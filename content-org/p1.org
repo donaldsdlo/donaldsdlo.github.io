@@ -1,0 +1,15 @@
+#+HUGO_BASE_DIR: ../
+#+TITLE: 测试数学公式
+#+DATE: [2024-07-26 周五 08:53]
+#+HUGO_AUTO_SET_LASTMOD: t
+#+HUGO_TAGS: math
+#+HUGO_DRAFT: false
+#+AUTHOR: Donald Lo
+#+HUGO_SECTION: posts
+
+#+hugo: more
+
+
+$n^2 = 4$
+
+看看能出现我要的结果不。

@@ -1,0 +1,15 @@
+#+HUGO_BASE_DIR: ../
+#+TITLE: test org mode and pictures in static
+#+DATE: [2024-07-25 周四 16:03]
+#+HUGO_AUTO_SET_LASTMOD: t
+#+HUGO_TAGS: test
+#+HUGO_DRAFT: false
+#+hugo_categories: cat
+#+AUTHOR: Donald Lo
+#+HUGO_SECTION: posts
+
+#+hugo: more
+
+这是一个测试用的。
+[[file:../static/images/third-post.org/_20240725_163117_y8XHR3.png]]
+[[file:../static/images/third-post.org/_20240725_163409_QDJkCC.png]]
