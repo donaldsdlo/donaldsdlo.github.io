@@ -1,0 +1,24 @@
+baseURL = 'https://donaldsdlo.github.io/'
+languageCode = 'zh-CN'
+title = 'My New Hugo Site1'
+theme = 'hugo-theme-tokiwa'
+
+[params]
+description = """
+Tokiwa-iro is the theme color of this site.
+"""
+math = true # for introducing $KaTEX$
+env = "production" # for Google Analytics and DISQUS.
+useChineseFonts = true # for font Noto Serif etc.
+
+[menu]
+# Shown in the side menu.
+  [[menu.main]]
+    name = "Posts"
+    weight = 1
+    identifier = "post"
+    url = "/posts/"
+  [[menu.main]]
+    name = "Tags"
+    url = "/tags/"
+    weight = 2
