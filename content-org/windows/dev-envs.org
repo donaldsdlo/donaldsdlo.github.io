@@ -18,10 +18,10 @@ Scoop 是一个面向 Windows 的命令行安装程序（包管理器），旨�
 
 主要特点包括：
 
-- *无需管理员权限*：默认将软件安装到用户目录（如 =~\scoop= ），避免系统污染。
-- *使用简单*：通过简洁的命令（如 =scoop install <app>= ）即可完成软件的安装。
+- *无需管理员权限* ：默认将软件安装到用户目录（如 =~\scoop= ），避免系统污染。
+- *使用简单* ：通过简洁的命令（如 =scoop install <app>= ）即可完成软件的安装。
 - *基于 Git 和 JSON 清单* ：软件定义以 JSON 格式存储在称为“bucket”的仓库中，便于维护和扩展。
-- *支持多 bucket*：除了官方主仓库（main bucket），还支持额外的社区或私有 bucket（如 =extras= 、 =versions=  等）。
+- *支持多 bucket* ：除了官方主仓库（main bucket），还支持额外的社区或私有 bucket（如 =extras= 、 =versions=  等）。
 - *自动处理 PATH 和依赖* ：安装后自动配置环境变量，部分软件会自动安装所需依赖（如 Visual C++ Redistributables）。
 
 ** 安装 scoop
