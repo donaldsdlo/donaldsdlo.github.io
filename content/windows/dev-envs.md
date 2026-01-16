@@ -2,7 +2,7 @@
 title = "windows 开发环境配置"
 author = ["Donald Lo"]
 date = 2026-01-15
-lastmod = 2026-01-16T14:50:06+08:00
+lastmod = 2026-01-16T15:30:07+08:00
 tags = ["windows", "dev"]
 draft = false
 +++
@@ -23,6 +23,8 @@ setx XDG_CONFIG_HOME "%HOME%\.config"
 setx XDG_DATA_HOME "%HOME%\.local\share"
 setx XDG_STATE_HOME "%HOME%\.local\state"
 ```
+
+在后续看到 `~` 开头的目录都是指在 `HOME` 下的子目录。
 
 
 ## scoop {#scoop}
@@ -129,7 +131,7 @@ scoop config cache_enabled true
 ### 安装常用工具 {#安装常用工具}
 
 ```shell
-scoop install git aria2 coreutils fzf grep gzip make ripgrep rga wget which fd 7zip ag altsnap ast-grep astyle autojump curl delta direnv everything everything-cli ffmpeg geekuninstaller  hugo hugo-extended mpv pandoc
+scoop install git aria2 coreutils fzf grep gzip make ripgrep rga wget which fd 7zip ag altsnap ast-grep astyle autojump curl delta direnv everything everything-cli ffmpeg geekuninstaller  hugo hugo-extended mpv pandoc scoop-search
 ```
 
 
@@ -248,11 +250,32 @@ scoop install potplayer
 ```
 
 
+### 数据库客户端 {#数据库客户端}
+
+```shell
+scoop install dbeaver
+```
+
+
+### postman 的替代品 bruno {#postman-的替代品-bruno}
+
+```shell
+scoop install bruno
+```
+
+
 ### 显示当前软件是否有需要更新 {#显示当前软件是否有需要更新}
 
 ```shell
 scoop status
 ```
+
+```shell
+Scoop is up to date.
+Everything is ok!
+```
+
+如果返回的是上面的消息，则所有安装的软件都不需要更新。
 
 
 ### 软件更新 {#软件更新}
@@ -267,6 +290,22 @@ scoop update deno
 
 ```shell
 scoop update -a
+```
+
+
+### 卸载软件 {#卸载软件}
+
+```shell
+scoop uninstall peazip
+```
+
+```shell
+Uninstalling 'peazip' (10.8.0).
+Removing shim 'peazip.shim'.
+Removing shim 'peazip.exe'.
+Removing shortcut ~\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Scoop Apps\PeaZip.lnk
+Unlinking D:\Scoop\apps\peazip\current
+'peazip' was uninstalled.
 ```
 
 
@@ -493,6 +532,17 @@ uv add requests
 ```
 
 将 default-python\\.venv\Scripts 的完整目录添加到 PATH 环境变量的最前面，这样就可以使用这个环境下的 python 作为系统的默认 python 了。
+
+
+### 使用国内镜像 {#使用国内镜像}
+
+在文件 ~/.config/uv/uv.toml 中添加如下内容：
+
+```toml
+[[index]]
+url = "https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple/"
+default = true
+```
 
 
 ### 管理项目 {#管理项目}

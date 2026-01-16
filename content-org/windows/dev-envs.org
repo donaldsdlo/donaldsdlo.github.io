@@ -25,6 +25,8 @@ setx XDG_DATA_HOME "%HOME%\.local\share"
 setx XDG_STATE_HOME "%HOME%\.local\state"
 #+end_src
 
+在后续看到 =~= 开头的目录都是指在 =HOME= 下的子目录。
+
 * scoop
 
 Scoop 是一个面向 Windows 的命令行安装程序（包管理器），旨在简化在 Windows 系统上安装、更新和管理开源命令行工具和应用程序的过程。
@@ -118,7 +120,7 @@ scoop config cache_enabled true
 ** 安装常用工具
 
 #+begin_src shell
-scoop install git aria2 coreutils fzf grep gzip make ripgrep rga wget which fd 7zip ag altsnap ast-grep astyle autojump curl delta direnv everything everything-cli ffmpeg geekuninstaller  hugo hugo-extended mpv pandoc
+scoop install git aria2 coreutils fzf grep gzip make ripgrep rga wget which fd 7zip ag altsnap ast-grep astyle autojump curl delta direnv everything everything-cli ffmpeg geekuninstaller  hugo hugo-extended mpv pandoc scoop-search
 #+end_src
 
 ** 使用aria2加速下载
@@ -225,11 +227,29 @@ scoop install snipaste
 scoop install potplayer
 #+end_src
 
+** 数据库客户端
+
+#+begin_src shell
+scoop install dbeaver
+#+end_src
+
+** postman 的替代品 bruno
+
+#+begin_src shell
+scoop install bruno
+#+end_src
+
 ** 显示当前软件是否有需要更新
 
 #+begin_src shell
 scoop status
 #+end_src
+
+#+begin_src shell
+Scoop is up to date.
+Everything is ok!
+#+end_src
+如果返回的是上面的消息，则所有安装的软件都不需要更新。
 
 ** 软件更新
 更新指定的软件
@@ -239,6 +259,21 @@ scoop update deno
 更新所有软件：
 #+begin_src shell
 scoop update -a
+#+end_src
+
+** 卸载软件
+
+#+begin_src shell
+scoop uninstall peazip
+#+end_src
+
+#+begin_src shell
+Uninstalling 'peazip' (10.8.0).
+Removing shim 'peazip.shim'.
+Removing shim 'peazip.exe'.
+Removing shortcut ~\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Scoop Apps\PeaZip.lnk
+Unlinking D:\Scoop\apps\peazip\current
+'peazip' was uninstalled.
 #+end_src
 
 ** 删除软件的旧版本
@@ -435,6 +470,17 @@ uv add requests
 #+end_src
 
 将 default-python\.venv\Scripts 的完整目录添加到 PATH 环境变量的最前面，这样就可以使用这个环境下的 python 作为系统的默认 python 了。
+
+** 使用国内镜像
+
+在文件 ~/.config/uv/uv.toml 中添加如下内容：
+
+#+begin_src toml :exports code
+[[index]]
+url = "https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple/"
+default = true
+#+end_src
+
 ** 管理项目
 ** 安装常用工具
 
