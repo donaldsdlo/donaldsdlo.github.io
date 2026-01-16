@@ -118,7 +118,7 @@ scoop config cache_enabled true
 ** 安装常用工具
 
 #+begin_src shell
-scoop install git aria2 coreutils fzf grep gzip make ripgrep rga wget which fd 7zip ag altsnap ast-grep astyle autojump curl delta direnv everything everything-cli ffmpeg geekuninstaller  hugo hugo-extended mpv
+scoop install git aria2 coreutils fzf grep gzip make ripgrep rga wget which fd 7zip ag altsnap ast-grep astyle autojump curl delta direnv everything everything-cli ffmpeg geekuninstaller  hugo hugo-extended mpv pandoc
 #+end_src
 
 ** 使用aria2加速下载
@@ -177,6 +177,235 @@ scoop config aria2-options ....
 #+begin_src shell
 scoop config /?
 #+end_src
+
+** 查找软件
+
+#+begin_src shell
+scoop search emacs
+#+end_src
+
+#+begin_src shell
+Name              Version                  Source     Binaries
+----              -------                  ------     --------
+emacs             30.2                     extras
+emax64-pdumper    20180619                 extras     runemacs.exe | emacs.exe | emacsclientw.exe | emacs-27.0.50.exe
+emacs27.2         27.2                     versions
+emacs-k           31.405.20260105.e12c0610 scoop-misc
+emacs-kl          31.405.20260105.e12c0610 scoop-misc
+emacs-lsp-booster 0.2.1                    scoop-misc
+emacs-x           30.2                     scoop-misc
+emax64            20200930                 scoop-misc runemacs.exe | emacs.exe | emacsclient.exe | emacsclientw.exe | emacsclientw.exe
+#+end_src
+
+安装软件：
+#+begin_src shell
+scoop install emacs-kl
+#+end_src
+
+** PDF 查看工具
+
+#+begin_src shell
+scoop install sumatrapdf
+#+end_src
+
+** 改键工具
+
+#+begin_src shell
+scoop install sharpkeys
+#+end_src
+
+** 截图工具
+
+#+begin_src shell
+scoop install snipaste
+#+end_src
+
+** 视频播放软件
+#+begin_src shell
+scoop install potplayer
+#+end_src
+
+** 显示当前软件是否有需要更新
+
+#+begin_src shell
+scoop status
+#+end_src
+
+** 软件更新
+更新指定的软件
+#+begin_src shell
+scoop update deno
+#+end_src
+更新所有软件：
+#+begin_src shell
+scoop update -a
+#+end_src
+
+** 删除软件的旧版本
+#+begin_src shell
+scoop cleanup *
+#+end_src
+会显示删除的所有的版本信息：
+#+begin_src shell
+Removing codex: 0.80.0 0.81.0
+Removing deno: 2.6.4
+Removing erlang: 28.3
+Removing golang: 1.25.5
+Removing innounp: 2.67.0
+Removing jdtls: 1.56.0-202601140747
+Removing luau-lsp: 1.60.0
+Removing opencode: 1.1.18 1.1.20
+Removing zed: 0.218.7
+Removing zotero: 7.0.31
+Everything is shiny now!
+#+end_src
+
+* 字体
+
+** 查找字体
+#+begin_src shell
+scoop search maple
+#+end_src
+
+#+begin_src shell
+Results from local buckets...
+
+Name                Version Source     Binaries
+----                ------- ------     --------
+maple               0.9.1.0 extras
+Maple-Mono-autohint 7.9     nerd-fonts
+Maple-Mono-NF-CN    7.9     nerd-fonts
+Maple-Mono-NF       7.9     nerd-fonts
+Maple-Mono-otf      7.9     nerd-fonts
+Maple-Mono          7.9     nerd-fonts
+#+end_src
+
+** 下载字体
+#+begin_src shell
+scoop download Maple-Mono-NF-CN
+#+end_src
+#+begin_src shell
+INFO  Downloading 'Maple-Mono-NF-CN' [64bit] from nerd-fonts bucket
+Starting download with aria2 ...
+Download: [#694632 55MiB/152MiB(36%) CN:5 DL:332KiB ETA:4m57s]
+#+end_src
+当出现如下最后一行的信息时，表示已经下载完成。
+#+begin_src shell
+PS D:\> scoop download Maple-Mono-NF-CN
+INFO  Downloading 'Maple-Mono-NF-CN' [64bit] from nerd-fonts bucket
+Starting download with aria2 ...
+Download: Download Results:
+Download: gid   |stat|avg speed  |path/URI
+Download: ======+====+===========+=======================================================
+Download: 694632|OK  |   314KiB/s|D:/Scoop/cache/Maple-Mono-NF-CN#7.9#2184a5b.zip
+Download: Status Legend:
+Download: (OK):download completed.
+Checking hash of MapleMono-NF-CN.zip ... ok.
+'Maple-Mono-NF-CN' (7.9) was downloaded successfully!
+#+end_src
+
+** 安装字体
+:PROPERTIES:
+:ID:       829783cb-8a33-40b9-8298-17ab07ccbe04
+:END:
+下载的文件保存在之前设置的环境变量 =SCOOP= 下的 =cache= 目录下，且是一个压缩包：
+[[file:../../static/images/dev-envs.org/2026-01-16_14-43-09_screenshot.png]]
+需要手工解压缩：
+[[file:../../static/images/dev-envs.org/2026-01-16_14-43-55_screenshot.png]]
+选中所有的字体文件（以 ttf 结尾的文件），然后鼠标右键菜单中选择 *为所有用户安装* :
+[[file:../../static/images/dev-envs.org/2026-01-16_14-49-30_screenshot.png]]
+
+** 常用的字体
+*** 落霞孤鹜中文字体
+#+begin_src shell
+scoop search lxgw
+#+end_src
+#+begin_src shell
+Results from local buckets...
+
+Name              Version Source     Binaries
+----              ------- ------     --------
+LXGW-Bright-GB    5.321   nerd-fonts
+LXGW-Bright-TC    5.321   nerd-fonts
+LXGW-Bright       5.321   nerd-fonts
+LXGWNeoXiHei      1.239   nerd-fonts
+LXGWNeoZhiSong    1.058   nerd-fonts
+LXGWWenKai        1.521   nerd-fonts
+LXGWWenKaiGB      1.521   nerd-fonts
+LXGWWenKaiMono    1.521   nerd-fonts
+LXGWWenKaiMonoGB  1.521   nerd-fonts
+LXGWWenKaiMonoTC  1.521   nerd-fonts
+LXGWWenKaiScreen  1.521   nerd-fonts
+LXGWWenKaiScreenR 1.315   nerd-fonts
+LXGWWenKaiTC      1.521   nerd-fonts
+#+end_src
+可以选用其中的 LXGWWenKaiMonoGB 字体
+*** 思源中文字体
+#+begin_src shell
+scoop search source
+#+end_src
+#+begin_src shell
+Results from local buckets...
+
+Name                          Version      Source     Binaries
+----                          -------      ------     --------
+ossgadget                     0.1.422      main       oss-find-source.exe
+pulumi                        3.215.0      main       pulumi-resource-pulumi-nodejs.cmd | pulumi-resource-pulumi-pytho…
+sourcegraph-cli               6.12.0       main
+resource-hacker               5.2.8        extras
+resource-tuner-console        2.30         extras
+resource-tuner                2.30         extras
+sourcegit                     2026.01      extras
+sourcetrail                   2021.4.19    extras
+sourcetree                    3.4.27       extras
+upsource                      2020.1.1992  extras
+appresourcesusageview         1.06         nirsoft
+dotnetresourcesextract        1.01         nirsoft
+eventlogsourcesview           1.00         nirsoft
+resourcesextract              1.18         nirsoft
+Source-Han-Mega-OTC           20190603     nerd-fonts
+Source-Han-Mono-HC            1.002        nerd-fonts
+Source-Han-Mono-J             1.002        nerd-fonts
+Source-Han-Mono-K             1.002        nerd-fonts
+Source-Han-Mono-SC            1.002        nerd-fonts
+Source-Han-Mono-TC            1.002        nerd-fonts
+Source-Han-Noto-CJK-Ultra-OTC 20190603     nerd-fonts
+Source-Han-Sans-HC            2.004        nerd-fonts
+Source-Han-Sans-J             2.004        nerd-fonts
+Source-Han-Sans-K             2.004        nerd-fonts
+Source-Han-Sans-SC            2.004        nerd-fonts
+Source-Han-Sans-TC            2.004        nerd-fonts
+Source-Han-Serif-HC           2.003        nerd-fonts
+Source-Han-Serif-J            2.003        nerd-fonts
+Source-Han-Serif-K            2.003        nerd-fonts
+Source-Han-Serif-SC           2.003        nerd-fonts
+Source-Han-Serif-TC           2.003        nerd-fonts
+SourceCodePro-NF-Mono         3.4.0        nerd-fonts
+SourceCodePro-NF-Propo        3.4.0        nerd-fonts
+SourceCodePro-NF              3.4.0        nerd-fonts
+sourcedepot                   4.9.29711.24 scoop-misc
+#+end_src
+source 为 nerd-fonts 的都是字体，我们可以安装 SC 结尾的简体中文字体。
+*** Iosevka 英文字体
+#+begin_src shell
+scoop search iosevka
+#+end_src
+#+begin_src shell
+Results from local buckets...
+
+Name                     Version Source     Binaries
+----                     ------- ------     --------
+Iosevka-NF-Mono          3.4.0   nerd-fonts
+Iosevka-NF-Propo         3.4.0   nerd-fonts
+Iosevka-NF               3.4.0   nerd-fonts
+IosevkaTerm-NF-Mono      3.4.0   nerd-fonts
+IosevkaTerm-NF-Propo     3.4.0   nerd-fonts
+IosevkaTerm-NF           3.4.0   nerd-fonts
+IosevkaTermSlab-NF-Mono  3.4.0   nerd-fonts
+IosevkaTermSlab-NF-Propo 3.4.0   nerd-fonts
+IosevkaTermSlab-NF       3.4.0   nerd-fonts
+#+end_src
+
 
 * Python 环境安装和配置
 
