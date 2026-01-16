@@ -20,11 +20,16 @@ useChineseFonts = true # for font Noto Serif etc.
     url = "/life/"
   [[menu.main]]
     name = "数学"
-    weight = 1
+    weight = 2
     identifier = "math"
     url = "/math/"
+  [[menu.main]]
+    name = "windows"
+    weight = 2
+    identifier = "windows"
+    url = "/windows/"    
     # Shown in the side menu.
   [[menu.main]]
     name = "Tags"
     url = "/tags/"
-    weight = 2
+    weight = 100
