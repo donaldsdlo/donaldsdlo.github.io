@@ -2,7 +2,7 @@
 title = "windows 开发环境配置"
 author = ["Donald Lo"]
 date = 2026-01-15
-lastmod = 2026-01-16T12:59:53+08:00
+lastmod = 2026-01-16T13:17:11+08:00
 tags = ["windows", "dev"]
 draft = false
 +++
@@ -54,12 +54,41 @@ irm get.scoop.sh | iex
 scoop bucket rm main
 ```
 
+可以通过如下的命令查看已经安装的 bucket 清单，根据实际需要将对应的 bucket 删除，然后换成国内的源。
+
+```shell
+scoop bucket list
+```
+
+你可能可以看到如下的结果：
+
+```shell
+Name          Source                                             Updated            Manifests
+----          ------                                             -------            ---------
+main          https://github.com/ScoopInstaller/Main             2026/1/15 12:33:06      1418
+extras        https://github.com/ScoopInstaller/Extras           2026/1/15 12:32:35      2254
+versions      https://github.com/ScoopInstaller/Versions         2026/1/15 13:03:17       550
+nirsoft       https://github.com/ScoopInstaller/Nirsoft          2026/1/13 13:13:19       290
+php           https://github.com/ScoopInstaller/PHP              2025/12/18 0:55:41       391
+nerd-fonts    https://github.com/matthewjberger/scoop-nerd-fonts 2026/1/14 18:31:41       367
+nonportable   https://github.com/ScoopInstaller/Nonportable      2026/1/15 2:27:24        126
+java          https://github.com/ScoopInstaller/Java             2026/1/13 16:33:01       324
+games         https://github.com/Calinou/scoop-games             2026/1/15 12:32:36       379
+scoop-clojure https://github.com/littleli/scoop-clojure          2026/1/14 8:43:14         28
+scoop-misc    https://github.com/kiennq/scoop-misc               2026/1/14 21:09:13        22
+```
+
 
 #### 添加南大镜像 {#添加南大镜像}
 
 ```shell
-scoop bucket add main https://mirror.nju.edu.cn/git/scoop-main.git
-scoop bucket add extras https://mirror.nju.edu.cn/git/scoop-extras.git
+scoop bucket add extras https://mirror.nju.edu.cn/git/scoop-extras.git/
+scoop bucket add java https://mirror.nju.edu.cn/git/scoop-java.git/
+scoop bucket add main https://mirror.nju.edu.cn/git/scoop-main.git/
+scoop bucket add nerd-fonts https://mirror.nju.edu.cn/git/scoop-nerd-fonts.git/
+scoop bucket add nirsoft https://mirror.nju.edu.cn/git/scoop-nirsoft.git/
+scoop bucket add nonportable https://mirror.nju.edu.cn/git/scoop-nonportable.git/
+scoop bucket add versions https://mirror.nju.edu.cn/git/scoop-versions.git/
 ```
 
 
@@ -112,3 +141,12 @@ uv add requests
 ```
 
 将 default-python\\.venv\Scripts 的完整目录添加到 PATH 环境变量的最前面，这样就可以使用这个环境下的 python 作为系统的默认 python 了。
+
+
+## 测试数学公式 {#测试数学公式}
+
+这是一个行内的数学公式： \\(n^2 = 10\\)
+
+\\[ n + 1 = x + y \\]
+
+这是末尾的字符。
