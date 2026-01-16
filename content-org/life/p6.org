@@ -1,0 +1,10 @@
+#+title: foo
+#+hugo_draft: false
+#+hugo_base_dir: ../../
+#+hugo_section: life
+
+* sdjkasjf
+asjdfkasjfl
+sd;lslf
+* sajdfkajsld
+asjdkajsfl

@@ -1,0 +1,30 @@
+baseURL = 'https://donaldsdlo.github.io/'
+languageCode = 'zh-CN'
+title = '这是我的博客的标题'
+theme = 'hugo-theme-tokiwa'
+
+[params]
+description = """
+Tokiwa-iro is the theme color of this site.
+"""
+math = true # for introducing $KaTEX$
+env = "production" # for Google Analytics and DISQUS.
+useChineseFonts = true # for font Noto Serif etc.
+
+[menu]
+# Shown in the side menu.
+  [[menu.main]]
+    name = "生活"
+    weight = 1
+    identifier = "life"
+    url = "/life/"
+  [[menu.main]]
+    name = "数学"
+    weight = 1
+    identifier = "math"
+    url = "/math/"
+    # Shown in the side menu.
+  [[menu.main]]
+    name = "Tags"
+    url = "/tags/"
+    weight = 2

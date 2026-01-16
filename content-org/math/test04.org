@@ -1,0 +1,18 @@
+#+TITLE: test 04 for math
+#+HUGO_TAGS: matn
+#+CATEGORIES: matn
+#+DATE: 2026-01-16
+#+AUTHOR: Donald Lo
+#+HUGO_SECTION: math
+#+HUGO_BASE_DIR: ../../
+#+OPTIONS: line-break:t
+#+HUGO_AUTO_SET_LASTMOD: t
+#+DRAFT: false
+#+HUGO_DRAFT: false
+#+hugo_front_matter_format: yaml
+
+这个是用来测试数学公式是否能够正常显示的：$n^2=10$
+
+$$ n + = 10 $$
+
+这个是结尾的部分。123
