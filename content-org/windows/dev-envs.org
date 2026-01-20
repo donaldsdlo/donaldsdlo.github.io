@@ -440,7 +440,64 @@ IosevkaTermSlab-NF-Mono  3.4.0   nerd-fonts
 IosevkaTermSlab-NF-Propo 3.4.0   nerd-fonts
 IosevkaTermSlab-NF       3.4.0   nerd-fonts
 #+end_src
+*** Fira Code
+#+begin_src shell
+scoop search firacode
+#+end_src
+#+begin_src shell
+Results from local buckets...
 
+Name              Version Source     Binaries
+----              ------- ------     --------
+FiraCode-NF-Mono  3.4.0   nerd-fonts
+FiraCode-NF-Propo 3.4.0   nerd-fonts
+FiraCode-NF       3.4.0   nerd-fonts
+FiraCode-Script   0.0.28  nerd-fonts
+FiraCode          6.2     nerd-fonts
+#+end_src
+#+begin_src shell
+scoop download FiraCode
+#+end_src
+
+* Windows Terminal
+
+#+begin_src shell
+scoop install windows-terminal
+#+end_src
+
+* Powershell
+
+** 查找 Powershell
+#+begin_src shell
+winget search --id Microsoft.PowerShell
+#+end_src
+
+#+begin_src shell
+名称               ID                           版本    源
+---------------------------------------------------------------
+PowerShell         Microsoft.PowerShell         7.5.4.0 winget
+PowerShell Preview Microsoft.PowerShell.Preview 7.6.0.6 winget
+#+end_src
+** 安装 Powershell
+#+begin_src shell
+winget install --id Microsoft.PowerShell --source winget
+#+end_src
+** 设置 Windows Terminal 默认打开的是新版本的 Powershell
+:PROPERTIES:
+:ID:       02478d7c-ebaa-46c2-80a3-777648f6cc68
+:END:
+打开 Windows Termial
+[[file:../../static/images/dev-envs.org/2026-01-20_09-02-04_screenshot.png]]
+通过 Ctrl+, 快捷键打开设置界面
+[[file:../../static/images/dev-envs.org/2026-01-20_09-02-58_screenshot.png]]
+** 查看 Powershell 的配置文件
+#+begin_src shell
+echo $PROFILE
+#+end_src
+#+begin_src shell
+D:\Documents\PowerShell\Microsoft.PowerShell_profile.ps1
+#+end_src
+需要添加的配置和一些函数都可以写在这个文件中。
 
 * Python 环境安装和配置
 
@@ -448,6 +505,16 @@ IosevkaTermSlab-NF       3.4.0   nerd-fonts
 #+begin_src shell
 setx UV_PYTHON_INSTALL_DIR D:\uv\python
 setx UV_TOOL_DIR D:\uv\tools
+#+end_src
+
+** 使用国内镜像
+
+在文件 ~/.config/uv/uv.toml 中添加如下内容：
+
+#+begin_src toml :exports code
+[[index]]
+url = "https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple/"
+default = true
 #+end_src
 
 ** 采用 UV 来管理 python 版本和项目虚拟环境，安装 UV 软件：
@@ -471,23 +538,134 @@ uv add requests
 
 将 default-python\.venv\Scripts 的完整目录添加到 PATH 环境变量的最前面，这样就可以使用这个环境下的 python 作为系统的默认 python 了。
 
-** 使用国内镜像
-
-在文件 ~/.config/uv/uv.toml 中添加如下内容：
-
-#+begin_src toml :exports code
-[[index]]
-url = "https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple/"
-default = true
+** 要为 uv 命令启用 Powershell 自动补全，在 Powershell 中运行以下对应命令：
+#+begin_src shell
+if (!(Test-Path -Path $PROFILE)) {
+  New-Item -ItemType File -Path $PROFILE -Force
+}
+Add-Content -Path $PROFILE -Value '(& uv generate-shell-completion powershell) | Out-String | Invoke-Expression'
 #+end_src
 
+** 使用 uv 管理多版本 Python
+*** 显示可安装以及已经安装的 Python 版本：
+#+begin_src shell
+uv python list
+#+end_src
+#+begin_src shell
+cpython-3.15.0a5-windows-x86_64-none                 <download available>
+cpython-3.15.0a5+freethreaded-windows-x86_64-none    <download available>
+cpython-3.15.0a1-windows-x86_64-none                 D:\uv\python\cpython-3.15.0a1-windows-x86_64-none\python.exe
+cpython-3.15.0a1-windows-x86_64-none                 C:\Users\donal\.local\bin\python3.15.exe
+cpython-3.14.2-windows-x86_64-none                   <download available>
+cpython-3.14.2+freethreaded-windows-x86_64-none      <download available>
+cpython-3.14.0-windows-x86_64-none                   D:\uv\python\cpython-3.14.0-windows-x86_64-none\python.exe
+cpython-3.14.0-windows-x86_64-none                   C:\Users\donal\.local\bin\python3.14.exe
+cpython-3.14.0+freethreaded-windows-x86_64-none      C:\Users\donal\.local\bin\python3.14t.exe
+cpython-3.14.0+freethreaded-windows-x86_64-none      D:\uv\python\cpython-3.14.0+freethreaded-windows-x86_64-none\python.exe
+cpython-3.13.11-windows-x86_64-none                  D:\uv\python\cpython-3.13.11-windows-x86_64-none\python.exe
+cpython-3.13.11+freethreaded-windows-x86_64-none     <download available>
+cpython-3.12.12-windows-x86_64-none                  D:\uv\python\cpython-3.12.12-windows-x86_64-none\python.exe
+cpython-3.11.14-windows-x86_64-none                  D:\uv\python\cpython-3.11.14-windows-x86_64-none\python.exe
+cpython-3.10.19-windows-x86_64-none                  <download available>
+cpython-3.9.25-windows-x86_64-none                   <download available>
+cpython-3.8.20-windows-x86_64-none                   <download available>
+pypy-3.11.13-windows-x86_64-none                     <download available>
+pypy-3.10.16-windows-x86_64-none                     <download available>
+pypy-3.9.19-windows-x86_64-none                      <download available>
+pypy-3.8.16-windows-x86_64-none                      <download available>
+graalpy-3.12.0-windows-x86_64-none                   <download available>
+graalpy-3.11.0-windows-x86_64-none                   <download available>
+graalpy-3.10.0-windows-x86_64-none                   <download available>
+#+end_src
+*** 安装指定版本的 Python
+#+begin_src shell
+uv python install 3.9
+#+end_src
+#+begin_src shell
+cpython-3.9.25-windows-x86_64-none (download) ------------------------------ 1.73 MiB/21.67 MiB
+#+end_src
+出现如下的消息时表示已经安装完成：
+#+begin_src shell
+Installed Python 3.9.25 in 2m 31s
+ + cpython-3.9.25-windows-x86_64-none (python3.9.exe)
+#+end_src
+也可以使用完整的名称来安装 Python:
+#+begin_src shell
+uv python install pypy-3.8.16-windows-x86_64-none
+#+end_src
+#+begin_src shell
+pypy-3.8.16-windows-x86_64-none (download) ------------------------------ 1.58 MiB/29.98 MiB
+#+end_src
+出现如下的消息时表示已经安装完成：
+#+begin_src shell
+Installed Python 3.8.16 in 13m 42s
+ + pypy-3.8.16-windows-x86_64-none (python3.8.exe)
+#+end_src
+*** 已经安装的版本，在后续使用到此版本的时候，UV 不会重复下载。
+*** 查看安装的结果
+#+begin_src shell
+uv python list
+#+end_src
+#+begin_src shell
+cpython-3.15.0a5-windows-x86_64-none                 <download available>
+cpython-3.15.0a5+freethreaded-windows-x86_64-none    <download available>
+cpython-3.15.0a1-windows-x86_64-none                 D:\uv\python\cpython-3.15.0a1-windows-x86_64-none\python.exe
+cpython-3.15.0a1-windows-x86_64-none                 C:\Users\donal\.local\bin\python3.15.exe
+cpython-3.14.2-windows-x86_64-none                   <download available>
+cpython-3.14.2+freethreaded-windows-x86_64-none      <download available>
+cpython-3.14.0-windows-x86_64-none                   D:\uv\python\cpython-3.14.0-windows-x86_64-none\python.exe
+cpython-3.14.0-windows-x86_64-none                   C:\Users\donal\.local\bin\python3.14.exe
+cpython-3.14.0+freethreaded-windows-x86_64-none      C:\Users\donal\.local\bin\python3.14t.exe
+cpython-3.14.0+freethreaded-windows-x86_64-none      D:\uv\python\cpython-3.14.0+freethreaded-windows-x86_64-none\python.exe
+cpython-3.13.11-windows-x86_64-none                  D:\uv\python\cpython-3.13.11-windows-x86_64-none\python.exe
+cpython-3.13.11+freethreaded-windows-x86_64-none     <download available>
+cpython-3.12.12-windows-x86_64-none                  D:\uv\python\cpython-3.12.12-windows-x86_64-none\python.exe
+cpython-3.11.14-windows-x86_64-none                  D:\uv\python\cpython-3.11.14-windows-x86_64-none\python.exe
+cpython-3.10.19-windows-x86_64-none                  <download available>
+cpython-3.9.25-windows-x86_64-none                   D:\uv\python\cpython-3.9.25-windows-x86_64-none\python.exe
+cpython-3.9.25-windows-x86_64-none                   <download available>
+cpython-3.8.20-windows-x86_64-none                   <download available>
+pypy-3.11.13-windows-x86_64-none                     <download available>
+pypy-3.10.16-windows-x86_64-none                     <download available>
+pypy-3.9.19-windows-x86_64-none                      <download available>
+pypy-3.8.16-windows-x86_64-none                      D:\uv\python\pypy-3.8.16-windows-x86_64-none\pypy3.8.exe
+pypy-3.8.16-windows-x86_64-none                      D:\home\.local\bin\python3.8.exe
+pypy-3.8.16-windows-x86_64-none                      <download available>
+graalpy-3.12.0-windows-x86_64-none                   <download available>
+graalpy-3.11.0-windows-x86_64-none                   <download available>
+graalpy-3.10.0-windows-x86_64-none                   <download available>
+#+end_src
+*** Python 安装的目录
+#+begin_src shell
+uv python dir
+#+end_src
+#+begin_src shell
+D:\uv\python
+#+end_src
+*** 移除已安装的版本
+#+begin_src shell
+uv python uninstall 3.9
+#+end_src
+#+begin_src shell
+Searching for Python versions matching: Python 3.9
+Uninstalled Python 3.9.25 in 483ms
+ - cpython-3.9.25-windows-x86_64-none (python3.9.exe)
+#+end_src
+也可以通过完整的 Python 版本名称来移除：
+#+begin_src shell
+uv python uninstall pypy-3.8.16-windows-x86_64-none
+#+end_src
+#+begin_src shell
+Searching for Python versions matching: pypy-3.8.16-windows-x86_64-none
+Uninstalled Python 3.8.16 in 431ms
+ - pypy-3.8.16-windows-x86_64-none (python3.8.exe)
+#+end_src
 ** 管理项目
 ** 安装常用工具
 
 #+begin_src shell
 uv tool install aider-chat
 #+end_src
-
 
 * 测试数学公式
 
