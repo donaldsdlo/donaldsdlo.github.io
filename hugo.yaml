@@ -5,7 +5,9 @@ module:
 
 params:
     mainSections:
-        - post
+        - windows
+        - math
+        - life
     featuredImageField: image
     rssFullContent: true
     favicon:
