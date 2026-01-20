@@ -4,6 +4,7 @@
 [submodule "themes/hugo-theme-tokiwa"]
 	path = themes/hugo-theme-tokiwa
 	url = https://github.com/heyeshuang/hugo-theme-tokiwa.git
+
 [submodule "themes/hugo-theme-stack"]
 	path = themes/hugo-theme-stack
-	url = https://github.com/CaiJimmy/hugo-theme-stack
+	url = https://github.com/donaldsdlo/hugo-theme-stack
