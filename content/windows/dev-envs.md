@@ -2,7 +2,7 @@
 title: "windows 开发环境配置"
 author: ["Donald Lo"]
 date: 2026-01-15
-lastmod: 2026-01-20T11:16:47+08:00
+lastmod: 2026-01-21T16:18:32+08:00
 tags: ["windows", "dev"]
 draft: false
 ---
@@ -72,7 +72,19 @@ draft: false
         - [Python 安装的目录](#python-安装的目录)
         - [移除已安装的版本](#移除已安装的版本)
     - [管理项目](#管理项目)
+        - [创建一个项目](#创建一个项目)
+        - [添加包](#添加包)
+        - [编写代码](#编写代码)
+        - [执行代码](#执行代码)
+        - [构建项目分发包](#构建项目分发包)
+        - [查看依赖树](#查看依赖树)
     - [安装常用工具](#安装常用工具)
+- [GPG/文件加密](#gpg-文件加密)
+    - [安装](#安装)
+    - [生成密钥](#生成密钥)
+    - [生成一个文本文件](#生成一个文本文件)
+    - [加密文件](#加密文件)
+    - [解密](#解密)
 - [测试数学公式](#测试数学公式)
 
 </div>
@@ -204,7 +216,7 @@ scoop config cache_enabled true
 ### 安装常用工具 {#安装常用工具}
 
 ```shell
-scoop install git aria2 coreutils fzf grep gzip make ripgrep rga wget which fd 7zip ag altsnap ast-grep astyle autojump curl delta direnv everything everything-cli ffmpeg geekuninstaller  hugo hugo-extended mpv pandoc scoop-search
+scoop install git aria2 coreutils fzf grep gzip make ripgrep rga wget which fd 7zip ag altsnap ast-grep astyle autojump curl delta direnv everything everything-cli ffmpeg geekuninstaller  hugo hugo-extended mpv pandoc scoop-search gpg
 ```
 
 
@@ -793,8 +805,40 @@ uv init default-python --python 3.14
 cd default-python
 ```
 
+安装包：
+
 ```shell
 uv add requests
+```
+
+指定版本约束
+
+```shell
+uv add 'requests==2.31.0'
+```
+
+添加 Git 依赖:
+
+```shell
+uv add git+https://github.com/psf/requests
+```
+
+将指定包更新到最新的兼容版本，同时保持锁文件中其他依赖不变:
+
+```shell
+uv lock --upgrade-package requests
+```
+
+从 requirements.txt 文件添加所有依赖:
+
+```shell
+uv add -r requirements.txt -c constraints.txt
+```
+
+删除包：
+
+```shell
+uv remove requests
 ```
 
 将 default-python\\.venv\Scripts 的完整目录添加到 PATH 环境变量的最前面，这样就可以使用这个环境下的 python 作为系统的默认 python 了。
@@ -961,10 +1005,527 @@ Uninstalled Python 3.8.16 in 431ms
 ### 管理项目 {#管理项目}
 
 
-### 安装常用工具 {#安装常用工具}
+#### 创建一个项目 {#创建一个项目}
 
 ```shell
-uv tool install aider-chat
+PS E:\tmp> uv init test04 --python 3.14
+```
+
+```shell
+Initialized project `test04` at `E:\tmp\test04`
+```
+
+执行完这个命令后，会创建 `test04` 目录并在其中创建如下的文件：
+
+```shell
+PS E:\tmp\test04> ls
+```
+
+```shell
+    Directory: E:\tmp\test04
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a---           2026/1/20    15:46            109 .gitignore
+-a---           2026/1/20    15:46              5 .python-version
+-a---           2026/1/20    15:46             84 main.py
+-a---           2026/1/20    15:46            152 pyproject.toml
+-a---           2026/1/20    15:46              0 README.md
+```
+
+其中的文件：
+
+-   gitignore：uv 会帮你把项目建立成 git 储存库，并且帮你写好了 .gitignore 文件，避免 Python 执行过程产生的暂存文件等也提交到储存库内
+    ```shell
+            # Python-generated files
+            __pycache__/
+            *.py[oc]
+            build/
+            dist/
+            wheels/
+            *.egg-info
+
+            # Virtual environments
+            .venv
+    ```
+-   .python-version：记录这个项目使用的 Python 版本
+-   main.py
+-   pyproject.toml：此项目的诠释数据，其实就是前面单一程序文件形式的项目在源代码开头注释的内容
+    ```toml
+            [project]
+            name = "test04"
+            version = "0.1.0"
+            description = "Add your description here"
+            readme = "README.md"
+            requires-python = ">=3.14"
+            dependencies = [
+            "openpyxl>=3.1.5",
+            ]
+    ```
+-   README. ME：空的 markdown 文件，预留让你撰写项目说明用。
+
+
+#### 添加包 {#添加包}
+
+可以在其中安装相关的包:
+
+```shell
+PS E:\tmp\test04> uv add openpyxl
+```
+
+```shell
+Using CPython 3.14.0
+Creating virtual environment at: .venv
+Resolved 3 packages in 426ms
+Installed 2 packages in 498ms
+ + et-xmlfile==2.0.0
+ + openpyxl==3.1.5
+```
+
+添加只在开发时使用的包
+
+```shell
+uv add --dev pytest black
+```
+
+
+#### 编写代码 {#编写代码}
+
+修改 main.py 中的代码如下：
+
+```python
+
+from openpyxl import load_workbook
+
+def read_excel_columns():
+    file_path = r"D:\data\Desktop\EXPOR615.XLSX"
+
+    try:
+        # 加载工作簿
+        workbook = load_workbook(filename=file_path)
+
+        # 获取第一个工作表（也可以指定表名：workbook['Sheet1']）
+        worksheet = workbook.active
+
+        print("读取的A、B列数据（最多10行）：")
+        print("-" * 30)
+
+        # 读取前10行的A、B列数据
+        for row in range(1, 11):  # 行号从1到10
+            cell_a = worksheet.cell(row=row, column=1).value
+            cell_b = worksheet.cell(row=row, column=2).value
+
+            # 如果两列都为空，可以考虑提前退出（可选）
+            # if cell_a is None and cell_b is None:
+            #     break
+
+            print(f"第{row:2d}行: A={cell_a}, B={cell_b}")
+
+    except FileNotFoundError:
+        print(f"错误：文件 {file_path} 未找到！")
+    except Exception as e:
+        print(f"读取文件时发生错误：{e}")
+    finally:
+        # openpyxl 会自动处理文件关闭，无需手动关闭
+        pass
+
+if __name__ == "__main__":
+    read_excel_columns()
+```
+
+
+#### 执行代码 {#执行代码}
+
+你需要修改实际的 Excel 文件名称，并在对应的文件中输入一些数据才能执行程序。
+
+```shell
+PS E:\tmp\test04> uv run .\main.py
+```
+
+程序的输出如下（输出的内容根据你的文件中的内容会不太一样）：
+
+```shell
+读取的A、B列数据（最多10行）：
+------------------------------
+第 1行: A=MANDT, B=BANFN
+第 2行: A=200, B=8900000002
+第 3行: A=200, B=8900000048
+第 4行: A=200, B=8900000048
+第 5行: A=200, B=8900000049
+第 6行: A=200, B=8900000668
+第 7行: A=200, B=8900000669
+第 8行: A=200, B=8900000672
+第 9行: A=200, B=8900000681
+第10行: A=200, B=8900000682
+```
+
+
+#### 构建项目分发包 {#构建项目分发包}
+
+```shell
+PS E:\tmp\test04> uv build
+```
+
+```shell
+Building source distribution...
+running egg_info
+creating test04.egg-info
+writing test04.egg-info\PKG-INFO
+writing dependency_links to test04.egg-info\dependency_links.txt
+writing requirements to test04.egg-info\requires.txt
+writing top-level names to test04.egg-info\top_level.txt
+writing manifest file 'test04.egg-info\SOURCES.txt'
+reading manifest file 'test04.egg-info\SOURCES.txt'
+writing manifest file 'test04.egg-info\SOURCES.txt'
+running sdist
+running egg_info
+writing test04.egg-info\PKG-INFO
+writing dependency_links to test04.egg-info\dependency_links.txt
+writing requirements to test04.egg-info\requires.txt
+writing top-level names to test04.egg-info\top_level.txt
+reading manifest file 'test04.egg-info\SOURCES.txt'
+writing manifest file 'test04.egg-info\SOURCES.txt'
+running check
+creating test04-0.1.0
+creating test04-0.1.0\test04.egg-info
+copying files to test04-0.1.0...
+copying README.md -> test04-0.1.0
+copying main.py -> test04-0.1.0
+copying pyproject.toml -> test04-0.1.0
+copying test04.egg-info\PKG-INFO -> test04-0.1.0\test04.egg-info
+copying test04.egg-info\SOURCES.txt -> test04-0.1.0\test04.egg-info
+copying test04.egg-info\dependency_links.txt -> test04-0.1.0\test04.egg-info
+copying test04.egg-info\requires.txt -> test04-0.1.0\test04.egg-info
+copying test04.egg-info\top_level.txt -> test04-0.1.0\test04.egg-info
+copying test04.egg-info\SOURCES.txt -> test04-0.1.0\test04.egg-info
+Writing test04-0.1.0\setup.cfg
+Creating tar archive
+removing 'test04-0.1.0' (and everything under it)
+Building wheel from source distribution...
+running egg_info
+writing test04.egg-info\PKG-INFO
+writing dependency_links to test04.egg-info\dependency_links.txt
+writing requirements to test04.egg-info\requires.txt
+writing top-level names to test04.egg-info\top_level.txt
+reading manifest file 'test04.egg-info\SOURCES.txt'
+writing manifest file 'test04.egg-info\SOURCES.txt'
+running bdist_wheel
+running build
+running build_py
+creating build\lib
+copying main.py -> build\lib
+running egg_info
+writing test04.egg-info\PKG-INFO
+writing dependency_links to test04.egg-info\dependency_links.txt
+writing requirements to test04.egg-info\requires.txt
+writing top-level names to test04.egg-info\top_level.txt
+reading manifest file 'test04.egg-info\SOURCES.txt'
+writing manifest file 'test04.egg-info\SOURCES.txt'
+installing to build\bdist.win-amd64\wheel
+running install
+running install_lib
+creating build\bdist.win-amd64\wheel
+copying build\lib\main.py -> build\bdist.win-amd64\wheel\.
+running install_egg_info
+Copying test04.egg-info to build\bdist.win-amd64\wheel\.\test04-0.1.0-py3.14.egg-info
+running install_scripts
+creating build\bdist.win-amd64\wheel\test04-0.1.0.dist-info\WHEEL
+creating 'E:\tmp\test04\dist\.tmp-oxq28ff2\test04-0.1.0-py3-none-any.whl' and adding 'build\bdist.win-amd64\wheel' to it
+adding 'main.py'
+adding 'test04-0.1.0.dist-info/METADATA'
+adding 'test04-0.1.0.dist-info/WHEEL'
+adding 'test04-0.1.0.dist-info/top_level.txt'
+adding 'test04-0.1.0.dist-info/RECORD'
+removing build\bdist.win-amd64\wheel
+Successfully built dist\test04-0.1.0.tar.gz
+Successfully built dist\test04-0.1.0-py3-none-any.whl
+```
+
+
+#### 查看依赖树 {#查看依赖树}
+
+```shell
+PS E:\tmp\test04> uv tree
+```
+
+```shell
+Resolved 15 packages in 1ms
+test04 v0.1.0
+├── openpyxl v3.1.5
+│   └── et-xmlfile v2.0.0
+├── black v26.1.0 (group: dev)
+│   ├── click v8.3.1
+│   │   └── colorama v0.4.6
+│   ├── mypy-extensions v1.1.0
+│   ├── packaging v25.0
+│   ├── pathspec v1.0.3
+│   ├── platformdirs v4.5.1
+│   └── pytokens v0.4.0
+└── pytest v9.0.2 (group: dev)
+    ├── colorama v0.4.6
+    ├── iniconfig v2.3.0
+    ├── packaging v25.0
+    ├── pluggy v1.6.0
+    └── pygments v2.19.2
+```
+
+
+### 安装常用工具 {#安装常用工具}
+
+安装工具：
+
+```shell
+uv tool install aider-chat ruff ty basedpyright black
+```
+
+安装工具的时候指定 Python 版本：
+
+```shell
+uv tool install aider-chat --python 3.11
+```
+
+查看已经安装的工具：
+
+```shell
+uv tool list
+```
+
+```shell
+aider-chat v0.86.1
+- aider
+ansible-lint v26.1.1
+- ansible-lint
+autopep8 v2.3.2
+- autopep8
+basedpyright v1.37.1
+- basedpyright
+- basedpyright-langserver
+black v26.1.0
+- black
+- blackd
+warning: Ignoring malformed tool `blink-search` (run `uv tool uninstall blink-search` to remove)
+citation-langserver v0.2.2
+- citation-langserver
+cmake-language-server v0.1.11
+- cmake-language-server
+cmakelang v0.6.13
+- cmake-annotate
+- cmake-format
+- cmake-genparsers
+- cmake-lint
+- ctest-to
+codex v1.9.2
+- codex
+cpp-linter v1.11.4
+- cpp-linter
+cpplint v2.0.2
+- cpplint
+debugpy v1.8.19
+- debugpy
+- debugpy-adapter
+warning: Ignoring malformed tool `default-python` (run `uv tool uninstall default-python` to remove)
+flake8 v7.3.0
+- flake8
+fortls v3.2.2
+- fortls
+warning: Ignoring malformed tool `holo-layer` (run `uv tool uninstall holo-layer` to remove)
+warning: Ignoring malformed tool `leetcode` (run `uv tool uninstall leetcode` to remove)
+warning: Ignoring malformed tool `lsp-bridge` (run `uv tool uninstall lsp-bridge` to remove)
+pathaction v0.9.6
+- pathaction
+pep8 v1.7.1
+- pep8
+pre-commit v4.5.1
+- pre-commit
+proselint v0.16.0
+- proselint
+pyflakes v3.4.0
+- pyflakes
+pylint v4.0.4
+- pylint
+- pylint-config
+- pyreverse
+- symilar
+pyrefly v0.48.2
+- pyrefly
+warning: Ignoring malformed tool `quickrun` (run `uv tool uninstall quickrun` to remove)
+robotframework v7.4.1
+- libdoc
+- rebot
+- robot
+ruff v0.14.13
+- ruff
+sqlparse v0.5.5
+- sqlformat
+tomllint v0.3.2
+- tomllint
+ty v0.0.12
+- ty
+yamllint v1.38.0
+- yamllint
+```
+
+升级特定工具
+
+```shell
+uv tool upgrade ruff
+```
+
+升级所有工具
+
+```shell
+uv tool upgrade --all
+```
+
+
+## GPG/文件加密 {#gpg-文件加密}
+
+
+### 安装 {#安装}
+
+```shell
+scoop install gpg
+```
+
+验证是否安装成功：
+
+```shell
+gpg --version
+```
+
+```shell
+gpg (GnuPG) 2.5.16
+libgcrypt 1.11.2
+Copyright (C) 2025 g10 Code GmbH
+License GNU GPL-3.0-or-later <https://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Home: D:\Scoop\apps\gpg\current\home
+Supported algorithms:
+Pubkey: RSA, Kyber, ELG, DSA, ECDH, ECDSA, EDDSA
+Cipher: IDEA, 3DES, CAST5, BLOWFISH, AES, AES192, AES256, TWOFISH,
+        CAMELLIA128, CAMELLIA192, CAMELLIA256
+Hash: SHA1, RIPEMD160, SHA256, SHA384, SHA512, SHA224
+Compression: Uncompressed, ZIP, ZLIB, BZIP2
+```
+
+
+### 生成密钥 {#生成密钥}
+
+```shell
+gpg --gen-key
+```
+
+输入回车，系统会给出提示：
+
+```shell
+gpg (GnuPG) 2.5.16; Copyright (C) 2025 g10 Code GmbH
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+gpg: keybox 'D:\\Scoop\\apps\\gpg\\current\\home\\pubring.kbx' created
+Note: Use "gpg --full-generate-key" for a full featured key generation dialog.
+
+GnuPG needs to construct a user ID to identify your key.
+
+Real name:
+```
+
+一次输入名字以及邮箱：
+
+```shell
+Real name: Donald Lo
+Email address: donald.sd.lo@gmail.com
+You selected this USER-ID:
+    "Donald Lo <donald.sd.lo@gmail.com>"
+
+Change (N)ame, (E)mail, or (O)kay/(Q)uit?
+```
+
+确认名字和邮箱后输入 o 后回车，会弹出一个输入密码保护 key 的对话框：
+![](/images/dev-envs.org/2026-01-21_15-37-56_screenshot.png)
+输入密码后回车，由于我输入的密码过于简单，弹出如下的对话框：
+
+![](/images/dev-envs.org/2026-01-21_15-38-17_screenshot.png)
+点击 Take this one anyway 按钮，会让你确认密码：
+![](/images/dev-envs.org/2026-01-21_15-38-37_screenshot.png)
+再此输入密码后点击 OK 就会生成 key。
+![](/images/dev-envs.org/2026-01-21_15-41-04_screenshot.png)
+如果要更多选项，可以使用如下命令生成 key：
+
+```shell
+gpg --full-generate-key
+```
+
+
+### 生成一个文本文件 {#生成一个文本文件}
+
+```shell
+PS E:\tmp\test04> cat .\test01.txt
+```
+
+其中的内容如下：
+
+```shell
+01
+02
+03
+04
+```
+
+
+### 加密文件 {#加密文件}
+
+```shell
+PS E:\tmp\test04> gpg --recipient "Donald Lo <donald.sd.lo@gmail.com>" --output test01.txt.gpg --encrypt .\test01.txt
+```
+
+```shell
+gpg: checking the trustdb
+gpg: marginals needed: 3  completes needed: 1  trust model: pgp
+gpg: depth: 0  valid:   1  signed:   0  trust: 0-, 0q, 0n, 0m, 0f, 1u
+gpg: next trustdb check due at 2029-01-20
+```
+
+查看加密后的文件内容
+
+```shell
+PS E:\tmp\test04> cat test01.txt.gpg
+```
+
+内容完全混乱了，无法识别：
+
+```shell
+�^+7I␦^�+�@�lQr���&�4   �{�JQ�,%_��h9��
+0�b�� �D������_o��-�a�s�b��мu�O1�h����u�p��[    �ZM�S�upn����j}ۑ�ŀ����G�����Ŷ��m�*V;U{gXFU%�R����[�*��s�0�{X�㏌�0FZ"T
+```
+
+
+### 解密 {#解密}
+
+```shell
+PS E:\tmp\test04> gpg --output test.de.txt --decrypt test01.txt.gpg
+```
+
+回车，如果提示要输入密码就输入之前输入的密码，之后会显示如下的消息：
+
+```shell
+gpg: encrypted with cv25519 key, ID 2B37491A5EF82BAB, created 2026-01-21
+      "Donald Lo <donald.sd.lo@gmail.com>"
+```
+
+查看解密之后的文件：
+
+```shell
+PS E:\tmp\test04> cat test.de.txt
+```
+
+```shell
+01
+02
+03
+04
 ```
 
 
