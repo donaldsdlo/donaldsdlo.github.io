@@ -11,6 +11,7 @@
 #+HUGO_DRAFT: false
 
 * 环境变量
+
 ** 设置重要的环境变量
 
 #+begin_src shell
@@ -73,6 +74,7 @@ scoop bucket list
 #+end_src
 
 你可能可以看到如下的结果：
+
 #+begin_src shell
 Name          Source                                             Updated            Manifests
 ----          ------                                             -------            ---------
@@ -140,6 +142,7 @@ scoop config aria2-enabled true
     "scoop_branch":  "master"
 }
 #+end_src
+
 添加 "aria2-options": "--async-dns=false" 配置后：
 
 #+begin_src json :exports code
@@ -154,6 +157,7 @@ scoop config aria2-enabled true
 #+end_src
 
 还有如下的配置项：
+
 #+begin_src shell
 #在scoop中，开启aria2加速下载（其实，默认是开启的）
 scoop config aria2-enabled $true   #直接使用true，效果也一样。
@@ -200,6 +204,7 @@ emax64            20200930                 scoop-misc runemacs.exe | emacs.exe |
 #+end_src
 
 安装软件：
+
 #+begin_src shell
 scoop install emacs-kl
 #+end_src
@@ -223,6 +228,7 @@ scoop install snipaste
 #+end_src
 
 ** 视频播放软件
+
 #+begin_src shell
 scoop install potplayer
 #+end_src
@@ -249,14 +255,19 @@ scoop status
 Scoop is up to date.
 Everything is ok!
 #+end_src
+
 如果返回的是上面的消息，则所有安装的软件都不需要更新。
 
 ** 软件更新
+
 更新指定的软件
+
 #+begin_src shell
 scoop update deno
 #+end_src
+
 更新所有软件：
+
 #+begin_src shell
 scoop update -a
 #+end_src
@@ -277,10 +288,13 @@ Unlinking D:\Scoop\apps\peazip\current
 #+end_src
 
 ** 删除软件的旧版本
+
 #+begin_src shell
 scoop cleanup *
 #+end_src
+
 会显示删除的所有的版本信息：
+
 #+begin_src shell
 Removing codex: 0.80.0 0.81.0
 Removing deno: 2.6.4
@@ -298,6 +312,7 @@ Everything is shiny now!
 * 字体
 
 ** 查找字体
+
 #+begin_src shell
 scoop search maple
 #+end_src
@@ -316,9 +331,11 @@ Maple-Mono          7.9     nerd-fonts
 #+end_src
 
 ** 下载字体
+
 #+begin_src shell
 scoop download Maple-Mono-NF-CN
 #+end_src
+
 #+begin_src shell
 INFO  Downloading 'Maple-Mono-NF-CN' [64bit] from nerd-fonts bucket
 Starting download with aria2 ...
@@ -343,18 +360,27 @@ Checking hash of MapleMono-NF-CN.zip ... ok.
 :PROPERTIES:
 :ID:       829783cb-8a33-40b9-8298-17ab07ccbe04
 :END:
+
 下载的文件保存在之前设置的环境变量 =SCOOP= 下的 =cache= 目录下，且是一个压缩包：
+
 [[file:../../static/images/dev-envs.org/2026-01-16_14-43-09_screenshot.png]]
+
 需要手工解压缩：
+
 [[file:../../static/images/dev-envs.org/2026-01-16_14-43-55_screenshot.png]]
+
 选中所有的字体文件（以 ttf 结尾的文件），然后鼠标右键菜单中选择 *为所有用户安装* :
+
 [[file:../../static/images/dev-envs.org/2026-01-16_14-49-30_screenshot.png]]
 
 ** 常用的字体
+
 *** 落霞孤鹜中文字体
+
 #+begin_src shell
 scoop search lxgw
 #+end_src
+
 #+begin_src shell
 Results from local buckets...
 
@@ -374,11 +400,15 @@ LXGWWenKaiScreen  1.521   nerd-fonts
 LXGWWenKaiScreenR 1.315   nerd-fonts
 LXGWWenKaiTC      1.521   nerd-fonts
 #+end_src
+
 可以选用其中的 LXGWWenKaiMonoGB 字体
+
 *** 思源中文字体
+
 #+begin_src shell
 scoop search source
 #+end_src
+
 #+begin_src shell
 Results from local buckets...
 
@@ -420,11 +450,15 @@ SourceCodePro-NF-Propo        3.4.0        nerd-fonts
 SourceCodePro-NF              3.4.0        nerd-fonts
 sourcedepot                   4.9.29711.24 scoop-misc
 #+end_src
+
 source 为 nerd-fonts 的都是字体，我们可以安装 SC 结尾的简体中文字体。
+
 *** Iosevka 英文字体
+
 #+begin_src shell
 scoop search iosevka
 #+end_src
+
 #+begin_src shell
 Results from local buckets...
 
@@ -440,10 +474,13 @@ IosevkaTermSlab-NF-Mono  3.4.0   nerd-fonts
 IosevkaTermSlab-NF-Propo 3.4.0   nerd-fonts
 IosevkaTermSlab-NF       3.4.0   nerd-fonts
 #+end_src
+
 *** Fira Code
+
 #+begin_src shell
 scoop search firacode
 #+end_src
+
 #+begin_src shell
 Results from local buckets...
 
@@ -478,30 +515,43 @@ winget search --id Microsoft.PowerShell
 PowerShell         Microsoft.PowerShell         7.5.4.0 winget
 PowerShell Preview Microsoft.PowerShell.Preview 7.6.0.6 winget
 #+end_src
+
 ** 安装 Powershell
+
 #+begin_src shell
 winget install --id Microsoft.PowerShell --source winget
 #+end_src
+
 ** 设置 Windows Terminal 默认打开的是新版本的 Powershell
 :PROPERTIES:
 :ID:       02478d7c-ebaa-46c2-80a3-777648f6cc68
 :END:
+
 打开 Windows Termial
+
 [[file:../../static/images/dev-envs.org/2026-01-20_09-02-04_screenshot.png]]
+
 通过 Ctrl+, 快捷键打开设置界面
+
 [[file:../../static/images/dev-envs.org/2026-01-20_09-02-58_screenshot.png]]
+
 ** 查看 Powershell 的配置文件
+
 #+begin_src shell
 echo $PROFILE
 #+end_src
+
 #+begin_src shell
 D:\Documents\PowerShell\Microsoft.PowerShell_profile.ps1
 #+end_src
+
 需要添加的配置和一些函数都可以写在这个文件中。
 
 * Python 环境安装和配置
 
-** UV 介绍
+** UV
+
+*** UV 介绍
 
 UV 是一个由 Astral 公司用 Rust 开发的高性能 Python 包管理工具，旨在提供比传统 pip 更快的包安装和依赖管理体验。
 
@@ -511,11 +561,11 @@ An extremely fast Python package and project manager, written in Rust.
 
 Python 生态系统中的包管理一直是开发者关注的焦点。从最初的 pip 到后来的 Poetry、PDM 等工具，每一次演进都试图解决前代工具的痛点。而今天我们要介绍的 UV，作为由 Ruff 团队（Astral）开发的下一代 Python 包管理工具，正以其惊人的速度和创新的设计理念，重新定义 Python 包管理的标准。
 
-*** 什么是UV？
+**** 什么是UV？
 
 UV 是一个极速的 Python 包管理器和解析器，由 Rust 编写，专注于提供卓越的性能和用户体验。其名称 "UV" 源自 "μv"（微伏），暗示着其轻量级和高效的特性。作为 pip 的直接替代品，UV 提供了兼容的命令行接口，同时在速度上实现了数量级的提升。
 
-*** UV的核心优势
+**** UV的核心优势
 
 与传统的 Python 包管理工具相比，UV 具有以下显著优势：
 
@@ -533,11 +583,11 @@ UV 是一个极速的 Python 包管理器和解析器，由 Rust 编写，专注
 
 随着Python项目规模和复杂度的增长，传统工具在性能和用户体验方面的局限性日益凸显。UV 的出现，为开发者提供了一个更快、更可靠的选择，特别适合大型项目和CI/CD环境中的应用。
 
-*** UV和其他工具对比
+**** UV和其他工具对比
 
 在Python生态系统中，包管理和环境管理工具众多，主要包括pip+virtualenv、Poetry、Conda等。在决定是否采用UV之前，了解它与现有工具的区别和优势非常重要。
 
-**** UV vs. pip+virtualenv
+***** UV vs. pip+virtualenv
 
 pip和virtualenv是Python包管理和虚拟环境创建的传统工具组合。UV相比它们具有以下优势：
 
@@ -547,7 +597,7 @@ pip和virtualenv是Python包管理和虚拟环境创建的传统工具组合。U
 - *错误处理* ：UV提供更清晰的错误信息和更好的依赖冲突解决方案
 - *可复现性* ：UV的锁文件方法确保了跨系统环境的一致性，这是基本requirements.txt文件无法保证的
 
-**** UV vs. Conda
+***** UV vs. Conda
 
 Conda是一个完整的包管理解决方案，特别适合科学计算环境。UV与Conda相比：
 
@@ -556,7 +606,7 @@ Conda是一个完整的包管理解决方案，特别适合科学计算环境。
 - *集成性* ：UV与现有Python打包标准和工具无缝集成，更容易与更广泛的Python生态系统协作
 - *非Python包* ：Conda可以管理非Python包和系统级依赖，而UV专注于Python包
 
-**** UV vs. Poetry
+***** UV vs. Poetry
 
 Poetry是另一个现代Python项目管理工具，与UV有许多相似之处：
 
@@ -566,7 +616,7 @@ Poetry是另一个现代Python项目管理工具，与UV有许多相似之处：
 
 然而，UV的Rust实现使其在速度和资源使用方面具有显著优势。此外，UV与现有Python包管理工具的兼容性意味着它可以与其他工具（如pip）一起工作，提供了Poetry更固执己见的方法有时缺乏的灵活性。
 
-**** 功能对比表
+***** 功能对比表
 
 | 功能特性       | UV                    | pip+virtualenv           | Conda        | Poetry           |
 |----------------+-----------------------+--------------------------+--------------+------------------|
@@ -587,13 +637,14 @@ Poetry是另一个现代Python项目管理工具，与UV有许多相似之处：
 
 总的来说，UV结合了现有工具的最佳特性，同时通过其Rust实现提供了显著的性能优势。对于寻求更快、更可靠的Python包管理解决方案的开发者来说，UV是一个极具吸引力的选择，特别是对于大型项目或CI/CD环境。
 
-** 设置 UV 相关的环境变量
+*** 设置 UV 相关的环境变量
+
 #+begin_src shell
 setx UV_PYTHON_INSTALL_DIR D:\uv\python
 setx UV_TOOL_DIR D:\uv\tools
 #+end_src
 
-** 使用国内镜像
+*** 使用国内镜像
 
 在文件 ~/.config/uv/uv.toml 中添加如下内容：
 
@@ -603,19 +654,25 @@ url = "https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple/"
 default = true
 #+end_src
 
-** 采用 UV 来管理 python 版本和项目虚拟环境，安装 UV 软件：
+*** 采用 UV 来管理 python 版本和项目虚拟环境，安装 UV 软件：
+
 #+begin_src shell
 scoop install uv
 #+end_src
+
 安装完成后，可以通过以下命令验证安装是否成功：
+
 #+begin_src shell
 uv --version
 #+end_src
+
 安装正确会得到版本号：
+
 #+begin_src shell
 uv 0.9.26 (ee4f00362 2026-01-15)
 #+end_src
-** 创建系统默认的 Python 环境
+
+*** 创建系统默认的 Python 环境
 
 在 D:\python-envs 目录中：
 
@@ -628,21 +685,25 @@ cd default-python
 #+end_src
 
 安装包：
+
 #+begin_src shell
 uv add requests
 #+end_src
 
 指定版本约束
+
 #+begin_src shell
 uv add 'requests==2.31.0'
 #+end_src
 
 添加 Git 依赖:
+
 #+begin_src shell
 uv add git+https://github.com/psf/requests
 #+end_src
 
 将指定包更新到最新的兼容版本，同时保持锁文件中其他依赖不变:
+
 #+begin_src shell
 uv lock --upgrade-package requests
 #+end_src
@@ -659,7 +720,8 @@ uv remove requests
 
 将 default-python\.venv\Scripts 的完整目录添加到 PATH 环境变量的最前面，这样就可以使用这个环境下的 python 作为系统的默认 python 了。
 
-** 要为 uv 命令启用 Powershell 自动补全，在 Powershell 中运行以下对应命令：
+*** 要为 uv 命令启用 Powershell 自动补全，在 Powershell 中运行以下对应命令：
+
 #+begin_src shell
 if (!(Test-Path -Path $PROFILE)) {
   New-Item -ItemType File -Path $PROFILE -Force
@@ -667,11 +729,14 @@ if (!(Test-Path -Path $PROFILE)) {
 Add-Content -Path $PROFILE -Value '(& uv generate-shell-completion powershell) | Out-String | Invoke-Expression'
 #+end_src
 
-** 使用 uv 管理多版本 Python
-*** 显示可安装以及已经安装的 Python 版本：
+*** 使用 uv 管理多版本 Python
+
+**** 显示可安装以及已经安装的 Python 版本：
+
 #+begin_src shell
 uv python list
 #+end_src
+
 #+begin_src shell
 cpython-3.15.0a5-windows-x86_64-none                 <download available>
 cpython-3.15.0a5+freethreaded-windows-x86_64-none    <download available>
@@ -698,35 +763,49 @@ graalpy-3.12.0-windows-x86_64-none                   <download available>
 graalpy-3.11.0-windows-x86_64-none                   <download available>
 graalpy-3.10.0-windows-x86_64-none                   <download available>
 #+end_src
-*** 安装指定版本的 Python
+
+**** 安装指定版本的 Python
+
 #+begin_src shell
 uv python install 3.9
 #+end_src
+
 #+begin_src shell
 cpython-3.9.25-windows-x86_64-none (download) ------------------------------ 1.73 MiB/21.67 MiB
 #+end_src
+
 出现如下的消息时表示已经安装完成：
+
 #+begin_src shell
 Installed Python 3.9.25 in 2m 31s
  + cpython-3.9.25-windows-x86_64-none (python3.9.exe)
 #+end_src
+
 也可以使用完整的名称来安装 Python:
+
 #+begin_src shell
 uv python install pypy-3.8.16-windows-x86_64-none
 #+end_src
+
 #+begin_src shell
 pypy-3.8.16-windows-x86_64-none (download) ------------------------------ 1.58 MiB/29.98 MiB
 #+end_src
+
 出现如下的消息时表示已经安装完成：
+
 #+begin_src shell
 Installed Python 3.8.16 in 13m 42s
  + pypy-3.8.16-windows-x86_64-none (python3.8.exe)
 #+end_src
-*** 已经安装的版本，在后续使用到此版本的时候，UV 不会重复下载。
-*** 查看安装的结果
+
+**** 已经安装的版本，在后续使用到此版本的时候，UV 不会重复下载。
+
+**** 查看安装的结果
+
 #+begin_src shell
 uv python list
 #+end_src
+
 #+begin_src shell
 cpython-3.15.0a5-windows-x86_64-none                 <download available>
 cpython-3.15.0a5+freethreaded-windows-x86_64-none    <download available>
@@ -756,43 +835,59 @@ graalpy-3.12.0-windows-x86_64-none                   <download available>
 graalpy-3.11.0-windows-x86_64-none                   <download available>
 graalpy-3.10.0-windows-x86_64-none                   <download available>
 #+end_src
-*** Python 安装的目录
+
+**** Python 安装的目录
+
 #+begin_src shell
 uv python dir
 #+end_src
+
 #+begin_src shell
 D:\uv\python
 #+end_src
-*** 移除已安装的版本
+
+**** 移除已安装的版本
+
 #+begin_src shell
 uv python uninstall 3.9
 #+end_src
+
 #+begin_src shell
 Searching for Python versions matching: Python 3.9
 Uninstalled Python 3.9.25 in 483ms
  - cpython-3.9.25-windows-x86_64-none (python3.9.exe)
 #+end_src
+
 也可以通过完整的 Python 版本名称来移除：
+
 #+begin_src shell
 uv python uninstall pypy-3.8.16-windows-x86_64-none
 #+end_src
+
 #+begin_src shell
 Searching for Python versions matching: pypy-3.8.16-windows-x86_64-none
 Uninstalled Python 3.8.16 in 431ms
  - pypy-3.8.16-windows-x86_64-none (python3.8.exe)
 #+end_src
-** 管理项目
-*** 创建一个项目
+
+*** 管理项目
+
+**** 创建一个项目
+
 #+begin_src shell
 PS E:\tmp> uv init test04 --python 3.14
 #+end_src
+
 #+begin_src shell
 Initialized project `test04` at `E:\tmp\test04`
 #+end_src
+
 执行完这个命令后，会创建 =test04= 目录并在其中创建如下的文件：
+
 #+begin_src shell
 PS E:\tmp\test04> ls
 #+end_src
+
 #+begin_src shell
     Directory: E:\tmp\test04
 
@@ -804,7 +899,9 @@ Mode                 LastWriteTime         Length Name
 -a---           2026/1/20    15:46            152 pyproject.toml
 -a---           2026/1/20    15:46              0 README.md
 #+end_src
+
 其中的文件：
+
 - gitignore：uv 会帮你把项目建立成 git 储存库，并且帮你写好了 .gitignore 文件，避免 Python 执行过程产生的暂存文件等也提交到储存库内
     #+begin_src shell
         # Python-generated files
@@ -833,11 +930,15 @@ Mode                 LastWriteTime         Length Name
         ]
     #+end_src
 - README. ME：空的 markdown 文件，预留让你撰写项目说明用。
-*** 添加包
+
+**** 添加包
+
 可以在其中安装相关的包:
+
 #+begin_src shell
 PS E:\tmp\test04> uv add openpyxl
 #+end_src
+
 #+begin_src shell
 Using CPython 3.14.0
 Creating virtual environment at: .venv
@@ -846,11 +947,15 @@ Installed 2 packages in 498ms
  + et-xmlfile==2.0.0
  + openpyxl==3.1.5
 #+end_src
+
 添加只在开发时使用的包
+
 #+begin_src shell
 uv add --dev pytest black
 #+end_src
-*** 编写代码
+
+**** 编写代码
+
 修改 main.py 中的代码如下：
 #+begin_src python
 
@@ -891,12 +996,15 @@ def read_excel_columns():
 if __name__ == "__main__":
     read_excel_columns()
 #+end_src
-*** 执行代码
+
+**** 执行代码
+
 你需要修改实际的 Excel 文件名称，并在对应的文件中输入一些数据才能执行程序。
 
 #+begin_src shell
 PS E:\tmp\test04> uv run .\main.py
 #+end_src
+
 程序的输出如下（输出的内容根据你的文件中的内容会不太一样）：
 #+begin_src shell
 读取的A、B列数据（最多10行）：
@@ -912,10 +1020,13 @@ PS E:\tmp\test04> uv run .\main.py
 第 9行: A=200, B=8900000681
 第10行: A=200, B=8900000682
 #+end_src
-*** 构建项目分发包
+
+**** 构建项目分发包
+
 #+begin_src shell
 PS E:\tmp\test04> uv build
 #+end_src
+
 #+begin_src shell
 Building source distribution...
 running egg_info
@@ -990,10 +1101,13 @@ removing build\bdist.win-amd64\wheel
 Successfully built dist\test04-0.1.0.tar.gz
 Successfully built dist\test04-0.1.0-py3-none-any.whl
 #+end_src
-*** 查看依赖树
+
+**** 查看依赖树
+
 #+begin_src shell
 PS E:\tmp\test04> uv tree
 #+end_src
+
 #+begin_src shell
 Resolved 15 packages in 1ms
 test04 v0.1.0
@@ -1014,19 +1128,24 @@ test04 v0.1.0
     ├── pluggy v1.6.0
     └── pygments v2.19.2
 #+end_src
-** 安装常用工具
+
+*** 安装常用工具
+
 安装工具：
 #+begin_src shell
 uv tool install aider-chat ruff ty basedpyright black
 #+end_src
+
 安装工具的时候指定 Python 版本：
 #+begin_src shell
 uv tool install aider-chat --python 3.11
 #+end_src
+
 查看已经安装的工具：
 #+begin_src shell
 uv tool list
 #+end_src
+
 #+begin_src shell
 aider-chat v0.86.1
 - aider
@@ -1103,18 +1222,99 @@ yamllint v1.38.0
 #+end_src
 
 升级特定工具
+
 #+begin_src shell
 uv tool upgrade ruff
 #+end_src
+
 升级所有工具
 #+begin_src shell
 uv tool upgrade --all
 #+end_src
+
+** Pycharm
+
+*** 安装 pycharm
+
+查找有哪些版本的 pycharm:
+#+begin_src shell
+scoop search pycharm
+#+end_src
+
+#+begin_src shell
+'extras' bucket:
+    pycharm (2025.3.1.1-253.29346.308)
+    pycharm-professional (2025.3.1.1-253.29346.308)
+
+'versions' bucket:
+    pycharm-eap (2025.2-252.23892.194)
+    pycharm-latest (2025.3-253.30387.25)
+    pycharm-professional-eap (2025.3-253.28294.166)
+    pycharm-professional-rc (2025.3.2-253.30387.25)
+    pycharm-rc (2025.2.3-252.26830.27)
+#+end_src
+
+安装社区版本的 pycharm:
+#+begin_src shell
+scoop install pycharm
+#+end_src
+
+*** 设置 pycharm 创建新项目的默认目录
+:PROPERTIES:
+:ID:       d375e3d5-9705-423c-a651-16c9d1e7e19b
+:END:
+
+打开配置界面：
+
+[[file:../../static/images/dev-envs.org/2026-01-22_10-08-54_screenshot.png]]
+
+找到 *默认项目目录* 然后选择需要保存新的项目目录，然后点确定并重启 IDE 就可以了。
+
+[[file:../../static/images/dev-envs.org/2026-01-22_10-09-42_screenshot.png]]
+
+*** 创建新项目
+:PROPERTIES:
+:ID:       a93a4221-5215-4d17-9453-d908e347fd9e
+:END:
+
+[[file:../../static/images/dev-envs.org/2026-01-22_10-11-22_screenshot.png]]
+
+[[file:../../static/images/dev-envs.org/2026-01-22_10-12-45_screenshot.png]]
+
+[[file:../../static/images/dev-envs.org/2026-01-22_10-13-37_screenshot.png]]
+
+#+begin_src shell
+PS E:\codes\python\test04> ls
+#+end_src
+#+begin_src shell
+    Directory: E:\codes\python\test04
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d----           2026/1/22    10:13                .idea
+d----           2026/1/22    10:12                .venv
+-a---           2026/1/22    10:13            502 main.py
+-a---           2026/1/22    10:12            131 pyproject.toml
+#+end_src
+
+也可以在 pycharm 中通过 Alt+F12 打开终端：
+
+[[file:../../static/images/dev-envs.org/2026-01-22_10-15-52_screenshot.png]]
+
+然后就可以执行命令了：
+
+比如安装 openxyxl 包：
+
+[[file:../../static/images/dev-envs.org/2026-01-22_10-16-31_screenshot.png]]
+
 * GPG/文件加密
+
 ** 安装
+
 #+begin_src shell
 scoop install gpg
 #+end_src
+
 验证是否安装成功：
 #+begin_src shell
 gpg --version
@@ -1135,13 +1335,16 @@ Cipher: IDEA, 3DES, CAST5, BLOWFISH, AES, AES192, AES256, TWOFISH,
 Hash: SHA1, RIPEMD160, SHA256, SHA384, SHA512, SHA224
 Compression: Uncompressed, ZIP, ZLIB, BZIP2
 #+end_src
+
 ** 生成密钥
 :PROPERTIES:
 :ID:       0e4688f8-96ab-41e1-b008-b8d2d1bf1a64
 :END:
+
 #+begin_src shell
 gpg --gen-key
 #+end_src
+
 输入回车，系统会给出提示：
 #+begin_src shell
 gpg (GnuPG) 2.5.16; Copyright (C) 2025 g10 Code GmbH
@@ -1155,6 +1358,7 @@ GnuPG needs to construct a user ID to identify your key.
 
 Real name:
 #+end_src
+
 一次输入名字以及邮箱：
 #+begin_src shell
 Real name: Donald Lo
@@ -1164,23 +1368,35 @@ You selected this USER-ID:
 
 Change (N)ame, (E)mail, or (O)kay/(Q)uit?
 #+end_src
+
 确认名字和邮箱后输入 o 后回车，会弹出一个输入密码保护 key 的对话框：
+
 [[file:../../static/images/dev-envs.org/2026-01-21_15-37-56_screenshot.png]]
+
 输入密码后回车，由于我输入的密码过于简单，弹出如下的对话框：
 
 [[file:../../static/images/dev-envs.org/2026-01-21_15-38-17_screenshot.png]]
+
 点击 Take this one anyway 按钮，会让你确认密码：
+
 [[file:../../static/images/dev-envs.org/2026-01-21_15-38-37_screenshot.png]]
+
 再此输入密码后点击 OK 就会生成 key。
+
 [[file:../../static/images/dev-envs.org/2026-01-21_15-41-04_screenshot.png]]
+
 如果要更多选项，可以使用如下命令生成 key：
+
 #+begin_src shell
 gpg --full-generate-key
 #+end_src
+
 ** 生成一个文本文件
+
 #+begin_src shell
 PS E:\tmp\test04> cat .\test01.txt
 #+end_src
+
 其中的内容如下：
 #+begin_src shell
 01
@@ -1188,44 +1404,55 @@ PS E:\tmp\test04> cat .\test01.txt
 03
 04
 #+end_src
+
 ** 加密文件
+
 #+begin_src shell
 PS E:\tmp\test04> gpg --recipient "Donald Lo <donald.sd.lo@gmail.com>" --output test01.txt.gpg --encrypt .\test01.txt
 #+end_src
+
 #+begin_src shell
 gpg: checking the trustdb
 gpg: marginals needed: 3  completes needed: 1  trust model: pgp
 gpg: depth: 0  valid:   1  signed:   0  trust: 0-, 0q, 0n, 0m, 0f, 1u
 gpg: next trustdb check due at 2029-01-20
 #+end_src
+
 查看加密后的文件内容
 #+begin_src shell
 PS E:\tmp\test04> cat test01.txt.gpg
 #+end_src
+
 内容完全混乱了，无法识别：
 #+begin_src shell
 �^+7I␦^�+�@�lQr���&�4   �{�JQ�,%_��h9��
 0�b�� �D������_o��-�a�s�b��мu�O1�h����u�p��[    �ZM�S�upn����j}ۑ�ŀ����G�����Ŷ��m�*V;U{gXFU%�R����[�*��s�0�{X�㏌�0FZ"T
 #+end_src
+
 ** 解密
+
 #+begin_src shell
 PS E:\tmp\test04> gpg --output test.de.txt --decrypt test01.txt.gpg
 #+end_src
+
 回车，如果提示要输入密码就输入之前输入的密码，之后会显示如下的消息：
 #+begin_src shell
 gpg: encrypted with cv25519 key, ID 2B37491A5EF82BAB, created 2026-01-21
       "Donald Lo <donald.sd.lo@gmail.com>"
 #+end_src
+
 查看解密之后的文件：
 #+begin_src shell
 PS E:\tmp\test04> cat test.de.txt
 #+end_src
+
 #+begin_src shell
 01
 02
 03
 04
 #+end_src
+
 * 测试数学公式
 
 这是一个行内的数学公式： $n^2 = 10$

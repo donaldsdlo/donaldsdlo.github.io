@@ -2,7 +2,7 @@
 title: "windows 开发环境配置"
 author: ["Donald Lo"]
 date: 2026-01-15
-lastmod: 2026-01-21T16:18:32+08:00
+lastmod: 2026-01-22T10:34:05+08:00
 tags: ["windows", "dev"]
 draft: false
 ---
@@ -51,34 +51,39 @@ draft: false
     - [设置 Windows Terminal 默认打开的是新版本的 Powershell](#设置-windows-terminal-默认打开的是新版本的-powershell)
     - [查看 Powershell 的配置文件](#查看-powershell-的配置文件)
 - [Python 环境安装和配置](#python-环境安装和配置)
-    - [UV 介绍](#uv-介绍)
-        - [什么是UV？](#什么是uv)
-        - [UV的核心优势](#uv的核心优势)
-        - [UV和其他工具对比](#uv和其他工具对比)
-            - [UV vs. pip+virtualenv](#uv-vs-dot-pip-plus-virtualenv)
-            - [UV vs. Conda](#uv-vs-dot-conda)
-            - [UV vs. Poetry](#uv-vs-dot-poetry)
-            - [功能对比表](#功能对比表)
-    - [设置 UV 相关的环境变量](#设置-uv-相关的环境变量)
-    - [使用国内镜像](#使用国内镜像)
-    - [采用 UV 来管理 python 版本和项目虚拟环境，安装 UV 软件：](#采用-uv-来管理-python-版本和项目虚拟环境-安装-uv-软件)
-    - [创建系统默认的 Python 环境](#创建系统默认的-python-环境)
-    - [要为 uv 命令启用 Powershell 自动补全，在 Powershell 中运行以下对应命令：](#要为-uv-命令启用-powershell-自动补全-在-powershell-中运行以下对应命令)
-    - [使用 uv 管理多版本 Python](#使用-uv-管理多版本-python)
-        - [显示可安装以及已经安装的 Python 版本：](#显示可安装以及已经安装的-python-版本)
-        - [安装指定版本的 Python](#安装指定版本的-python)
-        - [已经安装的版本，在后续使用到此版本的时候，UV 不会重复下载。](#已经安装的版本-在后续使用到此版本的时候-uv-不会重复下载)
-        - [查看安装的结果](#查看安装的结果)
-        - [Python 安装的目录](#python-安装的目录)
-        - [移除已安装的版本](#移除已安装的版本)
-    - [管理项目](#管理项目)
-        - [创建一个项目](#创建一个项目)
-        - [添加包](#添加包)
-        - [编写代码](#编写代码)
-        - [执行代码](#执行代码)
-        - [构建项目分发包](#构建项目分发包)
-        - [查看依赖树](#查看依赖树)
-    - [安装常用工具](#安装常用工具)
+    - [UV](#uv)
+        - [UV 介绍](#uv-介绍)
+            - [什么是UV？](#什么是uv)
+            - [UV的核心优势](#uv的核心优势)
+            - [UV和其他工具对比](#uv和其他工具对比)
+                - [UV vs. pip+virtualenv](#uv-vs-dot-pip-plus-virtualenv)
+                - [UV vs. Conda](#uv-vs-dot-conda)
+                - [UV vs. Poetry](#uv-vs-dot-poetry)
+                - [功能对比表](#功能对比表)
+        - [设置 UV 相关的环境变量](#设置-uv-相关的环境变量)
+        - [使用国内镜像](#使用国内镜像)
+        - [采用 UV 来管理 python 版本和项目虚拟环境，安装 UV 软件：](#采用-uv-来管理-python-版本和项目虚拟环境-安装-uv-软件)
+        - [创建系统默认的 Python 环境](#创建系统默认的-python-环境)
+        - [要为 uv 命令启用 Powershell 自动补全，在 Powershell 中运行以下对应命令：](#要为-uv-命令启用-powershell-自动补全-在-powershell-中运行以下对应命令)
+        - [使用 uv 管理多版本 Python](#使用-uv-管理多版本-python)
+            - [显示可安装以及已经安装的 Python 版本：](#显示可安装以及已经安装的-python-版本)
+            - [安装指定版本的 Python](#安装指定版本的-python)
+            - [已经安装的版本，在后续使用到此版本的时候，UV 不会重复下载。](#已经安装的版本-在后续使用到此版本的时候-uv-不会重复下载)
+            - [查看安装的结果](#查看安装的结果)
+            - [Python 安装的目录](#python-安装的目录)
+            - [移除已安装的版本](#移除已安装的版本)
+        - [管理项目](#管理项目)
+            - [创建一个项目](#创建一个项目)
+            - [添加包](#添加包)
+            - [编写代码](#编写代码)
+            - [执行代码](#执行代码)
+            - [构建项目分发包](#构建项目分发包)
+            - [查看依赖树](#查看依赖树)
+        - [安装常用工具](#安装常用工具)
+    - [Pycharm](#pycharm)
+        - [安装 pycharm](#安装-pycharm)
+        - [设置 pycharm 创建新项目的默认目录](#设置-pycharm-创建新项目的默认目录)
+        - [创建新项目](#创建新项目)
 - [GPG/文件加密](#gpg-文件加密)
     - [安装](#安装)
     - [生成密钥](#生成密钥)
@@ -472,11 +477,16 @@ Checking hash of MapleMono-NF-CN.zip ... ok.
 ### 安装字体 {#安装字体}
 
 下载的文件保存在之前设置的环境变量 `SCOOP` 下的 `cache` 目录下，且是一个压缩包：
-![](/images/dev-envs.org/2026-01-16_14-43-09_screenshot.png)
+
+{{< figure src="/images/dev-envs.org/2026-01-16_14-43-09_screenshot.png" >}}
+
 需要手工解压缩：
-![](/images/dev-envs.org/2026-01-16_14-43-55_screenshot.png)
+
+{{< figure src="/images/dev-envs.org/2026-01-16_14-43-55_screenshot.png" >}}
+
 选中所有的字体文件（以 ttf 结尾的文件），然后鼠标右键菜单中选择 **为所有用户安装** :
-![](/images/dev-envs.org/2026-01-16_14-49-30_screenshot.png)
+
+{{< figure src="/images/dev-envs.org/2026-01-16_14-49-30_screenshot.png" >}}
 
 
 ### 常用的字体 {#常用的字体}
@@ -642,9 +652,12 @@ winget install --id Microsoft.PowerShell --source winget
 ### 设置 Windows Terminal 默认打开的是新版本的 Powershell {#设置-windows-terminal-默认打开的是新版本的-powershell}
 
 打开 Windows Termial
-![](/images/dev-envs.org/2026-01-20_09-02-04_screenshot.png)
+
+{{< figure src="/images/dev-envs.org/2026-01-20_09-02-04_screenshot.png" >}}
+
 通过 Ctrl+, 快捷键打开设置界面
-![](/images/dev-envs.org/2026-01-20_09-02-58_screenshot.png)
+
+{{< figure src="/images/dev-envs.org/2026-01-20_09-02-58_screenshot.png" >}}
 
 
 ### 查看 Powershell 的配置文件 {#查看-powershell-的配置文件}
@@ -663,7 +676,10 @@ D:\Documents\PowerShell\Microsoft.PowerShell_profile.ps1
 ## Python 环境安装和配置 {#python-环境安装和配置}
 
 
-### UV 介绍 {#uv-介绍}
+### UV {#uv}
+
+
+#### UV 介绍 {#uv-介绍}
 
 UV 是一个由 Astral 公司用 Rust 开发的高性能 Python 包管理工具，旨在提供比传统 pip 更快的包安装和依赖管理体验。
 
@@ -672,12 +688,12 @@ UV 是一个由 Astral 公司用 Rust 开发的高性能 Python 包管理工具�
 Python 生态系统中的包管理一直是开发者关注的焦点。从最初的 pip 到后来的 Poetry、PDM 等工具，每一次演进都试图解决前代工具的痛点。而今天我们要介绍的 UV，作为由 Ruff 团队（Astral）开发的下一代 Python 包管理工具，正以其惊人的速度和创新的设计理念，重新定义 Python 包管理的标准。
 
 
-#### 什么是UV？ {#什么是uv}
+##### 什么是UV？ {#什么是uv}
 
 UV 是一个极速的 Python 包管理器和解析器，由 Rust 编写，专注于提供卓越的性能和用户体验。其名称 "UV" 源自 "μv"（微伏），暗示着其轻量级和高效的特性。作为 pip 的直接替代品，UV 提供了兼容的命令行接口，同时在速度上实现了数量级的提升。
 
 
-#### UV的核心优势 {#uv的核心优势}
+##### UV的核心优势 {#uv的核心优势}
 
 与传统的 Python 包管理工具相比，UV 具有以下显著优势：
 
@@ -696,12 +712,12 @@ UV 是一个极速的 Python 包管理器和解析器，由 Rust 编写，专注
 随着Python项目规模和复杂度的增长，传统工具在性能和用户体验方面的局限性日益凸显。UV 的出现，为开发者提供了一个更快、更可靠的选择，特别适合大型项目和CI/CD环境中的应用。
 
 
-#### UV和其他工具对比 {#uv和其他工具对比}
+##### UV和其他工具对比 {#uv和其他工具对比}
 
 在Python生态系统中，包管理和环境管理工具众多，主要包括pip+virtualenv、Poetry、Conda等。在决定是否采用UV之前，了解它与现有工具的区别和优势非常重要。
 
 
-##### UV vs. pip+virtualenv {#uv-vs-dot-pip-plus-virtualenv}
+###### UV vs. pip+virtualenv {#uv-vs-dot-pip-plus-virtualenv}
 
 pip和virtualenv是Python包管理和虚拟环境创建的传统工具组合。UV相比它们具有以下优势：
 
@@ -712,7 +728,7 @@ pip和virtualenv是Python包管理和虚拟环境创建的传统工具组合。U
 -   **可复现性** ：UV的锁文件方法确保了跨系统环境的一致性，这是基本requirements.txt文件无法保证的
 
 
-##### UV vs. Conda {#uv-vs-dot-conda}
+###### UV vs. Conda {#uv-vs-dot-conda}
 
 Conda是一个完整的包管理解决方案，特别适合科学计算环境。UV与Conda相比：
 
@@ -722,7 +738,7 @@ Conda是一个完整的包管理解决方案，特别适合科学计算环境。
 -   **非Python包** ：Conda可以管理非Python包和系统级依赖，而UV专注于Python包
 
 
-##### UV vs. Poetry {#uv-vs-dot-poetry}
+###### UV vs. Poetry {#uv-vs-dot-poetry}
 
 Poetry是另一个现代Python项目管理工具，与UV有许多相似之处：
 
@@ -733,7 +749,7 @@ Poetry是另一个现代Python项目管理工具，与UV有许多相似之处：
 然而，UV的Rust实现使其在速度和资源使用方面具有显著优势。此外，UV与现有Python包管理工具的兼容性意味着它可以与其他工具（如pip）一起工作，提供了Poetry更固执己见的方法有时缺乏的灵活性。
 
 
-##### 功能对比表 {#功能对比表}
+###### 功能对比表 {#功能对比表}
 
 | 功能特性   | UV           | pip+virtualenv        | Conda  | Poetry   |
 |--------|--------------|-----------------------|--------|----------|
@@ -755,7 +771,7 @@ Poetry是另一个现代Python项目管理工具，与UV有许多相似之处：
 总的来说，UV结合了现有工具的最佳特性，同时通过其Rust实现提供了显著的性能优势。对于寻求更快、更可靠的Python包管理解决方案的开发者来说，UV是一个极具吸引力的选择，特别是对于大型项目或CI/CD环境。
 
 
-### 设置 UV 相关的环境变量 {#设置-uv-相关的环境变量}
+#### 设置 UV 相关的环境变量 {#设置-uv-相关的环境变量}
 
 ```shell
 setx UV_PYTHON_INSTALL_DIR D:\uv\python
@@ -763,7 +779,7 @@ setx UV_TOOL_DIR D:\uv\tools
 ```
 
 
-### 使用国内镜像 {#使用国内镜像}
+#### 使用国内镜像 {#使用国内镜像}
 
 在文件 ~/.config/uv/uv.toml 中添加如下内容：
 
@@ -774,7 +790,7 @@ default = true
 ```
 
 
-### 采用 UV 来管理 python 版本和项目虚拟环境，安装 UV 软件： {#采用-uv-来管理-python-版本和项目虚拟环境-安装-uv-软件}
+#### 采用 UV 来管理 python 版本和项目虚拟环境，安装 UV 软件： {#采用-uv-来管理-python-版本和项目虚拟环境-安装-uv-软件}
 
 ```shell
 scoop install uv
@@ -793,7 +809,7 @@ uv 0.9.26 (ee4f00362 2026-01-15)
 ```
 
 
-### 创建系统默认的 Python 环境 {#创建系统默认的-python-环境}
+#### 创建系统默认的 Python 环境 {#创建系统默认的-python-环境}
 
 在 D:\python-envs 目录中：
 
@@ -844,7 +860,7 @@ uv remove requests
 将 default-python\\.venv\Scripts 的完整目录添加到 PATH 环境变量的最前面，这样就可以使用这个环境下的 python 作为系统的默认 python 了。
 
 
-### 要为 uv 命令启用 Powershell 自动补全，在 Powershell 中运行以下对应命令： {#要为-uv-命令启用-powershell-自动补全-在-powershell-中运行以下对应命令}
+#### 要为 uv 命令启用 Powershell 自动补全，在 Powershell 中运行以下对应命令： {#要为-uv-命令启用-powershell-自动补全-在-powershell-中运行以下对应命令}
 
 ```shell
 if (!(Test-Path -Path $PROFILE)) {
@@ -854,10 +870,10 @@ Add-Content -Path $PROFILE -Value '(& uv generate-shell-completion powershell) |
 ```
 
 
-### 使用 uv 管理多版本 Python {#使用-uv-管理多版本-python}
+#### 使用 uv 管理多版本 Python {#使用-uv-管理多版本-python}
 
 
-#### 显示可安装以及已经安装的 Python 版本： {#显示可安装以及已经安装的-python-版本}
+##### 显示可安装以及已经安装的 Python 版本： {#显示可安装以及已经安装的-python-版本}
 
 ```shell
 uv python list
@@ -891,7 +907,7 @@ graalpy-3.10.0-windows-x86_64-none                   <download available>
 ```
 
 
-#### 安装指定版本的 Python {#安装指定版本的-python}
+##### 安装指定版本的 Python {#安装指定版本的-python}
 
 ```shell
 uv python install 3.9
@@ -926,10 +942,10 @@ Installed Python 3.8.16 in 13m 42s
 ```
 
 
-#### 已经安装的版本，在后续使用到此版本的时候，UV 不会重复下载。 {#已经安装的版本-在后续使用到此版本的时候-uv-不会重复下载}
+##### 已经安装的版本，在后续使用到此版本的时候，UV 不会重复下载。 {#已经安装的版本-在后续使用到此版本的时候-uv-不会重复下载}
 
 
-#### 查看安装的结果 {#查看安装的结果}
+##### 查看安装的结果 {#查看安装的结果}
 
 ```shell
 uv python list
@@ -966,7 +982,7 @@ graalpy-3.10.0-windows-x86_64-none                   <download available>
 ```
 
 
-#### Python 安装的目录 {#python-安装的目录}
+##### Python 安装的目录 {#python-安装的目录}
 
 ```shell
 uv python dir
@@ -977,7 +993,7 @@ D:\uv\python
 ```
 
 
-#### 移除已安装的版本 {#移除已安装的版本}
+##### 移除已安装的版本 {#移除已安装的版本}
 
 ```shell
 uv python uninstall 3.9
@@ -1002,10 +1018,10 @@ Uninstalled Python 3.8.16 in 431ms
 ```
 
 
-### 管理项目 {#管理项目}
+#### 管理项目 {#管理项目}
 
 
-#### 创建一个项目 {#创建一个项目}
+##### 创建一个项目 {#创建一个项目}
 
 ```shell
 PS E:\tmp> uv init test04 --python 3.14
@@ -1065,7 +1081,7 @@ Mode                 LastWriteTime         Length Name
 -   README. ME：空的 markdown 文件，预留让你撰写项目说明用。
 
 
-#### 添加包 {#添加包}
+##### 添加包 {#添加包}
 
 可以在其中安装相关的包:
 
@@ -1089,7 +1105,7 @@ uv add --dev pytest black
 ```
 
 
-#### 编写代码 {#编写代码}
+##### 编写代码 {#编写代码}
 
 修改 main.py 中的代码如下：
 
@@ -1134,7 +1150,7 @@ if __name__ == "__main__":
 ```
 
 
-#### 执行代码 {#执行代码}
+##### 执行代码 {#执行代码}
 
 你需要修改实际的 Excel 文件名称，并在对应的文件中输入一些数据才能执行程序。
 
@@ -1160,7 +1176,7 @@ PS E:\tmp\test04> uv run .\main.py
 ```
 
 
-#### 构建项目分发包 {#构建项目分发包}
+##### 构建项目分发包 {#构建项目分发包}
 
 ```shell
 PS E:\tmp\test04> uv build
@@ -1242,7 +1258,7 @@ Successfully built dist\test04-0.1.0-py3-none-any.whl
 ```
 
 
-#### 查看依赖树 {#查看依赖树}
+##### 查看依赖树 {#查看依赖树}
 
 ```shell
 PS E:\tmp\test04> uv tree
@@ -1270,7 +1286,7 @@ test04 v0.1.0
 ```
 
 
-### 安装常用工具 {#安装常用工具}
+#### 安装常用工具 {#安装常用工具}
 
 安装工具：
 
@@ -1378,6 +1394,82 @@ uv tool upgrade --all
 ```
 
 
+### Pycharm {#pycharm}
+
+
+#### 安装 pycharm {#安装-pycharm}
+
+查找有哪些版本的 pycharm:
+
+```shell
+scoop search pycharm
+```
+
+```shell
+'extras' bucket:
+    pycharm (2025.3.1.1-253.29346.308)
+    pycharm-professional (2025.3.1.1-253.29346.308)
+
+'versions' bucket:
+    pycharm-eap (2025.2-252.23892.194)
+    pycharm-latest (2025.3-253.30387.25)
+    pycharm-professional-eap (2025.3-253.28294.166)
+    pycharm-professional-rc (2025.3.2-253.30387.25)
+    pycharm-rc (2025.2.3-252.26830.27)
+```
+
+安装社区版本的 pycharm:
+
+```shell
+scoop install pycharm
+```
+
+
+#### 设置 pycharm 创建新项目的默认目录 {#设置-pycharm-创建新项目的默认目录}
+
+打开配置界面：
+
+{{< figure src="/images/dev-envs.org/2026-01-22_10-08-54_screenshot.png" >}}
+
+找到 **默认项目目录** 然后选择需要保存新的项目目录，然后点确定并重启 IDE 就可以了。
+
+{{< figure src="/images/dev-envs.org/2026-01-22_10-09-42_screenshot.png" >}}
+
+
+#### 创建新项目 {#创建新项目}
+
+{{< figure src="/images/dev-envs.org/2026-01-22_10-11-22_screenshot.png" >}}
+
+{{< figure src="/images/dev-envs.org/2026-01-22_10-12-45_screenshot.png" >}}
+
+{{< figure src="/images/dev-envs.org/2026-01-22_10-13-37_screenshot.png" >}}
+
+```shell
+PS E:\codes\python\test04> ls
+```
+
+```shell
+    Directory: E:\codes\python\test04
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d----           2026/1/22    10:13                .idea
+d----           2026/1/22    10:12                .venv
+-a---           2026/1/22    10:13            502 main.py
+-a---           2026/1/22    10:12            131 pyproject.toml
+```
+
+也可以在 pycharm 中通过 Alt+F12 打开终端：
+
+{{< figure src="/images/dev-envs.org/2026-01-22_10-15-52_screenshot.png" >}}
+
+然后就可以执行命令了：
+
+比如安装 openxyxl 包：
+
+{{< figure src="/images/dev-envs.org/2026-01-22_10-16-31_screenshot.png" >}}
+
+
 ## GPG/文件加密 {#gpg-文件加密}
 
 
@@ -1444,14 +1536,21 @@ Change (N)ame, (E)mail, or (O)kay/(Q)uit?
 ```
 
 确认名字和邮箱后输入 o 后回车，会弹出一个输入密码保护 key 的对话框：
-![](/images/dev-envs.org/2026-01-21_15-37-56_screenshot.png)
+
+{{< figure src="/images/dev-envs.org/2026-01-21_15-37-56_screenshot.png" >}}
+
 输入密码后回车，由于我输入的密码过于简单，弹出如下的对话框：
 
-![](/images/dev-envs.org/2026-01-21_15-38-17_screenshot.png)
+{{< figure src="/images/dev-envs.org/2026-01-21_15-38-17_screenshot.png" >}}
+
 点击 Take this one anyway 按钮，会让你确认密码：
-![](/images/dev-envs.org/2026-01-21_15-38-37_screenshot.png)
+
+{{< figure src="/images/dev-envs.org/2026-01-21_15-38-37_screenshot.png" >}}
+
 再此输入密码后点击 OK 就会生成 key。
-![](/images/dev-envs.org/2026-01-21_15-41-04_screenshot.png)
+
+{{< figure src="/images/dev-envs.org/2026-01-21_15-41-04_screenshot.png" >}}
+
 如果要更多选项，可以使用如下命令生成 key：
 
 ```shell
