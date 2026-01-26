@@ -1,8 +1,8 @@
 ---
-title: Windows
+title: OS & Tools
 menu:
   main:
-    name: Windows
+    name: OS & Tools
     weight: 30
     params:
       icon: home

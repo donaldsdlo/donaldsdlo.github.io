@@ -12,9 +12,33 @@
 
 * 环境变量
 
+** 什么是 Windows 环境变量？
+
+=Windows= 环境变量是操作系统用于存储与系统运行相关的值或配置信息的 =名称-值= 对。它们用于控制应用程序和操作系统行为，类似于一组全局的设置或配置。环境变量可以影响系统的许多方面，例如文件搜索路径、临时文件存储位置、用户和系统设置等。
+
+** 环境变量的类型
+
+环境变量可分为用户变量与系统变量两类。
+
+*** 系统环境变量
+
+这些变量在整个操作系统范围内可用，影响所有用户和系统中的所有进程。它们通常由系统管理员设置。
+
+常见的系统环境变量包括：
+
+- =%PATH%= ：定义可执行文件的搜索路径。当你在 命令提示符 中输入一个命令时，系统会在这些路径中搜索对应的可执行文件。
+- =%TEMP%= 或 =%TMP%= ：定义临时文件的存放目录。
+- =%SystemRoot%= ：指向 =Windows= 操作系统的安装目录，通常是 =C:\Windows= 。
+
+*** 用户环境变量
+
+这些变量仅对特定用户有效，不影响其他用户。用户可以根据自己的需要自定义这些变量。 例如，每个用户都有自己的 =%PATH%= 变量，用于添加特定于该用户的可执行文件路径。
+
 ** 设置重要的环境变量
 
-#+begin_src shell
+在 =命令提示符= 中执行如下的命令：
+
+#+begin_src bash :exports code
 :: 第一步：设置 HOME
 setx HOME "D:\home"
 
@@ -28,7 +52,96 @@ setx XDG_STATE_HOME "%HOME%\.local\state"
 
 在后续看到 =~= 开头的目录都是指在 =HOME= 下的子目录。
 
-* scoop
+** 查看环境变量
+:PROPERTIES:
+:ID:       238b5742-cb5a-4bfe-bf01-a6c1455d3846
+:END:
+
+打开命令提示符（ =cmd= ），然后输入 =env= 命令，按回车。你将看到当前所有的环境变量及其值。
+
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
+[[file:../../static/images/dev-envs.org/2026-01-25_09-56-26_screenshot.png]]
+
+输入 =echo %VARIABLE_NAME%= 可以查看特定环境变量的值，例如 =echo %HOME%= 。
+
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
+[[file:../../static/images/dev-envs.org/2026-01-25_09-57-51_screenshot.png]]
+
+或者可以通过 *系统设置* :
+
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
+[[file:../../static/images/dev-envs.org/2026-01-25_10-02-52_screenshot.png]]
+
+在位置 1 按鼠标右键，然后在位置 2 点击鼠标左键：
+
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
+[[file:../../static/images/dev-envs.org/2026-01-25_10-09-36_screenshot.png]]
+
+点击图中的 *高级系统设置*:
+
+#+ATTR_ORG: :width 600
+#+ATTR_HTML: :width 90%
+[[file:../../static/images/dev-envs.org/2026-01-25_10-05-38_screenshot.png]]
+
+点击位置 1 的 *环境变量* 按钮：
+
+#+ATTR_ORG: :width 600
+#+ATTR_HTML: :width 90%
+[[file:../../static/images/dev-envs.org/2026-01-25_10-06-38_screenshot.png]]
+
+在此界面，除了可以查看环境变量的值，也可以进行维护。
+
+** 内置环境变量
+
+Windows系统中有一些常见的内置环境变量，它们提供了有关操作系统、用户、文件路径等信息。有一些内置环境变量在“环境变量”设置窗口是不显示的。
+
+以下是一些常见的系统内置环境变量：
+
+- =%SystemRoot%= ： =Windows= 操作系统的根目录，通常是 =C:\Windows= 。
+- =%PATH%= ：存储可执行文件的搜索路径。当你在命令行中输入命令时，系统会按顺序在这些路径中查找对应的可执行文件。
+- =%TEMP%= / =%TMP%= ：用于存放临时文件的目录。 =Windows= 和应用程序通常在这个目录中创建临时文件。
+- =%ProgramFiles%=：指向默认的程序文件目录，通常是系统中安装的大部分应用程序的存放位置。默认是: =C:\Program Files= 。
+- =%ProgramFiles(x86)%= ：在64位 =Windows=上，指向32位应用程序的默认安装目录。通常是: =C:\Program Files (x86)=  。
+- =%HOMEDRIVE%= ：当前用户的主目录所在的驱动器号。通常是： =C:= 。
+- =%HOMEPATH%= ：当前用户的主目录路径，不包含驱动器号，默认值： =\Users\<用户名>。=
+- =%USERPROFILE%=：当前用户的主目录的完整路径，包括驱动器号。通常是： =C:\Users\<用户名>。=
+- =%APPDATA%= ：指向当前用户的应用程序数据目录，通常用于存放用户配置文件和应用程序数据。通常是： =C:\Users\<用户名>\AppData\Roaming。=
+- =%LOCALAPPDATA%= ：指向当前用户的本地应用程序数据目录，与 =%APPDATA%= 类似，但数据不会在网络中漫游。通常是： =C:\Users\<用户名>\AppData\Local。=
+- =%COMSPEC%= ：指向命令解释器（通常是 =cmd.exe= ）的路径。通常是： =C:\Windows\System32\cmd.exe= 。
+- =%WINDIR%= ：另一个指向 =Windows= 目录的变量，通常与 =%SystemRoot%= 相同。通常是： =C:\Windows= 。
+- =%NUMBER_OF_PROCESSORS%=：指示当前系统中可用的处理器核心数量。示例: =2= （具体取决于具体硬件配置）。
+- =%PROCESSOR_ARCHITECTURE%=：指示处理器架构类型（例如x86、AMD64）。示例: =AMD64= （表示64位架构）。
+- =%PROCESSOR_IDENTIFIER%=： 提供关于处理器的信息，包括型号和制造商。如: =Intel64 Family 6 Model 158 Stepping 10, GenuineIntel= 。
+- =%ALLUSERSPROFILE%= ：指向所有用户的公共配置文件目录，通常用于共享应用程序数。通常是： =C:\ProgramData= 。
+- =%USERPROFILE%= ：当前用户的配置文件的位置，通常是： =C:\Users\<用户名>=
+
+** 默认环境变量(Windows 10/11)
+
+如果不小心误删除了环境变量，可以使用默认的环境变量进行恢复。(在误删除后，没有重启的情况下，也可以尝试通过注册表记录的值进行恢复，因为修改环境变量后，系统不会立刻刷新注册表）
+
+用户变量默认值：
+
+- =%PATH%= ： =%USERPROFILE%\AppData\Local\Microsoft\WindowsApps=
+- =%TEMP%= ： =%USERPROFILE%\AppData\Local\Temp=
+- =%TMP%= ： =%USERPROFILE%\AppData\Local\Temp=
+
+系统变量默认值：
+
+- =%PATH%= ： =%SystemRoot%\system32;%SystemRoot%;%SystemRoot%\System32\Wbem;%SYSTEMROOT%\System32\WindowsPowerShell\v1.0\=
+- =%ComSpec%= ： =%SystemRoot%\system32\cmd.exe=
+- =%PATHEXT%= ： =.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC=
+- =%DriverData%= ： =C:\Windows\System32\Drivers\DriverData=
+- =%PSModulePath%= ： =%ProgramFiles%\WindowsPowerShell\Modules;%SystemRoot%\system32\WindowsPowerShell\v1.0\Modules=
+- =%TEMP%= ： =%SystemRoot%\TEMP=
+- =%TMP%= ： =%SystemRoot%\TEMP=
+- =%USERNAME%= ： =SYSTEM=
+- =%windir%= ： =%SystemRoot%=
+
+* scoop 方便的软件安装工具
 
 Scoop 是一个面向 Windows 的命令行安装程序（包管理器），旨在简化在 Windows 系统上安装、更新和管理开源命令行工具和应用程序的过程。
 
@@ -40,22 +153,27 @@ Scoop 是一个面向 Windows 的命令行安装程序（包管理器），旨�
 - *支持多 bucket* ：除了官方主仓库（main bucket），还支持额外的社区或私有 bucket（如 =extras= 、 =versions=  等）。
 - *自动处理 PATH 和依赖* ：安装后自动配置环境变量，部分软件会自动安装所需依赖（如 Visual C++ Redistributables）。
 
+** 为什么不用 =winget=
+
+因为到目前位置，我也不知道如何设置 =winget= 安装软件的目录，我不想把所有的软件都安装到 C 盘，所以能用 =Scoop= 安装的软件，我就用 =Scoop= 安装，
+如果无法使用 =Scoop= 来安装，就使用 =Winget= 来安装了。
+
 ** 安装 scoop
 
 *** 设置环境变量
 
-#+begin_src shell
+#+begin_src bash :exports code
 setx SCOOP "D:\Scoop"
 setx SCOOP_GLOBAL "D:\ScoopGlobalApps"
 #+end_src
 
 *** 打开powershell，依次输入下面的命令
 
-#+begin_src shell
+#+begin_src bash :exports code
 Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
 #+end_src
 
-#+begin_src shell
+#+begin_src bash :exports code
 irm get.scoop.sh | iex
 #+end_src
 
@@ -63,19 +181,19 @@ irm get.scoop.sh | iex
 
 *** 先删除默认 main 源
 
-#+begin_src shell
+#+begin_src bash :exports code
 scoop bucket rm main
 #+end_src
 
 可以通过如下的命令查看已经安装的 bucket 清单，根据实际需要将对应的 bucket 删除，然后换成国内的源。
 
-#+begin_src shell
+#+begin_src bash :exports code
 scoop bucket list
 #+end_src
 
 你可能可以看到如下的结果：
 
-#+begin_src shell
+#+begin_src bash :exports code
 Name          Source                                             Updated            Manifests
 ----          ------                                             -------            ---------
 main          https://github.com/ScoopInstaller/Main             2026/1/15 12:33:06      1418
@@ -93,7 +211,7 @@ scoop-misc    https://github.com/kiennq/scoop-misc               2026/1/14 21:09
 
 *** 添加南大镜像
 
-#+begin_src shell
+#+begin_src bash :exports code
 scoop bucket add extras https://mirror.nju.edu.cn/git/scoop-extras.git/
 scoop bucket add java https://mirror.nju.edu.cn/git/scoop-java.git/
 scoop bucket add main https://mirror.nju.edu.cn/git/scoop-main.git/
@@ -105,7 +223,7 @@ scoop bucket add versions https://mirror.nju.edu.cn/git/scoop-versions.git/
 
 *** 恢复回官方源
 
-#+begin_src shell
+#+begin_src bash :exports code
 scoop bucket rm main
 scoop bucket rm extras
 scoop bucket add main
@@ -115,19 +233,20 @@ scoop bucket add extras
 ** 配置
 
 开启缓存，避免重复下载
-#+begin_src shell
+
+#+begin_src bash :exports code
 scoop config cache_enabled true
 #+end_src
 
 ** 安装常用工具
 
-#+begin_src shell
-scoop install git aria2 coreutils fzf grep gzip make ripgrep rga wget which fd 7zip ag altsnap ast-grep astyle autojump curl delta direnv everything everything-cli ffmpeg geekuninstaller  hugo hugo-extended mpv pandoc scoop-search gpg
+#+begin_src bash :exports code
+scoop install git aria2 coreutils fzf grep gzip make ripgrep rga wget which fd 7zip ag altsnap ast-grep astyle autojump curl delta direnv everything everything-cli ffmpeg geekuninstaller  hugo hugo-extended mpv pandoc scoop-search gpg busybox
 #+end_src
 
 ** 使用aria2加速下载
 
-#+begin_src shell
+#+begin_src bash :exports code
 scoop config aria2-enabled true
 #+end_src
 
@@ -158,7 +277,7 @@ scoop config aria2-enabled true
 
 还有如下的配置项：
 
-#+begin_src shell
+#+begin_src bash :exports code
 #在scoop中，开启aria2加速下载（其实，默认是开启的）
 scoop config aria2-enabled $true   #直接使用true，效果也一样。
 
@@ -180,17 +299,17 @@ scoop config aria2-options ....
 #+end_src
 
 还可以通过如下命令查看所有的配置参数：
-#+begin_src shell
+#+begin_src bash :exports code
 scoop config /?
 #+end_src
 
 ** 查找软件
 
-#+begin_src shell
+#+begin_src bash :exports code
 scoop search emacs
 #+end_src
 
-#+begin_src shell
+#+begin_src bash :exports code
 Name              Version                  Source     Binaries
 ----              -------                  ------     --------
 emacs             30.2                     extras
@@ -205,53 +324,94 @@ emax64            20200930                 scoop-misc runemacs.exe | emacs.exe |
 
 安装软件：
 
-#+begin_src shell
+#+begin_src bash :exports code
 scoop install emacs-kl
+#+end_src
+
+** Listary 应用启动器和文件快速搜索
+
+#+begin_src bash :exports code
+scoop install listary
 #+end_src
 
 ** PDF 查看工具
 
-#+begin_src shell
+#+begin_src bash :exports code
 scoop install sumatrapdf
 #+end_src
 
 ** 改键工具
 
-#+begin_src shell
+#+begin_src bash :exports code
 scoop install sharpkeys
 #+end_src
 
 ** 截图工具
 
-#+begin_src shell
+#+begin_src bash :exports code
 scoop install snipaste
 #+end_src
 
 ** 视频播放软件
 
-#+begin_src shell
+#+begin_src bash :exports code
 scoop install potplayer
 #+end_src
 
 ** 数据库客户端
 
-#+begin_src shell
+#+begin_src bash :exports code
 scoop install dbeaver
 #+end_src
 
 ** postman 的替代品 bruno
 
-#+begin_src shell
+#+begin_src bash :exports code
 scoop install bruno
 #+end_src
 
+** yt-dlp 下载网站视频
+
+** Motrix 下载工具
+
+#+begin_src bash :exports code
+scoop install motrix
+#+end_src
+
+** SharpKey  键位重映射工具
+:PROPERTIES:
+:ID:       445c96cf-2e84-449e-afab-e3e29f1359bd
+:END:
+
+#+begin_src bash :exports code
+scoop install sharpkey
+#+end_src
+
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
+[[file:../../static/images/dev-envs.org/2026-01-24_17-59-48_screenshot.png]]
+
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
+[[file:../../static/images/dev-envs.org/2026-01-24_18-00-38_screenshot.png]]
+
+可以在上图中用鼠标选择对应的键，也可以通过点击对应 =Type Key= 按钮然后在键盘上敲击对应的键来选择，输入完成
+后，然后点击 =OK= 按钮。
+
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
+[[file:../../static/images/dev-envs.org/2026-01-24_18-02-55_screenshot.png]]
+
+可以看到添加的映射关系在图中位置 1 显示，然后点击 =Write to Regist= 按钮，将这个映射关系保存到 windows 系统
+的注册表中，然后重新启动电脑使得这个映射关系生效。
+
 ** 显示当前软件是否有需要更新
 
-#+begin_src shell
+#+begin_src bash :exports code
 scoop status
 #+end_src
 
-#+begin_src shell
+#+begin_src bash :exports code
 Scoop is up to date.
 Everything is ok!
 #+end_src
@@ -262,23 +422,23 @@ Everything is ok!
 
 更新指定的软件
 
-#+begin_src shell
+#+begin_src bash :exports code
 scoop update deno
 #+end_src
 
 更新所有软件：
 
-#+begin_src shell
+#+begin_src bash :exports code
 scoop update -a
 #+end_src
 
 ** 卸载软件
 
-#+begin_src shell
+#+begin_src bash :exports code
 scoop uninstall peazip
 #+end_src
 
-#+begin_src shell
+#+begin_src bash :exports code
 Uninstalling 'peazip' (10.8.0).
 Removing shim 'peazip.shim'.
 Removing shim 'peazip.exe'.
@@ -289,13 +449,13 @@ Unlinking D:\Scoop\apps\peazip\current
 
 ** 删除软件的旧版本
 
-#+begin_src shell
+#+begin_src bash :exports code
 scoop cleanup *
 #+end_src
 
 会显示删除的所有的版本信息：
 
-#+begin_src shell
+#+begin_src bash :exports code
 Removing codex: 0.80.0 0.81.0
 Removing deno: 2.6.4
 Removing erlang: 28.3
@@ -313,11 +473,11 @@ Everything is shiny now!
 
 ** 查找字体
 
-#+begin_src shell
+#+begin_src bash :exports code
 scoop search maple
 #+end_src
 
-#+begin_src shell
+#+begin_src bash :exports code
 Results from local buckets...
 
 Name                Version Source     Binaries
@@ -332,17 +492,19 @@ Maple-Mono          7.9     nerd-fonts
 
 ** 下载字体
 
-#+begin_src shell
+#+begin_src bash :exports code
 scoop download Maple-Mono-NF-CN
 #+end_src
 
-#+begin_src shell
+#+begin_src bash :exports code
 INFO  Downloading 'Maple-Mono-NF-CN' [64bit] from nerd-fonts bucket
 Starting download with aria2 ...
 Download: [#694632 55MiB/152MiB(36%) CN:5 DL:332KiB ETA:4m57s]
 #+end_src
+
 当出现如下最后一行的信息时，表示已经下载完成。
-#+begin_src shell
+
+#+begin_src bash :exports code
 PS D:\> scoop download Maple-Mono-NF-CN
 INFO  Downloading 'Maple-Mono-NF-CN' [64bit] from nerd-fonts bucket
 Starting download with aria2 ...
@@ -363,25 +525,31 @@ Checking hash of MapleMono-NF-CN.zip ... ok.
 
 下载的文件保存在之前设置的环境变量 =SCOOP= 下的 =cache= 目录下，且是一个压缩包：
 
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
 [[file:../../static/images/dev-envs.org/2026-01-16_14-43-09_screenshot.png]]
 
 需要手工解压缩：
 
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
 [[file:../../static/images/dev-envs.org/2026-01-16_14-43-55_screenshot.png]]
 
 选中所有的字体文件（以 ttf 结尾的文件），然后鼠标右键菜单中选择 *为所有用户安装* :
 
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
 [[file:../../static/images/dev-envs.org/2026-01-16_14-49-30_screenshot.png]]
 
 ** 常用的字体
 
 *** 落霞孤鹜中文字体
 
-#+begin_src shell
+#+begin_src bash :exports code
 scoop search lxgw
 #+end_src
 
-#+begin_src shell
+#+begin_src bash :exports code
 Results from local buckets...
 
 Name              Version Source     Binaries
@@ -405,11 +573,11 @@ LXGWWenKaiTC      1.521   nerd-fonts
 
 *** 思源中文字体
 
-#+begin_src shell
+#+begin_src bash :exports code
 scoop search source
 #+end_src
 
-#+begin_src shell
+#+begin_src bash :exports code
 Results from local buckets...
 
 Name                          Version      Source     Binaries
@@ -453,13 +621,13 @@ sourcedepot                   4.9.29711.24 scoop-misc
 
 source 为 nerd-fonts 的都是字体，我们可以安装 SC 结尾的简体中文字体。
 
-*** Iosevka 英文字体
+*** Iosevka 英文字体-是中文字体宽度的一半
 
-#+begin_src shell
+#+begin_src bash :exports code
 scoop search iosevka
 #+end_src
 
-#+begin_src shell
+#+begin_src bash :exports code
 Results from local buckets...
 
 Name                     Version Source     Binaries
@@ -475,13 +643,13 @@ IosevkaTermSlab-NF-Propo 3.4.0   nerd-fonts
 IosevkaTermSlab-NF       3.4.0   nerd-fonts
 #+end_src
 
-*** Fira Code
+*** Fira Code-是中文字体宽度的 0.6
 
-#+begin_src shell
+#+begin_src bash :exports code
 scoop search firacode
 #+end_src
 
-#+begin_src shell
+#+begin_src bash :exports code
 Results from local buckets...
 
 Name              Version Source     Binaries
@@ -492,24 +660,26 @@ FiraCode-NF       3.4.0   nerd-fonts
 FiraCode-Script   0.0.28  nerd-fonts
 FiraCode          6.2     nerd-fonts
 #+end_src
-#+begin_src shell
-scoop download FiraCode
+#+begin_src bash :exports code
+scoop download FiraCode-NF-Mono
 #+end_src
+
+* Rime 中文输入法-可以配置各种输入法
 
 * Windows Terminal
 
-#+begin_src shell
+#+begin_src bash :exports code
 scoop install windows-terminal
 #+end_src
 
 * Powershell
 
 ** 查找 Powershell
-#+begin_src shell
+#+begin_src bash :exports code
 winget search --id Microsoft.PowerShell
 #+end_src
 
-#+begin_src shell
+#+begin_src bash :exports code
 名称               ID                           版本    源
 ---------------------------------------------------------------
 PowerShell         Microsoft.PowerShell         7.5.4.0 winget
@@ -518,7 +688,7 @@ PowerShell Preview Microsoft.PowerShell.Preview 7.6.0.6 winget
 
 ** 安装 Powershell
 
-#+begin_src shell
+#+begin_src bash :exports code
 winget install --id Microsoft.PowerShell --source winget
 #+end_src
 
@@ -529,23 +699,29 @@ winget install --id Microsoft.PowerShell --source winget
 
 打开 Windows Termial
 
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
 [[file:../../static/images/dev-envs.org/2026-01-20_09-02-04_screenshot.png]]
 
 通过 Ctrl+, 快捷键打开设置界面
 
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
 [[file:../../static/images/dev-envs.org/2026-01-20_09-02-58_screenshot.png]]
 
 ** 查看 Powershell 的配置文件
 
-#+begin_src shell
+#+begin_src bash :exports code
 echo $PROFILE
 #+end_src
 
-#+begin_src shell
+#+begin_src bash :exports code
 D:\Documents\PowerShell\Microsoft.PowerShell_profile.ps1
 #+end_src
 
 需要添加的配置和一些函数都可以写在这个文件中。
+
+* MSYS2
 
 * Python 环境安装和配置
 
@@ -639,7 +815,7 @@ Poetry是另一个现代Python项目管理工具，与UV有许多相似之处：
 
 *** 设置 UV 相关的环境变量
 
-#+begin_src shell
+#+begin_src bash :exports code
 setx UV_PYTHON_INSTALL_DIR D:\uv\python
 setx UV_TOOL_DIR D:\uv\tools
 #+end_src
@@ -650,25 +826,25 @@ setx UV_TOOL_DIR D:\uv\tools
 
 #+begin_src toml :exports code
 [[index]]
-url = "https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple/"
+url = "https://mirrors.xjtu.edu.cn/docs/pypi/"
 default = true
 #+end_src
 
 *** 采用 UV 来管理 python 版本和项目虚拟环境，安装 UV 软件：
 
-#+begin_src shell
+#+begin_src bash :exports code
 scoop install uv
 #+end_src
 
 安装完成后，可以通过以下命令验证安装是否成功：
 
-#+begin_src shell
+#+begin_src bash :exports code
 uv --version
 #+end_src
 
 安装正确会得到版本号：
 
-#+begin_src shell
+#+begin_src bash :exports code
 uv 0.9.26 (ee4f00362 2026-01-15)
 #+end_src
 
@@ -676,45 +852,46 @@ uv 0.9.26 (ee4f00362 2026-01-15)
 
 在 D:\python-envs 目录中：
 
-#+begin_src shell
+#+begin_src bash :exports code
 uv init default-python --python 3.14
 #+end_src
 
-#+begin_src shell
+#+begin_src bash :exports code
 cd default-python
 #+end_src
 
 安装包：
 
-#+begin_src shell
+#+begin_src bash :exports code
 uv add requests
 #+end_src
 
 指定版本约束
 
-#+begin_src shell
+#+begin_src bash :exports code
 uv add 'requests==2.31.0'
 #+end_src
 
 添加 Git 依赖:
 
-#+begin_src shell
+#+begin_src bash :exports code
 uv add git+https://github.com/psf/requests
 #+end_src
 
 将指定包更新到最新的兼容版本，同时保持锁文件中其他依赖不变:
 
-#+begin_src shell
+#+begin_src bash :exports code
 uv lock --upgrade-package requests
 #+end_src
 
 从 requirements.txt 文件添加所有依赖:
-#+begin_src shell
+#+begin_src bash :exports code
 uv add -r requirements.txt -c constraints.txt
 #+end_src
 
 删除包：
-#+begin_src shell
+
+#+begin_src bash :exports code
 uv remove requests
 #+end_src
 
@@ -722,10 +899,11 @@ uv remove requests
 
 *** 要为 uv 命令启用 Powershell 自动补全，在 Powershell 中运行以下对应命令：
 
-#+begin_src shell
+#+begin_src bash :exports code
 if (!(Test-Path -Path $PROFILE)) {
   New-Item -ItemType File -Path $PROFILE -Force
 }
+
 Add-Content -Path $PROFILE -Value '(& uv generate-shell-completion powershell) | Out-String | Invoke-Expression'
 #+end_src
 
@@ -733,11 +911,11 @@ Add-Content -Path $PROFILE -Value '(& uv generate-shell-completion powershell) |
 
 **** 显示可安装以及已经安装的 Python 版本：
 
-#+begin_src shell
+#+begin_src bash :exports code
 uv python list
 #+end_src
 
-#+begin_src shell
+#+begin_src bash :exports code
 cpython-3.15.0a5-windows-x86_64-none                 <download available>
 cpython-3.15.0a5+freethreaded-windows-x86_64-none    <download available>
 cpython-3.15.0a1-windows-x86_64-none                 D:\uv\python\cpython-3.15.0a1-windows-x86_64-none\python.exe
@@ -766,34 +944,34 @@ graalpy-3.10.0-windows-x86_64-none                   <download available>
 
 **** 安装指定版本的 Python
 
-#+begin_src shell
+#+begin_src bash :exports code
 uv python install 3.9
 #+end_src
 
-#+begin_src shell
+#+begin_src bash :exports code
 cpython-3.9.25-windows-x86_64-none (download) ------------------------------ 1.73 MiB/21.67 MiB
 #+end_src
 
 出现如下的消息时表示已经安装完成：
 
-#+begin_src shell
+#+begin_src bash :exports code
 Installed Python 3.9.25 in 2m 31s
  + cpython-3.9.25-windows-x86_64-none (python3.9.exe)
 #+end_src
 
 也可以使用完整的名称来安装 Python:
 
-#+begin_src shell
+#+begin_src bash :exports code
 uv python install pypy-3.8.16-windows-x86_64-none
 #+end_src
 
-#+begin_src shell
+#+begin_src bash :exports code
 pypy-3.8.16-windows-x86_64-none (download) ------------------------------ 1.58 MiB/29.98 MiB
 #+end_src
 
 出现如下的消息时表示已经安装完成：
 
-#+begin_src shell
+#+begin_src bash :exports code
 Installed Python 3.8.16 in 13m 42s
  + pypy-3.8.16-windows-x86_64-none (python3.8.exe)
 #+end_src
@@ -802,11 +980,11 @@ Installed Python 3.8.16 in 13m 42s
 
 **** 查看安装的结果
 
-#+begin_src shell
+#+begin_src bash :exports code
 uv python list
 #+end_src
 
-#+begin_src shell
+#+begin_src bash :exports code
 cpython-3.15.0a5-windows-x86_64-none                 <download available>
 cpython-3.15.0a5+freethreaded-windows-x86_64-none    <download available>
 cpython-3.15.0a1-windows-x86_64-none                 D:\uv\python\cpython-3.15.0a1-windows-x86_64-none\python.exe
@@ -838,21 +1016,21 @@ graalpy-3.10.0-windows-x86_64-none                   <download available>
 
 **** Python 安装的目录
 
-#+begin_src shell
+#+begin_src bash :exports code
 uv python dir
 #+end_src
 
-#+begin_src shell
+#+begin_src bash :exports code
 D:\uv\python
 #+end_src
 
 **** 移除已安装的版本
 
-#+begin_src shell
+#+begin_src bash :exports code
 uv python uninstall 3.9
 #+end_src
 
-#+begin_src shell
+#+begin_src bash :exports code
 Searching for Python versions matching: Python 3.9
 Uninstalled Python 3.9.25 in 483ms
  - cpython-3.9.25-windows-x86_64-none (python3.9.exe)
@@ -860,11 +1038,11 @@ Uninstalled Python 3.9.25 in 483ms
 
 也可以通过完整的 Python 版本名称来移除：
 
-#+begin_src shell
+#+begin_src bash :exports code
 uv python uninstall pypy-3.8.16-windows-x86_64-none
 #+end_src
 
-#+begin_src shell
+#+begin_src bash :exports code
 Searching for Python versions matching: pypy-3.8.16-windows-x86_64-none
 Uninstalled Python 3.8.16 in 431ms
  - pypy-3.8.16-windows-x86_64-none (python3.8.exe)
@@ -874,21 +1052,21 @@ Uninstalled Python 3.8.16 in 431ms
 
 **** 创建一个项目
 
-#+begin_src shell
+#+begin_src bash :exports code
 PS E:\tmp> uv init test04 --python 3.14
 #+end_src
 
-#+begin_src shell
+#+begin_src bash :exports code
 Initialized project `test04` at `E:\tmp\test04`
 #+end_src
 
 执行完这个命令后，会创建 =test04= 目录并在其中创建如下的文件：
 
-#+begin_src shell
+#+begin_src bash :exports code
 PS E:\tmp\test04> ls
 #+end_src
 
-#+begin_src shell
+#+begin_src bash :exports code
     Directory: E:\tmp\test04
 
 Mode                 LastWriteTime         Length Name
@@ -903,7 +1081,7 @@ Mode                 LastWriteTime         Length Name
 其中的文件：
 
 - gitignore：uv 会帮你把项目建立成 git 储存库，并且帮你写好了 .gitignore 文件，避免 Python 执行过程产生的暂存文件等也提交到储存库内
-    #+begin_src shell
+    #+begin_src bash :exports code
         # Python-generated files
         __pycache__/
         ,*.py[oc]
@@ -935,11 +1113,11 @@ Mode                 LastWriteTime         Length Name
 
 可以在其中安装相关的包:
 
-#+begin_src shell
+#+begin_src bash :exports code
 PS E:\tmp\test04> uv add openpyxl
 #+end_src
 
-#+begin_src shell
+#+begin_src bash :exports code
 Using CPython 3.14.0
 Creating virtual environment at: .venv
 Resolved 3 packages in 426ms
@@ -950,15 +1128,15 @@ Installed 2 packages in 498ms
 
 添加只在开发时使用的包
 
-#+begin_src shell
+#+begin_src bash :exports code
 uv add --dev pytest black
 #+end_src
 
 **** 编写代码
 
 修改 main.py 中的代码如下：
-#+begin_src python
 
+#+begin_src python
 from openpyxl import load_workbook
 
 def read_excel_columns():
@@ -1001,12 +1179,12 @@ if __name__ == "__main__":
 
 你需要修改实际的 Excel 文件名称，并在对应的文件中输入一些数据才能执行程序。
 
-#+begin_src shell
+#+begin_src bash :exports code
 PS E:\tmp\test04> uv run .\main.py
 #+end_src
 
 程序的输出如下（输出的内容根据你的文件中的内容会不太一样）：
-#+begin_src shell
+#+begin_src bash :exports code
 读取的A、B列数据（最多10行）：
 ------------------------------
 第 1行: A=MANDT, B=BANFN
@@ -1023,11 +1201,11 @@ PS E:\tmp\test04> uv run .\main.py
 
 **** 构建项目分发包
 
-#+begin_src shell
+#+begin_src bash :exports code
 PS E:\tmp\test04> uv build
 #+end_src
 
-#+begin_src shell
+#+begin_src bash :exports code
 Building source distribution...
 running egg_info
 creating test04.egg-info
@@ -1104,11 +1282,11 @@ Successfully built dist\test04-0.1.0-py3-none-any.whl
 
 **** 查看依赖树
 
-#+begin_src shell
+#+begin_src bash :exports code
 PS E:\tmp\test04> uv tree
 #+end_src
 
-#+begin_src shell
+#+begin_src bash :exports code
 Resolved 15 packages in 1ms
 test04 v0.1.0
 ├── openpyxl v3.1.5
@@ -1132,21 +1310,24 @@ test04 v0.1.0
 *** 安装常用工具
 
 安装工具：
-#+begin_src shell
+
+#+begin_src bash :exports code
 uv tool install aider-chat ruff ty basedpyright black
 #+end_src
 
 安装工具的时候指定 Python 版本：
-#+begin_src shell
+
+#+begin_src bash :exports code
 uv tool install aider-chat --python 3.11
 #+end_src
 
 查看已经安装的工具：
-#+begin_src shell
+
+#+begin_src bash :exports code
 uv tool list
 #+end_src
 
-#+begin_src shell
+#+begin_src bash :exports code
 aider-chat v0.86.1
 - aider
 ansible-lint v26.1.1
@@ -1223,25 +1404,27 @@ yamllint v1.38.0
 
 升级特定工具
 
-#+begin_src shell
+#+begin_src bash :exports code
 uv tool upgrade ruff
 #+end_src
 
 升级所有工具
-#+begin_src shell
+
+#+begin_src bash :exports code
 uv tool upgrade --all
 #+end_src
 
 ** Pycharm
 
-*** 安装 pycharm
+*** 安装 Pycharm
 
-查找有哪些版本的 pycharm:
-#+begin_src shell
+查找有哪些版本的 Pycharm:
+
+#+begin_src bash :exports code
 scoop search pycharm
 #+end_src
 
-#+begin_src shell
+#+begin_src bash :exports code
 'extras' bucket:
     pycharm (2025.3.1.1-253.29346.308)
     pycharm-professional (2025.3.1.1-253.29346.308)
@@ -1254,22 +1437,27 @@ scoop search pycharm
     pycharm-rc (2025.2.3-252.26830.27)
 #+end_src
 
-安装社区版本的 pycharm:
-#+begin_src shell
+安装社区版本的 Pycharm:
+
+#+begin_src bash :exports code
 scoop install pycharm
 #+end_src
 
-*** 设置 pycharm 创建新项目的默认目录
+*** 设置 Pycharm 创建新项目的默认目录
 :PROPERTIES:
 :ID:       d375e3d5-9705-423c-a651-16c9d1e7e19b
 :END:
 
 打开配置界面：
 
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
 [[file:../../static/images/dev-envs.org/2026-01-22_10-08-54_screenshot.png]]
 
 找到 *默认项目目录* 然后选择需要保存新的项目目录，然后点确定并重启 IDE 就可以了。
 
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
 [[file:../../static/images/dev-envs.org/2026-01-22_10-09-42_screenshot.png]]
 
 *** 创建新项目
@@ -1277,16 +1465,29 @@ scoop install pycharm
 :ID:       a93a4221-5215-4d17-9453-d908e347fd9e
 :END:
 
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
 [[file:../../static/images/dev-envs.org/2026-01-22_10-11-22_screenshot.png]]
 
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
 [[file:../../static/images/dev-envs.org/2026-01-22_10-12-45_screenshot.png]]
 
+1. 输入项目的目录
+2. 选择使用 Git 来管理项目版本
+3. 选择使用 UV 来管理项目的 Python 虚拟环境
+4. 选择使用的 Python 版本
+5. 选择使用的 UV 的可执行文件，一般使用默认的就可以了
+6. 确认上面的选项后点击 =创建= 按钮创建项目
+
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
 [[file:../../static/images/dev-envs.org/2026-01-22_10-13-37_screenshot.png]]
 
-#+begin_src shell
+#+begin_src bash :exports code
 PS E:\codes\python\test04> ls
 #+end_src
-#+begin_src shell
+#+begin_src bash :exports code
     Directory: E:\codes\python\test04
 
 Mode                 LastWriteTime         Length Name
@@ -1299,27 +1500,1208 @@ d----           2026/1/22    10:12                .venv
 
 也可以在 pycharm 中通过 Alt+F12 打开终端：
 
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
 [[file:../../static/images/dev-envs.org/2026-01-22_10-15-52_screenshot.png]]
 
 然后就可以执行命令了：
 
 比如安装 openxyxl 包：
 
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
 [[file:../../static/images/dev-envs.org/2026-01-22_10-16-31_screenshot.png]]
+
+* Node
+
+* Rust
+
+* Java
+
+** 软件安装
+
+*** JDK
+
+#+begin_src bash :exports code
+scoop search openjdk
+#+end_src
+
+#+begin_src bash :exports code
+Results from local buckets...
+
+Name                Version    Source Binaries
+----                -------    ------ --------
+openjdk-ea          25.0.2-10  java
+openjdk             25.0.2-10  java
+openjdk10           10.0.2-13  java
+openjdk11           11.0.2-9   java
+openjdk12           12.0.2-10  java
+openjdk13           13.0.2-8   java
+openjdk14           14.0.2-12  java
+openjdk15           15.0.2-7   java
+openjdk16           16.0.2-7   java
+openjdk17           17.0.2-8   java
+openjdk18           18.0.2.1-1 java
+openjdk19           19.0.2-7   java
+openjdk20           20.0.2-9   java
+openjdk21           21.0.2-13  java
+openjdk22           22.0.2-9   java
+openjdk23           23.0.2-7   java
+openjdk24           24.0.2-12  java
+openjdk25           25.0.2-10  java
+openjdk7-unofficial 7u80-b32   java
+openjdk8-redhat-jre 8u342-b07  java
+openjdk8-redhat     8u342-b07  java
+openjdk9            9.0.4-12   java
+#+end_src
+
+这里安装最新的 JDK 版本：
+
+#+begin_src bash :exports code
+scoop install openjdk25
+#+end_src
+
+*** IDE
+
+#+begin_src bash :exports code
+scoop search idea
+#+end_src
+
+#+begin_src bash :exports code
+Results from local buckets...
+
+Name                 Version                  Source   Binaries
+----                 -------                  ------   --------
+gridea               0.9.3                    extras
+idea-ultimate        2025.3.1.1-253.29346.240 extras
+idea                 2025.2.6.1-252.28539.33  extras
+idea-eap             2025.2.2-252.26199.7     versions
+idea-rc              2025.2.4-252.27397.28    versions
+idea-ultimate-eap    2026.1-261.17801.55      versions
+idea-ultimate-latest 261.17801.55             versions
+idea-ultimate-rc     2025.3.1-253.29346.50    versions
+#+end_src
+
+安装社区版本：
+
+#+begin_src bash :exports code
+scoop install idea
+#+end_src
+
+*** Maven
+
+#+begin_src bash :exports code
+scoop search maven
+#+end_src
+
+#+begin_src bash :exports code
+Results from local buckets...
+
+Name   Version    Source   Binaries
+----   -------    ------   --------
+maven  3.9.12     main
+maven3 3.9.12     versions
+maven4 4.0.0-rc-5 versions
+#+end_src
+
+安装最新版本：
+
+#+begin_src bash :exports code
+scoop install maven4
+#+end_src
+
+* C/C++
+
+* TexLive
+
+https://mirrors.tuna.tsinghua.edu.cn/help/CTAN/
+
+TeX Live 是目前使用最为广泛的 TeX 发行版，支持 Windows、Linux 和 macOS。其中，在 macOS 上发行的版本称为 MacTeX。
+
+** 安装方法
+
+TeX Live 发行版的常见安装方法可以参考如下文档。
+
+https://mirrors.tuna.tsinghua.edu.cn/CTAN/info/install-latex-guide-zh-cn/install-latex-guide-zh-cn.pdf
+
+除每年更新的完整版 ISO 镜像以外，CTAN 镜像中也包含在线安装器。这种方法可以使安装的所有宏包均为最新版本，但受网络连接状况影响较大。操作方法为（ /很可能需要管理员权限/ ）：
+
+1. 下载 install-tl.zip 并解压缩
+    https://mirrors.tuna.tsinghua.edu.cn/CTAN/systems/texlive/tlnet/install-tl.zip
+2. Windows 下双击运行其中的 =install-tl.bat= 。如果有图形化界面，可以在进入安装器前的右下角按钮指定使用镜像源。
+
+** 切换镜像
+
+TeX Live 使用的 CTAN 镜像源可以从内置的包管理器 =tlmgr=  更改（ /很可能需要管理员权限/ ）。
+
+在命令行中执行
+
+#+begin_src bash :exports code
+tlmgr option repository https://mirrors.tuna.tsinghua.edu.cn/CTAN/systems/texlive/tlnet
+#+end_src
+
+即可永久更改镜像源。
+
+如果只需要临时切换，可以用如下命令：
+
+#+begin_src bash :exports code
+tlmgr update --all --repository https://mirrors.tuna.tsinghua.edu.cn/CTAN/systems/texlive/tlnet
+#+end_src
+
+其中的 =update --all=  指令可根据需要修改。
+
+** 下载自定义的 template
+
+我将 Texlive 安装在 D:\texlive\ 下，可以将 template 下载到 D:\texlive\texmf-local\tex\latex\local 这个目录中：
+
+#+begin_src shell
+PS D:\texlive\texmf-local\tex\latex\local> git clone https://github.com/kimim/ElegantBook.git
+#+end_src
+
+#+INCLUDE: ../../static/test.tex src tex
+
+你可以查看 https://github.com/donaldsdlo/book_template 中 build/test.tex 以及 test.pdf 来查看对应的文件。
+
+编译的命令如下：
+
+#+begin_src shell
+xelatex   -shell-escape  -8bit -interaction=nonstopmode -synctex=1 -output-directorr test.tex
+#+end_src
+
+其中主要跟关注的内容为，指定文档的 class：
+
+#+begin_src tex
+\documentclass[lang=cn,color=blue]{elegantbook}
+#+end_src
+
+指定引用的图片的目录：
+
+#+begin_src tex
+\graphicspath{{D:/texlive/texmf-local/tex/latex/local/ElegantBook/figure/}}
+\graphicspath{{D:/texlive/texmf-local/tex/latex/local/ElegantBook/image/}}
+#+end_src
+
+* WSL2
+
+** 先决条件
+
+必须运行 Windows 10 版本 2004 及更高版本（内部版本 19041 及更高版本）或 Windows 11 才能使用以下命令。 如果使用的是早期版本，请参阅 [[https://learn.microsoft.com/zh-cn/windows/wsl/install-manual][手动安装页]]。
+
+** 安装 WSL 命令
+
+现在，可以使用单个命令安装运行 WSL 所需的所有内容。 右键单击并选择“以 *管理员*  身份运行”，在管理员模式下打开 PowerShell，输入 wsl --install 命令，然后重新启动计算机。
+
+#+begin_src bash :exports code
+wsl --install
+#+end_src
+
+此命令将启用运行 WSL 并安装 Linux 的 Ubuntu 分发所需的功能。
+
+** 如果不能按上面的方式安装，则使用如下方式安装
+
+#+begin_src bash :exports code
+dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
+dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
+#+end_src
+
+** 安装新的 Linux 分发版时将默认版本设置为 WSL 2
+
+#+begin_src bash :exports code
+wsl.exe --set-default-version 2
+#+end_src
+
+** 列出可用的 Linux 分发版
+
+#+begin_src bash :exports code
+wsl -l -o
+#+end_src
+
+** Update WSL
+
+#+begin_src bash :exports code
+wsl --update
+#+end_src
+
+要更新到最新的预发行版本，请换用以下命令：
+
+#+begin_src bash :exports code
+wsl --update --pre-release
+#+end_src
+
+** 在 WSL 上安装 Arch Linux
+
+#+begin_src bash :exports code
+wsl --install -d archlinux --name Arch --location E:\WSLOS\Arch
+#+end_src
+
+下载安装程序:
+#+begin_src bash :exports code
+PS C:\Users\donal> wsl --install -d archlinux --name Arch --location E:\WSLOS\Arch
+正在下载: Arch Linux
+[=====                      9.8%                           ]
+
+#+end_src
+
+安装完成后终端显示：
+
+#+begin_src bash :exports code
+PS C:\Users\donal> wsl --install -d archlinux --name Arch --location E:\WSLOS\Arch
+正在下载: Arch Linux
+正在安装: Arch Linux
+已成功安装分发。可以通过 “wsl.exe -d Arch” 启动它
+正在启动 Arch...
+Welcome to the Arch Linux WSL image!
+
+This image is maintained at <https://gitlab.archlinux.org/archlinux/archlinux-wsl>.
+
+Please, report bugs at <https://gitlab.archlinux.org/archlinux/archlinux-wsl/-/issues>.
+Note that WSL 1 is not supported.
+
+For more information about this WSL image and its usage (including "tips and tricks" and troubleshooting steps), see the related Arch Wiki page at <https://wiki.archlinux.org/title/Install_Arch_Linux_on_WSL>.
+
+While images are built regularly, it is strongly recommended running "pacman -Syu" right after the first launch due to the rolling release nature of Arch Linux.
+
+Generating pacman keys...
+==> Generating pacman master key. This may take some time.
+==> Updating trust database...
+Done
+[root@DESKTOP-92CHCK7 donal]#
+#+end_src
+
+同时会显示图形界面：
+
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
+[[file:../../static/images/dev-envs.org/_20251106_105407_oK5vp2.png]]
+
+** 如果上面的方式安装缓慢，可以从镜像站下载文件后从文件安装
+
+*** 查找镜像下载 URL
+:PROPERTIES:
+:ID:       e341a66f-a372-4a72-835a-9ba0bf9beca3
+:END:
+
+可以在如下的网站上查看具体的版本：
+
+https://mirrors.tuna.tsinghua.edu.cn/archlinux/wsl/
+
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
+[[file:../../static/images/dev-envs.org/2025-11-27_14-19-43_screenshot.png]]
+
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
+[[file:../../static/images/dev-envs.org/2025-11-27_14-20-36_screenshot.png]]
+
+得到 URL：https://mirrors.tuna.tsinghua.edu.cn/archlinux/wsl/latest/archlinux.wsl 然后你就可以通过任意的下载工具下载此文件了。
+
+如果你是一个 ubuntu 发行版的使用者，你也可以从 https://mirrors.tuna.tsinghua.edu.cn/ubuntu-releases/25.10/ 中找到对应的版本进行下载。
+
+*** 从文件安装 Arch Linux WSL
+
+#+begin_src bash :exports code
+wsl --install --from-file archlinux.wsl --location D:\WSL\archlinux\ --name archlinux
+#+end_src
+
+其中的 --from-file 和 --location 的参数需要根据实际情况调整。
+
+** 添加国内镜像
+
+编辑 =/etc/pacman.d/mirrorlist= ，在文件的最顶端添加：
+
+#+begin_src bash :exports code :tangle no
+Server = https://mirrors.xjtu.edu.cn/archlinux/$repo/os/$arch
+#+end_src
+
+更新软件包缓存：
+
+#+begin_src bash :exports code :tangle no
+pacman -Syyu
+#+end_src
+
+** 确认是否已经启用了 =systemd= 服务
+
+#+begin_src bash :exports code
+[root@DESKTOP-92CHCK7 donal]# systemctl status
+#+end_src
+
+#+begin_src bash :exports code
+● DESKTOP-92CHCK7
+    State: running
+    Units: 339 loaded (incl. loaded aliases)
+     Jobs: 0 queued
+   Failed: 0 units
+    Since: Thu 2025-11-06 10:52:03 CST; 4min 58s ago
+  systemd: 258.1-1-arch
+   CGroup: /
+           ├─init.scope
+           │ ├─  1 /sbin/init
+           │ ├─  2 /init
+           │ ├─  8 plan9 --control-socket 7 --log-level 4 --server-fd 8 --pipe-fd 10 --log-truncate
+           │ ├─231 /init
+           │ ├─232 /init
+           │ ├─233 /usr/bin/bash
+           │ ├─320 systemctl status
+           │ └─321 "(pager)"
+           ├─system.slice
+           │ ├─dbus-broker.service
+           │ │ ├─214 /usr/bin/dbus-broker-launch --scope system --audit
+           │ │ └─215 dbus-broker --log 10 --controller 9 --machine-id e055bdab25604b729b245f253abd5e5f --max-bytes 536870912 --max-fds 4096 --max-matches 16384 --audit
+           │ ├─systemd-homed.service
+           │ │ └─216 /usr/lib/systemd/systemd-homed
+           │ ├─systemd-journald.service
+           │ │ └─45 /usr/lib/systemd/systemd-journald
+           │ ├─systemd-logind.service
+           │ │ └─217 /usr/lib/systemd/systemd-logind
+           │ ├─systemd-networkd.service
+           │ │ └─107 /usr/lib/systemd/systemd-networkd
+           │ ├─systemd-nsresourced.service
+           │ │ ├─76 /usr/lib/systemd/systemd-nsresourced
+           │ │ ├─80 "systemd-nsresourcework: waiting..."
+           │ │ ├─81 "systemd-nsresourcework: waiting..."
+           │ │ ├─82 "systemd-nsresourcework: waiting..."
+           │ │ ├─83 "systemd-nsresourcework: waiting..."
+           │ │ └─84 "systemd-nsresourcework: waiting..."
+           │ ├─systemd-resolved.service
+           │ │ └─96 /usr/lib/systemd/systemd-resolved
+           │ ├─systemd-udevd.service
+           │ │ └─udev
+           │ │   └─106 /usr/lib/systemd/systemd-udevd
+           │ └─systemd-userdbd.service
+           │   ├─ 77 /usr/lib/systemd/systemd-userdbd
+           │   ├─197 "systemd-userwork: waiting..."
+           │   ├─198 "systemd-userwork: waiting..."
+           │   └─199 "systemd-userwork: waiting..."
+           └─user.slice
+             └─user-0.slice
+               ├─session-c1.scope
+               │ ├─262 "login -- root"
+               │ └─280 -bash
+               └─user@0.service
+                 └─init.scope
+                   ├─267 /usr/lib/systemd/systemd --user
+                   └─269 "(sd-pam)"
+#+end_src
+
+** 更新系统
+
+#+begin_src bash :exports code
+pacman -Syyuu
+#+end_src
+
+#+begin_src bash :exports code
+:: Synchronizing package databases...
+ core downloading...
+ extra downloading...
+:: Starting full system upgrade...
+resolving dependencies...
+looking for conflicting packages...
+
+Package (2)         Old Version  New Version  Net Change  Download Size
+
+core/device-mapper  2.03.36-1    2.03.36-2      0.00 MiB       0.28 MiB
+core/iana-etc       20250612-1   20251030-1     0.01 MiB       0.39 MiB
+
+Total Download Size:   0.67 MiB
+Total Installed Size:  4.76 MiB
+Net Upgrade Size:      0.01 MiB
+
+:: Proceed with installation? [Y/n] y
+:: Retrieving packages...
+ iana-etc-20251030-1-any downloading...
+ device-mapper-2.03.36-2-x86_64 downloading...
+checking keyring...
+checking package integrity...
+loading package files...
+checking for file conflicts...
+:: Processing package changes...
+upgrading iana-etc...
+upgrading device-mapper...
+:: Running post-transaction hooks...
+(1/4) Reloading system manager configuration...
+(2/4) Restarting marked services...
+(3/4) Reloading device manager configuration...
+(4/4) Arming ConditionNeedsUpdate...
+[root@DESKTOP-92CHCK7 donal]#
+#+end_src
+
+** 安装熟悉的 NeoVIM
+
+#+begin_src bash :exports code
+[root@DESKTOP-92CHCK7 donal]# pacman -S neovim
+#+end_src
+
+** 修改镜像源
+
+https://mirrors.xjtu.edu.cn/docs/archlinux
+
+文件 /etc/pacman.d/mirrorlist 原内容：
+
+#+begin_src bash :exports code
+Server = https://fastly.mirror.pkgbuild.com/$repo/os/$arch
+Server = https://geo.mirror.pkgbuild.com/$repo/os/$arch
+#+end_src
+
+编辑 /etc/pacman.d/mirrorlist，在文件的最顶端添加：
+
+#+begin_src bash :exports code
+Server = https://mirrors.xjtu.edu.cn/archlinux/$repo/os/$arch
+#+end_src
+
+使用如下命令修改文件：
+
+#+begin_src bash :exports code
+[root@DESKTOP-92CHCK7 donal]# nvim /etc/pacman.d/mirrorlist
+#+end_src
+
+修改完成后的内容：
+
+#+begin_src bash :exports code
+Server = https://mirrors.xjtu.edu.cn/archlinux/$repo/os/$arch
+Server = https://fastly.mirror.pkgbuild.com/$repo/os/$arch
+Server = https://geo.mirror.pkgbuild.com/$repo/os/$arch
+#+end_src
+
+更新软件包缓存：
+
+#+begin_src bash :exports code
+pacman -Syyu
+#+end_src
+
+两次 =y=  能避免从 *损坏的* 镜像切换到 *正常的* 镜像时出现的问题。
+
+如果您从一个较新的镜像切换到较旧的镜像，以下命令可以降级部分包，以避免系统的部分更新。
+
+#+begin_src bash :exports code
+pacman -Syyuu
+#+end_src
+
+** 安装一些常用软件
+
+#+begin_src bash :exports code
+pacman -Sy --needed base-devel git fastfetch bash-completion tree ripgrep ripgrep-all fd
+#+end_src
+
+** 安装和配置 Docker
+
+*** 安装 Docker
+
+#+begin_src bash :exports code
+pacman -S docker docker-compose
+#+end_src
+
+*** 启动 Docker 守护进程
+
+#+begin_src bash :exports code
+systemctl start docker.service
+#+end_src
+
+建议启用 Docker 服务，以便 Docker 守护进程在系统启动时自动启动。
+
+#+begin_src bash :exports code
+systemctl enable docker.service
+#+end_src
+
+*** 查看 Docker 服务状态
+
+#+begin_src bash :exports code
+systemctl status docker.service
+#+end_src
+
+#+begin_src bash :exports code
+[root@DESKTOP-92CHCK7 donal]# systemctl status docker.service
+● docker.service - Docker Application Container Engine
+     Loaded: loaded (/usr/lib/systemd/system/docker.service; disabled; preset: disabled)
+     Active: active (running) since Thu 2025-11-06 15:25:23 CST; 25s ago
+ Invocation: 31c258ff57734662a7bef3815d63f71e
+TriggeredBy: ● docker.socket
+       Docs: https://docs.docker.com
+   Main PID: 1692 (dockerd)
+      Tasks: 12
+     Memory: 23.8M (peak: 25.6M)
+        CPU: 277ms
+     CGroup: /system.slice/docker.service
+             └─1692 /usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
+
+Nov 06 15:25:23 DESKTOP-92CHCK7 dockerd[1692]: time="2025-11-06T15:25:23.040538308+08:00" level=info msg="CDI directory does not exist, skipping: failed to monitor for changes: no such file or directory" dir=/var/run/cdi
+Nov 06 15:25:23 DESKTOP-92CHCK7 dockerd[1692]: time="2025-11-06T15:25:23.051611156+08:00" level=info msg="Creating a containerd client" address=/run/containerd/containerd.sock timeout=1m0s
+Nov 06 15:25:23 DESKTOP-92CHCK7 dockerd[1692]: time="2025-11-06T15:25:23.158342485+08:00" level=info msg="Loading containers: start."
+Nov 06 15:25:23 DESKTOP-92CHCK7 dockerd[1692]: time="2025-11-06T15:25:23.445920972+08:00" level=info msg="Loading containers: done."
+Nov 06 15:25:23 DESKTOP-92CHCK7 dockerd[1692]: time="2025-11-06T15:25:23.476819753+08:00" level=info msg="Docker daemon" commit=89c5e8fd66 containerd-snapshotter=false storage-driver=overlay2 version=28.5.2
+Nov 06 15:25:23 DESKTOP-92CHCK7 dockerd[1692]: time="2025-11-06T15:25:23.477204532+08:00" level=info msg="Initializing buildkit"
+Nov 06 15:25:23 DESKTOP-92CHCK7 dockerd[1692]: time="2025-11-06T15:25:23.570329696+08:00" level=info msg="Completed buildkit initialization"
+Nov 06 15:25:23 DESKTOP-92CHCK7 dockerd[1692]: time="2025-11-06T15:25:23.578868047+08:00" level=info msg="Daemon has completed initialization"
+Nov 06 15:25:23 DESKTOP-92CHCK7 dockerd[1692]: time="2025-11-06T15:25:23.578973779+08:00" level=info msg="API listen on /run/docker.sock"
+Nov 06 15:25:23 DESKTOP-92CHCK7 systemd[1]: Started Docker Application Container Engine.
+#+end_src
+
+*** 将用户添加到 Docker 组
+
+#+begin_src bash :exports code
+usermod -aG docker $USER
+#+end_src
+
+*** 换源
+
+**** 创建目录
+
+#+begin_src bash :exports code
+mkdir -p /etc/docker
+#+end_src
+
+**** 向配置文件写入镜像源
+
+#+begin_src bash :exports code
+tee /etc/docker/daemon.json <<-'EOF'
+{
+    "registry-mirrors": [
+    	"https://docker.m.daocloud.io",
+    	"https://docker.imgdb.de",
+    	"https://docker-0.unsee.tech",
+    	"https://docker.hlmirror.com",
+    	"https://docker.1ms.run",
+    	"https://func.ink",
+    	"https://lispy.org",
+    	"https://docker.xiaogenban1993.com"
+    ]
+}
+EOF
+#+end_src
+
+**** 重启 Docker 服务
+
+#+begin_src bash :exports code
+systemctl daemon-reload && systemctl restart docker
+#+end_src
+
+**** 验证
+
+#+begin_src bash :exports code
+docker pull hello-world
+#+end_src
+
+#+begin_src bash :exports code
+Using default tag: latest
+latest: Pulling from library/hello-world
+17eec7bbc9d7: Pull complete
+Digest: sha256:56433a6be3fda188089fb548eae3d91df3ed0d6589f7c2656121b911198df065
+Status: Downloaded newer image for hello-world:latest
+docker.io/library/hello-world:latest
+#+end_src
+
+** 安装 python 管理工具
+
+#+begin_src bash :exports code
+pacman -S uv
+#+end_src
+
+根据 https://mirrors.xjtu.edu.cn/docs/pypi 的说明配置国内源
+
+#+begin_src bash :exports code
+~/.config/uv/
+#+end_src
+
+创建完目录后通过以下命令编辑配置文件：
+
+#+begin_src bash :exports code
+nvim ~/.config/uv/uv.toml
+#+end_src
+
+文件中的内容如下：
+
+#+begin_src toml :exports code
+[[index]]
+url = "https://mirrors.xjtu.edu.cn/pypi/simple/"
+default = true
+#+end_src
+
+Arch Linux 系统本身没有安装 python，可以通过 UV 创建一个环境，把对应的目录放入到环境变量 PATH 中就可以了。
+
+#+begin_src bash :exports code
+[root@DESKTOP-92CHCK7 donal]# python --version
+bash: python: command not found
+[root@DESKTOP-92CHCK7 donal]# python3 --version
+bash: python3: command not found
+#+end_src
+
+在用户目录中创建一个目录并进入到该目录：
+
+#+begin_src bash :exports code
+[root@DESKTOP-92CHCK7 donal]# cd ~/
+[root@DESKTOP-92CHCK7 ~]# pwd
+/root
+[root@DESKTOP-92CHCK7 ~]# mkdir python
+[root@DESKTOP-92CHCK7 ~]# cd python/
+#+end_src
+
+查看可用的 python 版本：
+#+begin_src bash :exports code
+uv python list
+#+end_src
+
+#+begin_src bash :exports code
+cpython-3.15.0a1-linux-x86_64-gnu                 <download available>
+cpython-3.15.0a1+freethreaded-linux-x86_64-gnu    <download available>
+cpython-3.14.0-linux-x86_64-gnu                   <download available>
+cpython-3.14.0+freethreaded-linux-x86_64-gnu      <download available>
+cpython-3.13.9-linux-x86_64-gnu                   <download available>
+cpython-3.13.9+freethreaded-linux-x86_64-gnu      <download available>
+cpython-3.12.12-linux-x86_64-gnu                  <download available>
+cpython-3.11.14-linux-x86_64-gnu                  <download available>
+cpython-3.10.19-linux-x86_64-gnu                  <download available>
+cpython-3.9.24-linux-x86_64-gnu                   <download available>
+cpython-3.8.20-linux-x86_64-gnu                   <download available>
+pypy-3.11.13-linux-x86_64-gnu                     <download available>
+pypy-3.10.16-linux-x86_64-gnu                     <download available>
+pypy-3.9.19-linux-x86_64-gnu                      <download available>
+pypy-3.8.16-linux-x86_64-gnu                      <download available>
+graalpy-3.12.0-linux-x86_64-gnu                   <download available>
+graalpy-3.11.0-linux-x86_64-gnu                   <download available>
+graalpy-3.10.0-linux-x86_64-gnu                   <download available>
+graalpy-3.8.5-linux-x86_64-gnu                    <download available>
+#+end_src
+
+选择一个合适的版本安装
+
+#+begin_src bash :exports code
+uv init --python cpython-3.14.0-linux-x86_64-gnu
+#+end_src
+
+安装一个包才会实际安装 python:
+
+#+begin_src bash :exports code
+[root@DESKTOP-92CHCK7 python]# uv add requests
+#+end_src
+
+#+begin_src bash :exports code
+Resolved 6 packages in 1.33s
+Prepared 5 packages in 684ms
+Installed 5 packages in 7ms
+ + certifi==2025.10.5
+ + charset-normalizer==3.4.4
+ + idna==3.11
+ + requests==2.32.5
+ + urllib3==2.5.0
+#+end_src
+
+在文件 ~/.bashrc 中配置环境变量 PATH:
+
+#+begin_src bash :exports code
+export PATH=/root/python/.venv/bin:$PATH
+#+end_src
+
+配置完了要立即生效，可以执行命令：
+
+#+begin_src bash :exports code
+source ~/.bashrc
+#+end_src
+
+现在就可以查询到 python 版本了：
+
+#+begin_src bash :exports code
+[root@DESKTOP-92CHCK7 bin]# python --version
+Python 3.14.0
+#+end_src
+
+** 备份 Arch
+
+#+begin_src bash :exports code
+wsl --export Arch E:\backups\arch.tar
+#+end_src
+
+#+begin_src bash :exports code
+正在导出，这可能需要几分钟时间。 (1531 MB): ./etc/pacman.d/gnupg/S.gpg-agent.ssh: pax format cannot archive sockets: ./etc/pacman.d/gnupg/S.gpg-agent: pax format cannot archive sockets: ./etc/pacman.d/gnupg/S.keyboxd: pax format cannot archive sockets: ./etc/pacman.d/gnupg/S.gpg-agent.extra: pax format cannot archive sockets: ./etc/pacman.d/gnupg/S.dirmngr: pax format cannot archive sockets: ./etc/pacman.d/gnupg/S.gpg-agent.browser: pax format cannot archi (4116 MB)
+#+end_src
+
+看上去导出的文件还是比较大的，有没有必要备份呢？
+
+** 问题处理
+
+*** Locales
+
+#+begin_src bash :exports code
+PS D:\Documents\codes\python\study> wsl
+-bash: warning: setlocale: LC_CTYPE: cannot change locale (en_US.UTF-8): No such file or directory
+-bash: warning: setlocale: LC_CTYPE: cannot change locale (en_US.UTF-8): No such file or directory
+-bash: warning: setlocale: LC_COLLATE: cannot change locale (en_US.UTF-8): No such file or directory
+#+end_src
+
+#+begin_src bash :exports code
+# 编辑 locale.gen 文件
+sudo nvim /etc/locale.gen
+
+# 取消注释 en_US.UTF-8 UTF-8 这一行（删除行首的 #）
+# 找到这一行并确保是这样的：
+en_US.UTF-8 UTF-8
+
+# 生成 locales
+sudo locale-gen
+
+# 设置系统locale
+sudo nvim /etc/locale.conf
+#+end_src
+
+** 字体安装
+
+#+begin_src bash :exports code
+mkdir -p ~/.local/share/fonts/
+#+end_src
+
+将字体文件复制到此目录中，然后执行：
+
+#+begin_src bash :exports code
+fc-cache -f -v
+#+end_src
+
+** 输入法
+
+#+begin_src bash :exports code
+pacman -S fcitx5 fcitx5-configtool fcitx5-gtk fcitx5-qt fcitx5-chinese-addons librime librime-data fcitx5-rime
+#+end_src
+
+安装字体支持
+
+#+begin_src bash :exports code
+pacman -S noto-fonts-cjk noto-fonts-emoji
+#+end_src
+
+先手动运行
+
+#+begin_src bash :exports code
+fcitx5 --disable=wayland -d
+#+end_src
+#+begin_src bash :exports code
+fcitx5-configtool
+#+end_src
+
+* 虚拟机管理
+
+** 设置默认的目录，节省 C 盘空间
+
+默认情况下，vagrant 会把相关的文件都保存在 %USERPROFILE%\.vagrant.d 目录中，可以通过设置环境变量 VAGRANT_HOME
+来调整到其他盘符下，以节省 C 盘的空间。
+
+#+begin_src shell
+setx VAGRANT_HOME d:\.vagrant.d
+#+end_src
+
+** 相关软件安装
+
+#+begin_src shell
+winget install Oracle.VirtualBox
+winget install Hashicorp.Vagrant
+#+end_src
+
+** 虚拟机默认位置
+
+#+begin_src shell
+VBoxManage setproperty machinefolder "D:\VirtualBoxVMs"
+#+end_src
+
+** 查找 vagrant box
+:PROPERTIES:
+:ID:       0106fcc9-88d0-4231-a6e6-4bc546d92008
+:END:
+
+https://portal.cloud.hashicorp.com/vagrant/discover
+
+[[file:../../static/images/dev-envs.org/2026-01-26_15-27-13_screenshot.png]]
+
+复制要下载的 Box 的名称，然后使用如下的名称将 Box 下载到本地：
+
+#+begin_src shell
+vagrant box add  cloud-image/debian-13
+#+end_src
+
+#+begin_src shell
+==> box: Loading metadata for box 'cloud-image/debian-13'
+    box: URL: https://vagrantcloud.com/api/v2/vagrant/cloud-image/debian-13
+This box can work with multiple providers! The providers that it
+can work with are listed below. Please review the list and choose
+the provider you will be working with.
+
+1) libvirt
+2) qemu
+3) virtualbox
+
+Enter your choice:
+#+end_src
+
+我使用 virtualbox，所以我选择 3,然后就开始下载了:
+
+#+begin_src shell
+==> box: Loading metadata for box 'cloud-image/debian-13'
+    box: URL: https://vagrantcloud.com/api/v2/vagrant/cloud-image/debian-13
+This box can work with multiple providers! The providers that it
+can work with are listed below. Please review the list and choose
+the provider you will be working with.
+
+1) libvirt
+2) qemu
+3) virtualbox
+
+Enter your choice: 3
+==> box: Adding box 'cloud-image/debian-13' (v20260112.2355.0) for provider: virtualbox (amd64)
+    box: Downloading: https://vagrantcloud.com/cloud-image/boxes/debian-13/versions/20260112.2355.0/providers/virtualbox/amd64/vagrant.box
+Progress: 0% (Rate: 76073/s, Estimated time remaining: 4:51:49)
+#+end_src
+
+#+begin_src shell
+==> box: Loading metadata for box 'cloud-image/debian-13'
+    box: URL: https://vagrantcloud.com/api/v2/vagrant/cloud-image/debian-13
+This box can work with multiple providers! The providers that it
+can work with are listed below. Please review the list and choose
+the provider you will be working with.
+
+1) libvirt
+2) qemu
+3) virtualbox
+
+Enter your choice: 3
+==> box: Adding box 'cloud-image/debian-13' (v20260112.2355.0) for provider: virtualbox (amd64)
+    box: Downloading: https://vagrantcloud.com/cloud-image/boxes/debian-13/versions/20260112.2355.0/providers/virtualbox/amd64/vagrant.box
+    box:
+==> box: Successfully added box 'cloud-image/debian-13' (v20260112.2355.0) for 'virtualbox (amd64)'!
+#+end_src
+
+出现最后一行的成功消息后，表示添加成功了，可以使用这个 Box 来创建虚拟机了。
+
+可以通过如下的命令检查 Box：
+
+#+begin_src shell
+vagrant box list
+#+end_src
+
+#+begin_src shell
+cloud-image/debian-13 (virtualbox, 20260112.2355.0, (amd64))
+#+end_src
+
+如果下载的速度很慢，你也可以将这个 URL 复制出来，然后使用其他的下载工具下载 ,然后通过如下的命令来添加 Box：
+
+#+begin_src shell
+vagrant box add my/debian13 D:\data\downloads\cloud-image-debian-13-virtualbox.box
+#+end_src
+
+#+begin_src shell
+==> box: Box file was not detected as metadata. Adding it directly...
+==> box: Adding box 'my/debian13' (v0) for provider: (amd64)
+    box: Unpacking necessary files from: file:///D:/data/downloads/cloud-image-debian-13-virtualbox.box
+    box:
+==> box: Successfully added box 'my/debian13' (v0) for '(amd64)'!
+#+end_src
+
+查看 Box:
+
+#+begin_src shell
+vagrant box list
+#+end_src
+
+#+begin_src shell
+cloud-image/debian-13 (virtualbox, 20260112.2355.0, (amd64))
+my/debian13           (virtualbox, 0, (amd64))
+#+end_src
+
+可以看到自己命名的 Box 已经添加到系统中了。
+
+** 创建虚拟机
+:PROPERTIES:
+:ID:       e884ecb7-3592-4153-ac33-6fe3fb8a0a73
+:END:
+*** Virtualbox 这是个失败的例子，但是应该是可以成功的，不知道跟什么冲突了
+虚拟机我都放在 D:\VirtualBoxVMs 目录中，然后在这个目录中创建一个目录，例如 debian13 ，然后在命令行中进入到这个目录：
+
+#+begin_src shell
+PS D:\VirtualBoxVMs\debian13> vagrant init cloud-image/debian-13
+#+end_src
+
+#+begin_src shell
+A `Vagrantfile` has been placed in this directory. You are now
+ready to `vagrant up` your first virtual environment! Please read
+the comments in the Vagrantfile as well as documentation on
+`vagrantup.com` for more information on using Vagrant.
+#+end_src
+
+执行完命令后会提示生成了一个 `Vagrantfile` 文件，此文件是用 Ruby 语言编写的虚拟机描述文件，使用如下命令启动虚拟机：
+
+#+begin_src shell
+PS D:\VirtualBoxVMs\debian13> vagrant up
+#+end_src
+
+#+begin_src shell
+ringing machine 'default' up with 'virtualbox' provider...
+==> default: Importing base box 'cloud-image/debian-13'...
+==> default: Generating MAC address for NAT networking...
+==> default: Checking if box 'cloud-image/debian-13' version '20260112.2355.0' is up to date...
+==> default: Setting the name of the VM: debian13_default_1769414455947_44388
+==> default: Clearing any previously set network interfaces...
+==> default: Preparing network interfaces based on configuration...
+    default: Adapter 1: nat
+==> default: Forwarding ports...
+    default: 22 (guest) => 2222 (host) (adapter 1)
+==> default: Booting VM...
+There was an error while executing `VBoxManage`, a CLI used by Vagrant
+for controlling VirtualBox. The command and stderr is shown below.
+
+Command: ["startvm", "211f21bc-c624-4782-9d03-3081241fdad0", "--type", "headless"]
+
+Stderr: VBoxManage.exe: error: The virtual machine 'debian13_default_1769414455947_44388' has terminated unexpectedly during startup with exit code -1073741819 (0xc0000005)
+VBoxManage.exe: error: Details: code E_FAIL (0x80004005), component MachineWrap, interface IMachine
+#+end_src
+
+但是碰到了这个错误，似乎是 WSL 与 VirtualBox 有冲突。
+
+删除创建的虚拟机：
+
+#+begin_src shell
+PS D:\VirtualBoxVMs\debian13> vagrant destroy
+#+end_src
+
+#+begin_src shell
+    default: Are you sure you want to destroy the 'default' VM? [y/N]
+#+end_src
+
+恢复 Y ：
+
+#+begin_src shell
+    default: Are you sure you want to destroy the 'default' VM? [y/N] y
+==> default: Destroying VM and associated drives...
+#+end_src
+
+*** VMWare
+
+**** 安装 VMWare Workstation
+
+https://www.vmware.com/products/desktop-hypervisor/workstation-and-fusion 从此网站上下载 VMWare Workstation pro ，然后
+手动安装并设置默认的虚拟机目录：
+
+[[file:../../static/images/dev-envs.org/2026-01-26_16-44-11_screenshot.png]]
+
+[[file:../../static/images/dev-envs.org/2026-01-26_16-44-36_screenshot.png]]
+
+**** 从网站 https://developer.hashicorp.com/vagrant/install/vmware 上下载 Vagrant VMware Utility 并安装
+
+**** 安装 vmware-desktop 插件
+
+#+begin_src shell
+PS D:\VirtualBoxVMs\debian13> vagrant plugin install vagrant-vmware-desktop
+#+end_src
+
+#+begin_src shell
+Installing the 'vagrant-vmware-desktop' plugin. This can take a few minutes...
+Fetching hashdiff-1.2.1.gem
+Fetching crack-1.0.1.gem
+Fetching public_suffix-7.0.2.gem
+Fetching addressable-2.8.8.gem
+Fetching webmock-3.26.1.gem
+Fetching rspec-support-3.13.6.gem
+Fetching diff-lcs-1.6.2.gem
+Fetching rspec-expectations-3.13.5.gem
+Fetching rspec-core-3.13.6.gem
+Fetching rspec-its-2.0.0.gem
+Fetching rspec-mocks-3.13.7.gem
+Fetching rspec-3.13.2.gem
+Fetching rake-13.3.1.gem
+Fetching vagrant-vmware-desktop-3.0.5.gem
+Thank you for installing the Vagrant VMware Desktop
+plugin. This plugin requires the Vagrant VMware
+Utility to be installed. To learn more about the
+Vagrant VMware Utility, please visit:
+
+  https://www.vagrantup.com/docs/providers/vmware/vagrant-vmware-utility
+
+To install the Vagrant VMware Utility, please
+download the appropriate installer for your
+system from:
+
+  https://www.vagrantup.com/downloads/vmware
+Successfully uninstalled addressable-2.8.8
+Successfully uninstalled crack-1.0.1
+Removing htmldiff
+Removing ldiff
+Successfully uninstalled diff-lcs-1.6.2
+Successfully uninstalled hashdiff-1.2.1
+Successfully uninstalled public_suffix-7.0.2
+Removing rake
+Successfully uninstalled rake-13.3.1
+Successfully uninstalled rspec-3.13.2
+Removing rspec
+Successfully uninstalled rspec-core-3.13.6
+Successfully uninstalled rspec-expectations-3.13.5
+Successfully uninstalled rspec-its-2.0.0
+Successfully uninstalled rspec-mocks-3.13.7
+Successfully uninstalled rspec-support-3.13.6
+Successfully uninstalled webmock-3.26.1
+Installed the plugin 'vagrant-vmware-desktop (3.0.5)'!
+Post install message from the 'vagrant-vmware-desktop' plugin:
+
+Thank you for installing the Vagrant VMware Desktop
+plugin. This plugin requires the Vagrant VMware
+Utility to be installed. To learn more about the
+Vagrant VMware Utility, please visit:
+
+  https://www.vagrantup.com/docs/providers/vmware/vagrant-vmware-utility
+
+To install the Vagrant VMware Utility, please
+download the appropriate installer for your
+system from:
+
+  https://www.vagrantup.com/downloads/vmware
+#+end_src
+
+**** 重新下载支持 vmware_desktop 的 Box
+:PROPERTIES:
+:ID:       3eead486-e068-43af-953d-bb35f870d67a
+:END:
+
+[[file:../../static/images/dev-envs.org/2026-01-26_16-53-13_screenshot.png]]
+
+#+begin_src shell
+vagrant box add svincent/debian13
+#+end_src
+
+#+begin_src shell
+==> box: Loading metadata for box 'svincent/debian13'
+    box: URL: https://vagrantcloud.com/api/v2/vagrant/svincent/debian13
+This box can work with multiple providers! The providers that it
+can work with are listed below. Please review the list and choose
+the provider you will be working with.
+
+1) libvirt
+2) virtualbox
+3) vmware_desktop
+
+Enter your choice:
+#+end_src
+
+输入 3 后回车
+
+#+begin_src shell
+Enter your choice: 3
+==> box: Adding box 'svincent/debian13' (v1.2.0) for provider: vmware_desktop (amd64)
+    box: Downloading: https://vagrantcloud.com/svincent/boxes/debian13/versions/1.2.0/providers/vmware_desktop/amd64/vagrant.box
+    box:
+    box: Calculating and comparing box checksum...
+==> box: Successfully added box 'svincent/debian13' (v1.2.0) for 'vmware_desktop (amd64)'!
+PS D:\>
+#+end_src
+
+**** 初始化虚拟机
+
+#+begin_src shell
+PS D:\VirtualBoxVMs\debian13> vagrant init svincent/debian13
+#+end_src
+
+#+begin_src shell
+A `Vagrantfile` has been placed in this directory. You are now
+ready to `vagrant up` your first virtual environment! Please read
+the comments in the Vagrantfile as well as documentation on
+`vagrantup.com` for more information on using Vagrant.
+#+end_src
+
+**** 启动虚拟机
+
+#+begin_src shell
+PS D:\VirtualBoxVMs\debian13> vagrant up --provider=vmware_desktop
+#+end_src
+
+这个过程需要花费几分钟的时间，等到结束：
+
+#+begin_src shell
+Bringing machine 'default' up with 'vmware_desktop' provider...
+==> default: Cloning VMware VM: 'svincent/debian13'. This can take some time...
+==> default: Checking if box 'svincent/debian13' version '1.2.0' is up to date...
+==> default: Verifying vmnet devices are healthy...
+==> default: Preparing network adapters...
+==> default: Starting the VMware VM...
+==> default: Waiting for the VM to receive an address...
+==> default: Forwarding ports...
+    default: -- 22 => 2222
+==> default: Waiting for machine to boot. This may take a few minutes...
+    default: SSH address: 127.0.0.1:2222
+    default: SSH username: vagrant
+    default: SSH auth method: private key
+    default:
+    default: Vagrant insecure key detected. Vagrant will automatically replace
+    default: this with a newly generated keypair for better security.
+    default:
+    default: Inserting generated public key within guest...
+    default: Removing insecure key from the guest if it's present...
+    default: Key inserted! Disconnecting and reconnecting using new SSH key...
+==> default: Machine booted and ready!
+==> default: Configuring network adapters within the VM...
+#+end_src
+
+**** 登录到这个虚拟机
+
+#+begin_src shell
+PS D:\VirtualBoxVMs\debian13> vagrant ssh
+#+end_src
+
+#+begin_src shell
+vagrant@debian13:~$
+#+end_src
+
+出现如上的提示符，表示登录到了虚拟机中了。
+
+*root 和 vagrant 用户密码都是 vagrant*
+
+**** 停止虚拟机
+
+#+begin_src shell
+vagrant halt
+#+end_src
+
+**** 销毁虚拟机
+
+#+begin_src shell
+vagrant destroy
+#+end_src
+
+**** 批量创建虚拟机
+
+#+begin_src ruby
+# Vagrantfile 示例
+Vagrant.configure("2") do |config|
+  (1..3).each do |i|
+    config.vm.define "server#{i}" do |server|
+      server.vm.box = "ubuntu/focal64"
+      server.vm.network "private_network", ip: "192.168.50.#{100 + i}"
+    end
+  end
+end
+#+end_src
+
+通过上述配置文件，可以快速创建 3 台虚拟机，每台虚拟机的 IP 地址分别为 192.168.50.101、192.168.50.102 和 192.168.50.103。
+
+启动批量虚拟机的命令如下：
+
+#+begin_src shell
+vagrant up
+#+end_src
+
+销毁批量虚拟机的命令如下：
+
+#+begin_src shell
+vagrant destroy -f
+#+end_src
+
+* NeoVIM
 
 * GPG/文件加密
 
 ** 安装
 
-#+begin_src shell
+#+begin_src bash :exports code
 scoop install gpg
 #+end_src
 
 验证是否安装成功：
-#+begin_src shell
+
+#+begin_src bash :exports code
 gpg --version
 #+end_src
-#+begin_src shell
+
+#+begin_src bash :exports code
 gpg (GnuPG) 2.5.16
 libgcrypt 1.11.2
 Copyright (C) 2025 g10 Code GmbH
@@ -1341,12 +2723,13 @@ Compression: Uncompressed, ZIP, ZLIB, BZIP2
 :ID:       0e4688f8-96ab-41e1-b008-b8d2d1bf1a64
 :END:
 
-#+begin_src shell
+#+begin_src bash :exports code
 gpg --gen-key
 #+end_src
 
 输入回车，系统会给出提示：
-#+begin_src shell
+
+#+begin_src bash :exports code
 gpg (GnuPG) 2.5.16; Copyright (C) 2025 g10 Code GmbH
 This is free software: you are free to change and redistribute it.
 There is NO WARRANTY, to the extent permitted by law.
@@ -1360,7 +2743,8 @@ Real name:
 #+end_src
 
 一次输入名字以及邮箱：
-#+begin_src shell
+
+#+begin_src bash :exports code
 Real name: Donald Lo
 Email address: donald.sd.lo@gmail.com
 You selected this USER-ID:
@@ -1371,34 +2755,42 @@ Change (N)ame, (E)mail, or (O)kay/(Q)uit?
 
 确认名字和邮箱后输入 o 后回车，会弹出一个输入密码保护 key 的对话框：
 
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
 [[file:../../static/images/dev-envs.org/2026-01-21_15-37-56_screenshot.png]]
 
 输入密码后回车，由于我输入的密码过于简单，弹出如下的对话框：
 
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
 [[file:../../static/images/dev-envs.org/2026-01-21_15-38-17_screenshot.png]]
 
 点击 Take this one anyway 按钮，会让你确认密码：
 
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
 [[file:../../static/images/dev-envs.org/2026-01-21_15-38-37_screenshot.png]]
 
 再此输入密码后点击 OK 就会生成 key。
 
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
 [[file:../../static/images/dev-envs.org/2026-01-21_15-41-04_screenshot.png]]
 
 如果要更多选项，可以使用如下命令生成 key：
 
-#+begin_src shell
+#+begin_src bash :exports code
 gpg --full-generate-key
 #+end_src
 
 ** 生成一个文本文件
 
-#+begin_src shell
+#+begin_src bash :exports code
 PS E:\tmp\test04> cat .\test01.txt
 #+end_src
 
 其中的内容如下：
-#+begin_src shell
+#+begin_src bash :exports code
 01
 02
 03
@@ -1407,11 +2799,11 @@ PS E:\tmp\test04> cat .\test01.txt
 
 ** 加密文件
 
-#+begin_src shell
+#+begin_src bash :exports code
 PS E:\tmp\test04> gpg --recipient "Donald Lo <donald.sd.lo@gmail.com>" --output test01.txt.gpg --encrypt .\test01.txt
 #+end_src
 
-#+begin_src shell
+#+begin_src bash :exports code
 gpg: checking the trustdb
 gpg: marginals needed: 3  completes needed: 1  trust model: pgp
 gpg: depth: 0  valid:   1  signed:   0  trust: 0-, 0q, 0n, 0m, 0f, 1u
@@ -1419,34 +2811,38 @@ gpg: next trustdb check due at 2029-01-20
 #+end_src
 
 查看加密后的文件内容
-#+begin_src shell
+
+#+begin_src bash :exports code
 PS E:\tmp\test04> cat test01.txt.gpg
 #+end_src
 
 内容完全混乱了，无法识别：
-#+begin_src shell
+
+#+begin_src bash :exports code
 �^+7I␦^�+�@�lQr���&�4   �{�JQ�,%_��h9��
 0�b�� �D������_o��-�a�s�b��мu�O1�h����u�p��[    �ZM�S�upn����j}ۑ�ŀ����G�����Ŷ��m�*V;U{gXFU%�R����[�*��s�0�{X�㏌�0FZ"T
 #+end_src
 
 ** 解密
 
-#+begin_src shell
+#+begin_src bash :exports code
 PS E:\tmp\test04> gpg --output test.de.txt --decrypt test01.txt.gpg
 #+end_src
 
 回车，如果提示要输入密码就输入之前输入的密码，之后会显示如下的消息：
-#+begin_src shell
+
+#+begin_src bash :exports code
 gpg: encrypted with cv25519 key, ID 2B37491A5EF82BAB, created 2026-01-21
       "Donald Lo <donald.sd.lo@gmail.com>"
 #+end_src
 
 查看解密之后的文件：
-#+begin_src shell
+
+#+begin_src bash :exports code
 PS E:\tmp\test04> cat test.de.txt
 #+end_src
 
-#+begin_src shell
+#+begin_src bash :exports code
 01
 02
 03
@@ -1459,4 +2855,4 @@ PS E:\tmp\test04> cat test.de.txt
 
 $$ n + 1 = x + y $$
 
-这是末尾的字符。
+ 这是末尾的字符。
