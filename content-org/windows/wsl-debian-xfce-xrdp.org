@@ -1,0 +1,152 @@
+#+TITLE: WSL Debian XFCE with XRDP
+#+HUGO_TAGS: WSL XRDP
+#+CATEGORIES: Windows
+#+DATE: 2026-01-28
+#+AUTHOR: Donald Lo
+#+HUGO_SECTION: windows
+#+HUGO_BASE_DIR: ../../
+#+OPTIONS: line-break:t
+#+HUGO_AUTO_SET_LASTMOD: t
+#+DRAFT: false
+#+HUGO_DRAFT: false
+#+hugo_front_matter_format: yaml
+
+之前都是使用虚拟机来安装 Linux 系统，使用 WSL 安装 Linux 系统确实比较方便，安装上桌面以后也可以达到
+以前虚拟机的功能：
+
+* 安装 WSL Debian
+
+ 通过以下点命令来安装：
+
+#+begin_src shell
+wsl --install -d debian --name debian --location D:\VirtualBoxVMs\WSL\Debian
+#+end_src
+
+#+begin_src shell
+正在下载: Debian GNU/Linux
+正在安装: Debian GNU/Linux
+已成功安装分发。可以通过 “wsl.exe -d debian” 启动它
+正在启动 debian...
+Please create a default UNIX user account. The username does not need to match your Windows username.
+For more information visit: https://aka.ms/wslusers
+Enter new UNIX username:
+#+end_src
+
+中间会提醒输入新的账号：
+
+#+begin_src shell
+Enter new UNIX username: donald
+New password:
+Retype new password:
+passwd: password updated successfully
+usermod: no changes
+#+end_src
+
+输入新的账号以及输入两次密码后安装完成。
+
+* 查看安装的 Debian 的版本
+
+#+begin_src shell
+donald@DESKTOP-92CHCK7:/mnt/d$ cat /etc/os-release
+#+end_src
+
+#+begin_src shell
+PRETTY_NAME="Debian GNU/Linux 13 (trixie)"
+NAME="Debian GNU/Linux"
+VERSION_ID="13"
+VERSION="13 (trixie)"
+VERSION_CODENAME=trixie
+DEBIAN_VERSION_FULL=13.0
+ID=debian
+HOME_URL="https://www.debian.org/"
+SUPPORT_URL="https://www.debian.org/support"
+BUG_REPORT_URL="https://bugs.debian.org/"
+#+end_src
+
+从上面都输出可以看出安装都是 13 版本：
+
+* 替换国内源
+:PROPERTIES:
+:ID:       064c231e-4bab-4978-ac76-656f5ac5141d
+:END:
+
+先备份老大配置文件：
+
+#+begin_src shell
+sudo cp /etc/apt/sources.list /etc/apt/sources.list.backup
+#+end_src
+
+在如下的网址中 https://mirrors.tuna.tsinghua.edu.cn/help/debian/ ，安装图中 1,2 标示的选项后，将 3 中的
+文本复制出来。
+
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
+[[file:../../static/images/wsl-debian-xfce-xrdp.org/2026-01-28_16-06-22_screenshot.png]]
+
+通过以下命令修改文件内容：
+
+#+begin_src shell
+sudo vi /etc/apt/sources.list
+#+end_src
+
+先删除其中的所有内容，然后把上面网址中的内容（我把 https 改成了 http）粘贴到这个文件并保存，然后执行以下命令：
+
+#+begin_src shell
+sudo apt update
+sudo apt upgrade
+#+end_src
+
+* 安装 XFCE 桌面
+
+#+begin_src shell
+sudo apt install xfce4 xfce4-goodies
+#+end_src
+
+* 安装 Dbus
+
+#+begin_src shell
+sudo apt install -y dbus dbus-x11
+#+end_src
+
+* 安装 XDRP
+
+#+begin_src shell
+sudo apt install xrdp
+#+end_src
+
+执行如下命令来修改配置文件：
+
+#+begin_src shell
+sudo cp /etc/xrdp/xrdp.ini /etc/xrdp/xrdp.ini.bak
+sudo sed -i 's/3389/3390/g' /etc/xrdp/xrdp.ini
+sudo sed -i 's/max_bpp=32/#max_bpp=32\nmax_bpp=128/g' /etc/xrdp/xrdp.ini
+sudo sed -i 's/xserverbpp=24/#xserverbpp=24\nxserverbpp=128/g' /etc/xrdp/xrdp.ini
+#+end_src
+
+将账号添加到 Group 中：
+
+#+begin_src shell
+sudo usermod -a -G ssl-cert xrdp
+#+end_src
+
+* 在 Windows 中使用 Remote Desktop Connection 来连接桌面
+:PROPERTIES:
+:ID:       881f0494-1e7b-4bac-9dc8-75c842974ee9
+:END:
+
+localhost:3390
+
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
+[[file:../../static/images/wsl-debian-xfce-xrdp.org/2026-01-28_16-11-55_screenshot.png]]
+
+
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
+[[file:../../static/images/wsl-debian-xfce-xrdp.org/2026-01-28_16-13-13_screenshot.png]]
+
+输入账号和密码后回车：
+
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
+[[file:../../static/images/wsl-debian-xfce-xrdp.org/2026-01-28_16-13-54_screenshot.png]]

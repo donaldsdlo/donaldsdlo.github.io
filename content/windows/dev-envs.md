@@ -2,7 +2,7 @@
 title: "windows 开发环境配置"
 author: ["Donald Lo"]
 date: 2026-01-15
-lastmod: 2026-01-26T17:32:09+08:00
+lastmod: 2026-01-28T16:19:26+08:00
 tags: ["windows", "dev"]
 draft: false
 ---
@@ -143,6 +143,7 @@ draft: false
         - [Locales](#locales)
     - [字体安装](#字体安装)
     - [输入法](#输入法)
+    - [删除 Arch Linux](#删除-arch-linux)
 - [虚拟机管理](#虚拟机管理)
     - [设置默认的目录，节省 C 盘空间](#设置默认的目录-节省-c-盘空间)
     - [相关软件安装](#相关软件安装)
@@ -2918,6 +2919,33 @@ fcitx5-configtool
 ```
 
 
+### 删除 Arch Linux {#删除-arch-linux}
+
+```shell
+PS D:\home\.emacs.d> wsl -l
+```
+
+```shell
+适用于 Linux 的 Windows 子系统分发:
+archlinux (默认值)
+debian
+```
+
+进行删除
+
+```shell
+PS D:\home\.emacs.d> wsl --unregister archlinux
+```
+
+删除后会自动确认一个默认值：
+
+```shell
+PS D:\home\.emacs.d> wsl -l
+适用于 Linux 的 Windows 子系统分发:
+debian (默认值)
+```
+
+
 ## 虚拟机管理 {#虚拟机管理}
 
 
@@ -2950,7 +2978,7 @@ VBoxManage setproperty machinefolder "D:\VirtualBoxVMs"
 
 <https://portal.cloud.hashicorp.com/vagrant/discover>
 
-{{< figure src="/images/dev-envs.org/2026-01-26_15-27-13_screenshot.png" >}}
+{{< figure src="/images/dev-envs.org/2026-01-26_15-27-13_screenshot.png" width="90%" >}}
 
 复制要下载的 Box 的名称，然后使用如下的名称将 Box 下载到本地：
 
@@ -3122,9 +3150,9 @@ PS D:\VirtualBoxVMs\debian13> vagrant destroy
 <https://www.vmware.com/products/desktop-hypervisor/workstation-and-fusion> 从此网站上下载 VMWare Workstation pro ，然后
 手动安装并设置默认的虚拟机目录：
 
-{{< figure src="/images/dev-envs.org/2026-01-26_16-44-11_screenshot.png" >}}
+{{< figure src="/images/dev-envs.org/2026-01-26_16-44-11_screenshot.png" width="90%" >}}
 
-{{< figure src="/images/dev-envs.org/2026-01-26_16-44-36_screenshot.png" >}}
+{{< figure src="/images/dev-envs.org/2026-01-26_16-44-36_screenshot.png" width="90%" >}}
 
 
 ##### 从网站 <https://developer.hashicorp.com/vagrant/install/vmware> 上下载 Vagrant VMware Utility 并安装 {#从网站-https-developer-dot-hashicorp-dot-com-vagrant-install-vmware-上下载-vagrant-vmware-utility-并安装}
@@ -3201,7 +3229,7 @@ system from:
 
 ##### 重新下载支持 vmware_desktop 的 Box {#重新下载支持-vmware-desktop-的-box}
 
-{{< figure src="/images/dev-envs.org/2026-01-26_16-53-13_screenshot.png" >}}
+{{< figure src="/images/dev-envs.org/2026-01-26_16-53-13_screenshot.png" width="90%" >}}
 
 ```shell
 vagrant box add svincent/debian13

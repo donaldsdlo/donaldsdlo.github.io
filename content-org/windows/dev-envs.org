@@ -2274,6 +2274,32 @@ fcitx5 --disable=wayland -d
 fcitx5-configtool
 #+end_src
 
+** 删除 Arch Linux
+
+#+begin_src shell
+PS D:\home\.emacs.d> wsl -l
+#+end_src
+
+#+begin_src shell
+适用于 Linux 的 Windows 子系统分发:
+archlinux (默认值)
+debian
+#+end_src
+
+进行删除
+
+#+begin_src shell
+PS D:\home\.emacs.d> wsl --unregister archlinux
+#+end_src
+
+删除后会自动确认一个默认值：
+
+#+begin_src shell
+PS D:\home\.emacs.d> wsl -l
+适用于 Linux 的 Windows 子系统分发:
+debian (默认值)
+#+end_src
+
 * 虚拟机管理
 
 ** 设置默认的目录，节省 C 盘空间
@@ -2305,6 +2331,8 @@ VBoxManage setproperty machinefolder "D:\VirtualBoxVMs"
 
 https://portal.cloud.hashicorp.com/vagrant/discover
 
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
 [[file:../../static/images/dev-envs.org/2026-01-26_15-27-13_screenshot.png]]
 
 复制要下载的 Box 的名称，然后使用如下的名称将 Box 下载到本地：
@@ -2474,8 +2502,12 @@ PS D:\VirtualBoxVMs\debian13> vagrant destroy
 https://www.vmware.com/products/desktop-hypervisor/workstation-and-fusion 从此网站上下载 VMWare Workstation pro ，然后
 手动安装并设置默认的虚拟机目录：
 
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
 [[file:../../static/images/dev-envs.org/2026-01-26_16-44-11_screenshot.png]]
 
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
 [[file:../../static/images/dev-envs.org/2026-01-26_16-44-36_screenshot.png]]
 
 **** 从网站 https://developer.hashicorp.com/vagrant/install/vmware 上下载 Vagrant VMware Utility 并安装
@@ -2553,6 +2585,8 @@ system from:
 :ID:       3eead486-e068-43af-953d-bb35f870d67a
 :END:
 
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
 [[file:../../static/images/dev-envs.org/2026-01-26_16-53-13_screenshot.png]]
 
 #+begin_src shell
