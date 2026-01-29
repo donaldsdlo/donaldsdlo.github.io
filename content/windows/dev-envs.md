@@ -2,7 +2,7 @@
 title: "windows 开发环境配置"
 author: ["Donald Lo"]
 date: 2026-01-15
-lastmod: 2026-01-28T16:19:26+08:00
+lastmod: 2026-01-29T14:23:14+08:00
 tags: ["windows", "dev"]
 draft: false
 ---
@@ -3369,6 +3369,98 @@ vagrant destroy -f
 
 
 ## NeoVIM {#neovim}
+
+我只会一些 VIM 相关等操作，不懂 VIM 的相关配置，所以我使用一个网络上发布的配置。
+
+安装 neovide
+
+```shell
+scoop install neovide
+```
+
+```shell
+Updating Scoop...
+Updating Buckets...
+ * 08a96210c61a ppsspp-dev: Update to version 1.19.3-1478-ge71e1d260e    games        77 minutes ago
+ * bcafc586b552 openmsx-dev: Update to version 21.0-190-g60ff4c7ba       games        77 minutes ago
+ * ca8006ff2add duckstation-preview: Update to version 20260129-g130494f games        77 minutes ago
+ * d9b6f6aaab7c cs-demo-manager: Update to version 3.18.2                games        77 minutes ago
+ * 91b434d3ff77 rpcs3: Update to version 0.0.39-18741                    games        5 hours ago
+ * 4dfa0d647238 ppsspp-dev: Update to version 1.19.3-1472-g8de5b45bbe    games        5 hours ago
+ * 4d8ac09004d1 openmsx-dev: Update to version 21.0-189-gb9d7c346c       games        5 hours ago
+ * b88b953dc226 vscode-dev: Update to version 1.109.0-09a6795            scoop-misc   3 hours ago
+ * aba5229aa11d opencode-x: Update to version 1.1.4.8f8ee09              scoop-misc   3 hours ago
+Scoop was updated successfully!
+Installing 'neovide' (0.15.2) [64bit] from 'extras' bucket
+Starting download with aria2 ...
+Download: Download Results:
+Download: gid   |stat|avg speed  |path/URI
+Download: ======+====+===========+=======================================================
+Download: 34a69e|OK  |   0.9MiB/s|D:/Scoop/cache/neovide#0.15.2#784a84a.zip
+Download: Status Legend:
+Download: (OK):download completed.
+Checking hash of neovide.exe.zip ... ok.
+Extracting neovide.exe.zip ... done.
+Linking D:\Scoop\apps\neovide\current => D:\Scoop\apps\neovide\0.15.2
+Creating shim for 'neovide'.
+Making D:\Scoop\shims\neovide.exe a GUI binary.
+Creating shortcut for Neovide (neovide.exe)
+Running post_install script...done.
+'neovide' (0.15.2) was installed successfully!
+Notes
+-----
+Add Open with Neovide as a context menu option by running:
+reg import "D:\Scoop\apps\neovide\current\install-context.reg"
+```
+
+根据上面的提示之行：
+
+```shell
+reg import "D:\Scoop\apps\neovide\current\install-context.reg"
+```
+
+从 github 上下载 AstroNvim 的配制到如下目录中（记得前面环境变量的配制）：
+
+```shell
+PS D:\home\.config> git clone --depth 1 https://github.com/AstroNvim/template nvim
+```
+
+出现以下信息表示克隆完成：
+
+```shell
+Cloning into 'nvim'...
+remote: Enumerating objects: 21, done.
+remote: Counting objects: 100% (21/21), done.
+remote: Compressing objects: 100% (19/19), done.
+remote: Total 21 (delta 0), reused 8 (delta 0), pack-reused 0 (from 0)
+Receiving objects: 100% (21/21), 9.68 KiB | 2.42 MiB/s, done.
+```
+
+克隆完成后启动 neovide，会出现如下的信息，neovide 在自动安装一些插件：
+
+{{< figure src="/images/dev-envs.org/2026-01-29_14-14-40_screenshot.png" width="90%" >}}
+
+安装完成后出现如下的介面：
+
+{{< figure src="/images/dev-envs.org/2026-01-29_14-18-36_screenshot.png" width="90%" >}}
+
+使用空格以及界面上提示的快捷键来进行操作：
+
+{{< figure src="/images/dev-envs.org/2026-01-29_14-19-56_screenshot.png" width="90%" >}}
+
+然后按 f 键后出现如下的介面：
+
+{{< figure src="/images/dev-envs.org/2026-01-29_14-21-03_screenshot.png" width="90%" >}}
+
+再按 f 键查找文件：
+
+{{< figure src="/images/dev-envs.org/2026-01-29_14-21-52_screenshot.png" width="90%" >}}
+
+回车打开文件：
+
+{{< figure src="/images/dev-envs.org/2026-01-29_14-22-23_screenshot.png" width="90%" >}}
+
+然后就跟正常的 Vim 一样操作了，详细到操作可以参考 <https://docs.astronvim.com/> 。
 
 
 ## GPG/文件加密 {#gpg-文件加密}
