@@ -2,7 +2,7 @@
 title: "windows 开发环境配置"
 author: ["Donald Lo"]
 date: 2026-01-15
-lastmod: 2026-01-29T14:23:14+08:00
+lastmod: 2026-01-29T18:09:14+08:00
 tags: ["windows", "dev"]
 draft: false
 ---
@@ -41,6 +41,12 @@ draft: false
     - [数据库客户端](#数据库客户端)
     - [postman 的替代品 bruno](#postman-的替代品-bruno)
     - [yt-dlp 下载网站视频](#yt-dlp-下载网站视频)
+    - [软件安装](#软件安装)
+    - [在 firefox 中登录哔哩](#在-firefox-中登录哔哩)
+    - [你可以使用如下的命令来下载视频](#你可以使用如下的命令来下载视频)
+    - [有一些值得追的系列，自动下载](#有一些值得追的系列-自动下载)
+    - [只下载音频](#只下载音频)
+    - [当然你也可以将这些长的命令写进 powershell 中，变成一个段的函数](#当然你也可以将这些长的命令写进-powershell-中-变成一个段的函数)
     - [Motrix 下载工具](#motrix-下载工具)
     - [SharpKey  键位重映射工具](#sharpkey-键位重映射工具)
     - [显示当前软件是否有需要更新](#显示当前软件是否有需要更新)
@@ -552,6 +558,100 @@ scoop install bruno
 
 
 ### yt-dlp 下载网站视频 {#yt-dlp-下载网站视频}
+
+如果你希望将哔哩上的视频下载到本地电脑上，在没有网络的时候也可以观看，你可以选择使用哔哩的客户端同步，也可以使用
+yt-dlp 这个软件下载成 MP4 格式，然后使用你喜欢的视频播放器来观看。
+
+当然，这个软件也不只能下载哔哩上的视频，可以下载很多网站上的视频的。
+
+
+### 软件安装 {#软件安装}
+
+```shell
+scoop install ffmpeg yt-dlp
+```
+
+yt-dlp 依赖 ffmpeg，所以你必须安装。
+
+
+### 在 firefox 中登录哔哩 {#在-firefox-中登录哔哩}
+
+
+### 你可以使用如下的命令来下载视频 {#你可以使用如下的命令来下载视频}
+
+```shell
+yt-dlp  --cookies-from-browser firefox --download-archive D:\Documents\yt-dlp\archives.txt --output "%(playlist_title)s/%(upload_date)s - P%(playlist_index)04d - %(title)s.%(ext)s" --format "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best" 视频的网址
+```
+
+-   --cookies-from-browser firefox 在使用 yt-dlp 下载需要登录才能访问的音视频时，--cookies-from-browser 是最便捷且安全的身份认证方式之一，它可以直接从浏览器读取已登录的 Cookie 信息，避免手动导出或构造 Cookie。使用 firefox 中的 cookies 信息登录，将 firefox 替换为你已登录的浏览器名称（支持 chrome、edge、safari、opera 等）
+-   --download-archive D:\Documents\yt-dlp\archives.txt 将下载过的视频的 ID 保存在这个文件中，避免重复下载
+-   --output "%(playlist_title)s/%(upload_date)s - P%(playlist_index)04d - %(title)s.%(ext)s" 下载到本地的视频的文件名称
+-   --format "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best" 以最好的视频质量和音频质量下载
+
+
+### 有一些值得追的系列，自动下载 {#有一些值得追的系列-自动下载}
+
+将需要追的系列的 URL 保存到 URL.txt 文件中，格式如下：
+
+```shell
+# 文明之旅
+https://space.bilibili.com/3546593938639500/channel/collectiondetail?sid=4220708
+
+# 合集·【长江】吃饭故事
+https://space.bilibili.com/39627524/channel/collectiondetail?sid=5219365
+```
+
+然后使用如下命令来下载，注意，执行命令的目录就是下载视频的目录：
+
+```shell
+yt-dlp  --cookies-from-browser firefox --download-archive D:\Documents\yt-dlp\archives.txt --output "%(playlist_title)s/%(upload_date)s - P%(playlist_index)04d - %(title)s.%(ext)s" --format "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best"  -a D:\Documents\yt-dlp\urls.txt
+```
+
+
+### 只下载音频 {#只下载音频}
+
+如果有一些有声书，可以通过如下的命令来下载：
+
+```shell
+yt-dlp  --cookies-from-browser firefox --download-archive D:\Documents\yt-dlp\archives.txt --output "%(playlist_title)s/%(upload_date)s - P%(playlist_index)04d - %(title)s.%(ext)s" --format "bestaudio[ext=m4a]/best" 视频网址
+```
+
+
+### 当然你也可以将这些长的命令写进 powershell 中，变成一个段的函数 {#当然你也可以将这些长的命令写进-powershell-中-变成一个段的函数}
+
+```shell
+vim $PROFILE
+```
+
+如果打开文件不成功，就根据提示创建对应的文件夹和文件。
+
+将以下代码添加到 $PROFILE 这个文件中：
+
+```shell
+function y {
+    yt-dlp  --cookies-from-browser firefox `
+            --download-archive D:\Documents\yt-dlp\archives.txt `
+            --output "%(playlist_title)s/%(upload_date)s - P%(playlist_index)04d - %(title)s.%(ext)s" `
+            --format "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best" `
+            $args
+}
+function y1 {
+    yt-dlp  --cookies-from-browser firefox `
+            --download-archive D:\Documents\yt-dlp\archives.txt `
+            --output "%(playlist_title)s/%(upload_date)s - P%(playlist_index)04d - %(title)s.%(ext)s" `
+            --format "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best"  `
+            -a D:\Documents\yt-dlp\urls.txt
+}
+function y3 {
+    yt-dlp  --cookies-from-browser firefox `
+            --download-archive D:\Documents\yt-dlp\archives.txt `
+            --output "%(playlist_title)s/%(upload_date)s - P%(playlist_index)04d - %(title)s.%(ext)s" `
+            --format "bestaudio[ext=m4a]/best" `
+            $args
+}
+```
+
+重新启动 powershell 后，你就可以使用 <kbd>y 视频网址</kbd> 来下载视频，~y1~ 命令直接下载保存的视频系列， <kbd>y3 视频地址</kbd> 来下载音频文件。
 
 
 ### Motrix 下载工具 {#motrix-下载工具}
