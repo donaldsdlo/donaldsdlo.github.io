@@ -2,7 +2,7 @@
 title: "windows 开发环境配置"
 author: ["Donald Lo"]
 date: 2026-01-15
-lastmod: 2026-01-30T12:59:20+08:00
+lastmod: 2026-01-30T16:52:17+08:00
 tags: ["windows", "dev"]
 draft: false
 ---
@@ -44,6 +44,11 @@ draft: false
     - [Octave-开源数据软件](#octave-开源数据软件)
     - [Everything](#everything)
     - [Draw.io](#draw-dot-io)
+    - [微信](#微信)
+    - [QQ](#qq)
+    - [XMind-思维导图](#xmind-思维导图)
+    - [vscode](#vscode)
+    - [teams](#teams)
     - [截图工具](#截图工具)
     - [视频播放软件](#视频播放软件)
     - [数据库客户端](#数据库客户端)
@@ -119,6 +124,11 @@ draft: false
         - [创建新项目](#创建新项目)
 - [Node](#node)
 - [Rust](#rust)
+    - [安装](#安装)
+    - [更新 rustup](#更新-rustup)
+    - [创建一个 Hello World 程序](#创建一个-hello-world-程序)
+        - [创建项目](#创建项目)
+        - [执行程序](#执行程序)
 - [Java](#java)
     - [软件安装](#软件安装)
         - [JDK](#jdk)
@@ -181,6 +191,7 @@ draft: false
             - [停止虚拟机](#停止虚拟机)
             - [销毁虚拟机](#销毁虚拟机)
             - [批量创建虚拟机](#批量创建虚拟机)
+    - [删除不再使用的 Box](#删除不再使用的-box)
 - [NeoVIM](#neovim)
 - [GPG/文件加密](#gpg-文件加密)
     - [安装](#安装)
@@ -595,6 +606,41 @@ scoop install everything everything-cli
 
 ```shell
 scoop install draw.io
+```
+
+
+### 微信 {#微信}
+
+```shell
+scoop install wechat
+```
+
+
+### QQ {#qq}
+
+```shell
+scoop install qq-nt
+```
+
+
+### XMind-思维导图 {#xmind-思维导图}
+
+```shell
+scoop install xmind
+```
+
+
+### vscode {#vscode}
+
+```shell
+scoop install vscode
+```
+
+
+### teams {#teams}
+
+```shell
+scoop install microsoft-teams
 ```
 
 
@@ -2005,6 +2051,118 @@ d----           2026/1/22    10:12                .venv
 
 
 ## Rust {#rust}
+
+
+### 安装 {#安装}
+
+```bash
+scoop install rustup
+```
+
+安装完成后，根据 <https://mirrors.tuna.tsinghua.edu.cn/help/rustup/> 中的提示设置环境变量：
+
+| 变量名             | 值                                                   |
+|-----------------|-----------------------------------------------------|
+| RUSTUP_DIST_SERVER | <https://mirrors.tuna.tsinghua.edu.cn/rustup>        |
+| RUSTUP_UPDATE_ROOT | <https://mirrors.tuna.tsinghua.edu.cn/rustup/rustup> |
+| CARGO_HOME         | D:\Scoop\persist\rustup\\.cargo                      |
+
+安装工具链
+
+```bash
+rustup toolchain install stable-x86_64-pc-windows-msvc
+```
+
+安装完成后配置包服务器的国内镜像，参考 <https://mirrors.tuna.tsinghua.edu.cn/help/crates.io-index/> 进行配置：
+
+编辑 `$CARGO_HOME/config.toml`  文件，添加以下内容：
+
+```yaml
+[source.crates-io]
+replace-with = 'mirror'
+
+[source.mirror]
+registry = "sparse+https://mirrors.tuna.tsinghua.edu.cn/crates.io-index/"
+
+[registries.mirror]
+index = "sparse+https://mirrors.tuna.tsinghua.edu.cn/crates.io-index/"
+```
+
+注： `sparse+` 表示在使用稀疏索引，链接末尾的 `/`  不能缺少。
+
+注： `$CARGO_HOME` ：在 Windows 系统默认为： `%USERPROFILE%\.cargo` ，在类 Unix 系统默认为： `$HOME/.cargo` 。
+
+注：cargo 仍会尝试读取不带 `.toml` 扩展名的配置文件（即 `$CARGO_HOME/config=），但从 1.39 版本起，cargo 引入了对 =.toml`  扩展名的支持，并将其设为首选格式。请根据使用的 cargo 版本选择适当的配置文件名。
+
+注：使用 `cargo search` 、 `cargo info` 等命令时需要添加 `--registry mirror=，例如 =cargo search --registry mirror reqwest` 。
+
+
+### 更新 rustup {#更新-rustup}
+
+```bash
+rustup update
+```
+
+
+### 创建一个 Hello World 程序 {#创建一个-hello-world-程序}
+
+
+#### 创建项目 {#创建项目}
+
+```bash
+PS E:\codes\rust> cargo new hello_world
+```
+
+```bash
+    Creating binary (application) `hello_world` package
+note: see more `Cargo.toml` keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+```
+
+创建完成后，目录中的文件如下：
+
+```bash
+PS E:\codes\rust\hello_world> ls
+
+    Directory: E:\codes\rust\hello_world
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d----           2026/1/30    16:46                src
+-a---           2026/1/30    16:46              8 .gitignore
+-a---           2026/1/30    16:46             82 Cargo.toml
+```
+
+```bash
+hello_world/
+├── Cargo.toml
+└── src/
+    └── main.rs
+```
+
+原代码文件  main.rs 中的内容如下：
+
+```rust
+fn main() {
+    println!("Hello, world!");
+}
+```
+
+
+#### 执行程序 {#执行程序}
+
+```bash
+PS E:\codes\rust\hello_world> cargo run
+    Cleaning [=================>       ]  72.02%
+```
+
+cargo run 这个命令会先执行编译，编译成功了会执行可执行程序：
+
+```bash
+   Compiling hello_world v0.1.0 (E:\codes\rust\hello_world)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 16.33s
+     Running `target\debug\hello_world.exe`
+Hello, world!
+```
 
 
 ## Java {#java}
@@ -3657,6 +3815,45 @@ vagrant up
 
 ```shell
 vagrant destroy -f
+```
+
+
+### 删除不再使用的 Box {#删除不再使用的-box}
+
+在删除之前先查看当前系统中有哪些 Box：
+
+```bash
+PS D:\> vagrant box list
+```
+
+当前系统中只有一个 Box：
+
+```bash
+debian13 (virtualbox, 0, (amd64))
+```
+
+删除名称为 debian13 的 Box:
+
+```bash
+PS D:\> vagrant box remove debian13
+```
+
+系统提示正在删除这个 Box:
+
+```bash
+Removing box 'debian13' (v0) with provider 'virtualbox'...
+```
+
+删除的命令执行完后再次查看系统的 Box：
+
+```bash
+PS D:\> vagrant box list
+```
+
+从系统提示的消息可以看出，当前系统中没有任何的 Box 了，如果删除的时候有多个 Box，那么这里会列出剩余的 Box：
+
+```bash
+There are no installed boxes! Use `vagrant box add` to add some.
 ```
 
 
