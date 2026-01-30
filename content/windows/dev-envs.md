@@ -2,7 +2,7 @@
 title: "windows 开发环境配置"
 author: ["Donald Lo"]
 date: 2026-01-15
-lastmod: 2026-01-30T11:26:12+08:00
+lastmod: 2026-01-30T11:29:20+08:00
 tags: ["windows", "dev"]
 draft: false
 ---
@@ -41,12 +41,12 @@ draft: false
     - [数据库客户端](#数据库客户端)
     - [postman 的替代品 bruno](#postman-的替代品-bruno)
     - [yt-dlp 下载网站视频](#yt-dlp-下载网站视频)
-    - [软件安装](#软件安装)
-    - [在 firefox 中登录哔哩](#在-firefox-中登录哔哩)
-    - [你可以使用如下的命令来下载视频](#你可以使用如下的命令来下载视频)
-    - [有一些值得追的系列，自动下载](#有一些值得追的系列-自动下载)
-    - [只下载音频](#只下载音频)
-    - [当然你也可以将这些长的命令写进 powershell 中，变成一个段的函数](#当然你也可以将这些长的命令写进-powershell-中-变成一个段的函数)
+        - [软件安装](#软件安装)
+        - [在 firefox 中登录哔哩](#在-firefox-中登录哔哩)
+        - [你可以使用如下的命令来下载视频](#你可以使用如下的命令来下载视频)
+        - [有一些值得追的系列，自动下载](#有一些值得追的系列-自动下载)
+        - [只下载音频](#只下载音频)
+        - [当然你也可以将这些长的命令写进 powershell 中，变成一个段的函数](#当然你也可以将这些长的命令写进-powershell-中-变成一个段的函数)
     - [Motrix 下载工具](#motrix-下载工具)
     - [SharpKey  键位重映射工具](#sharpkey-键位重映射工具)
     - [显示当前软件是否有需要更新](#显示当前软件是否有需要更新)
@@ -570,7 +570,7 @@ yt-dlp 这个软件下载成 MP4 格式，然后使用你喜欢的视频播放�
 当然，这个软件也不只能下载哔哩上的视频，可以下载很多网站上的视频的。
 
 
-### 软件安装 {#软件安装}
+#### 软件安装 {#软件安装}
 
 ```shell
 scoop install ffmpeg yt-dlp
@@ -579,10 +579,10 @@ scoop install ffmpeg yt-dlp
 yt-dlp 依赖 ffmpeg，所以你必须安装。
 
 
-### 在 firefox 中登录哔哩 {#在-firefox-中登录哔哩}
+#### 在 firefox 中登录哔哩 {#在-firefox-中登录哔哩}
 
 
-### 你可以使用如下的命令来下载视频 {#你可以使用如下的命令来下载视频}
+#### 你可以使用如下的命令来下载视频 {#你可以使用如下的命令来下载视频}
 
 ```shell
 yt-dlp  --cookies-from-browser firefox --download-archive D:\Documents\yt-dlp\archives.txt --output "%(playlist_title)s/%(upload_date)s - P%(playlist_index)04d - %(title)s.%(ext)s" --format "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best" 视频的网址
@@ -594,7 +594,7 @@ yt-dlp  --cookies-from-browser firefox --download-archive D:\Documents\yt-dlp\ar
 -   --format "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best" 以最好的视频质量和音频质量下载
 
 
-### 有一些值得追的系列，自动下载 {#有一些值得追的系列-自动下载}
+#### 有一些值得追的系列，自动下载 {#有一些值得追的系列-自动下载}
 
 将需要追的系列的 URL 保存到 URL.txt 文件中，格式如下：
 
@@ -613,7 +613,7 @@ yt-dlp  --cookies-from-browser firefox --download-archive D:\Documents\yt-dlp\ar
 ```
 
 
-### 只下载音频 {#只下载音频}
+#### 只下载音频 {#只下载音频}
 
 如果有一些有声书，可以通过如下的命令来下载：
 
@@ -622,7 +622,7 @@ yt-dlp  --cookies-from-browser firefox --download-archive D:\Documents\yt-dlp\ar
 ```
 
 
-### 当然你也可以将这些长的命令写进 powershell 中，变成一个段的函数 {#当然你也可以将这些长的命令写进-powershell-中-变成一个段的函数}
+#### 当然你也可以将这些长的命令写进 powershell 中，变成一个段的函数 {#当然你也可以将这些长的命令写进-powershell-中-变成一个段的函数}
 
 ```shell
 vim $PROFILE

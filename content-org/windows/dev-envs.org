@@ -377,7 +377,7 @@ yt-dlp 这个软件下载成 MP4 格式，然后使用你喜欢的视频播放�
 
 当然，这个软件也不只能下载哔哩上的视频，可以下载很多网站上的视频的。
 
-** 软件安装
+*** 软件安装
 
 #+begin_src shell
 scoop install ffmpeg yt-dlp
@@ -385,9 +385,9 @@ scoop install ffmpeg yt-dlp
 
 yt-dlp 依赖 ffmpeg，所以你必须安装。
 
-** 在 firefox 中登录哔哩
+*** 在 firefox 中登录哔哩
 
-** 你可以使用如下的命令来下载视频
+*** 你可以使用如下的命令来下载视频
 
 #+begin_src shell
 yt-dlp  --cookies-from-browser firefox --download-archive D:\Documents\yt-dlp\archives.txt --output "%(playlist_title)s/%(upload_date)s - P%(playlist_index)04d - %(title)s.%(ext)s" --format "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best" 视频的网址
@@ -398,7 +398,7 @@ yt-dlp  --cookies-from-browser firefox --download-archive D:\Documents\yt-dlp\ar
 + --output "%(playlist_title)s/%(upload_date)s - P%(playlist_index)04d - %(title)s.%(ext)s" 下载到本地的视频的文件名称
 + --format "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best" 以最好的视频质量和音频质量下载
 
-** 有一些值得追的系列，自动下载
+*** 有一些值得追的系列，自动下载
 
 将需要追的系列的 URL 保存到 URL.txt 文件中，格式如下：
 
@@ -416,7 +416,7 @@ https://space.bilibili.com/39627524/channel/collectiondetail?sid=5219365
 yt-dlp  --cookies-from-browser firefox --download-archive D:\Documents\yt-dlp\archives.txt --output "%(playlist_title)s/%(upload_date)s - P%(playlist_index)04d - %(title)s.%(ext)s" --format "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best"  -a D:\Documents\yt-dlp\urls.txt
 #+end_src
 
-** 只下载音频
+*** 只下载音频
 
 如果有一些有声书，可以通过如下的命令来下载：
 
@@ -424,7 +424,7 @@ yt-dlp  --cookies-from-browser firefox --download-archive D:\Documents\yt-dlp\ar
 yt-dlp  --cookies-from-browser firefox --download-archive D:\Documents\yt-dlp\archives.txt --output "%(playlist_title)s/%(upload_date)s - P%(playlist_index)04d - %(title)s.%(ext)s" --format "bestaudio[ext=m4a]/best" 视频网址
 #+end_src
 
-** 当然你也可以将这些长的命令写进 powershell 中，变成一个段的函数
+*** 当然你也可以将这些长的命令写进 powershell 中，变成一个段的函数
 
 #+begin_src shell
 vim $PROFILE
