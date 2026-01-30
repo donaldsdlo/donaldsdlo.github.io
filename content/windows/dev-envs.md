@@ -2,7 +2,7 @@
 title: "windows 开发环境配置"
 author: ["Donald Lo"]
 date: 2026-01-15
-lastmod: 2026-01-30T11:29:20+08:00
+lastmod: 2026-01-30T12:59:20+08:00
 tags: ["windows", "dev"]
 draft: false
 ---
@@ -36,6 +36,14 @@ draft: false
     - [Listary 应用启动器和文件快速搜索](#listary-应用启动器和文件快速搜索)
     - [PDF 查看工具](#pdf-查看工具)
     - [改键工具](#改键工具)
+    - [Busybox-常用的命令行工具](#busybox-常用的命令行工具)
+    - [安装浏览器](#安装浏览器)
+    - [Obsidian-笔记软件](#obsidian-笔记软件)
+    - [轻巧的文本编辑软件-Sublime](#轻巧的文本编辑软件-sublime)
+    - [Pandoc-文件格式转换工具](#pandoc-文件格式转换工具)
+    - [Octave-开源数据软件](#octave-开源数据软件)
+    - [Everything](#everything)
+    - [Draw.io](#draw-dot-io)
     - [截图工具](#截图工具)
     - [视频播放软件](#视频播放软件)
     - [数据库客户端](#数据库客户端)
@@ -531,6 +539,62 @@ scoop install sumatrapdf
 
 ```bash
 scoop install sharpkeys
+```
+
+
+### Busybox-常用的命令行工具 {#busybox-常用的命令行工具}
+
+```shell
+scoop install busybox
+```
+
+
+### 安装浏览器 {#安装浏览器}
+
+```shell
+scoop install googlechrome
+```
+
+
+### Obsidian-笔记软件 {#obsidian-笔记软件}
+
+```shell
+scoop install obsidian
+```
+
+
+### 轻巧的文本编辑软件-Sublime {#轻巧的文本编辑软件-sublime}
+
+```shell
+scoop install sublime-text
+```
+
+
+### Pandoc-文件格式转换工具 {#pandoc-文件格式转换工具}
+
+```shell
+scoop install pandoc
+```
+
+
+### Octave-开源数据软件 {#octave-开源数据软件}
+
+```shell
+scoop install octave
+```
+
+
+### Everything {#everything}
+
+```shell
+scoop install everything everything-cli
+```
+
+
+### Draw.io {#draw-dot-io}
+
+```shell
+scoop install draw.io
 ```
 
 

@@ -346,6 +346,54 @@ scoop install sumatrapdf
 scoop install sharpkeys
 #+end_src
 
+** Busybox-常用的命令行工具
+
+#+begin_src shell
+scoop install busybox
+#+end_src
+
+** 安装浏览器
+
+#+begin_src shell
+scoop install googlechrome
+#+end_src
+
+** Obsidian-笔记软件
+
+#+begin_src shell
+scoop install obsidian
+#+end_src
+
+** 轻巧的文本编辑软件-Sublime
+
+#+begin_src shell
+scoop install sublime-text
+#+end_src
+
+** Pandoc-文件格式转换工具
+
+#+begin_src shell
+scoop install pandoc
+#+end_src
+
+** Octave-开源数据软件
+
+#+begin_src shell
+scoop install octave
+#+end_src
+
+** Everything
+
+#+begin_src shell
+scoop install everything everything-cli
+#+end_src
+
+** Draw.io
+
+#+begin_src shell
+scoop install draw.io
+#+end_src
+
 ** 截图工具
 
 #+begin_src bash :exports code
