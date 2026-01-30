@@ -754,6 +754,149 @@ scoop download FiraCode-NF-Mono
 
 * Rime 中文输入法-可以配置各种输入法
 
+** 为什么用 Rime？
+
+明明对于大多数用户来说，类似搜狗输入法、微信输入法、乃至于手心输入法之类的主流输入法，已经完全够用了啊？
+
+事实上，Rime 适合的用户，大多是：
+
+- 喜欢极简/干净/小而美
+- 极度反感广告
+- 有高度定制需求
+- 对输入安全有需求
+- 对输入速度有追求
+- 对切换多种输入方案有需求
+- 对输入标点快符、自定义短语有需求
+- 使用小众输入方案，如双拼、音形、形码
+- 对输入生僻字有需求，如常常输入古书、文献上的字等
+- 对输入精确的繁体字、外来字、外语字有需求
+- 部分程序员
+- 部分文案、编辑、网文写手
+- 打字圈、竞速圈用户
+
+其中，使用小众输入方案的用户是 Rime 用户群体最常见的来源之一。
+
+例如：使用双拼、音形、形码的用户，是最容易接触到 Rime 的。
+
+说得明确些，对于这类用户，我个人 100% 推荐使用 Rime。
+
+理由是：Rime 对小众方案的支持几乎是开箱即用的，在 GitHub 与任意方案的群里，都能找到现成的方案对应的 Rime 包。直接下载复制到 Rime 的用户文件夹目录，右键一点托盘重新部署，稍等片刻让 Rime 自动生成对应文件，就能直接使用。
+
+
+
+此时就会发现 Rime 的独一档优势：
+
+- 主流输入法几乎不可能支持小众方案，即使支持，也不会完善；
+- Rime 的高定制性，让小众方案的开箱即用包基本都定制了大量功能（例如反查、以词定字、辅助码、重复上屏、快捷输入等），非常好用；
+- 几乎所有小众方案都支持的标点快符功能，让输入标点符号时双手再也不用离开主键区，输入流畅度飞跃式提升。（这条对文案、网文写手等用户群体来说非常有用）
+
+** 我使用 Rime 的理由
+
+我要使用带辅助码的自然码输入法，原来周志农开发的自然码输入法不再维护，无法继续使用，在 github 上找到了一个开源的 Rime 码表，于是采用了 Rime。
+发现原来的词库太小，然后又将一些开源的词库转换成自然码输入法的词库，但是多音字会有些问题，在使用的过程中不断的修正中。
+
+我不使用大模型是因为我很多时候都使用辅助码来提高输入的效率，如果你需要使用大模型来提高输入效率，可以在 https://github.com/amzxyz/RIME-LMDG/releases 中下载  wanxiang-lts-zh-hans.gram 保存到用户文件夹。
+
+使用我的配置，从  https://github.com/donaldsdlo/weasel 克隆到本地目录，比如我克隆到了 D:\home\rime 中。
+
+** 安装 Rime 输入法
+:PROPERTIES:
+:ID:       879dcc92-cea6-4c89-9e08-ecab1d853437
+:END:
+
+从  https://rime.im/ 下载最新的版本进行安装：
+
+#+ATTR_ORG: :width 500
+#+ATTR_HTML: :width 90%
+[[file:../../static/images/dev-envs.org/PixPin_2026-01-30_10-57-13.png]]
+
+#+ATTR_ORG: :width 500
+#+ATTR_HTML: :width 90%
+[[file:../../static/images/dev-envs.org/PixPin_2026-01-30_10-57-32.png]]
+
+#+ATTR_ORG: :width 500
+#+ATTR_HTML: :width 90%
+[[file:../../static/images/dev-envs.org/PixPin_2026-01-30_10-58-00.png]]
+
+在这里我们需要指定用户文件夹在前面克隆的目录：
+
+#+ATTR_ORG: :width 500
+#+ATTR_HTML: :width 90%
+[[file:../../static/images/dev-envs.org/PixPin_2026-01-30_10-58-23.png]]
+
+#+ATTR_ORG: :width 500
+#+ATTR_HTML: :width 90%
+[[file:../../static/images/dev-envs.org/PixPin_2026-01-30_10-58-36.png]]
+
+#+ATTR_ORG: :width 500
+#+ATTR_HTML: :width 90%
+[[file:../../static/images/dev-envs.org/PixPin_2026-01-30_10-58-57.png]]
+
+#+ATTR_ORG: :width 500
+#+ATTR_HTML: :width 90%
+[[file:../../static/images/dev-envs.org/PixPin_2026-01-30_10-59-11.png]]
+
+#+ATTR_ORG: :width 500
+#+ATTR_HTML: :width 90%
+[[file:../../static/images/dev-envs.org/PixPin_2026-01-30_10-59-28.png]]
+
+#+ATTR_ORG: :width 500
+#+ATTR_HTML: :width 90%
+[[file:../../static/images/dev-envs.org/PixPin_2026-01-30_10-59-39.png]]
+
+如果你使用带辅助码的自然码输入法，你就可以直接使用了。
+
+** 使用其他的输入法方案
+
+如果你需要使用其他的输入法，可以在 default.custom.yaml 文件中，调整 schema 的顺序或者把需要的输入法的注释去掉：
+
+#+begin_src yaml :tangle no
+  schema_list:
+    - schema: zrm2000
+    # - schema: wubi86_jidian
+    # - schema: openfly
+    # - schema: rime_ice
+    # - schema: double_pinyin_flypy
+    - schema: numbers
+    # - schema: double_pinyin
+    - schema: melt_eng
+    - schema: latex
+#+end_src
+
+修改完成后需要重新部署 Rime 输入法。
+
+如果要使用大模型，按照前面的网址下载后保存到 D:\home\rime 文件夹中，然后将 zrm2000.custom.yaml 中的如下行中的注释去掉，再重新部署输入法：
+
+#+begin_src yaml :tangle no
+# patch:
+#   grammar:
+#     language: wanxiang-lts-zh-hans
+#     collocation_max_length: 5
+#     collocation_min_length: 2
+#   translator/contextual_suggestions: true
+#   translator/max_homophones: 7
+#   translator/max_homographs: 7
+#+end_src
+
+去掉注释后的配置文件如下：
+
+#+begin_src yaml :tangle no
+patch:
+  grammar:
+    language: wanxiang-lts-zh-hans
+    collocation_max_length: 5
+    collocation_min_length: 2
+  translator/contextual_suggestions: true
+  translator/max_homophones: 7
+  translator/max_homographs: 7
+#+end_src
+
+** 自然码双拼输入法辅助码键位图
+
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
+[[file:../../static/images/dev-envs.org/ziranmashurufa.jpg]]
+
 * Windows Terminal
 
 #+begin_src bash :exports code
@@ -763,6 +906,7 @@ scoop install windows-terminal
 * Powershell
 
 ** 查找 Powershell
+
 #+begin_src bash :exports code
 winget search --id Microsoft.PowerShell
 #+end_src
@@ -3088,3 +3232,5 @@ PS E:\tmp\test04> cat test.de.txt
 $$ n + 1 = x + y $$
 
  这是末尾的字符。
+
+ 营造法式
