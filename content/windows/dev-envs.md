@@ -2,7 +2,7 @@
 title: "windows 开发环境配置"
 author: ["Donald Lo"]
 date: 2026-01-15
-lastmod: 2026-02-04T10:50:35+08:00
+lastmod: 2026-02-04T13:05:22+08:00
 tags: ["windows", "dev"]
 draft: false
 ---
@@ -2301,9 +2301,9 @@ index = "sparse+https://mirrors.tuna.tsinghua.edu.cn/crates.io-index/"
 
 注： `$CARGO_HOME` ：在 Windows 系统默认为： `%USERPROFILE%\.cargo` ，在类 Unix 系统默认为： `$HOME/.cargo` 。
 
-注：cargo 仍会尝试读取不带 `.toml` 扩展名的配置文件（即 `$CARGO_HOME/config=），但从 1.39 版本起，cargo 引入了对 =.toml`  扩展名的支持，并将其设为首选格式。请根据使用的 cargo 版本选择适当的配置文件名。
+注：cargo 仍会尝试读取不带 `.toml` 扩展名的配置文件（即 `$CARGO_HOME/config` ），但从 1.39 版本起，cargo 引入了对 `.toml`  扩展名的支持，并将其设为首选格式。请根据使用的 cargo 版本选择适当的配置文件名。
 
-注：使用 `cargo search` 、 `cargo info` 等命令时需要添加 `--registry mirror=，例如 =cargo search --registry mirror reqwest` 。
+注：使用 `cargo search` 、 `cargo info` 等命令时需要添加 `--registry mirror` ，例如 `cargo search --registry mirror request` 。
 
 
 ### 更新 rustup {#更新-rustup}
