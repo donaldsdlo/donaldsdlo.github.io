@@ -142,6 +142,210 @@ Windows系统中有一些常见的内置环境变量，它们提供了有关操�
 - =%USERNAME%= ： =SYSTEM=
 - =%windir%= ： =%SystemRoot%=
 
+* 软链接
+
+** 什么是软链接
+
+软链接（Symbolic Link，也称为符号链接）是一种特殊的文件，它指向另一个文件或目录。在 Windows 系统中，软链接类似于 Linux 系统中的符号链接。
+
+软链接具有以下特点：
+
+- 指向目标文件或目录，不包含实际数据
+- 可以跨文件系统（驱动器）
+- 如果目标被删除，软链接会失效
+- 在文件资源管理器中显示为一个快捷方式的图标
+
+Windows 支持三种链接类型：
+
+| 类型               | 说明                     | 跨分区 | 硬链接限制   |
+|--------------------+--------------------------+--------+--------------|
+| 符号链接（软链接） | 指向目标文件或目录的指针 | 是     | 无           |
+| 硬链接             | 同一文件系统的多个入口   | 否     | 需要同一分区 |
+| 目录链接           | 符号链接的目录版本       | 是     | 仅限管理员   |
+
+** 创建软链接
+
+*** 使用命令提示符（cmd）
+
+创建指向文件的软链接：
+
+#+begin_src bash :exports code
+mklink link_name target_file
+#+end_src
+
+创建指向目录的软链接：
+
+#+begin_src bash :exports code
+mklink /D link_name target_directory
+#+end_src
+
+例如：
+
+#+begin_src bash :exports code
+:: 创建文件软链接
+mklink config.txt D:\home\config\settings.txt
+
+:: 创建目录软链接
+mklink /D workspace D:\Projects\workspace
+#+end_src
+
+*** 使用 PowerShell
+
+PowerShell 也提供了创建符号链接的方法：
+
+#+begin_src bash :exports code
+:: 创建文件软链接
+New-Item -ItemType SymbolicLink -Path "link_name" -Target "target_file"
+
+:: 创建目录软链接
+New-Item -ItemType SymbolicLink -Path "link_name" -Target "target_directory"
+#+end_src
+
+例如：
+
+#+begin_src bash :exports code
+New-Item -ItemType SymbolicLink -Path "config.txt" -Target "D:\home\config\settings.txt"
+
+New-Item -ItemType SymbolicLink -Path "workspace" -Target "D:\Projects\workspace"
+#+end_src
+
+** 查看软链接
+
+使用命令查看链接信息：
+
+#+begin_src bash :exports code
+:: 在 cmd 中
+dir /Al
+
+:: 在 PowerShell 中
+Get-ChildItem | Where-Object { $_.LinkType -ne $null }
+#+end_src
+
+使用 fsutil 工具查看重解析点信息：
+
+#+begin_src bash :exports code
+fsutil reparsepoint query "link_name"
+#+end_src
+
+** 删除软链接
+
+删除软链接和删除普通文件一样，不会影响目标文件：
+
+#+begin_src bash :exports code
+:: 在 cmd 中
+del link_name    :: 删除文件软链接
+rmdir link_name  :: 删除目录软链接
+
+:: 在 PowerShell 中
+Remove-Item -Path "link_name"
+#+end_src
+
+** 软链接的实际用例
+
+*** 统一配置文件管理
+
+将应用程序配置文件集中到一个目录：
+
+#+begin_src bash :exports code
+:: 创建 Git 配置链接
+mklink %USERPROFILE%\.gitconfig D:\home\config\gitconfig
+
+:: 创建 SSH 配置链接
+mklink /D %USERPROFILE%\.ssh D:\home\config\ssh
+#+end_src
+
+*** 项目工作区快速访问
+
+将常用项目目录链接到主目录：
+
+#+begin_src bash :exports code
+mklink /D %USERPROFILE%\projects D:\Projects
+mklink /D %USERPROFILE%\work D:\Work\current
+#+end_src
+
+*** 跨驱动器文件访问
+
+当需要在不同驱动器之间访问文件时：
+
+#+begin_src bash :exports code
+:: 将 D 盘的数据目录链接到 C 盘的项目下
+mklink /D C:\Users\username\project\data D:\data
+#+end_src
+
+*** 版本管理
+
+为不同版本的软件创建链接，便于切换：
+
+#+begin_src bash :exports code
+:: 切换不同版本的 Node.js
+mklink /D nodejs-v16 D:\nodejs\16.x
+mklink /D nodejs-v20 D:\nodejs\20.x
+
+:: 当需要使用 v16 时
+mklink /D nodejs nodejs-v16
+
+:: 当需要使用 v20 时
+rmdir nodejs
+mklink /D nodejs nodejs-v20
+#+end_src
+
+*** 备份和同步
+
+为重要的数据目录创建备份链接：
+
+#+begin_src bash :exports code
+:: 将文档目录同步到备份盘
+mklink /D %USERPROFILE%\Documents Z:\backup\documents
+#+end_src
+
+*** 开发环境配置
+
+为开发工具创建统一的配置目录：
+
+#+begin_src bash :exports code
+:: VS Code 配置
+mklink /D %APPDATA%\Code\User D:\home\config\vscode
+
+:: Emacs 配置
+mklink %USERPROFILE%\.emacs.d D:\home\config\emacs
+mklink %USERPROFILE%\.emacs D:\home\config\emacs\init.el
+#+end_src
+
+*** 应用程序数据迁移
+
+当需要将应用程序数据迁移到其他位置时：
+
+#+begin_src bash :exports code
+:: 将浏览器缓存移到 D 盘
+move %LOCALAPPDATA%\Google\Chrome\User Data\Default\Cache D:\browser_cache\chrome
+mklink /D %LOCALAPPDATA%\Google\Chrome\User Data\Default\Cache D:\browser_cache\chrome
+#+end_src
+
+*** 临时目录优化
+
+将临时目录移到其他驱动器以节省 C 盘空间：
+
+#+begin_src bash :exports code
+:: 创建临时目录
+mkdir D:\tmp
+
+:: 修改环境变量指向新目录（需要管理员权限）
+setx TEMP D:\tmp
+setx TMP D:\tmp
+
+:: 为原有目录创建软链接（可选）
+mklink /D %TEMP% D:\tmp
+mklink /D %TMP% D:\tmp
+#+end_src
+
+** 注意事项
+
+1. *权限要求* ：创建软链接默认需要管理员权限，但在某些情况下（如开发者模式开启），普通用户也可以创建
+2. *目标不存在* ：如果目标文件或目录不存在，创建的软链接会变成"断链"（broken link）
+3. *相对路径* ：使用相对路径创建的软链接依赖于当前工作目录，建议使用绝对路径
+4. *删除目标* ：删除目标文件后，软链接会失效但不会自动删除
+5. *程序兼容性* ：某些老旧程序可能无法正确识别软链接，建议测试后再使用
+
 * scoop 方便的软件安装工具
 
 Scoop 是一个面向 Windows 的命令行安装程序（包管理器），旨在简化在 Windows 系统上安装、更新和管理开源命令行工具和应用程序的过程。
