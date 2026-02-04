@@ -2,7 +2,7 @@
 title: "windows 开发环境配置"
 author: ["Donald Lo"]
 date: 2026-01-15
-lastmod: 2026-02-02T17:42:48+08:00
+lastmod: 2026-02-04T10:50:35+08:00
 tags: ["windows", "dev"]
 draft: false
 ---
@@ -88,6 +88,24 @@ draft: false
     - [设置 Windows Terminal 默认打开的是新版本的 Powershell](#设置-windows-terminal-默认打开的是新版本的-powershell)
     - [查看 Powershell 的配置文件](#查看-powershell-的配置文件)
 - [MSYS2](#msys2)
+    - [MSYS2 介绍](#msys2-介绍)
+    - [MSYS2 与其他软件的对比](#msys2-与其他软件的对比)
+        - [MSYS2 vs WSL](#msys2-vs-wsl)
+        - [MSYS2 vs Chocolatey](#msys2-vs-chocolatey)
+        - [MSYS2 vs Cygwin](#msys2-vs-cygwin)
+        - [MSYS2 vs Git Bash](#msys2-vs-git-bash)
+    - [通过 Scoop 安装 MSYS2](#通过-scoop-安装-msys2)
+    - [配置国内镜像源](#配置国内镜像源)
+    - [可以通过网站来查找 Package](#可以通过网站来查找-package)
+    - [安装命令行软件](#安装命令行软件)
+        - [安装工具链](#安装工具链)
+        - [安装 sdcv (StarDict 控制台版本)](#安装-sdcv--stardict-控制台版本)
+        - [安装其他常用工具](#安装其他常用工具)
+        - [搜索软件包](#搜索软件包)
+        - [查看已安装的包](#查看已安装的包)
+        - [卸载软件包](#卸载软件包)
+    - [将 MSYS2 工具添加到 Windows PATH](#将-msys2-工具添加到-windows-path)
+    - [Pacman 常用命令总结](#pacman-常用命令总结)
 - [Python 环境安装和配置](#python-环境安装和配置)
     - [UV](#uv)
         - [UV 介绍](#uv-介绍)
@@ -1269,6 +1287,169 @@ D:\Documents\PowerShell\Microsoft.PowerShell_profile.ps1
 
 
 ## MSYS2 {#msys2}
+
+
+### MSYS2 介绍 {#msys2-介绍}
+
+`MSYS2` 是一个软件分发和构建平台，为 Windows 提供了一个易于使用的环境，用于构建、安装和运行原生 Windows 软件。
+
+它包括一个名为 `mintty` 的命令行终端、=bash= shell、版本控制系统（如 `git` 和 `subversion` ）、工具（如 `tar` 和 `awk` ），甚至包括构建系统（如 `autotools` ），所有这些都基于修改版的 `Cygwin` 。尽管这些核心部分部分基于 Cygwin，但 MSYS2 的主要重点是提供原生 Windows 软件的构建环境，而使用 Cygwin 的部分保持最少。
+
+MSYS2 提供了许多流行软件的最新原生构建版本 ，包括 `GCC` 、 `mingw-w64` 、 `CPython` 、 `CMake` 、 `Meson` 、 `OpenSSL` 、 `FFmpeg` 、 `Rust` 、 `Ruby` 等。
+
+为了方便软件安装和保持更新，MSYS2 提供了一个名为 `Pacman` 的包管理系统，这对于 Arch Linux 用户来说应该很熟悉。它带来了许多强大的功能，如依赖解析和简单的完整系统升级，以及简单且可重现的包构建。MSYS2 的软件包仓库包含超过 3700 个预先构建的软件包，可以直接安装。
+
+
+### MSYS2 与其他软件的对比 {#msys2-与其他软件的对比}
+
+
+#### MSYS2 vs WSL {#msys2-vs-wsl}
+
+MSYS2 允许你构建  **原生 Windows 程序** ，而 WSL 只能交叉编译，这使得事情变得更复杂。如果你只是在寻找 Linux CLI 工具，或者想要构建最终将在 Linux 服务器上运行的软件，那么 WSL 是更好的选择。
+
+
+#### MSYS2 vs Chocolatey {#msys2-vs-chocolatey}
+
+`Chocolatey` 主要捆绑已经构建好的（开源和闭源）软件，使安装/更新变得容易。在 MSYS2 中，所有软件包都是从源代码构建的，你可以轻松地在你的机器上重现构建。Chocolatey 软件包的优势在于，捆绑的安装程序通常具有更好的 Windows 集成，因为它们设置文件关联、快捷键等。而且由于它们不是从源代码构建的，所以也有很多闭源软件的软件包，如 Visual Studio 等，这些软件很难以其他方式管理/更新。
+
+
+#### MSYS2 vs Cygwin {#msys2-vs-cygwin}
+
+MSYS2 中的 unixy 工具直接基于 =Cygwin=，所以在一定程度上有重叠。虽然 Cygwin 专注于在 Windows 上 **按原样** 构建 Unix 软件，但 MSYS2 专注于构建 **针对 Windows API** 的原生软件。
+
+
+#### MSYS2 vs Git Bash {#msys2-vs-git-bash}
+
+`Git Bash` 是 Git for Windows 附带的最小化 bash 环境，主要用于 Git 操作。相比之下，MSYS2 提供了完整的包管理器（Pacman），可以安装和管理数千个软件包，包括编译工具、开发库和各种命令行工具。MSYS2 更适合开发编译和复杂的项目构建。
+
+
+### 通过 Scoop 安装 MSYS2 {#通过-scoop-安装-msys2}
+
+```bash
+scoop install msys2
+```
+
+
+### 配置国内镜像源 {#配置国内镜像源}
+
+直接运行如下命令：
+
+```bash
+sed -i "s#https\?://mirror.msys2.org/#https://mirrors.tuna.tsinghua.edu.cn/msys2/#g" /etc/pacman.d/mirrorlist*
+```
+
+然后更新系统：
+
+```bash
+pacman -Syyu
+```
+
+
+### 可以通过网站来查找 Package {#可以通过网站来查找-package}
+
+<https://packages.msys2.org/packages/>
+
+{{< figure src="/images/dev-envs.org/2026-02-04_10-39-47_screenshot.png" width="90%" >}}
+
+{{< figure src="/images/dev-envs.org/2026-02-04_10-40-06_screenshot.png" width="90%" >}}
+
+
+### 安装命令行软件 {#安装命令行软件}
+
+
+#### 安装工具链 {#安装工具链}
+
+```bash
+pacman -S mingw-w64-ucrt-x86_64-toolchain
+```
+
+
+#### 安装 sdcv (StarDict 控制台版本) {#安装-sdcv--stardict-控制台版本}
+
+`sdcv` 是一个命令行词典工具，可以使用 StarDict 格式的词典文件。
+
+```bash
+pacman -S mingw-w64-ucrt-x86_64-sdcv
+```
+
+安装完成后，你需要下载词典文件。你可以从网上搜索 StarDict 词典，下载后解压到 `~/.stardict/dic` 目录。
+
+
+#### 安装其他常用工具 {#安装其他常用工具}
+
+```bash
+# 安装基础工具
+pacman -S base-devel
+
+# 安装编译工具链
+pacman -S mingw-w64-ucrt-x86_64-cmake
+pacman -S mingw-w64-ucrt-x86_64-ninja
+
+# 安装其他实用工具
+pacman -S mingw-w64-ucrt-x86_64-vim
+pacman -S mingw-w64-ucrt-x86_64-neovim
+pacman -S mingw-w64-ucrt-x86_64-tmux
+pacman -S mingw-w64-ucrt-x86_64-ripgrep
+pacman -S mingw-w64-ucrt-x86_64-fd
+pacman -S mingw-w64-ucrt-x86_64-jq
+pacman -S mingw-w64-ucrt-x86_64-tree
+```
+
+
+#### 搜索软件包 {#搜索软件包}
+
+```bash
+pacman -Ss <package-name>
+```
+
+例如，搜索 `python` 相关的包：
+
+```bash
+pacman -Ss python
+```
+
+
+#### 查看已安装的包 {#查看已安装的包}
+
+```bash
+pacman -Q
+```
+
+
+#### 卸载软件包 {#卸载软件包}
+
+```bash
+pacman -R <package-name>
+```
+
+连同依赖一起删除：
+
+```bash
+pacman -Rns <package-name>
+```
+
+
+### 将 MSYS2 工具添加到 Windows PATH {#将-msys2-工具添加到-windows-path}
+
+如果你想在 Windows 命令行中直接使用 MSYS2 的工具，可以将 MSYS2 的 bin 目录添加到 PATH 环境变量中。
+
+例如，如果你使用 UCRT64 环境，添加：
+
+`D:\Scoop\apps\msys2\current\ucrt64\bin`
+
+
+### Pacman 常用命令总结 {#pacman-常用命令总结}
+
+| 命令                   | 说明         |
+|----------------------|------------|
+| pacman -Syu            | 更新系统和所有包 |
+| pacman -S &lt;包名&gt; | 安装软件包   |
+| pacman -R &lt;包名&gt; | 删除软件包   |
+| pacman -Rns &lt;包名&gt; | 删除软件包及其依赖和配置 |
+| pacman -Ss &lt;关键词&gt; | 搜索软件包   |
+| pacman -Q              | 列出已安装的软件包 |
+| pacman -Qi &lt;包名&gt; | 显示软件包详细信息 |
+| pacman -Qu             | 列出可更新的软件包 |
 
 
 ## Python 环境安装和配置 {#python-环境安装和配置}
