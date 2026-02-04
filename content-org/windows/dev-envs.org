@@ -9,6 +9,7 @@
 #+HUGO_AUTO_SET_LASTMOD: t
 #+DRAFT: false
 #+HUGO_DRAFT: false
+#+STARTUP: latexpreview
 
 * 环境变量
 
@@ -329,10 +330,53 @@ scoop install emacs-kl
 #+end_src
 
 ** Listary 应用启动器和文件快速搜索
+:PROPERTIES:
+:ID:       41a0dd9c-a7d7-4600-b6ff-187d55f102b1
+:END:
 
 #+begin_src bash :exports code
 scoop install listary
 #+end_src
+
+默认的快捷键为双击 ~Ctrl~ 键激活 Listary。
+
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
+[[file:../../static/images/dev-envs.org/2026-02-02_14-53-12_screenshot.png]]
+
+在这个框里可以输入想查询的程序或者文件（支持拼音首字母搜索）：
+
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
+[[file:../../static/images/dev-envs.org/2026-02-02_14-54-52_screenshot.png]]
+
+按回车选择当前的项目或者使用后面的快捷键来选择对应的项目也可以。
+
+也可以在项目上鼠标右键，然后根据具体的选项进行操作：
+
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
+[[file:../../static/images/dev-envs.org/2026-02-02_14-56-44_screenshot.png]]
+
+可以通过如下方式进行设置：
+
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
+[[file:../../static/images/dev-envs.org/2026-02-02_14-58-41_screenshot.png]]
+
+在红色箭头的图标上鼠标右键：
+
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
+[[file:../../static/images/dev-envs.org/2026-02-02_14-59-24_screenshot.png]]
+
+然后用鼠标点击红框中的 Options 菜单：
+
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
+[[file:../../static/images/dev-envs.org/2026-02-02_15-00-20_screenshot.png]]
+
+安装图中标注的顺序操作设置，其他的设置就不一一举例了。
 
 ** PDF 查看工具
 
@@ -1860,7 +1904,6 @@ registry = "sparse+https://mirrors.tuna.tsinghua.edu.cn/crates.io-index/"
 [registries.mirror]
 index = "sparse+https://mirrors.tuna.tsinghua.edu.cn/crates.io-index/"
 #+end_src
-
 
 注： =sparse+= 表示在使用稀疏索引，链接末尾的 =/=  不能缺少。
 

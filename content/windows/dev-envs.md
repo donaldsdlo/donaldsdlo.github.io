@@ -2,7 +2,7 @@
 title: "windows 开发环境配置"
 author: ["Donald Lo"]
 date: 2026-01-15
-lastmod: 2026-01-30T16:52:17+08:00
+lastmod: 2026-02-02T17:42:48+08:00
 tags: ["windows", "dev"]
 draft: false
 ---
@@ -537,6 +537,34 @@ scoop install emacs-kl
 ```bash
 scoop install listary
 ```
+
+默认的快捷键为双击 <kbd>Ctrl</kbd> 键激活 Listary。
+
+{{< figure src="/images/dev-envs.org/2026-02-02_14-53-12_screenshot.png" width="90%" >}}
+
+在这个框里可以输入想查询的程序或者文件（支持拼音首字母搜索）：
+
+{{< figure src="/images/dev-envs.org/2026-02-02_14-54-52_screenshot.png" width="90%" >}}
+
+按回车选择当前的项目或者使用后面的快捷键来选择对应的项目也可以。
+
+也可以在项目上鼠标右键，然后根据具体的选项进行操作：
+
+{{< figure src="/images/dev-envs.org/2026-02-02_14-56-44_screenshot.png" width="90%" >}}
+
+可以通过如下方式进行设置：
+
+{{< figure src="/images/dev-envs.org/2026-02-02_14-58-41_screenshot.png" width="90%" >}}
+
+在红色箭头的图标上鼠标右键：
+
+{{< figure src="/images/dev-envs.org/2026-02-02_14-59-24_screenshot.png" width="90%" >}}
+
+然后用鼠标点击红框中的 Options 菜单：
+
+{{< figure src="/images/dev-envs.org/2026-02-02_15-00-20_screenshot.png" width="90%" >}}
+
+安装图中标注的顺序操作设置，其他的设置就不一一举例了。
 
 
 ### PDF 查看工具 {#pdf-查看工具}
