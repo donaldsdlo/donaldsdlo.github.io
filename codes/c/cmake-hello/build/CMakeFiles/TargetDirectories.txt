@@ -1,0 +1,7 @@
+D:/Documents/donaldsdlo.github.io/codes/c/cmake-hello/build/CMakeFiles/cmake_hello.dir
+D:/Documents/donaldsdlo.github.io/codes/c/cmake-hello/build/CMakeFiles/edit_cache.dir
+D:/Documents/donaldsdlo.github.io/codes/c/cmake-hello/build/CMakeFiles/rebuild_cache.dir
+D:/Documents/donaldsdlo.github.io/codes/c/cmake-hello/build/CMakeFiles/list_install_components.dir
+D:/Documents/donaldsdlo.github.io/codes/c/cmake-hello/build/CMakeFiles/install.dir
+D:/Documents/donaldsdlo.github.io/codes/c/cmake-hello/build/CMakeFiles/install/local.dir
+D:/Documents/donaldsdlo.github.io/codes/c/cmake-hello/build/CMakeFiles/install/strip.dir

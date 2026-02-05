@@ -2410,6 +2410,328 @@ scoop install maven4
 
 * C/C++
 
+** 使用 MSYS2 (UCRT) 安装 C/C++ 开发工具链
+
+*** 安装工具链
+
+打开 MSYS2 UCRT64 终端，使用 toolchain 安装完整的 C/C++ 开发工具链：
+
+#+begin_src bash :exports code
+# 安装完整的工具链（推荐方式，包含 gcc, g++, gdb, binutils 等）
+pacman -S mingw-w64-ucrt-x86_64-toolchain
+
+# 安装其他开发工具
+pacman -S mingw-w64-ucrt-x86_64-clang-tools-extra  # 包含 clangd, clang-tidy 等
+pacman -S mingw-w64-ucrt-x86_64-ctags             # 代码标签生成
+pacman -S mingw-w64-ucrt-x86_64-cmake             # 构建系统
+pacman -S mingw-w64-ucrt-x86_64-ninja             # 快速构建工具
+pacman -S mingw-w64-ucrt-x86_64-make              # Makefile 工具
+#+end_src
+
+*** 单个工具安装说明
+
+如果你不想安装完整的 toolchain，也可以单独安装：
+
+#+begin_src bash :exports code
+# C/C++ 编译器
+pacman -S mingw-w64-ucrt-x86_64-gcc
+
+# 调试器
+pacman -S mingw-w64-ucrt-x86_64-gdb
+
+# 代码格式化工具
+pacman -S mingw-w64-ucrt-x86_64-clang-format
+
+# 静态代码分析
+pacman -S mingw-w64-ucrt-x86_64-clang-tidy
+
+# Ctags 用于代码导航
+pacman -S mingw-w64-ucrt-x86_64-ctags
+
+# CMake 构建系统
+pacman -S mingw-w64-ucrt-x86_64-cmake
+
+# Ninja 构建工具
+pacman -S mingw-w64-ucrt-x86_64-ninja
+#+end_src
+
+*** 配置环境变量
+
+为了在 Windows 命令行中直接使用 MSYS2 工具，将以下路径添加到系统 PATH：
+
+#+begin_src bash :exports code
+# 添加到 PATH 环境变量（根据实际情况调整路径）
+D:\Scoop\apps\msys2\current\ucrt64\bin
+D:\Scoop\apps\msys2\current\usr\bin
+#+end_src
+
+** GCC 手工编译和 GDB 调试实例
+
+以下是一个完整的 GCC 手工编译程序和 GDB 调试的实例。
+
+*** 项目文件
+
+#+transclude: [[../../codes/c/gcc-hello/hello.c]]  :src c
+
+*** Makefile
+
+#+transclude: [[../../codes/c/gcc-hello/Makefile]]  :src makefile
+
+*** 编译和运行
+
+在 MSYS2 UCRT64 终端中执行：
+
+#+begin_src bash :exports code
+# 进入项目目录
+cd codes/c/gcc-hello
+
+# 使用 make 编译
+make
+
+# 或者直接使用 gcc 编译
+gcc -Wall -Wextra -g -O0 -o hello hello.c
+
+# 运行程序
+./hello
+#+end_src
+
+*** GDB 调试
+
+#+begin_src bash :exports code
+# 启动 GDB
+gdb ./hello
+
+# 常用 GDB 命令：
+# (gdb) break main          # 在 main 函数处设置断点
+# (gdb) break hello.c:15    # 在第 15 行设置断点
+# (gdb) run                 # 运行程序
+# (gdb) next                # 单步执行（不进入函数）
+# (gdb) step                # 单步执行（进入函数）
+# (gdb) continue            # 继续执行到下一个断点
+# (gdb) print variable      # 打印变量值
+# (gdb) display variable    # 持续显示变量值
+# (gdb) backtrace           # 查看调用栈
+# (gdb) info locals         # 查看局部变量
+# (gdb) quit                # 退出 GDB
+
+# 实际调试示例会话：
+(gdb) break main
+(gdb) run
+(gdb) next
+(gdb) print i
+(gdb) continue
+(gdb) quit
+#+end_src
+
+** CMake 多文件项目示例
+
+以下是一个使用 CMake 管理的完整 C 项目示例，包含 include 目录和多个源文件，并生成 compile_commands.json。
+
+*** 项目结构
+
+#+begin_src bash :exports code
+cmake-hello/
+├── CMakeLists.txt           # CMake 配置文件
+├── build.bat                # Windows 构建脚本
+├── build.sh                 # Unix/Linux 构建脚本
+├── include/
+│   ├── math_utils.h         # 数学工具头文件
+│   └── string_utils.h       # 字符串工具头文件
+└── src/
+    ├── main.c               # 主程序
+    ├── math_utils.c         # 数学工具实现
+    └── string_utils.c       # 字符串工具实现
+#+end_src
+
+*** CMakeLists.txt
+
+#+transclude: [[../../codes/c/cmake-hello/CMakeLists.txt]]  :src cmake
+
+*** 头文件：math_utils.h
+
+#+transclude: [[../../codes/c/cmake-hello/include/math_utils.h]]  :src c
+
+*** 头文件：string_utils.h
+
+#+transclude: [[../../codes/c/cmake-hello/include/string_utils.h]]  :src c
+
+*** 源文件：main.c
+
+#+transclude: [[../../codes/c/cmake-hello/src/main.c]]  :src c
+
+*** 源文件：math_utils.c
+
+#+transclude: [[../../codes/c/cmake-hello/src/math_utils.c]]  :src c
+
+*** 源文件：string_utils.c
+
+#+transclude: [[../../codes/c/cmake-hello/src/string_utils.c]]  :src c
+
+*** Windows 构建脚本
+
+#+transclude: [[../../codes/c/cmake-hello/build.bat]]  :src bat
+
+*** Unix/Linux 构建脚本
+
+#+transclude: [[../../codes/c/cmake-hello/build.sh]]  :src bash
+
+*** 构建和使用
+
+在 MSYS2 UCRT64 终端中执行：
+
+#+begin_src bash :exports code
+# 进入项目目录
+cd codes/c/cmake-hello
+
+# 方式1：使用脚本构建（推荐）
+./build.sh        # Unix/Linux
+# 或
+./build.bat       # Windows
+
+# 方式2：手动构建
+mkdir build
+cd build
+cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
+make
+
+# 运行程序
+./bin/cmake_hello
+
+# compile_commands.json 已生成，可用于：
+# - LSP 服务器（如 clangd）提供代码补全
+# - 静态分析工具（如 clang-tidy）
+# - 编辑器智能提示
+#+end_src
+
+构建前的目录结构
+#+begin_src bash
+PS D:\Documents\donaldsdlo.github.io\codes\c\cmake-hello> ls
+
+    Directory: D:\Documents\donaldsdlo.github.io\codes\c\cmake-hello
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d----            2026/2/5    12:10                include
+d----            2026/2/5    12:11                src
+-a---            2026/2/5    12:11            755 build.bat
+-a---            2026/2/5    12:11            591 build.sh
+-a---            2026/2/5    12:10            874 CMakeLists.txt
+#+end_src
+
+进行构建
+
+#+begin_src bash
+PS D:\Documents\donaldsdlo.github.io\codes\c\cmake-hello> .\build.bat
+Building CMake Hello World Project...
+Configuring with CMake...
+-- The C compiler identification is GNU 15.2.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: D:/Scoop/apps/msys2/current/ucrt64/bin/cc.exe - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Configuring done (1.9s)
+-- Generating done (0.0s)
+-- Build files have been written to: D:/Documents/donaldsdlo.github.io/codes/c/cmake-hello/build
+Building project...
+[ 25%] Building C object CMakeFiles/cmake_hello.dir/src/main.c.obj
+[ 50%] Building C object CMakeFiles/cmake_hello.dir/src/math_utils.c.obj
+[ 75%] Building C object CMakeFiles/cmake_hello.dir/src/string_utils.c.obj
+[100%] Linking C executable bin\cmake_hello.exe
+[100%] Built target cmake_hello
+已复制         1 个文件。
+
+Build successful! Executable: build/bin/cmake_hello.exe
+compile_commands.json generated for language server support.
+#+end_src
+
+构建完成后的目录结构多了一个 ~build~ 目录：
+
+#+begin_src bash
+PS D:\Documents\donaldsdlo.github.io\codes\c\cmake-hello> ls
+
+    Directory: D:\Documents\donaldsdlo.github.io\codes\c\cmake-hello
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d----            2026/2/5    14:03                build
+d----            2026/2/5    12:10                include
+d----            2026/2/5    12:11                src
+-a---            2026/2/5    12:11            755 build.bat
+-a---            2026/2/5    12:11            591 build.sh
+-a---            2026/2/5    12:10            874 CMakeLists.txt
+-a---            2026/2/5    14:03           1544 compile_commands.json
+#+end_src
+
+如下的目录结构中有可执行文件：
+
+#+begin_src bash
+PS D:\Documents\donaldsdlo.github.io\codes\c\cmake-hello\build\bin> ls
+
+    Directory: D:\Documents\donaldsdlo.github.io\codes\c\cmake-hello\build\bin
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a---            2026/2/5    14:03         142839 cmake_hello.exe
+#+end_src
+
+执行文件：
+
+#+begin_src bash
+PS D:\Documents\donaldsdlo.github.io\codes\c\cmake-hello\build\bin> ./cmake_hello.exe
+#+end_src
+
+返回的结果：
+
+#+begin_src bash
+=== CMake Multi-File Project Demo ===
+
+=== Math Utils Demo ===
+Factorial of 5: 120
+2^10: 1024.00
+sqrt(2): 1.414214
+Is 17 prime? Yes
+GCD(48, 18): 6
+LCM(4, 6): 12
+
+=== String Utils Demo ===
+Original string: Hello
+Length: 5
+After concatenation: Hello World
+Uppercase: HELLO WORLD
+Lowercase: hello world
+Reversed 'World': dlroW
+
+=== Palindrome Check ===
+String: "A man a plan a canal Panama"
+Is palindrome (ignoring spaces): Yes
+
+=== End of Demo ===
+#+end_src
+*** compile_commands.json 的作用
+
+=compile_commands.json= 是 CMake 生成的编译数据库文件，记录了每个文件的编译命令，被广泛用于：
+
+1. *语言服务器 (LSP)* ：clangd、cpplint 等工具依赖此文件提供准确的代码补全和诊断
+2. *静态分析* ：clang-tidy、cppcheck 等工具使用此文件了解项目编译参数
+3. *IDE 支持* ：VS Code、CLion 等 IDE 使用此文件配置 IntelliSense
+
+在 Emacs 中使用 =eglot= 或 =lsp-mode= 时，确保 =compile_commands.json= 在项目根目录，语言服务器会自动识别。
+
+** C/C++ 开发工具使用总结
+
+| 工具         | 用途       | MSYS2 包名                              |
+|--------------+------------+-----------------------------------------|
+| gcc          | C 编译器   | mingw-w64-ucrt-x86_64-gcc               |
+| g++          | C++ 编译器 | mingw-w64-ucrt-x86_64-gcc               |
+| gdb          | 调试器     | mingw-w64-ucrt-x86_64-gdb               |
+| clang-format | 代码格式化 | mingw-w64-ucrt-x86_64-clang-format      |
+| clang-tidy   | 静态分析   | mingw-w64-ucrt-x86_64-clang-tools-extra |
+| clangd       | LSP 服务器 | mingw-w64-ucrt-x86_64-clang-tools-extra |
+| ctags        | 代码标签   | mingw-w64-ucrt-x86_64-ctags             |
+| cmake        | 构建系统   | mingw-w64-ucrt-x86_64-cmake             |
+| ninja        | 快速构建   | mingw-w64-ucrt-x86_64-ninja             |
+
 * TexLive
 
 https://mirrors.tuna.tsinghua.edu.cn/help/CTAN/

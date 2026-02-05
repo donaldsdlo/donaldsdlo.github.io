@@ -2,7 +2,7 @@
 title: "windows 开发环境配置"
 author: ["Donald Lo"]
 date: 2026-01-15
-lastmod: 2026-02-04T13:58:49+08:00
+lastmod: 2026-02-05T14:10:31+08:00
 tags: ["windows", "dev"]
 draft: false
 ---
@@ -167,6 +167,28 @@ draft: false
         - [IDE](#ide)
         - [Maven](#maven)
 - [C/C++](#c-c-plus-plus)
+    - [使用 MSYS2 (UCRT) 安装 C/C++ 开发工具链](#使用-msys2--ucrt--安装-c-c-plus-plus-开发工具链)
+        - [安装工具链](#安装工具链)
+        - [单个工具安装说明](#单个工具安装说明)
+        - [配置环境变量](#配置环境变量)
+    - [GCC 手工编译和 GDB 调试实例](#gcc-手工编译和-gdb-调试实例)
+        - [项目文件](#项目文件)
+        - [Makefile](#makefile)
+        - [编译和运行](#编译和运行)
+        - [GDB 调试](#gdb-调试)
+    - [CMake 多文件项目示例](#cmake-多文件项目示例)
+        - [项目结构](#项目结构)
+        - [CMakeLists.txt](#cmakelists-dot-txt)
+        - [头文件：math_utils.h](#头文件-math-utils-dot-h)
+        - [头文件：string_utils.h](#头文件-string-utils-dot-h)
+        - [源文件：main.c](#源文件-main-dot-c)
+        - [源文件：math_utils.c](#源文件-math-utils-dot-c)
+        - [源文件：string_utils.c](#源文件-string-utils-dot-c)
+        - [Windows 构建脚本](#windows-构建脚本)
+        - [Unix/Linux 构建脚本](#unix-linux-构建脚本)
+        - [构建和使用](#构建和使用)
+        - [compile_commands.json 的作用](#compile-commands-dot-json-的作用)
+    - [C/C++ 开发工具使用总结](#c-c-plus-plus-开发工具使用总结)
 - [TexLive](#texlive)
     - [安装方法](#安装方法)
     - [切换镜像](#切换镜像)
@@ -2687,6 +2709,780 @@ scoop install maven4
 
 
 ## C/C++ {#c-c-plus-plus}
+
+
+### 使用 MSYS2 (UCRT) 安装 C/C++ 开发工具链 {#使用-msys2--ucrt--安装-c-c-plus-plus-开发工具链}
+
+
+#### 安装工具链 {#安装工具链}
+
+打开 MSYS2 UCRT64 终端，使用 toolchain 安装完整的 C/C++ 开发工具链：
+
+```bash
+# 安装完整的工具链（推荐方式，包含 gcc, g++, gdb, binutils 等）
+pacman -S mingw-w64-ucrt-x86_64-toolchain
+
+# 安装其他开发工具
+pacman -S mingw-w64-ucrt-x86_64-clang-tools-extra  # 包含 clangd, clang-tidy 等
+pacman -S mingw-w64-ucrt-x86_64-ctags             # 代码标签生成
+pacman -S mingw-w64-ucrt-x86_64-cmake             # 构建系统
+pacman -S mingw-w64-ucrt-x86_64-ninja             # 快速构建工具
+pacman -S mingw-w64-ucrt-x86_64-make              # Makefile 工具
+```
+
+
+#### 单个工具安装说明 {#单个工具安装说明}
+
+如果你不想安装完整的 toolchain，也可以单独安装：
+
+```bash
+# C/C++ 编译器
+pacman -S mingw-w64-ucrt-x86_64-gcc
+
+# 调试器
+pacman -S mingw-w64-ucrt-x86_64-gdb
+
+# 代码格式化工具
+pacman -S mingw-w64-ucrt-x86_64-clang-format
+
+# 静态代码分析
+pacman -S mingw-w64-ucrt-x86_64-clang-tidy
+
+# Ctags 用于代码导航
+pacman -S mingw-w64-ucrt-x86_64-ctags
+
+# CMake 构建系统
+pacman -S mingw-w64-ucrt-x86_64-cmake
+
+# Ninja 构建工具
+pacman -S mingw-w64-ucrt-x86_64-ninja
+```
+
+
+#### 配置环境变量 {#配置环境变量}
+
+为了在 Windows 命令行中直接使用 MSYS2 工具，将以下路径添加到系统 PATH：
+
+```bash
+# 添加到 PATH 环境变量（根据实际情况调整路径）
+D:\Scoop\apps\msys2\current\ucrt64\bin
+D:\Scoop\apps\msys2\current\usr\bin
+```
+
+
+### GCC 手工编译和 GDB 调试实例 {#gcc-手工编译和-gdb-调试实例}
+
+以下是一个完整的 GCC 手工编译程序和 GDB 调试的实例。
+
+
+#### 项目文件 {#项目文件}
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+
+// 计算阶乘的函数
+unsigned long long factorial(int n) {
+    if (n <= 1) return 1;
+    return n * factorial(n - 1);
+}
+
+// 计算斐波那契数列的函数
+int fibonacci(int n) {
+    if (n <= 0) return 0;
+    if (n == 1) return 1;
+    return fibonacci(n - 1) + fibonacci(n - 2);
+}
+
+int main(int argc, char *argv[]) {
+    printf("=== C Program Demo ===\n\n");
+
+    // 演示：计算阶乘
+    printf("Factorial calculations:\n");
+    for (int i = 0; i <= 10; i++) {
+        printf("  %d! = %llu\n", i, factorial(i));
+    }
+
+    printf("\n");
+
+    // 演示：斐波那契数列
+    printf("Fibonacci sequence:\n");
+    printf("  ");
+    for (int i = 0; i < 15; i++) {
+        printf("%d ", fibonacci(i));
+    }
+    printf("\n");
+
+    printf("\n=== End of Demo ===\n");
+
+    return 0;
+}
+```
+
+
+#### Makefile {#makefile}
+
+```makefile
+# Makefile for hello.c
+
+CC = gcc
+CFLAGS = -Wall -Wextra -g -O0
+TARGET = hello
+SRC = hello.c
+
+.PHONY: all clean debug
+
+all: $(TARGET)
+
+$(TARGET): $(SRC)
+$(CC) $(CFLAGS) -o $(TARGET) $(SRC)
+
+clean:
+rm -f $(TARGET) $(TARGET).exe
+
+# 用于 GDB 调试的目标
+debug: $(TARGET)
+gdb ./$(TARGET)
+```
+
+
+#### 编译和运行 {#编译和运行}
+
+在 MSYS2 UCRT64 终端中执行：
+
+```bash
+# 进入项目目录
+cd codes/c/gcc-hello
+
+# 使用 make 编译
+make
+
+# 或者直接使用 gcc 编译
+gcc -Wall -Wextra -g -O0 -o hello hello.c
+
+# 运行程序
+./hello
+```
+
+
+#### GDB 调试 {#gdb-调试}
+
+```bash
+# 启动 GDB
+gdb ./hello
+
+# 常用 GDB 命令：
+# (gdb) break main          # 在 main 函数处设置断点
+# (gdb) break hello.c:15    # 在第 15 行设置断点
+# (gdb) run                 # 运行程序
+# (gdb) next                # 单步执行（不进入函数）
+# (gdb) step                # 单步执行（进入函数）
+# (gdb) continue            # 继续执行到下一个断点
+# (gdb) print variable      # 打印变量值
+# (gdb) display variable    # 持续显示变量值
+# (gdb) backtrace           # 查看调用栈
+# (gdb) info locals         # 查看局部变量
+# (gdb) quit                # 退出 GDB
+
+# 实际调试示例会话：
+(gdb) break main
+(gdb) run
+(gdb) next
+(gdb) print i
+(gdb) continue
+(gdb) quit
+```
+
+
+### CMake 多文件项目示例 {#cmake-多文件项目示例}
+
+以下是一个使用 CMake 管理的完整 C 项目示例，包含 include 目录和多个源文件，并生成 compile_commands.json。
+
+
+#### 项目结构 {#项目结构}
+
+```bash
+cmake-hello/
+├── CMakeLists.txt           # CMake 配置文件
+├── build.bat                # Windows 构建脚本
+├── build.sh                 # Unix/Linux 构建脚本
+├── include/
+│   ├── math_utils.h         # 数学工具头文件
+│   └── string_utils.h       # 字符串工具头文件
+└── src/
+    ├── main.c               # 主程序
+    ├── math_utils.c         # 数学工具实现
+    └── string_utils.c       # 字符串工具实现
+```
+
+
+#### CMakeLists.txt {#cmakelists-dot-txt}
+
+```cmake
+cmake_minimum_required(VERSION 3.10)
+project(CMakeHello VERSION 1.0.0 LANGUAGES C)
+
+# 设置 C 标准
+set(CMAKE_C_STANDARD 99)
+set(CMAKE_C_STANDARD_REQUIRED ON)
+
+# 设置输出目录
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+
+# 包含头文件目录
+include_directories(${CMAKE_SOURCE_DIR}/include)
+
+# 源文件
+set(SOURCES
+  src/main.c
+  src/math_utils.c
+  src/string_utils.c
+)
+
+# 创建可执行文件
+add_executable(cmake_hello ${SOURCES})
+
+# 设置编译选项
+target_compile_options(cmake_hello PRIVATE
+  -Wall
+  -Wextra
+  -Wpedantic
+)
+
+# 生成 compile_commands.json（用于代码补全和静态分析）
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+# 安装目标
+install(TARGETS cmake_hello
+  RUNTIME DESTINATION bin
+)
+```
+
+
+#### 头文件：math_utils.h {#头文件-math-utils-dot-h}
+
+```c
+#ifndef MATH_UTILS_H
+#define MATH_UTILS_H
+
+// 数学工具函数头文件
+
+// 计算阶乘
+unsigned long long factorial(int n);
+
+// 计算幂
+double power(double base, int exp);
+
+// 计算平方根（牛顿迭代法）
+double sqrt_newton(double n);
+
+// 判断素数
+int is_prime(int n);
+
+// 计算最大公约数
+int gcd(int a, int b);
+
+// 计算最小公倍数
+int lcm(int a, int b);
+
+#endif // MATH_UTILS_H
+```
+
+
+#### 头文件：string_utils.h {#头文件-string-utils-dot-h}
+
+```c
+#ifndef STRING_UTILS_H
+#define STRING_UTILS_H
+
+#include <stddef.h>
+
+// 字符串工具函数头文件
+
+// 计算字符串长度
+size_t my_strlen(const char *str);
+
+// 复制字符串
+char *my_strcpy(char *dest, const char *src);
+
+// 连接字符串
+char *my_strcat(char *dest, const char *src);
+
+// 比较字符串
+int my_strcmp(const char *s1, const char *s2);
+
+// 反转字符串
+void my_strrev(char *str);
+
+// 判断回文字符串
+int is_palindrome(const char *str);
+
+// 将字符串转换为大写
+void to_upper(char *str);
+
+// 将字符串转换为小写
+void to_lower(char *str);
+
+#endif // STRING_UTILS_H
+```
+
+
+#### 源文件：main.c {#源文件-main-dot-c}
+
+```c
+#include <stdio.h>
+#include "math_utils.h"
+#include "string_utils.h"
+
+int main(void) {
+    printf("=== CMake Multi-File Project Demo ===\n\n");
+
+    // 演示数学工具函数
+    printf("=== Math Utils Demo ===\n");
+    printf("Factorial of 5: %llu\n", factorial(5));
+    printf("2^10: %.2f\n", power(2.0, 10));
+    printf("sqrt(2): %.6f\n", sqrt_newton(2.0));
+    printf("Is 17 prime? %s\n", is_prime(17) ? "Yes" : "No");
+    printf("GCD(48, 18): %d\n", gcd(48, 18));
+    printf("LCM(4, 6): %d\n", lcm(4, 6));
+
+    printf("\n=== String Utils Demo ===\n");
+    char str1[100] = "Hello";
+    char str2[100] = "World";
+    char str3[100] = "A man a plan a canal Panama";
+
+    printf("Original string: %s\n", str1);
+    printf("Length: %zu\n", my_strlen(str1));
+
+    my_strcat(str1, " ");
+    my_strcat(str1, str2);
+    printf("After concatenation: %s\n", str1);
+
+    to_upper(str1);
+    printf("Uppercase: %s\n", str1);
+
+    to_lower(str1);
+    printf("Lowercase: %s\n", str1);
+
+    my_strrev(str2);
+    printf("Reversed 'World': %s\n", str2);
+
+    // 移除空格后检查回文
+    printf("\n=== Palindrome Check ===\n");
+    printf("String: \"%s\"\n", str3);
+    printf("Is palindrome (ignoring spaces): %s\n",
+           is_palindrome(str3) ? "Yes" : "No");
+
+    printf("\n=== End of Demo ===\n");
+
+    return 0;
+}
+```
+
+
+#### 源文件：math_utils.c {#源文件-math-utils-dot-c}
+
+```c
+#include "math_utils.h"
+#include <math.h>
+
+unsigned long long factorial(int n) {
+    if (n < 0) return 0;
+    if (n <= 1) return 1;
+
+    unsigned long long result = 1;
+    for (int i = 2; i <= n; i++) {
+        result *= i;
+    }
+    return result;
+}
+
+double power(double base, int exp) {
+    if (exp == 0) return 1.0;
+
+    double result = 1.0;
+    int positive_exp = exp > 0 ? exp : -exp;
+
+    for (int i = 0; i < positive_exp; i++) {
+        result *= base;
+    }
+
+    return exp > 0 ? result : 1.0 / result;
+}
+
+double sqrt_newton(double n) {
+    if (n < 0) return -1.0;
+    if (n == 0) return 0.0;
+
+    double x = n;
+    double epsilon = 1e-10;
+
+    while (fabs(x * x - n) > epsilon) {
+        x = (x + n / x) / 2.0;
+    }
+
+    return x;
+}
+
+int is_prime(int n) {
+    if (n <= 1) return 0;
+    if (n <= 3) return 1;
+    if (n % 2 == 0 || n % 3 == 0) return 0;
+
+    for (int i = 5; i * i <= n; i += 6) {
+        if (n % i == 0 || n % (i + 2) == 0) return 0;
+    }
+
+    return 1;
+}
+
+int gcd(int a, int b) {
+    a = a < 0 ? -a : a;
+    b = b < 0 ? -b : b;
+
+    while (b != 0) {
+        int temp = b;
+        b = a % b;
+        a = temp;
+    }
+
+    return a;
+}
+
+int lcm(int a, int b) {
+    if (a == 0 || b == 0) return 0;
+    return (a / gcd(a, b)) * b;
+}
+```
+
+
+#### 源文件：string_utils.c {#源文件-string-utils-dot-c}
+
+```c
+#include "string_utils.h"
+#include <ctype.h>
+
+size_t my_strlen(const char *str) {
+    size_t len = 0;
+    while (str[len] != '\0') {
+        len++;
+    }
+    return len;
+}
+
+char *my_strcpy(char *dest, const char *src) {
+    char *original = dest;
+    while ((*dest++ = *src++) != '\0');
+    return original;
+}
+
+char *my_strcat(char *dest, const char *src) {
+    char *original = dest;
+
+    // 移动到 dest 的末尾
+    while (*dest != '\0') {
+        dest++;
+    }
+
+    // 复制 src
+    while ((*dest++ = *src++) != '\0');
+
+    return original;
+}
+
+int my_strcmp(const char *s1, const char *s2) {
+    while (*s1 && *s1 == *s2) {
+        s1++;
+        s2++;
+    }
+    return (unsigned char)*s1 - (unsigned char)*s2;
+}
+
+void my_strrev(char *str) {
+    if (!str || !*str) return;
+
+    int len = my_strlen(str);
+    for (int i = 0; i < len / 2; i++) {
+        char temp = str[i];
+        str[i] = str[len - 1 - i];
+        str[len - 1 - i] = temp;
+    }
+}
+
+int is_palindrome(const char *str) {
+    if (!str) return 0;
+
+    int left = 0;
+    int right = my_strlen(str) - 1;
+
+    while (left < right) {
+        // 跳过非字母数字字符
+        while (left < right && !isalnum((unsigned char)str[left])) left++;
+        while (left < right && !isalnum((unsigned char)str[right])) right--;
+
+        if (tolower((unsigned char)str[left]) != tolower((unsigned char)str[right])) {
+            return 0;
+        }
+
+        left++;
+        right--;
+    }
+
+    return 1;
+}
+
+void to_upper(char *str) {
+    while (*str) {
+        *str = toupper((unsigned char)*str);
+        str++;
+    }
+}
+
+void to_lower(char *str) {
+    while (*str) {
+        *str = tolower((unsigned char)*str);
+        str++;
+    }
+}
+```
+
+
+#### Windows 构建脚本 {#windows-构建脚本}
+
+```bat
+    @echo off
+    REM Windows build script for CMake project
+
+    echo Building CMake Hello World Project...
+
+    REM Create build directory
+    if not exist build mkdir build
+    cd build
+
+    REM Configure with CMake
+    echo Configuring with CMake...
+    cmake -G "MinGW Makefiles" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
+
+    if %ERRORLEVEL% NEQ 0 (
+        echo CMake configuration failed!
+        exit /b 1
+    )
+
+    REM Build the project
+    echo Building project...
+    cmake --build .
+
+    if %ERRORLEVEL% NEQ 0 (
+        echo Build failed!
+        exit /b 1
+    )
+
+    REM Copy compile_commands.json to project root for language servers
+    copy compile_commands.json ..\compile_commands.json
+
+    echo.
+    echo Build successful! Executable: build/bin/cmake_hello.exe
+    echo compile_commands.json generated for language server support.
+
+    cd ..
+```
+
+
+#### Unix/Linux 构建脚本 {#unix-linux-构建脚本}
+
+```bash
+#!/bin/bash
+# Unix/Linux/macOS build script for CMake project
+
+set -e
+
+echo "Building CMake Hello World Project..."
+
+# Create build directory
+mkdir -p build
+cd build
+
+# Configure with CMake
+echo "Configuring with CMake..."
+cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
+
+# Build the project
+echo "Building project..."
+cmake --build .
+
+# Copy compile_commands.json to project root for language servers
+cp compile_commands.json ../compile_commands.json
+
+echo ""
+echo "Build successful! Executable: build/bin/cmake_hello"
+echo "compile_commands.json generated for language server support."
+
+cd ..
+```
+
+
+#### 构建和使用 {#构建和使用}
+
+在 MSYS2 UCRT64 终端中执行：
+
+```bash
+# 进入项目目录
+cd codes/c/cmake-hello
+
+# 方式1：使用脚本构建（推荐）
+./build.sh        # Unix/Linux
+# 或
+./build.bat       # Windows
+
+# 方式2：手动构建
+mkdir build
+cd build
+cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
+make
+
+# 运行程序
+./bin/cmake_hello
+
+# compile_commands.json 已生成，可用于：
+# - LSP 服务器（如 clangd）提供代码补全
+# - 静态分析工具（如 clang-tidy）
+# - 编辑器智能提示
+```
+
+构建前的目录结构
+
+```bash
+PS D:\Documents\donaldsdlo.github.io\codes\c\cmake-hello> ls
+
+    Directory: D:\Documents\donaldsdlo.github.io\codes\c\cmake-hello
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d----            2026/2/5    12:10                include
+d----            2026/2/5    12:11                src
+-a---            2026/2/5    12:11            755 build.bat
+-a---            2026/2/5    12:11            591 build.sh
+-a---            2026/2/5    12:10            874 CMakeLists.txt
+```
+
+进行构建
+
+```bash
+PS D:\Documents\donaldsdlo.github.io\codes\c\cmake-hello> .\build.bat
+Building CMake Hello World Project...
+Configuring with CMake...
+-- The C compiler identification is GNU 15.2.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: D:/Scoop/apps/msys2/current/ucrt64/bin/cc.exe - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Configuring done (1.9s)
+-- Generating done (0.0s)
+-- Build files have been written to: D:/Documents/donaldsdlo.github.io/codes/c/cmake-hello/build
+Building project...
+[ 25%] Building C object CMakeFiles/cmake_hello.dir/src/main.c.obj
+[ 50%] Building C object CMakeFiles/cmake_hello.dir/src/math_utils.c.obj
+[ 75%] Building C object CMakeFiles/cmake_hello.dir/src/string_utils.c.obj
+[100%] Linking C executable bin\cmake_hello.exe
+[100%] Built target cmake_hello
+已复制         1 个文件。
+
+Build successful! Executable: build/bin/cmake_hello.exe
+compile_commands.json generated for language server support.
+```
+
+构建完成后的目录结构多了一个 <kbd>build</kbd> 目录：
+
+```bash
+PS D:\Documents\donaldsdlo.github.io\codes\c\cmake-hello> ls
+
+    Directory: D:\Documents\donaldsdlo.github.io\codes\c\cmake-hello
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d----            2026/2/5    14:03                build
+d----            2026/2/5    12:10                include
+d----            2026/2/5    12:11                src
+-a---            2026/2/5    12:11            755 build.bat
+-a---            2026/2/5    12:11            591 build.sh
+-a---            2026/2/5    12:10            874 CMakeLists.txt
+-a---            2026/2/5    14:03           1544 compile_commands.json
+```
+
+如下的目录结构中有可执行文件：
+
+```bash
+PS D:\Documents\donaldsdlo.github.io\codes\c\cmake-hello\build\bin> ls
+
+    Directory: D:\Documents\donaldsdlo.github.io\codes\c\cmake-hello\build\bin
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a---            2026/2/5    14:03         142839 cmake_hello.exe
+```
+
+执行文件：
+
+```bash
+PS D:\Documents\donaldsdlo.github.io\codes\c\cmake-hello\build\bin> ./cmake_hello.exe
+```
+
+返回的结果：
+
+```bash
+=== CMake Multi-File Project Demo ===
+
+=== Math Utils Demo ===
+Factorial of 5: 120
+2^10: 1024.00
+sqrt(2): 1.414214
+Is 17 prime? Yes
+GCD(48, 18): 6
+LCM(4, 6): 12
+
+=== String Utils Demo ===
+Original string: Hello
+Length: 5
+After concatenation: Hello World
+Uppercase: HELLO WORLD
+Lowercase: hello world
+Reversed 'World': dlroW
+
+=== Palindrome Check ===
+String: "A man a plan a canal Panama"
+Is palindrome (ignoring spaces): Yes
+
+=== End of Demo ===
+```
+
+
+#### compile_commands.json 的作用 {#compile-commands-dot-json-的作用}
+
+`compile_commands.json` 是 CMake 生成的编译数据库文件，记录了每个文件的编译命令，被广泛用于：
+
+1.  **语言服务器 (LSP)** ：clangd、cpplint 等工具依赖此文件提供准确的代码补全和诊断
+2.  **静态分析** ：clang-tidy、cppcheck 等工具使用此文件了解项目编译参数
+3.  **IDE 支持** ：VS Code、CLion 等 IDE 使用此文件配置 IntelliSense
+
+在 Emacs 中使用 `eglot` 或 `lsp-mode` 时，确保 `compile_commands.json` 在项目根目录，语言服务器会自动识别。
+
+
+### C/C++ 开发工具使用总结 {#c-c-plus-plus-开发工具使用总结}
+
+| 工具         | 用途    | MSYS2 包名                              |
+|------------|-------|---------------------------------------|
+| gcc          | C 编译器 | mingw-w64-ucrt-x86_64-gcc               |
+| g++          | C++ 编译器 | mingw-w64-ucrt-x86_64-gcc               |
+| gdb          | 调试器  | mingw-w64-ucrt-x86_64-gdb               |
+| clang-format | 代码格式化 | mingw-w64-ucrt-x86_64-clang-format      |
+| clang-tidy   | 静态分析 | mingw-w64-ucrt-x86_64-clang-tools-extra |
+| clangd       | LSP 服务器 | mingw-w64-ucrt-x86_64-clang-tools-extra |
+| ctags        | 代码标签 | mingw-w64-ucrt-x86_64-ctags             |
+| cmake        | 构建系统 | mingw-w64-ucrt-x86_64-cmake             |
+| ninja        | 快速构建 | mingw-w64-ucrt-x86_64-ninja             |
 
 
 ## TexLive {#texlive}

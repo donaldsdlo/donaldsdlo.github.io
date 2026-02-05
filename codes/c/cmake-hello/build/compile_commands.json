@@ -1,0 +1,20 @@
+[
+{
+  "directory": "D:/Documents/donaldsdlo.github.io/codes/c/cmake-hello/build",
+  "command": "D:\\Scoop\\apps\\msys2\\current\\ucrt64\\bin\\cc.exe  @CMakeFiles/cmake_hello.dir/includes_C.rsp -std=gnu99 -Wall -Wextra -Wpedantic -o CMakeFiles\\cmake_hello.dir\\src\\main.c.obj -c D:\\Documents\\donaldsdlo.github.io\\codes\\c\\cmake-hello\\src\\main.c",
+  "file": "D:/Documents/donaldsdlo.github.io/codes/c/cmake-hello/src/main.c",
+  "output": "CMakeFiles/cmake_hello.dir/src/main.c.obj"
+},
+{
+  "directory": "D:/Documents/donaldsdlo.github.io/codes/c/cmake-hello/build",
+  "command": "D:\\Scoop\\apps\\msys2\\current\\ucrt64\\bin\\cc.exe  @CMakeFiles/cmake_hello.dir/includes_C.rsp -std=gnu99 -Wall -Wextra -Wpedantic -o CMakeFiles\\cmake_hello.dir\\src\\math_utils.c.obj -c D:\\Documents\\donaldsdlo.github.io\\codes\\c\\cmake-hello\\src\\math_utils.c",
+  "file": "D:/Documents/donaldsdlo.github.io/codes/c/cmake-hello/src/math_utils.c",
+  "output": "CMakeFiles/cmake_hello.dir/src/math_utils.c.obj"
+},
+{
+  "directory": "D:/Documents/donaldsdlo.github.io/codes/c/cmake-hello/build",
+  "command": "D:\\Scoop\\apps\\msys2\\current\\ucrt64\\bin\\cc.exe  @CMakeFiles/cmake_hello.dir/includes_C.rsp -std=gnu99 -Wall -Wextra -Wpedantic -o CMakeFiles\\cmake_hello.dir\\src\\string_utils.c.obj -c D:\\Documents\\donaldsdlo.github.io\\codes\\c\\cmake-hello\\src\\string_utils.c",
+  "file": "D:/Documents/donaldsdlo.github.io/codes/c/cmake-hello/src/string_utils.c",
+  "output": "CMakeFiles/cmake_hello.dir/src/string_utils.c.obj"
+}
+]
