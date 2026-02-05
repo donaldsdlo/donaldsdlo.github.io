@@ -2,7 +2,7 @@
 title: "windows 开发环境配置"
 author: ["Donald Lo"]
 date: 2026-01-15
-lastmod: 2026-02-04T13:44:02+08:00
+lastmod: 2026-02-04T13:58:49+08:00
 tags: ["windows", "dev"]
 draft: false
 ---
@@ -117,10 +117,7 @@ draft: false
     - [安装命令行软件](#安装命令行软件)
         - [安装工具链](#安装工具链)
         - [安装 sdcv (StarDict 控制台版本)](#安装-sdcv--stardict-控制台版本)
-        - [安装其他常用工具](#安装其他常用工具)
-        - [搜索软件包](#搜索软件包)
-        - [查看已安装的包](#查看已安装的包)
-        - [卸载软件包](#卸载软件包)
+        - [安装 C/C++ 开发工具链](#安装-c-c-plus-plus-开发工具链)
     - [将 MSYS2 工具添加到 Windows PATH](#将-msys2-工具添加到-windows-path)
     - [Pacman 常用命令总结](#pacman-常用命令总结)
 - [Python 环境安装和配置](#python-环境安装和配置)
@@ -545,7 +542,6 @@ mklink /D %APPDATA%\Code\User D:\home\config\vscode
 
 :: Emacs 配置
 mklink %USERPROFILE%\.emacs.d D:\home\config\emacs
-mklink %USERPROFILE%\.emacs D:\home\config\emacs\init.el
 ```
 
 
@@ -1613,13 +1609,25 @@ pacman -S mingw-w64-ucrt-x86_64-sdcv
 安装完成后，你需要下载词典文件。你可以从网上搜索 StarDict 词典，下载后解压到 `~/.stardict/dic` 目录。
 
 
-#### 安装其他常用工具 {#安装其他常用工具}
+#### 安装 C/C++ 开发工具链 {#安装-c-c-plus-plus-开发工具链}
 
 ```bash
-# 安装基础工具
-pacman -S base-devel
+# 安装 GCC 工具链（包含 gcc, g++, gdb 等）
+pacman -S mingw-w64-ucrt-x86_64-gcc
 
-# 安装编译工具链
+# 安装 Clang 工具链（包含 clang, clang++ 等）
+pacman -S mingw-w64-ucrt-x86_64-clang
+
+# 安装代码格式化工具
+pacman -S mingw-w64-ucrt-x86_64-clang-format
+
+# 安装代码静态分析工具
+pacman -S mingw-w64-ucrt-x86_64-clang-tools-extra
+
+# 安装 Ctags（用于代码导航）
+pacman -S mingw-w64-ucrt-x86_64-ctags
+
+# 安装 CMake 和 Ninja
 pacman -S mingw-w64-ucrt-x86_64-cmake
 pacman -S mingw-w64-ucrt-x86_64-ninja
 
@@ -1631,39 +1639,6 @@ pacman -S mingw-w64-ucrt-x86_64-ripgrep
 pacman -S mingw-w64-ucrt-x86_64-fd
 pacman -S mingw-w64-ucrt-x86_64-jq
 pacman -S mingw-w64-ucrt-x86_64-tree
-```
-
-
-#### 搜索软件包 {#搜索软件包}
-
-```bash
-pacman -Ss <package-name>
-```
-
-例如，搜索 `python` 相关的包：
-
-```bash
-pacman -Ss python
-```
-
-
-#### 查看已安装的包 {#查看已安装的包}
-
-```bash
-pacman -Q
-```
-
-
-#### 卸载软件包 {#卸载软件包}
-
-```bash
-pacman -R <package-name>
-```
-
-连同依赖一起删除：
-
-```bash
-pacman -Rns <package-name>
 ```
 
 
