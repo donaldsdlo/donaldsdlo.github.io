@@ -2,7 +2,7 @@
 title: "windows 开发环境配置"
 author: ["Donald Lo"]
 date: 2026-01-15
-lastmod: 2026-02-05T14:10:31+08:00
+lastmod: 2026-02-05T14:27:39+08:00
 tags: ["windows", "dev"]
 draft: false
 ---
@@ -155,6 +155,27 @@ draft: false
         - [设置 Pycharm 创建新项目的默认目录](#设置-pycharm-创建新项目的默认目录)
         - [创建新项目](#创建新项目)
 - [Node](#node)
+    - [使用 Scoop 安装 Node.js](#使用-scoop-安装-node-dot-js)
+        - [安装最新版本](#安装最新版本)
+        - [验证安装](#验证安装)
+    - [配置国内镜像](#配置国内镜像)
+        - [npm 镜像配置](#npm-镜像配置)
+            - [使用淘宝镜像（推荐）](#使用淘宝镜像-推荐)
+            - [使用 nrm 管理镜像源](#使用-nrm-管理镜像源)
+            - [其他常用镜像源](#其他常用镜像源)
+        - [Yarn 镜像配置（可选）](#yarn-镜像配置-可选)
+        - [pnpm 镜像配置（可选）](#pnpm-镜像配置-可选)
+    - [安装常用工具和 LSP/Formatter/Lint](#安装常用工具和-lsp-formatter-lint)
+        - [全局开发工具](#全局开发工具)
+        - [LSP (Language Server Protocol) 工具](#lsp--language-server-protocol--工具)
+        - [代码格式化工具 (Formatter)](#代码格式化工具--formatter)
+        - [代码检查工具 (Linter)](#代码检查工具--linter)
+        - [开发辅助工具](#开发辅助工具)
+        - [推荐的项目配置](#推荐的项目配置)
+            - [package.json 示例](#package-dot-json-示例)
+            - [.eslintrc.json 示例](#dot-eslintrc-dot-json-示例)
+            - [.prettierrc 示例](#dot-prettierrc-示例)
+        - [更新 Node.js 和全局包](#更新-node-dot-js-和全局包)
 - [Rust](#rust)
     - [安装](#安装)
     - [更新 rustup](#更新-rustup)
@@ -253,7 +274,6 @@ draft: false
     - [生成一个文本文件](#生成一个文本文件)
     - [加密文件](#加密文件)
     - [解密](#解密)
-- [测试数学公式](#测试数学公式)
 
 </div>
 <!--endtoc-->
@@ -2492,6 +2512,403 @@ d----           2026/1/22    10:12                .venv
 
 
 ## Node {#node}
+
+
+### 使用 Scoop 安装 Node.js {#使用-scoop-安装-node-dot-js}
+
+
+#### 安装最新版本 {#安装最新版本}
+
+使用 Scoop 安装 Node.js 的最新 LTS 版本：
+
+```bash
+scoop install nodejs
+```
+
+如果需要安装特定版本，可以使用 versions bucket：
+
+```bash
+# 查看可用版本
+scoop search nodejs
+
+# 安装特定版本
+scoop install nodejs20  # Node.js 20.x
+scoop install nodejs18  # Node.js 18.x
+```
+
+
+#### 验证安装 {#验证安装}
+
+安装完成后，验证 Node.js 和 npm 是否正确安装：
+
+```bash
+node --version
+npm --version
+```
+
+
+### 配置国内镜像 {#配置国内镜像}
+
+
+#### npm 镜像配置 {#npm-镜像配置}
+
+由于网络原因，建议配置国内 npm 镜像源以加速包下载。
+
+
+##### 使用淘宝镜像（推荐） {#使用淘宝镜像-推荐}
+
+```bash
+# 设置 npm 镜像为淘宝镜像
+npm config set registry https://registry.npmmirror.com
+
+# 验证配置
+npm config get registry
+```
+
+
+##### 使用 nrm 管理镜像源 {#使用-nrm-管理镜像源}
+
+nrm 是一个 npm 镜像源管理工具，可以方便地切换不同的镜像源：
+
+```bash
+# 安装 nrm
+npm install -g nrm
+
+# 列出可用镜像源
+nrm ls
+
+# 切换到淘宝镜像
+nrm use taobao
+
+# 切换到官方镜像
+nrm use npm
+
+# 测试各个镜像源速度
+nrm test
+```
+
+
+##### 其他常用镜像源 {#其他常用镜像源}
+
+| 镜像源 | 地址                                              |
+|-----|-------------------------------------------------|
+| 官方 npm | <https://registry.npmjs.org>                      |
+| 淘宝 npm | <https://registry.npmmirror.com>                  |
+| 腾讯云 | <https://mirrors.cloud.tencent.com/npm/>          |
+| 华为云 | <https://mirrors.huaweicloud.com/repository/npm/> |
+
+
+#### Yarn 镜像配置（可选） {#yarn-镜像配置-可选}
+
+如果你使用 Yarn 作为包管理器：
+
+```bash
+# 安装 Yarn
+npm install -g yarn
+
+# 配置 Yarn 使用淘宝镜像
+yarn config set registry https://registry.npmmirror.com
+
+# 验证配置
+yarn config get registry
+```
+
+
+#### pnpm 镜像配置（可选） {#pnpm-镜像配置-可选}
+
+pnpm 是一个快速、节省磁盘空间的包管理器：
+
+```bash
+# 安装 pnpm
+npm install -g pnpm
+
+# 配置 pnpm 使用淘宝镜像
+pnpm config set registry https://registry.npmmirror.com
+
+# 验证配置
+pnpm config get registry
+```
+
+
+### 安装常用工具和 LSP/Formatter/Lint {#安装常用工具和-lsp-formatter-lint}
+
+
+#### 全局开发工具 {#全局开发工具}
+
+```bash
+# 包管理工具
+npm install -g yarn           # Facebook 的包管理器
+npm install -g pnpm           # 高效的包管理器
+
+# 版本管理工具
+npm install -g n              # Node.js 版本管理器
+npm install -g nvm-windows    # Windows 版 NVM
+
+# 进程管理
+npm install -g pm2            # Node.js 进程管理器
+npm install -g nodemon        # 开发时自动重启服务
+
+# 构建工具
+npm install -g typescript     # TypeScript 编译器
+npm install -g ts-node        # 直接运行 TypeScript
+npm install -g esbuild        # 超快构建工具
+npm install -g vite           # 下一代前端构建工具
+
+# HTTP 和 API 工具
+npm install -g http-server    # 简单的静态文件服务器
+npm install -g json-server    # 快速创建 REST API
+npm install -g httpie         # 用户友好的 HTTP 客户端
+npm install -g @stoplight/prism-cli  # API Mock 服务器
+```
+
+
+#### LSP (Language Server Protocol) 工具 {#lsp--language-server-protocol--工具}
+
+```bash
+# TypeScript/JavaScript LSP
+npm install -g typescript-language-server
+
+# Vue LSP
+npm install -g @vue/language-server
+
+# ESLint LSP
+npm install -g eslint-lsp
+
+# CSS/SCSS LSP
+npm install -g vscode-css-languageserver-bin
+
+# HTML LSP
+npm install -g vscode-html-languageserver-bin
+
+# JSON LSP
+npm install -g vscode-json-languageserver
+
+# Tailwind CSS LSP
+npm install -g @tailwindcss/language-server
+```
+
+
+#### 代码格式化工具 (Formatter) {#代码格式化工具--formatter}
+
+```bash
+# Prettier - 代码格式化工具
+npm install -g prettier
+
+# 配置文件示例 (.prettierrc)
+# {
+#   "semi": true,
+#   "singleQuote": true,
+#   "tabWidth": 2,
+#   "trailingComma": "es5",
+#   "printWidth": 80
+# }
+
+# 使用 Prettier 格式化文件
+# prettier --write "src/**/*.{js,ts,jsx,tsx,json,css,md}"
+
+# Stylelint - CSS/SCSS 格式化
+npm install -g stylelint stylelint-config-standard
+
+# Markdown 格式化
+npm install -g markdownlint-cli
+```
+
+
+#### 代码检查工具 (Linter) {#代码检查工具--linter}
+
+```bash
+# ESLint - JavaScript/TypeScript 代码检查
+npm install -g eslint
+
+# 初始化 ESLint 配置
+eslint --init
+
+# 运行 ESLint 检查
+# eslint "src/**/*.{js,ts,jsx,tsx}"
+
+# 修复 ESLint 问题
+# eslint "src/**/*.{js,ts,jsx,tsx}" --fix
+
+# Stylelint - CSS/SCSS 代码检查
+npm install -g stylelint
+
+# 配置文件示例 (.stylelintrc.json)
+# {
+#   "extends": ["stylelint-config-standard"],
+#   "rules": {
+#     "indentation": 2,
+#     "string-quotes": "single"
+#   }
+# }
+
+# HTMLHint - HTML 代码检查
+npm install -g htmlhint
+
+# Markdownlint - Markdown 代码检查
+npm install -g markdownlint-cli
+
+# CSpell - 拼写检查
+npm install -g cspell
+```
+
+
+#### 开发辅助工具 {#开发辅助工具}
+
+```bash
+# 代码生成和脚手架
+npm install -g @angular/cli      # Angular CLI
+npm install -g create-react-app  # React 脚手架
+npm install -g create-vue        # Vue 脚手架
+npm install -g create-next-app   # Next.js 脚手架
+npm install -g degit             # 项目模板下载
+
+# 测试工具
+npm install -g jest              # 测试框架
+npm install -g vitest            # Vite 原生测试框架
+npm install -g playwright        # E2E 测试
+npm install -g cypress           # E2E 测试
+
+# 代码质量工具
+npm install -g sonarqube-scanner # SonarQube 扫描
+
+# 文档工具
+npm install -g @compodoc/compodoc  # 文档生成
+npm install -g jsdoc             # JSDoc 文档生成
+
+# Git 增强工具
+npm install -g commitizen        # 规范提交信息
+npm install -g cz-conventional-changelog  # 提交规范
+npm install -g conventional-changelog-cli # 变更日志生成
+
+# 其他实用工具
+npm install -g serve             # 静态文件服务
+npm install -g live-server       # 实时重载开发服务器
+npm install -g browser-sync      # 浏览器同步测试
+npm install -g gulp-cli          # Gulp 构建工具
+npm install -g grunt-cli         # Grunt 构建工具
+npm install -g webpack-cli       # Webpack CLI
+npm install -g parcel-bundler    # Parcel 打包工具
+npm install -g rollup            # Rollup 打包工具
+npm install -g turbo             # 单体仓库构建工具
+```
+
+
+#### 推荐的项目配置 {#推荐的项目配置}
+
+在项目中创建以下配置文件：
+
+
+##### package.json 示例 {#package-dot-json-示例}
+
+```json
+{
+  "name": "my-project",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
+    "lint:fix": "eslint . --ext .ts,.tsx,.js,.jsx --fix",
+    "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,css,scss,md}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json,css,scss,md}\"",
+    "test": "vitest",
+    "type-check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.50.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-import": "^2.28.0",
+    "prettier": "^3.0.0",
+    "typescript": "^5.2.0",
+    "vite": "^4.4.0",
+    "vitest": "^0.34.0"
+  }
+}
+```
+
+
+##### .eslintrc.json 示例 {#dot-eslintrc-dot-json-示例}
+
+```json
+{
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "node": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:import/recommended",
+    "plugin:import/typescript",
+    "prettier"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "plugins": ["@typescript-eslint", "import"],
+  "rules": {
+    "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    "import/order": [
+      "error",
+      {
+        "groups": ["builtin", "external", "internal", "parent", "sibling", "index"],
+        "newlines-between": "always"
+      }
+    ]
+  },
+  "settings": {
+    "import/resolver": {
+      "typescript": true,
+      "node": true
+    }
+  }
+}
+```
+
+
+##### .prettierrc 示例 {#dot-prettierrc-示例}
+
+```json
+{
+  "semi": true,
+  "singleQuote": true,
+  "tabWidth": 2,
+  "trailingComma": "es5",
+  "printWidth": 80,
+  "bracketSpacing": true,
+  "arrowParens": "avoid",
+  "endOfLine": "lf"
+}
+```
+
+
+#### 更新 Node.js 和全局包 {#更新-node-dot-js-和全局包}
+
+```bash
+# 更新 Scoop 的 nodejs
+scoop update nodejs
+
+# 更新所有全局 npm 包
+npm update -g
+
+# 或者使用 npm-check 检查更新
+npm install -g npm-check
+npm-check -u -g
+
+# 使用 n 切换 Node.js 版本（如果安装了 n）
+npm install -g n
+n latest      # 安装最新版本
+n lts         # 安装 LTS 版本
+n 20          # 安装 Node.js 20
+n             # 交互式选择版本
+```
 
 
 ## Rust {#rust}
@@ -5326,14 +5743,3 @@ PS E:\tmp\test04> cat test.de.txt
 03
 04
 ```
-
-
-## 测试数学公式 {#测试数学公式}
-
-这是一个行内的数学公式： \\(n^2 = 10\\)
-
-\\[ n + 1 = x + y \\]
-
-这是末尾的字符。
-
-营造法式
