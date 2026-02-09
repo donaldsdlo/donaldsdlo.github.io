@@ -3585,6 +3585,189 @@ Status: Downloaded newer image for hello-world:latest
 docker.io/library/hello-world:latest
 #+end_src
 
+*** 以 mysql 为例跑一个测试用例
+
+**** 下载镜像
+
+上面配置的镜像源似乎失效了，直接指定源来下载 msql 的镜像：
+
+#+begin_src bash
+docker pull docker.1ms.run/mysql:latest
+#+end_src
+
+#+begin_src bash
+latest: Pulling from mysql
+4f37333d1be6: Pull complete
+e5a384f12fc1: Pull complete
+a5b1ba019080: Pull complete
+93b95dea6553: Pull complete
+c3c2157be11c: Pull complete
+fe44c8bf49c1: Pull complete
+85e7dc27e1dd: Pull complete
+7a3034072b44: Pull complete
+c07617e6f14b: Pull complete
+74e9390a4418: Pull complete
+7e5a775ad22a: Download complete
+cc8be4b9c0eb: Download complete
+Digest: sha256:db32c8ec843c042a728efb0ac7aa814d6f010eaac8923e20ae0a849d09c5baf8
+Status: Downloaded newer image for docker.1ms.run/mysql:latest
+docker.1ms.run/mysql:latest
+#+end_src
+
+下载完了查看：
+
+#+begin_src bash
+[root@DESKTOP-92CHCK7 d]# docker images
+#+end_src
+
+#+begin_src bash
+IMAGE                         ID             DISK USAGE   CONTENT SIZE   EXTRA
+docker.1ms.run/mysql:latest   db32c8ec843c       1.27GB          283MB
+[root@DESKTOP-92CHCK7 d]#
+#+end_src
+
+**** 第一次启动 mysql 容器
+
+#+begin_src bash
+docker run -d --name test-mysql -e MYSQL_ROOT_PASSWORD=123456 -e MYSQL_ROOT_HOST='%' -p 3306:3306 docker.1ms.run/mysql:latest
+#+end_src
+
+#+begin_src bash
+9f23fcd221c8ceecee2d089ea0d03425f6b75399c6d4948ce7870dae6177f76f
+#+end_src
+
+#+begin_src bash
+[root@DESKTOP-92CHCK7 d]# docker ps
+#+end_src
+
+#+begin_src bash
+[root@DESKTOP-92CHCK7 d]# docker ps
+CONTAINER ID   IMAGE                         COMMAND                  CREATED              STATUS              PORTS                                                    NAMES
+9f23fcd221c8   docker.1ms.run/mysql:latest   "docker-entrypoint.s…"   About a minute ago   Up About a minute   0.0.0.0:3306->3306/tcp, [::]:3306->3306/tcp, 33060/tcp   test-mysql
+#+end_src
+
+
+
+**** 在 WSL 中连接到 mysql
+
+#+begin_src bash
+[root@DESKTOP-92CHCK7 d]# docker exec -it test-mysql mysql -uroot -p
+#+end_src
+
+#+begin_src bash
+Enter password:
+#+end_src
+
+#+begin_src bash
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 12
+Server version: 9.6.0 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2026, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql>
+#+end_src
+
+#+begin_src bash
+mysql> SELECT host, user FROM mysql.user WHERE user = 'root';
+#+end_src
+
+#+begin_src bash
++-----------+------+
+| host      | user |
++-----------+------+
+| %         | root |
+| localhost | root |
++-----------+------+
+2 rows in set (0.003 sec)
+#+end_src
+
+**** 创建新账号，能在其他电脑上登录
+
+#+begin_src bash
+mysql> CREATE USER 'donald'@'%' IDENTIFIED BY 'p123456!';
+Query OK, 0 rows affected (0.011 sec)
+
+mysql> GRANT ALL PRIVILEGES ON *.* TO 'donald'@'%' WITH GRANT OPTION;
+Query OK, 0 rows affected (0.006 sec)
+
+mysql> FLUSH PRIVILEGES;
+Query OK, 0 rows affected, 1 warning (0.004 sec)
+#+end_src
+
+**** mysql client
+:PROPERTIES:
+:ID:       c19d04c2-b7c9-4e83-a31e-fe95edfd88fd
+:END:
+
+#+begin_src bash
+scoop install mysql-workbench
+#+end_src
+
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
+[[file:../../static/images/dev-envs.org/2026-02-09_11-39-07_screenshot.png]]
+
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
+[[file:../../static/images/dev-envs.org/2026-02-09_11-39-27_screenshot.png]]
+
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
+[[file:../../static/images/dev-envs.org/2026-02-09_11-40-15_screenshot.png]]
+
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
+[[file:../../static/images/dev-envs.org/2026-02-09_11-40-28_screenshot.png]]
+
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
+[[file:../../static/images/dev-envs.org/2026-02-09_11-43-36_screenshot.png]]
+
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
+[[file:../../static/images/dev-envs.org/2026-02-09_11-43-48_screenshot.png]]
+
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
+[[file:../../static/images/dev-envs.org/2026-02-09_11-44-02_screenshot.png]]
+
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
+[[file:../../static/images/dev-envs.org/2026-02-09_11-44-30_screenshot.png]]
+
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
+[[file:../../static/images/dev-envs.org/2026-02-09_11-44-53_screenshot.png]]
+
+
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
+[[file:../../static/images/dev-envs.org/2026-02-09_11-45-47_screenshot.png]]
+
+SQL 语句一定记得以分号结尾：
+
+#+begin_src sql
+use sys;
+
+select * from sys_config;
+#+end_src
+
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
+[[file:../../static/images/dev-envs.org/2026-02-09_11-48-14_screenshot.png]]
+按 Ctrl+Retrun 键执行当前 SQL 语句，在最下方是执行语句的日志。
+
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
+[[file:../../static/images/dev-envs.org/2026-02-09_11-48-25_screenshot.png]]
+
 ** 安装 python 管理工具
 
 #+begin_src bash :exports code

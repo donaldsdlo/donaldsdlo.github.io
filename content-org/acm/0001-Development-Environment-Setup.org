@@ -52,27 +52,45 @@ C++是由Bjarne Stroustrup在1979年在贝尔实验室创建的，最初被称�
 * Windows下使用Dev-C++
 
 ** 安装Dev-C++
+:PROPERTIES:
+:ID:       3dc6d6a0-47ee-424c-8ad7-74ac9b33157f
+:END:
 Dev-C++是一款免费的C++集成开发环境，适合初学者使用。
 
-1. 访问Dev-C++官网或SourceForge下载最新版本的Dev-C++
-   - 推荐使用Orwell Dev-C++或Embarcadero Dev-C++
-   - 下载地址：https://www.bloodshed.net/devcpp.html （Bloodshed Dev-C++）
-   - 或者：https://sourceforge.net/projects/orwelldevcpp/ （Orwell Dev-C++）
+1. 访问 Embarcadero Dev-C++ 官网下载最新版本的Dev-C++ 或者通过 winget 来安装
+   - 推荐使用 winget 来安装
+   - 下载地址：https://www.embarcadero.com/free-tools/dev-cpp （Embarcadero Dev-C++）
 
 2. 运行安装程序
-   - 双击下载的安装文件（如devcpp-5.11.exe）
-   - 选择安装语言（一般会自动检测）
-   - 点击"Next"或"下一步"
-   - 阅读并同意许可协议，选择"I Agree"
-   - 选择安装路径（默认路径为C:\\Program Files (x86)\\Dev-Cpp，可以使用默认路径）
-   - 选择要安装的组件，建议全部选择
-   - 点击"Install"开始安装
-   - 等待安装完成，点击"Finish"
-
-3. 首次运行Dev-C++
-   - 启动后会提示一些基本设置
-   - 选择语言（中文简体）
-   - 设置字体等个人偏好
+   #+begin_src bash
+    winget search Embarcadero
+   #+end_src
+   #+begin_src bash
+   名称                ID                  版本 源
+   ----------------------------------------------------
+   Embarcadero Dev-C++ Embarcadero.Dev-C++ 6.3  winget
+   #+end_src
+   #+begin_src bash
+   winget install Embarcadero.Dev-C++
+   #+end_src
+1. 首次运行Dev-C++
+     - 启动后会提示一些基本设置
+     - 选择语言（中文简体）
+      #+ATTR_ORG: :width 800
+	   #+ATTR_HTML: :width 90%
+	   [[file:../../static/images/0001-Development-Environment-Setup.org/2026-02-09_13-11-20_screenshot.png]]
+     - 设置字体等个人偏好
+      #+ATTR_ORG: :width 800
+      #+ATTR_HTML: :width 90%
+      [[file:../../static/images/0001-Development-Environment-Setup.org/2026-02-09_13-11-51_screenshot.png]]
+     - 确认设置完成
+      #+ATTR_ORG: :width 800
+      #+ATTR_HTML: :width 90%
+      [[file:../../static/images/0001-Development-Environment-Setup.org/2026-02-09_13-12-10_screenshot.png]]
+     - 设置完成后第一次打开的主界面
+      #+ATTR_ORG: :width 800
+      #+ATTR_HTML: :width 90%
+      [[file:../../static/images/0001-Development-Environment-Setup.org/2026-02-09_13-12-42_screenshot.png]]
 
 ** 使用Dev-C++编写Hello World程序
 
