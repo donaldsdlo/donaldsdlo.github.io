@@ -4635,8 +4635,6 @@ vim +/pattern filename " 打开文件并跳到第一个匹配
 - =ZQ= ：强制退出不保存（无需按回车）
 - =:x= ：保存并退出（与 :wq 类似，但只在有修改时才保存）
 
-* Git
-
 * GPG/文件加密
 
 ** 安装
@@ -4798,3 +4796,173 @@ PS E:\tmp\test04> cat test.de.txt
 03
 04
 #+end_src
+
+* Git
+
+Git 是一个分布式版本控制系统，由 Linus Torvalds 于 2005 年创建。它用于跟踪源代码的变化，并允许多人协作开发项目。Git 的主要特点包括：
+
+- 分布式：每个开发者都有完整的代码仓库副本
+- 分支管理：快速创建、切换和合并分支
+- 历史追踪：完整记录代码的修改历史
+- 高效性能：对大型项目也能快速操作
+- 灵活工作流：支持多种协作方式
+
+** 使用 Scoop 安装 Git
+
+在 PowerShell 中执行以下命令安装 Git：
+
+#+begin_src bash :exports code
+scoop install git
+#+end_src
+
+** 配置 Git 用户信息
+
+安装完成后，需要配置你的用户名和邮箱，这些信息会出现在每次提交中：
+
+#+begin_src bash :exports code
+git config --global user.name "Your Name"
+git config --global user.email "your.email@example.com"
+#+end_src
+
+查看配置：
+
+#+begin_src bash :exports code
+git config --list
+#+end_src
+
+** 本地项目初始化和管理
+
+*** 初始化新项目
+
+创建项目目录并初始化 Git 仓库：
+
+#+begin_src bash :exports code
+mkdir my-project
+cd my-project
+git init
+#+end_src
+
+*** 创建文件并提交
+
+创建项目文件：
+
+#+begin_src bash :exports code
+echo "# My Project" > README.md
+echo "console.log('Hello, Git!');" > app.js
+#+end_src
+
+查看当前状态：
+
+#+begin_src bash :exports code
+git status
+#+end_src
+
+将文件添加到暂存区：
+
+#+begin_src bash :exports code
+git add .
+#+end_src
+
+提交文件：
+
+#+begin_src bash :exports code
+git commit -m "Initial commit: Add README and app.js"
+#+end_src
+
+*** 修改文件并提交
+
+修改文件内容：
+
+#+begin_src bash :exports code
+echo "console.log('Updated: Hello, Git!');" > app.js
+#+end_src
+
+查看修改：
+
+#+begin_src bash :exports code
+git diff
+#+end_src
+
+添加并提交修改：
+
+#+begin_src bash :exports code
+git add app.js
+git commit -m "Update app.js: Improve greeting message"
+#+end_src
+
+*** 添加远程仓库并推送
+
+添加远程仓库（需要在 GitHub 或其他平台创建仓库）：
+
+#+begin_src bash :exports code
+git remote add origin https://github.com/username/my-project.git
+#+end_src
+
+查看远程仓库：
+
+#+begin_src bash :exports code
+git remote -v
+#+end_src
+
+设置主分支名称为 main：
+
+#+begin_src bash :exports code
+git branch -M main
+#+end_src
+
+首次推送到远程仓库：
+
+#+begin_src bash :exports code
+git push -u origin main
+#+end_src
+
+后续推送代码：
+
+#+begin_src bash :exports code
+git push
+#+end_src
+
+** 从远程仓库克隆
+
+从远程仓库克隆项目：
+
+#+begin_src bash :exports code
+git clone https://github.com/username/repository.git
+#+end_src
+
+进入项目目录：
+
+#+begin_src bash :exports code
+cd repository
+#+end_src
+
+** 从远程仓库更新
+
+拉取远程仓库的最新更改并合并到本地：
+
+#+begin_src bash :exports code
+git pull
+#+end_src
+
+或者分别获取更新和合并：
+
+#+begin_src bash :exports code
+git fetch origin
+git merge origin/main
+#+end_src
+
+** 常用 Git 命令参考
+
+| 命令                    | 说明               |
+|-------------------------+--------------------|
+| git init                | 初始化新仓库       |
+| git clone <url>         | 克隆远程仓库       |
+| git status              | 查看当前状态       |
+| git add <file>          | 添加文件到暂存区   |
+| git commit -m "message" | 提交更改           |
+| git push                | 推送到远程仓库     |
+| git pull                | 拉取远程更新       |
+| git log                 | 查看提交历史       |
+| git branch              | 列出/创建/删除分支   |
+| git checkout            | 切换分支或恢复文件 |
+| git merge               | 合并分支           |

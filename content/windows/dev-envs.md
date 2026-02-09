@@ -2,7 +2,7 @@
 title: "windows 开发环境配置"
 author: ["Donald Lo"]
 date: 2026-01-15
-lastmod: 2026-02-09T09:48:52+08:00
+lastmod: 2026-02-09T10:25:36+08:00
 tags: ["windows", "dev"]
 draft: false
 ---
@@ -296,13 +296,23 @@ draft: false
     - [Vim 退出](#vim-退出)
         - [保存和退出命令](#保存和退出命令)
         - [常用退出组合](#常用退出组合)
-- [Git](#git)
 - [GPG/文件加密](#gpg-文件加密)
     - [安装](#安装)
     - [生成密钥](#生成密钥)
     - [生成一个文本文件](#生成一个文本文件)
     - [加密文件](#加密文件)
     - [解密](#解密)
+- [Git](#git)
+    - [使用 Scoop 安装 Git](#使用-scoop-安装-git)
+    - [配置 Git 用户信息](#配置-git-用户信息)
+    - [本地项目初始化和管理](#本地项目初始化和管理)
+        - [初始化新项目](#初始化新项目)
+        - [创建文件并提交](#创建文件并提交)
+        - [修改文件并提交](#修改文件并提交)
+        - [添加远程仓库并推送](#添加远程仓库并推送)
+    - [从远程仓库克隆](#从远程仓库克隆)
+    - [从远程仓库更新](#从远程仓库更新)
+    - [常用 Git 命令参考](#常用-git-命令参考)
 
 </div>
 <!--endtoc-->
@@ -5918,9 +5928,6 @@ vim +/pattern filename " 打开文件并跳到第一个匹配
 -   `:x` ：保存并退出（与 :wq 类似，但只在有修改时才保存）
 
 
-## Git {#git}
-
-
 ## GPG/文件加密 {#gpg-文件加密}
 
 
@@ -6077,3 +6084,184 @@ PS E:\tmp\test04> cat test.de.txt
 03
 04
 ```
+
+
+## Git {#git}
+
+Git 是一个分布式版本控制系统，由 Linus Torvalds 于 2005 年创建。它用于跟踪源代码的变化，并允许多人协作开发项目。Git 的主要特点包括：
+
+-   分布式：每个开发者都有完整的代码仓库副本
+-   分支管理：快速创建、切换和合并分支
+-   历史追踪：完整记录代码的修改历史
+-   高效性能：对大型项目也能快速操作
+-   灵活工作流：支持多种协作方式
+
+
+### 使用 Scoop 安装 Git {#使用-scoop-安装-git}
+
+在 PowerShell 中执行以下命令安装 Git：
+
+```bash
+scoop install git
+```
+
+
+### 配置 Git 用户信息 {#配置-git-用户信息}
+
+安装完成后，需要配置你的用户名和邮箱，这些信息会出现在每次提交中：
+
+```bash
+git config --global user.name "Your Name"
+git config --global user.email "your.email@example.com"
+```
+
+查看配置：
+
+```bash
+git config --list
+```
+
+
+### 本地项目初始化和管理 {#本地项目初始化和管理}
+
+
+#### 初始化新项目 {#初始化新项目}
+
+创建项目目录并初始化 Git 仓库：
+
+```bash
+mkdir my-project
+cd my-project
+git init
+```
+
+
+#### 创建文件并提交 {#创建文件并提交}
+
+创建项目文件：
+
+```bash
+echo "# My Project" > README.md
+echo "console.log('Hello, Git!');" > app.js
+```
+
+查看当前状态：
+
+```bash
+git status
+```
+
+将文件添加到暂存区：
+
+```bash
+git add .
+```
+
+提交文件：
+
+```bash
+git commit -m "Initial commit: Add README and app.js"
+```
+
+
+#### 修改文件并提交 {#修改文件并提交}
+
+修改文件内容：
+
+```bash
+echo "console.log('Updated: Hello, Git!');" > app.js
+```
+
+查看修改：
+
+```bash
+git diff
+```
+
+添加并提交修改：
+
+```bash
+git add app.js
+git commit -m "Update app.js: Improve greeting message"
+```
+
+
+#### 添加远程仓库并推送 {#添加远程仓库并推送}
+
+添加远程仓库（需要在 GitHub 或其他平台创建仓库）：
+
+```bash
+git remote add origin https://github.com/username/my-project.git
+```
+
+查看远程仓库：
+
+```bash
+git remote -v
+```
+
+设置主分支名称为 main：
+
+```bash
+git branch -M main
+```
+
+首次推送到远程仓库：
+
+```bash
+git push -u origin main
+```
+
+后续推送代码：
+
+```bash
+git push
+```
+
+
+### 从远程仓库克隆 {#从远程仓库克隆}
+
+从远程仓库克隆项目：
+
+```bash
+git clone https://github.com/username/repository.git
+```
+
+进入项目目录：
+
+```bash
+cd repository
+```
+
+
+### 从远程仓库更新 {#从远程仓库更新}
+
+拉取远程仓库的最新更改并合并到本地：
+
+```bash
+git pull
+```
+
+或者分别获取更新和合并：
+
+```bash
+git fetch origin
+git merge origin/main
+```
+
+
+### 常用 Git 命令参考 {#常用-git-命令参考}
+
+| 命令                    | 说明       |
+|-----------------------|----------|
+| git init                | 初始化新仓库 |
+| git clone &lt;url&gt;   | 克隆远程仓库 |
+| git status              | 查看当前状态 |
+| git add &lt;file&gt;    | 添加文件到暂存区 |
+| git commit -m "message" | 提交更改   |
+| git push                | 推送到远程仓库 |
+| git pull                | 拉取远程更新 |
+| git log                 | 查看提交历史 |
+| git branch              | 列出/创建/删除分支 |
+| git checkout            | 切换分支或恢复文件 |
+| git merge               | 合并分支   |
