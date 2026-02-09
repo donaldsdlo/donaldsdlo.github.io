@@ -1,0 +1,673 @@
+---
+title: "开发环境准备"
+author: ["Donald Lo"]
+date: 2026-02-06
+lastmod: 2026-02-06T14:29:43+08:00
+tags: ["C/C++"]
+draft: false
+---
+
+<div class="ox-hugo-toc toc">
+
+<div class="heading">&#30446;&#24405;</div>
+
+- [C/C++及开发环境简介](#c-c-plus-plus-及开发环境简介)
+    - [C语言介绍](#c语言介绍)
+    - [C++语言介绍](#c-plus-plus-语言介绍)
+    - [开发环境组成](#开发环境组成)
+- [Windows下使用Dev-C++](#windows下使用dev-c-plus-plus)
+    - [安装Dev-C++](#安装dev-c-plus-plus)
+    - [使用Dev-C++编写Hello World程序](#使用dev-c-plus-plus-编写hello-world程序)
+    - [常用快捷键总结](#常用快捷键总结)
+- [Linux下的开发环境](#linux下的开发环境)
+    - [安装开发工具](#安装开发工具)
+    - [Vim编辑器基础操作](#vim编辑器基础操作)
+    - [Hello World程序示例](#hello-world程序示例)
+    - [编译程序](#编译程序)
+    - [运行程序](#运行程序)
+    - [使用GDB调试程序](#使用gdb调试程序)
+    - [使用Make构建工具](#使用make构建工具)
+- [macOS下的开发环境](#macos下的开发环境)
+    - [安装开发工具](#安装开发工具)
+    - [Vim编辑器基础操作](#vim编辑器基础操作)
+    - [Hello World程序示例](#hello-world程序示例)
+    - [编译程序](#编译程序)
+    - [运行程序](#运行程序)
+    - [使用LLDB调试程序](#使用lldb调试程序)
+    - [使用Make构建工具](#使用make构建工具)
+- [总结](#总结)
+
+</div>
+<!--endtoc-->
+
+
+
+## C/C++及开发环境简介 {#c-c-plus-plus-及开发环境简介}
+
+
+### C语言介绍 {#c语言介绍}
+
+C语言是由Dennis Ritchie在1972年在贝尔实验室创建的高级程序设计语言。它是一种通用的、面向过程的编程语言，以其高效性和灵活性而闻名。C语言的特点包括：
+
+-   高效性：C语言生成的代码执行效率高，接近汇编语言
+-   可移植性：C代码可以在多种平台上编译运行
+-   底层访问：允许直接操作内存和硬件
+-   结构化编程：支持模块化和结构化设计
+
+
+### C++语言介绍 {#c-plus-plus-语言介绍}
+
+C++是由Bjarne Stroustrup在1979年在贝尔实验室创建的，最初被称为"C with Classes"。它在C语言的基础上增加了面向对象编程的特性。C++的特点包括：
+
+-   面向对象：支持类、继承、多态等面向对象特性
+-   兼容C：C++完全兼容C语言，可以使用C的所有特性
+-   泛型编程：通过模板支持泛型编程
+-   标准库：提供丰富的标准库，包括STL（标准模板库）
+
+
+### 开发环境组成 {#开发环境组成}
+
+一个完整的C/C++开发环境通常包括以下几个部分：
+
+1.  **代码编辑器/IDE**
+    -   用于编写和编辑源代码
+    -   可以是简单的文本编辑器（如记事本、vim）
+    -   也可以是集成开发环境（如Dev-C++、Visual Studio、CLion等）
+2.  **编译器**
+    -   将源代码编译成可执行文件
+    -   常见的编译器：GCC（GNU Compiler Collection）、Clang、MSVC等
+3.  **调试器**
+    -   用于查找和修复程序中的错误
+    -   可以设置断点、查看变量值、单步执行代码
+    -   常见的调试器：GDB、LLDB、Visual Studio Debugger等
+4.  **构建工具**
+    -   用于自动化编译过程
+    -   处理依赖关系、批量编译
+    -   常见的构建工具：Make、CMake等
+
+
+## Windows下使用Dev-C++ {#windows下使用dev-c-plus-plus}
+
+
+### 安装Dev-C++ {#安装dev-c-plus-plus}
+
+Dev-C++是一款免费的C++集成开发环境，适合初学者使用。
+
+1.  访问Dev-C++官网或SourceForge下载最新版本的Dev-C++
+    -   推荐使用Orwell Dev-C++或Embarcadero Dev-C++
+    -   下载地址：<https://www.bloodshed.net/devcpp.html> （Bloodshed Dev-C++）
+    -   或者：<https://sourceforge.net/projects/orwelldevcpp/> （Orwell Dev-C++）
+
+2.  运行安装程序
+    -   双击下载的安装文件（如devcpp-5.11.exe）
+    -   选择安装语言（一般会自动检测）
+    -   点击"Next"或"下一步"
+    -   阅读并同意许可协议，选择"I Agree"
+    -   选择安装路径（默认路径为C:\\\Program Files (x86)\\\Dev-Cpp，可以使用默认路径）
+    -   选择要安装的组件，建议全部选择
+    -   点击"Install"开始安装
+    -   等待安装完成，点击"Finish"
+
+3.  首次运行Dev-C++
+    -   启动后会提示一些基本设置
+    -   选择语言（中文简体）
+    -   设置字体等个人偏好
+
+
+### 使用Dev-C++编写Hello World程序 {#使用dev-c-plus-plus-编写hello-world程序}
+
+1.  创建新文件
+    -   通过菜单栏选择：File -&gt; New -&gt; Source File
+    -   或使用快捷键 Ctrl+N
+    -   这会创建一个新的源代码文件
+
+2.  编写代码
+    -   在编辑器中输入以下代码：
+        ```cpp
+              #include <iostream>
+
+              int main() {
+                  std::cout << "Hello, World!" << std::endl;
+                  return 0;
+              }
+        ```
+
+3.  保存文件
+    -   选择 File -&gt; Save
+    -   或使用快捷键 Ctrl+S
+    -   选择保存位置
+    -   输入文件名（如hello.cpp）
+    -   确保文件扩展名为.cpp
+
+4.  编译和运行
+    -   编译：选择 Execute -&gt; Compile
+    -   或使用快捷键 F9
+    -   如果编译成功，会在底部看到"Compilation successful"
+    -   运行：选择 Execute -&gt; Run
+    -   或使用快捷键 Ctrl+F10
+    -   如果想直接编译并运行，可以选择 Execute -&gt; Compile &amp; Run
+    -   或使用快捷键 F11
+
+5.  创建项目（可选）
+    -   对于多个文件的程序，可以使用项目功能
+    -   File -&gt; New -&gt; Project
+    -   选择项目类型（Console Application）
+    -   选择语言（C或C++）
+    -   填写项目名称和保存位置
+    -   之后可以在项目中添加多个源文件
+
+
+### 常用快捷键总结 {#常用快捷键总结}
+
+-   Ctrl+N：新建文件
+-   Ctrl+S：保存文件
+-   F9：编译
+-   Ctrl+F10：运行
+-   F11：编译并运行
+-   Ctrl+F5：查看输出
+
+
+## Linux下的开发环境 {#linux下的开发环境}
+
+
+### 安装开发工具 {#安装开发工具}
+
+Linux下我们通常使用vim编辑代码，gcc/g++编译，gdb调试，make构建工具。
+
+**Arch Linux系（包括Manjaro、Garuda等）**
+
+```bash
+sudo pacman -S base-devel
+```
+
+这会安装gcc、g++、g++、make等基本开发工具。
+
+**Debian/Ubuntu系**
+
+```bash
+sudo apt update
+sudo apt install build-essential gdb vim
+```
+
+这会安装gcc、g++、make、gdb、vim等工具。
+
+**Fedora/CentOS/RHEL系**
+
+```bash
+sudo dnf groupinstall "Development Tools"
+sudo dnf install gdb vim
+```
+
+或者使用yum（旧版本）：
+
+```bash
+sudo yum groupinstall "Development Tools"
+sudo yum install gdb vim
+```
+
+
+### Vim编辑器基础操作 {#vim编辑器基础操作}
+
+Vim是一个强大的文本编辑器，有三种模式：
+
+1.  **普通模式** （默认启动时的模式）
+    -   移动光标：h（左）、j（下）、k（上）、l（右）
+    -   i：进入插入模式
+    -   :（英文冒号）：进入命令模式
+    -   dd：删除当前行
+    -   yy：复制当前行
+    -   p：粘贴
+    -   u：撤销
+
+2.  **插入模式**
+    -   可以正常输入文本
+    -   按Esc键返回普通模式
+
+3.  **命令模式**
+    -   :w：保存
+    -   :q：退出
+    -   :wq：保存并退出
+    -   :q!：强制退出不保存
+    -   :set number：显示行号
+    -   :set nonumber：隐藏行号
+
+
+### Hello World程序示例 {#hello-world程序示例}
+
+1.  创建源代码文件
+    ```bash
+       vim hello.cpp
+    ```
+
+2.  按i进入插入模式，输入以下代码：
+    ```cpp
+       #include <iostream>
+
+       int main() {
+           std::cout << "Hello, World!" << std::endl;
+           return 0;
+       }
+    ```
+
+3.  按Esc返回普通模式，输入:wq保存并退出
+
+
+### 编译程序 {#编译程序}
+
+使用g++编译器编译源代码：
+
+```bash
+g++ hello.cpp -o hello
+```
+
+参数说明：
+
+-   hello.cpp：源文件
+-   -o hello：指定输出文件名为hello（不指定则默认为a.out）
+-   -Wall（可选）：显示所有警告信息
+-   -g（可选）：生成调试信息，用于gdb调试
+
+
+### 运行程序 {#运行程序}
+
+```bash
+./hello
+```
+
+输出：
+
+```text
+Hello, World!
+```
+
+
+### 使用GDB调试程序 {#使用gdb调试程序}
+
+1.  编译时添加调试信息：
+
+<!--listend-->
+
+```bash
+g++ -g hello.cpp -o hello_debug
+```
+
+1.  启动GDB：
+
+<!--listend-->
+
+```bash
+gdb ./hello_debug
+```
+
+1.  GDB常用命令：
+
+    **基础命令**
+
+    -   run或r：运行程序
+    -   quit或q：退出GDB
+    -   help或h：查看帮助
+
+    **断点相关**
+
+    -   break main或b main：在main函数设置断点
+    -   break 5：在第5行设置断点
+    -   info breakpoints：查看所有断点
+    -   delete n：删除第n个断点
+    -   disable n：禁用第n个断点
+    -   enable n：启用第n个断点
+
+    **程序执行**
+
+    -   continue或c：继续执行
+    -   next或n：单步执行（不进入函数）
+    -   step或s：单步执行（进入函数）
+    -   until或u：继续执行直到当前循环结束
+    -   finish：执行完当前函数
+
+    **查看信息**
+
+    -   print var或p var：打印变量var的值
+    -   list或l：查看源代码
+    -   backtrace或bt：查看调用栈
+    -   info locals：查看所有局部变量
+    -   info args：查看函数参数
+    -   display var：每次停止时自动显示变量var
+    -   undisplay n：取消第n个自动显示
+
+2.  调试示例：
+
+<!--listend-->
+
+```bash
+$ gdb ./hello_debug
+GNU gdb (Ubuntu 9.2-0ubuntu1~20.04.1) 9.2
+...
+(gdb) break main
+Breakpoint 1 at 0x1155: file hello.cpp, line 3.
+(gdb) run
+Starting program: /path/to/hello_debug
+
+Breakpoint 1, main () at hello.cpp:3
+3       std::cout << "Hello, World!" << std::endl;
+(gdb) next
+4       return 0;
+(gdb) continue
+Continuing.
+Hello, World!
+[Inferior 1 (process 12345) exited normally]
+(gdb) quit
+```
+
+
+### 使用Make构建工具 {#使用make构建工具}
+
+1.  创建Makefile文件：
+
+<!--listend-->
+
+```bash
+vim Makefile
+```
+
+1.  编辑Makefile：
+
+<!--listend-->
+
+```makefile
+CC = g++
+CFLAGS = -Wall -g
+TARGET = hello
+SOURCES = hello.cpp
+
+all: $(TARGET)
+
+$(TARGET): $(SOURCES)
+	$(CC) $(CFLAGS) -o $(TARGET) $(SOURCES)
+
+clean:
+	rm -f $(TARGET)
+```
+
+**注意：Makefile中缩进必须使用Tab键，不能使用空格**
+
+1.  编译：
+
+<!--listend-->
+
+```bash
+make
+```
+
+1.  运行：
+
+<!--listend-->
+
+```bash
+./hello
+```
+
+1.  清理生成的文件：
+
+<!--listend-->
+
+```bash
+make clean
+```
+
+
+## macOS下的开发环境 {#macos下的开发环境}
+
+
+### 安装开发工具 {#安装开发工具}
+
+macOS下我们使用Clang编译器、LLDB调试器、Make构建工具和Vim编辑器，这些都是macOS系统自带的工具。
+
+安装Xcode Command Line Tools以获取完整的开发工具链：
+
+```bash
+xcode-select --install
+```
+
+系统会弹出提示，点击"安装"按钮即可自动下载和安装。安装完成后，你将获得：
+
+-   clang/clang++：C/C++编译器
+-   lldb：调试器
+-   make：构建工具
+-   vim：文本编辑器
+
+安装验证：
+
+```bash
+clang --version
+lldb --version
+make --version
+vim --version
+```
+
+
+### Vim编辑器基础操作 {#vim编辑器基础操作}
+
+macOS自带vim编辑器，用法与Linux下完全相同。
+
+1.  **普通模式** （默认启动时的模式）
+    -   移动光标：h（左）、j（下）、k（上）、l（右）
+    -   i：进入插入模式
+    -   :（英文冒号）：进入命令模式
+    -   dd：删除当前行
+    -   yy：复制当前行
+    -   p：粘贴
+    -   u：撤销
+
+2.  **插入模式**
+    -   可以正常输入文本
+    -   按Esc键返回普通模式
+
+3.  **命令模式**
+    -   :w：保存
+    -   :q：退出
+    -   :wq：保存并退出
+    -   :q!：强制退出不保存
+    -   :set number：显示行号
+    -   :set nonumber：隐藏行号
+
+
+### Hello World程序示例 {#hello-world程序示例}
+
+1.  创建源代码文件：
+    ```bash
+       vim hello.cpp
+    ```
+
+2.  按i进入插入模式，输入以下代码：
+    ```cpp
+       #include <iostream>
+
+       int main() {
+           std::cout << "Hello, World!" << std::endl;
+           return 0;
+       }
+    ```
+
+3.  按Esc返回普通模式，输入:wq保存并退出
+
+
+### 编译程序 {#编译程序}
+
+使用clang++编译器编译源代码：
+
+```bash
+clang++ hello.cpp -o hello
+```
+
+参数说明：
+
+-   hello.cpp：源文件
+-   -o hello：指定输出文件名为hello
+-   -Wall（可选）：显示所有警告信息
+-   -g（可选）：生成调试信息，用于lldb调试
+
+
+### 运行程序 {#运行程序}
+
+```bash
+./hello
+```
+
+输出：
+
+```text
+Hello, World!
+```
+
+
+### 使用LLDB调试程序 {#使用lldb调试程序}
+
+1.  编译时添加调试信息：
+    ```bash
+       clang++ -g hello.cpp -o hello_debug
+    ```
+
+2.  启动LLDB：
+    ```bash
+       lldb ./hello_debug
+    ```
+
+3.  LLDB常用命令：
+
+    **基础命令**
+
+    -   run或r：运行程序
+    -   quit或q：退出LLDB
+    -   help或h：查看帮助
+
+    **断点相关**
+
+    -   breakpoint set --name main：在main函数设置断点
+    -   breakpoint set --line 5：在第5行设置断点
+    -   breakpoint list：查看所有断点
+    -   breakpoint delete 1：删除第1个断点
+    -   breakpoint disable 1：禁用第1个断点
+    -   breakpoint enable 1：启用第1个断点
+
+    **程序执行**
+
+    -   continue或c：继续执行
+    -   next或n：单步执行（不进入函数）
+    -   step或s：单步执行（进入函数）
+    -   finish：执行完当前函数
+
+    **查看信息**
+
+    -   print var或p var：打印变量var的值
+    -   frame variable：查看所有局部变量
+    -   thread list：查看所有线程
+    -   bt：查看调用栈
+    -   list或l：查看源代码
+
+    **快捷别名**
+    LLDB内置了一些快捷别名，让操作更便捷：
+
+    -   b：设置断点（等同于breakpoint set）
+    -   br list：列出断点
+    -   n：next
+    -   s：step
+    -   c：continue
+
+4.  调试示例：
+    ```bash
+       $ lldb ./hello_debug
+       (lldb) target create "./hello_debug"
+       Current executable set to './hello_debug' (x86_64).
+       (lldb) b main
+       Breakpoint 1: where = hello`main + 11 at hello.cpp:3, address = 0x0000000100000f1b
+       (lldb) r
+       Process 12345 launched: './hello_debug' (x86_64)
+       Process 12345 stopped
+    ​   * thread #1, queue = 'com.apple.main-thread', stop reason = breakpoint 1.1
+           frame #0: 0x0000000100000f1b hello`main at hello.cpp:3
+          1    #include <iostream>
+          2
+       -> 3    int main() {
+          4        std::cout << "Hello, World!" << std::endl;
+          5        return 0;
+          6    }
+       (lldb) n
+       Process 12345 stopped
+    ​   * thread #1, queue = 'com.apple.main-thread', stop reason = step over
+           frame #0: 0x0000000100000f26 hello`main at hello.cpp:4
+          1    #include <iostream>
+          2
+          3    int main() {
+       -> 4        std::cout << "Hello, World!" << std::endl;
+          5        return 0;
+          6    }
+       (lldb) continue
+       Process 12345 resuming
+       Hello, World!
+       Process 12345 exited with status = 0 (0x00000000)
+       (lldb) quit
+    ```
+
+
+### 使用Make构建工具 {#使用make构建工具}
+
+1.  创建Makefile文件：
+    ```bash
+       vim Makefile
+    ```
+
+2.  编辑Makefile：
+    ```makefile
+       CXX = clang++
+       CXXFLAGS = -Wall -g
+       TARGET = hello
+       SOURCES = hello.cpp
+
+       all: $(TARGET)
+
+       $(TARGET): $(SOURCES)
+       	$(CXX) $(CXXFLAGS) -o $(TARGET) $(SOURCES)
+
+       clean:
+       	rm -f $(TARGET)
+    ```
+
+**注意：Makefile中缩进必须使用Tab键，不能使用空格**
+
+1.  编译：
+    ```bash
+       make
+    ```
+
+2.  运行：
+    ```bash
+       ./hello
+    ```
+
+3.  清理生成的文件：
+    ```bash
+       make clean
+    ```
+    系统会弹出提示，点击"安装"按钮即可自动下载和安装。
+
+4.  **使用Homebrew安装GCC和其他工具**
+    首先安装Homebrew（如果还没有安装）：
+    ```bash
+       /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    ```
+    然后安装gcc、gdb和make：
+    ```bash
+       brew install gcc gdb make
+    ```
+    注意：macOS自带的Clang编译器也可以编译C/C++代码。
+
+
+## 总结 {#总结}
+
+本教程介绍了三种主流操作系统下搭建C/C++开发环境的方法：
+
+-   Windows：使用Dev-C++作为集成开发环境，适合初学者快速上手
+-   Linux：使用vim编辑代码，gcc编译，gdb调试，make构建，适合需要深入了解底层原理的开发者
+-   macOS：使用vim编辑代码，clang编译，lldb调试，make构建，macOS原生工具链
+
+对于ACM编程竞赛来说，建议熟练掌握一种编辑器和编译工具组合，这样能够在比赛时更加专注于算法和问题本身，而不是被工具使用所困扰。

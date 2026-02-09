@@ -9,7 +9,7 @@
 #+HUGO_AUTO_SET_LASTMOD: t
 #+DRAFT: false
 #+HUGO_DRAFT: false
-#+STARTUP: latexpreview
+# #+STARTUP: latexpreview
 
 * 环境变量
 
@@ -4634,6 +4634,8 @@ vim +/pattern filename " 打开文件并跳到第一个匹配
 - =ZZ= ：快速保存并退出（无需按回车）
 - =ZQ= ：强制退出不保存（无需按回车）
 - =:x= ：保存并退出（与 :wq 类似，但只在有修改时才保存）
+
+* Git
 
 * GPG/文件加密
 
