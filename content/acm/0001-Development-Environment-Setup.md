@@ -1,8 +1,8 @@
 ---
-title: "开发环境准备"
+title: "ACM C/C++ 开发环境准备"
 author: ["Donald Lo"]
 date: 2026-02-06
-lastmod: 2026-02-09T13:17:13+08:00
+lastmod: 2026-03-03T20:44:43+08:00
 tags: ["C/C++"]
 draft: false
 ---

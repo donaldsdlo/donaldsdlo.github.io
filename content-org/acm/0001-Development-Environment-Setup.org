@@ -1,4 +1,4 @@
-#+TITLE: 开发环境准备
+#+TITLE: ACM C/C++ 开发环境准备
 #+HUGO_TAGS: C/C++
 #+CATEGORIES: C/C++
 #+DATE: 2026-02-06
@@ -11,10 +11,12 @@
 #+HUGO_DRAFT: false
 #+hugo_front_matter_format: yaml
 #+STARTUP: inlineimages
+#+STARTUP: latexpreview
 
 * C/C++及开发环境简介
 
 ** C语言介绍
+
 C语言是由Dennis Ritchie在1972年在贝尔实验室创建的高级程序设计语言。它是一种通用的、面向过程的编程语言，以其高效性和灵活性而闻名。C语言的特点包括：
 
 - 高效性：C语言生成的代码执行效率高，接近汇编语言
@@ -23,6 +25,7 @@ C语言是由Dennis Ritchie在1972年在贝尔实验室创建的高级程序设�
 - 结构化编程：支持模块化和结构化设计
 
 ** C++语言介绍
+
 C++是由Bjarne Stroustrup在1979年在贝尔实验室创建的，最初被称为"C with Classes"。它在C语言的基础上增加了面向对象编程的特性。C++的特点包括：
 
 - 面向对象：支持类、继承、多态等面向对象特性
@@ -31,6 +34,7 @@ C++是由Bjarne Stroustrup在1979年在贝尔实验室创建的，最初被称�
 - 标准库：提供丰富的标准库，包括STL（标准模板库）
 
 ** 开发环境组成
+
 一个完整的C/C++开发环境通常包括以下几个部分：
 
 1. *代码编辑器/IDE*
@@ -136,6 +140,7 @@ Dev-C++是一款免费的C++集成开发环境，适合初学者使用。
    - 之后可以在项目中添加多个源文件
 
 ** 常用快捷键总结
+
 - Ctrl+N：新建文件
 - Ctrl+S：保存文件
 - F9：编译
@@ -146,6 +151,7 @@ Dev-C++是一款免费的C++集成开发环境，适合初学者使用。
 * Linux下的开发环境
 
 ** 安装开发工具
+
 Linux下我们通常使用vim编辑代码，gcc/g++编译，gdb调试，make构建工具。
 
 *Arch Linux系（包括Manjaro、Garuda等）*
@@ -176,6 +182,7 @@ sudo yum install gdb vim
 #+END_SRC
 
 ** Vim编辑器基础操作
+
 Vim是一个强大的文本编辑器，有三种模式：
 
 1. *普通模式* （默认启动时的模式）
@@ -219,6 +226,7 @@ Vim是一个强大的文本编辑器，有三种模式：
 3. 按Esc返回普通模式，输入:wq保存并退出
 
 ** 编译程序
+
 使用g++编译器编译源代码：
 #+BEGIN_SRC bash
 g++ hello.cpp -o hello
@@ -231,6 +239,7 @@ g++ hello.cpp -o hello
 - -g（可选）：生成调试信息，用于gdb调试
 
 ** 运行程序
+
 #+BEGIN_SRC bash
 ./hello
 #+END_SRC
@@ -347,6 +356,7 @@ make clean
 * macOS下的开发环境
 
 ** 安装开发工具
+
 macOS下我们使用Clang编译器、LLDB调试器、Make构建工具和Vim编辑器，这些都是macOS系统自带的工具。
 
 安装Xcode Command Line Tools以获取完整的开发工具链：
@@ -369,6 +379,7 @@ vim --version
 #+END_SRC
 
 ** Vim编辑器基础操作
+
 macOS自带vim编辑器，用法与Linux下完全相同。
 
 1. *普通模式* （默认启动时的模式）
@@ -412,6 +423,7 @@ macOS自带vim编辑器，用法与Linux下完全相同。
 3. 按Esc返回普通模式，输入:wq保存并退出
 
 ** 编译程序
+
 使用clang++编译器编译源代码：
 #+BEGIN_SRC bash
 clang++ hello.cpp -o hello
@@ -424,6 +436,7 @@ clang++ hello.cpp -o hello
 - -g（可选）：生成调试信息，用于lldb调试
 
 ** 运行程序
+
 #+BEGIN_SRC bash
 ./hello
 #+END_SRC
@@ -572,6 +585,9 @@ Hello, World!
    注意：macOS自带的Clang编译器也可以编译C/C++代码。
 
 * 总结
+:PROPERTIES:
+:ID:       7e325a12-ad01-49a7-9a04-4e3ae2a08fa4
+:END:
 
 本教程介绍了三种主流操作系统下搭建C/C++开发环境的方法：
 

@@ -2,7 +2,7 @@
 title: "windows 开发环境配置"
 author: ["Donald Lo"]
 date: 2026-01-15
-lastmod: 2026-02-09T11:51:36+08:00
+lastmod: 2026-02-24T16:17:13+08:00
 tags: ["windows", "dev"]
 draft: false
 ---
@@ -37,7 +37,7 @@ draft: false
         - [应用程序数据迁移](#应用程序数据迁移)
         - [临时目录优化](#临时目录优化)
     - [注意事项](#注意事项)
-- [scoop 方便的软件安装工具](#scoop-方便的软件安装工具)
+- [Scoop 方便的软件安装工具](#scoop-方便的软件安装工具)
     - [为什么不用 `winget`](#为什么不用-winget)
     - [安装 scoop](#安装-scoop)
         - [设置环境变量](#设置环境变量)
@@ -319,6 +319,38 @@ draft: false
     - [从远程仓库克隆](#从远程仓库克隆)
     - [从远程仓库更新](#从远程仓库更新)
     - [常用 Git 命令参考](#常用-git-命令参考)
+- [Rsync](#rsync)
+    - [Rsync 简介](#rsync-简介)
+    - [通过 Scoop 安装 Rsync](#通过-scoop-安装-rsync)
+    - [Rsync 基础语法](#rsync-基础语法)
+    - [常用参数说明](#常用参数说明)
+    - [本地同步示例](#本地同步示例)
+        - [同步目录内容](#同步目录内容)
+        - [保留符号链接](#保留符号链接)
+        - [排除特定文件](#排除特定文件)
+        - [文件大小过滤](#文件大小过滤)
+    - [远程同步示例（SSH）](#远程同步示例-ssh)
+        - [推送到远程服务器](#推送到远程服务器)
+        - [从远程服务器拉取](#从远程服务器拉取)
+        - [指定 SSH 端口](#指定-ssh-端口)
+    - [增量备份示例](#增量备份示例)
+        - [首次全量备份](#首次全量备份)
+        - [增量备份到新目录](#增量备份到新目录)
+    - [模拟执行（dry-run）](#模拟执行-dry-run)
+    - [带宽限制](#带宽限制)
+    - [断点续传](#断点续传)
+    - [常用组合命令速查](#常用组合命令速查)
+    - [备份重要数据到移动硬盘](#备份重要数据到移动硬盘)
+        - [备份 Emacs 配置](#备份-emacs-配置)
+        - [备份 Rime 输入法配置](#备份-rime-输入法配置)
+        - [备份文档目录](#备份文档目录)
+        - [一键备份脚本](#一键备份脚本)
+    - [常用参数说明](#常用参数说明)
+    - [常见问题](#常见问题)
+        - [rsync: command not found](#rsync-command-not-found)
+        - [权限问题](#权限问题)
+        - [路径问题](#路径问题)
+    - [定时自动备份](#定时自动备份)
 
 </div>
 <!--endtoc-->
@@ -670,7 +702,7 @@ mklink /D %TMP% D:\tmp
 5.  **程序兼容性** ：某些老旧程序可能无法正确识别软链接，建议测试后再使用
 
 
-## scoop 方便的软件安装工具 {#scoop-方便的软件安装工具}
+## Scoop 方便的软件安装工具 {#scoop-方便的软件安装工具}
 
 Scoop 是一个面向 Windows 的命令行安装程序（包管理器），旨在简化在 Windows 系统上安装、更新和管理开源命令行工具和应用程序的过程。
 
@@ -3239,8 +3271,75 @@ D:\Scoop\apps\msys2\current\usr\bin
 
 #### 项目文件 {#项目文件}
 
+```c
+#include <stdio.h>
+#include <stdlib.h>
+
+// 计算阶乘的函数
+unsigned long long factorial(int n) {
+    if (n <= 1) return 1;
+    return n * factorial(n - 1);
+}
+
+// 计算斐波那契数列的函数
+int fibonacci(int n) {
+    if (n <= 0) return 0;
+    if (n == 1) return 1;
+    return fibonacci(n - 1) + fibonacci(n - 2);
+}
+
+int main(int argc, char *argv[]) {
+    printf("=== C Program Demo ===\n\n");
+
+    // 演示：计算阶乘
+    printf("Factorial calculations:\n");
+    for (int i = 0; i <= 10; i++) {
+        printf("  %d! = %llu\n", i, factorial(i));
+    }
+
+    printf("\n");
+
+    // 演示：斐波那契数列
+    printf("Fibonacci sequence:\n");
+    printf("  ");
+    for (int i = 0; i < 15; i++) {
+        printf("%d ", fibonacci(i));
+    }
+    printf("\n");
+
+    printf("\n=== End of Demo ===\n");
+
+    return 0;
+}
+```
+
+transclude: <../../codes/c/gcc-hello/hello.c>  :src c
+
 
 #### Makefile {#makefile}
+
+```makefile
+# Makefile for hello.c
+
+CC = gcc
+CFLAGS = -Wall -Wextra -g -O0
+TARGET = hello
+SRC = hello.c
+
+.PHONY: all clean debug
+
+all: $(TARGET)
+
+$(TARGET): $(SRC)
+$(CC) $(CFLAGS) -o $(TARGET) $(SRC)
+
+clean:
+rm -f $(TARGET) $(TARGET).exe
+
+# 用于 GDB 调试的目标
+debug: $(TARGET)
+gdb ./$(TARGET)
+```
 
 
 #### 编译和运行 {#编译和运行}
@@ -3315,26 +3414,409 @@ cmake-hello/
 
 #### CMakeLists.txt {#cmakelists-dot-txt}
 
+```cmake
+cmake_minimum_required(VERSION 3.10)
+project(CMakeHello VERSION 1.0.0 LANGUAGES C)
+
+# 设置 C 标准
+set(CMAKE_C_STANDARD 99)
+set(CMAKE_C_STANDARD_REQUIRED ON)
+
+# 设置输出目录
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+
+# 包含头文件目录
+include_directories(${CMAKE_SOURCE_DIR}/include)
+
+# 源文件
+set(SOURCES
+  src/main.c
+  src/math_utils.c
+  src/string_utils.c
+)
+
+# 创建可执行文件
+add_executable(cmake_hello ${SOURCES})
+
+# 设置编译选项
+target_compile_options(cmake_hello PRIVATE
+  -Wall
+  -Wextra
+  -Wpedantic
+)
+
+# 生成 compile_commands.json（用于代码补全和静态分析）
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+# 安装目标
+install(TARGETS cmake_hello
+  RUNTIME DESTINATION bin
+)
+```
+
 
 #### 头文件：math_utils.h {#头文件-math-utils-dot-h}
+
+```c
+#ifndef MATH_UTILS_H
+#define MATH_UTILS_H
+
+// 数学工具函数头文件
+
+// 计算阶乘
+unsigned long long factorial(int n);
+
+// 计算幂
+double power(double base, int exp);
+
+// 计算平方根（牛顿迭代法）
+double sqrt_newton(double n);
+
+// 判断素数
+int is_prime(int n);
+
+// 计算最大公约数
+int gcd(int a, int b);
+
+// 计算最小公倍数
+int lcm(int a, int b);
+
+#endif // MATH_UTILS_H
+```
 
 
 #### 头文件：string_utils.h {#头文件-string-utils-dot-h}
 
+```c
+#ifndef STRING_UTILS_H
+#define STRING_UTILS_H
+
+#include <stddef.h>
+
+// 字符串工具函数头文件
+
+// 计算字符串长度
+size_t my_strlen(const char *str);
+
+// 复制字符串
+char *my_strcpy(char *dest, const char *src);
+
+// 连接字符串
+char *my_strcat(char *dest, const char *src);
+
+// 比较字符串
+int my_strcmp(const char *s1, const char *s2);
+
+// 反转字符串
+void my_strrev(char *str);
+
+// 判断回文字符串
+int is_palindrome(const char *str);
+
+// 将字符串转换为大写
+void to_upper(char *str);
+
+// 将字符串转换为小写
+void to_lower(char *str);
+
+#endif // STRING_UTILS_H
+```
+
 
 #### 源文件：main.c {#源文件-main-dot-c}
+
+```c
+#include <stdio.h>
+#include "math_utils.h"
+#include "string_utils.h"
+
+int main(void) {
+    printf("=== CMake Multi-File Project Demo ===\n\n");
+
+    // 演示数学工具函数
+    printf("=== Math Utils Demo ===\n");
+    printf("Factorial of 5: %llu\n", factorial(5));
+    printf("2^10: %.2f\n", power(2.0, 10));
+    printf("sqrt(2): %.6f\n", sqrt_newton(2.0));
+    printf("Is 17 prime? %s\n", is_prime(17) ? "Yes" : "No");
+    printf("GCD(48, 18): %d\n", gcd(48, 18));
+    printf("LCM(4, 6): %d\n", lcm(4, 6));
+
+    printf("\n=== String Utils Demo ===\n");
+    char str1[100] = "Hello";
+    char str2[100] = "World";
+    char str3[100] = "A man a plan a canal Panama";
+
+    printf("Original string: %s\n", str1);
+    printf("Length: %zu\n", my_strlen(str1));
+
+    my_strcat(str1, " ");
+    my_strcat(str1, str2);
+    printf("After concatenation: %s\n", str1);
+
+    to_upper(str1);
+    printf("Uppercase: %s\n", str1);
+
+    to_lower(str1);
+    printf("Lowercase: %s\n", str1);
+
+    my_strrev(str2);
+    printf("Reversed 'World': %s\n", str2);
+
+    // 移除空格后检查回文
+    printf("\n=== Palindrome Check ===\n");
+    printf("String: \"%s\"\n", str3);
+    printf("Is palindrome (ignoring spaces): %s\n",
+           is_palindrome(str3) ? "Yes" : "No");
+
+    printf("\n=== End of Demo ===\n");
+
+    return 0;
+}
+```
 
 
 #### 源文件：math_utils.c {#源文件-math-utils-dot-c}
 
+```c
+#include "math_utils.h"
+#include <math.h>
+
+unsigned long long factorial(int n) {
+    if (n < 0) return 0;
+    if (n <= 1) return 1;
+
+    unsigned long long result = 1;
+    for (int i = 2; i <= n; i++) {
+        result *= i;
+    }
+    return result;
+}
+
+double power(double base, int exp) {
+    if (exp == 0) return 1.0;
+
+    double result = 1.0;
+    int positive_exp = exp > 0 ? exp : -exp;
+
+    for (int i = 0; i < positive_exp; i++) {
+        result *= base;
+    }
+
+    return exp > 0 ? result : 1.0 / result;
+}
+
+double sqrt_newton(double n) {
+    if (n < 0) return -1.0;
+    if (n == 0) return 0.0;
+
+    double x = n;
+    double epsilon = 1e-10;
+
+    while (fabs(x * x - n) > epsilon) {
+        x = (x + n / x) / 2.0;
+    }
+
+    return x;
+}
+
+int is_prime(int n) {
+    if (n <= 1) return 0;
+    if (n <= 3) return 1;
+    if (n % 2 == 0 || n % 3 == 0) return 0;
+
+    for (int i = 5; i * i <= n; i += 6) {
+        if (n % i == 0 || n % (i + 2) == 0) return 0;
+    }
+
+    return 1;
+}
+
+int gcd(int a, int b) {
+    a = a < 0 ? -a : a;
+    b = b < 0 ? -b : b;
+
+    while (b != 0) {
+        int temp = b;
+        b = a % b;
+        a = temp;
+    }
+
+    return a;
+}
+
+int lcm(int a, int b) {
+    if (a == 0 || b == 0) return 0;
+    return (a / gcd(a, b)) * b;
+}
+```
+
 
 #### 源文件：string_utils.c {#源文件-string-utils-dot-c}
+
+```c
+#include "string_utils.h"
+#include <ctype.h>
+
+size_t my_strlen(const char *str) {
+    size_t len = 0;
+    while (str[len] != '\0') {
+        len++;
+    }
+    return len;
+}
+
+char *my_strcpy(char *dest, const char *src) {
+    char *original = dest;
+    while ((*dest++ = *src++) != '\0');
+    return original;
+}
+
+char *my_strcat(char *dest, const char *src) {
+    char *original = dest;
+
+    // 移动到 dest 的末尾
+    while (*dest != '\0') {
+        dest++;
+    }
+
+    // 复制 src
+    while ((*dest++ = *src++) != '\0');
+
+    return original;
+}
+
+int my_strcmp(const char *s1, const char *s2) {
+    while (*s1 && *s1 == *s2) {
+        s1++;
+        s2++;
+    }
+    return (unsigned char)*s1 - (unsigned char)*s2;
+}
+
+void my_strrev(char *str) {
+    if (!str || !*str) return;
+
+    int len = my_strlen(str);
+    for (int i = 0; i < len / 2; i++) {
+        char temp = str[i];
+        str[i] = str[len - 1 - i];
+        str[len - 1 - i] = temp;
+    }
+}
+
+int is_palindrome(const char *str) {
+    if (!str) return 0;
+
+    int left = 0;
+    int right = my_strlen(str) - 1;
+
+    while (left < right) {
+        // 跳过非字母数字字符
+        while (left < right && !isalnum((unsigned char)str[left])) left++;
+        while (left < right && !isalnum((unsigned char)str[right])) right--;
+
+        if (tolower((unsigned char)str[left]) != tolower((unsigned char)str[right])) {
+            return 0;
+        }
+
+        left++;
+        right--;
+    }
+
+    return 1;
+}
+
+void to_upper(char *str) {
+    while (*str) {
+        *str = toupper((unsigned char)*str);
+        str++;
+    }
+}
+
+void to_lower(char *str) {
+    while (*str) {
+        *str = tolower((unsigned char)*str);
+        str++;
+    }
+}
+```
 
 
 #### Windows 构建脚本 {#windows-构建脚本}
 
+```bat
+    @echo off
+    REM Windows build script for CMake project
+
+    echo Building CMake Hello World Project...
+
+    REM Create build directory
+    if not exist build mkdir build
+    cd build
+
+    REM Configure with CMake
+    echo Configuring with CMake...
+    cmake -G "MinGW Makefiles" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
+
+    if %ERRORLEVEL% NEQ 0 (
+        echo CMake configuration failed!
+        exit /b 1
+    )
+
+    REM Build the project
+    echo Building project...
+    cmake --build .
+
+    if %ERRORLEVEL% NEQ 0 (
+        echo Build failed!
+        exit /b 1
+    )
+
+    REM Copy compile_commands.json to project root for language servers
+    copy compile_commands.json ..\compile_commands.json
+
+    echo.
+    echo Build successful! Executable: build/bin/cmake_hello.exe
+    echo compile_commands.json generated for language server support.
+
+    cd ..
+```
+
 
 #### Unix/Linux 构建脚本 {#unix-linux-构建脚本}
+
+```bash
+#!/bin/bash
+# Unix/Linux/macOS build script for CMake project
+
+set -e
+
+echo "Building CMake Hello World Project..."
+
+# Create build directory
+mkdir -p build
+cd build
+
+# Configure with CMake
+echo "Configuring with CMake..."
+cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
+
+# Build the project
+echo "Building project..."
+cmake --build .
+
+# Copy compile_commands.json to project root for language servers
+cp compile_commands.json ../compile_commands.json
+
+echo ""
+echo "Build successful! Executable: build/bin/cmake_hello"
+echo "compile_commands.json generated for language server support."
+
+cd ..
+```
 
 
 #### 构建和使用 {#构建和使用}
@@ -5982,3 +6464,291 @@ git merge origin/main
 | git branch              | 列出/创建/删除分支 |
 | git checkout            | 切换分支或恢复文件 |
 | git merge               | 合并分支   |
+
+
+## Rsync {#rsync}
+
+
+### Rsync 简介 {#rsync-简介}
+
+`Rsync` （Remote Sync）是一个强大的文件同步工具，可以高效地进行本地和远程文件同步。它具有以下核心特点：
+
+-   **增量传输** ：只传输变动的部分，而不是整个文件
+-   **压缩传输** ：传输过程中自动压缩数据，减少带宽占用
+-   **保留属性** ：保持文件权限、时间戳、所有者等元信息
+-   **灵活控制** ：支持多种参数配置，满足各种同步需求
+
+
+### 通过 Scoop 安装 Rsync {#通过-scoop-安装-rsync}
+
+Rsync 是一款强大的文件同步工具，可以高效地进行本地和远程文件同步。在 Windows 系统下，可以通过 Scoop 方便地安装 Rsync。
+
+```bash
+scoop install rsync
+```
+
+
+### Rsync 基础语法 {#rsync-基础语法}
+
+```bash
+rsync [选项] 源路径 目标路径
+```
+
+
+### 常用参数说明 {#常用参数说明}
+
+| 参数          | 说明              |
+|-------------|-----------------|
+| `-r`          | 递归复制子目录    |
+| `-a`          | 归档模式，保留权限、时间戳等 |
+| `-v`          | 显示详细信息      |
+| `-z`          | 传输时压缩数据    |
+| `-n`          | 模拟执行，不真正传输 |
+| `-P`          | 显示进度并支持断点续传 |
+| `--delete`    | 删除目标目录中不存在于源目录的文件 |
+| `--progress`  | 显示传输进度      |
+| `--exclude`   | 排除特定文件或目录 |
+| `--include`   | 指定包含的文件模式 |
+| `--bwlimit`   | 限制传输带宽（单位：KB/s） |
+| `--max-size`  | 最大文件大小限制  |
+| `--min-size`  | 最小文件大小限制  |
+| `-e ssh`      | 使用 SSH 协议传输 |
+| `--link-dest` | 增量备份时指定基准目录 |
+
+
+### 本地同步示例 {#本地同步示例}
+
+
+#### 同步目录内容 {#同步目录内容}
+
+```bash
+:: 同步源目录到目标目录
+rsync -av D:\source\ D:\destination\
+```
+
+
+#### 保留符号链接 {#保留符号链接}
+
+```bash
+:: 复制符号链接本身而非链接指向的文件
+rsync -avk D:\source\ D:\destination\
+```
+
+
+#### 排除特定文件 {#排除特定文件}
+
+```bash
+:: 排除所有 .log 文件和 temp 目录
+rsync -av --exclude='*.log' --exclude='temp/' D:\source\ D:\destination\
+```
+
+
+#### 文件大小过滤 {#文件大小过滤}
+
+```bash
+:: 只传输大于 1MB 的文件
+rsync -av --max-size=1M D:\source\ D:\destination\
+```
+
+
+### 远程同步示例（SSH） {#远程同步示例-ssh}
+
+
+#### 推送到远程服务器 {#推送到远程服务器}
+
+```bash
+:: 将本地目录同步到远程服务器
+rsync -avz D:\local\ user@remote:/remote/path/
+```
+
+
+#### 从远程服务器拉取 {#从远程服务器拉取}
+
+```bash
+:: 将远程服务器目录同步到本地
+rsync -avz user@remote:/remote/path/ D:\local\
+```
+
+
+#### 指定 SSH 端口 {#指定-ssh-端口}
+
+```bash
+:: 使用非标准 SSH 端口
+rsync -avz -e "ssh -p 2222" D:\local\ user@remote:/remote/path/
+```
+
+
+### 增量备份示例 {#增量备份示例}
+
+
+#### 首次全量备份 {#首次全量备份}
+
+```bash
+:: 首次备份到 backup_20260224 目录
+rsync -av --progress D:\data\ G:\backups\backup_20260224\
+```
+
+
+#### 增量备份到新目录 {#增量备份到新目录}
+
+```bash
+:: 基于上次备份进行增量备份
+rsync -av --delete --progress \
+  D:\data\ \
+  --link-dest=G:\backups\backup_20260224 \
+  G:\backups\backup_20260225\
+```
+
+这个命令会自动创建硬链接指向未修改的文件，节省磁盘空间。
+
+
+### 模拟执行（dry-run） {#模拟执行-dry-run}
+
+在执行同步之前，建议先使用 `-n` 参数模拟执行，查看会发生什么变化：
+
+```bash
+:: 模拟执行，不真正传输文件
+rsync -avn --delete D:\source\ D:\destination\
+```
+
+
+### 带宽限制 {#带宽限制}
+
+```bash
+:: 限制传输带宽为 500 KB/s
+rsync -avz --bwlimit=500 D:\source\ D:\destination\
+```
+
+
+### 断点续传 {#断点续传}
+
+```bash
+:: 支持断点续传
+rsync -avP --partial D:\large-file.iso D:\destination\
+```
+
+
+### 常用组合命令速查 {#常用组合命令速查}
+
+| 用途    | 命令                                                         |
+|-------|------------------------------------------------------------|
+| 本地同步 | rsync -av source/ dest/                                      |
+| 带进度显示 | rsync -avP source/ dest/                                     |
+| 镜像同步 | rsync -av --delete source/ dest/                             |
+| 同步前模拟 | rsync -avn --delete source/ dest/                            |
+| 带压缩远程同步 | rsync -avz source/ user@remote:/path/                        |
+| 限制带宽 | rsync -avz --bwlimit=1000 source/ dest/                      |
+| 排除文件同步 | rsync -av --exclude='\*.log' --exclude='.git/' source/ dest/ |
+| 增量备份 | rsync -av --link-dest=/backup/prev source/ backup/current/   |
+
+
+### 备份重要数据到移动硬盘 {#备份重要数据到移动硬盘}
+
+以下是将重要配置文件备份到移动硬盘 `G:\backups` 目录的完整示例。
+
+
+#### 备份 Emacs 配置 {#备份-emacs-配置}
+
+```bash
+rsync -av --progress D:\home\.emacs.d\ G:\backups\emacs.d\
+```
+
+参数说明：
+
+-   `-a` ：归档模式，保留文件权限、时间戳等属性
+-   `-v` ：显示详细信息
+-   `--progress` ：显示传输进度
+
+
+#### 备份 Rime 输入法配置 {#备份-rime-输入法配置}
+
+```bash
+rsync -av --progress D:\home\rime\ G:\backups\rime\
+```
+
+
+#### 备份文档目录 {#备份文档目录}
+
+```bash
+rsync -av --progress D:\Documents\ G:\backups\Documents\
+```
+
+
+#### 一键备份脚本 {#一键备份脚本}
+
+创建批处理文件 `backup.bat` ：
+
+```bash
+@echo off
+echo 开始备份重要数据...
+echo.
+
+echo [1/3] 备份 Emacs 配置...
+rsync -av --delete --progress D:\home\.emacs.d\ G:\backups\emacs.d\
+
+echo.
+echo [2/3] 备份 Rime 输入法配置...
+rsync -av --delete --progress D:\home\rime\ G:\backups\rime\
+
+echo.
+echo [3/3] 备份文档目录...
+rsync -av --delete --progress D:\Documents\ G:\backups\Documents\
+
+echo.
+echo 备份完成！
+pause
+```
+
+
+### 常用参数说明 {#常用参数说明}
+
+| 参数         | 说明              |
+|------------|-----------------|
+| `-a`         | 归档模式，保留权限、时间戳等 |
+| `-v`         | 显示详细信息      |
+| `-z`         | 传输时压缩数据    |
+| `--delete`   | 删除目标目录中不存在于源目录的文件 |
+| `--progress` | 显示传输进度      |
+| `--exclude`  | 排除特定文件或目录 |
+| `--bwlimit`  | 限制传输带宽（单位：KB/s） |
+
+
+### 常见问题 {#常见问题}
+
+
+#### rsync: command not found {#rsync-command-not-found}
+
+解决方案：
+
+1.  确认 Scoop 已安装
+2.  执行： `scoop install rsync`
+3.  重启终端使环境变量生效
+
+
+#### 权限问题 {#权限问题}
+
+解决方案：
+
+1.  检查目标目录权限
+2.  确保移动硬盘已正确连接
+3.  使用管理员权限运行命令提示符
+
+
+#### 路径问题 {#路径问题}
+
+Windows 路径注意事项：
+
+-   Rsync 支持正斜杠 `/` 和反斜杠 `\`
+-   建议使用正斜杠以避免转义问题
+-   路径末尾的 `\` 表示目录
+
+
+### 定时自动备份 {#定时自动备份}
+
+可以通过 Windows 任务计划程序设置定时备份：
+
+1.  打开"任务计划程序"
+2.  点击"创建基本任务"
+3.  设置触发器（如每天晚上 10 点）
+4.  在"操作"中选择"启动程序"，指定备份脚本路径
+5.  完成创建
