@@ -2,7 +2,7 @@
 title: "ACM 循环语句练习"
 author: ["Donald Lo"]
 date: 2026-03-03
-lastmod: 2026-03-13T15:32:17+08:00
+lastmod: 2026-04-22T14:20:24+08:00
 tags: ["ACM", "loop"]
 draft: false
 ---
@@ -691,19 +691,9 @@ int main() {
 
 假设现在有输入数组 A{64, 25, 12, 22, 11}
 
-第一遍遍历，在所有元素中找到最小值11，将11与第一个元素64交换位置；数组变成{11, 25, 12, 22, 64}。
-
-第二遍遍历，在剩下的元素{25, 12, 22, 64}中找到最小值12，将12与第二个元素25交换位置；数组变成{11, 12, 25, 22, 64}。
-
-第三遍遍历，在剩下的元素{25, 22, 64}中找到最小值22，将22与第三个元素25交换位置；数组变成{11, 12, 22, 25, 64}。
-
-第四遍遍历，在剩下的元素{25, 64}中找到最小值25，25已经在正确位置，不需要交换；数组保持{11, 12, 22, 25, 64}。
-
-至此，我们得到了输出数组B{11, 12, 22, 25, 64}。
-
 **流程展示图**
 
-{{< figure src="../../static/content-org/acm/0003-loop-practice.org/selection-sort-demo.gif" caption="<span class=\"figure-number\">&#22270;4&nbsp; </span>选择排序动态演示" >}}
+{{< figure src="/content-org/acm/0003-loop-practice.org/v2-9dd4ecd8b6cdea12a61f5faffbcfe411_b.gif" caption="<span class=\"figure-number\">&#22270;4&nbsp; </span>选择排序动态演示" >}}
 
 
 ### 代码展示 {#代码展示}
