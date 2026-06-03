@@ -1,0 +1,564 @@
+#+TITLE: EndeavourOS
+#+HUGO_TAGS: EndeavourOS Arch Linux
+#+CATEGORIES: EndeavourOS Arch Linux
+#+DATE: 2026-05-13
+#+AUTHOR: Donald Lo
+#+HUGO_SECTION: windows
+#+HUGO_BASE_DIR: ../../
+#+OPTIONS: line-break:t
+#+HUGO_AUTO_SET_LASTMOD: t
+#+DRAFT: false
+#+HUGO_DRAFT: false
+#+hugo_front_matter_format: yaml
+#+STARTUP: latexpreview
+#+STARTUP: inlineimages
+
+* 为什么选择 EndeavourOS
+
+EndeavourOS 是一个基于 Arch Linux 的发行版，它兼具 Arch Linux 的强大定制性和开箱即用的便利性。对于想要学习 Linux 系统但又不想从零配置的用户来说，是一个理想的选择。
+
+** 主要优势
+
+- =开箱即用= — 无需手动配置桌面环境、网络、引导程序等基础组件
+- =滚动更新= — 始终使用最新的软件包，无需担心版本过旧
+- =强大的 AUR= — 访问 Arch 用户仓库，拥有海量软件资源
+- =轻量灵活= — 可根据需求自由选择桌面环境和系统组件
+- =社区活跃= — 友好的中文社区支持，遇到问题容易找到解决方案
+
+** 与 Arch Linux 的区别
+
+| 特性     | Arch Linux     | EndeavourOS        |
+|----------+----------------+--------------------|
+| 安装方式 | 命令行手动安装 | 图形化安装界面     |
+| 初始配置 | 完全手动       | 自动检测并配置硬件 |
+| 学习曲线 | 陡峭           | 平缓               |
+| 适合人群 | 有经验的用户   | 初学者到中级用户   |
+
+** 系统要求
+
+- CPU: 64位处理器
+- 内存: 至少 2GB（推荐 4GB+）
+- 硬盘: 至少 20GB 可用空间
+- 显卡: 支持 UEFI 或 BIOS 启动
+
+* 安装步骤
+
+** 准备工作
+
+*** 下载 ISO 镜像
+
+从 EndeavourOS 官网下载最新的 ISO 镜像文件：
+
+- 官方网站：https://endeavouros.com/latest-release/
+- 下载链接：https://github.com/endeavouros-team/EndeavourOS/releases
+
+建议使用 BT 种子或国内镜像源下载，可获得更快的下载速度。
+
+*** 制作启动 U 盘
+
+将 ISO 文件刻录到 U 盘有以下几种方式：
+
+**** Windows 系统
+
+推荐使用 =Rufus= 或 =balenaEtcher= 工具：
+
+=Rufus= （推荐）：
+1. 下载并打开 Rufus：https://rufus.ie/
+2. 插入 U 盘（容量至少 4GB）
+3. 选择 U 盘设备
+4. 点击「选择」按钮，加载 ISO 文件
+5. 分区方案选择 =GPT=
+6. 目标系统类型选择 =UEFI（非 CSM）=
+7. 点击「开始」等待刻录完成
+
+=balenaEtcher= ：
+1. 下载并打开 balenaEtcher：https://etcher.balena.io/
+2. 点击「Flash from file」，选择 ISO 文件
+3. 选择目标 U 盘
+4. 点击「Flash!」开始刻录
+
+**** Linux 系统
+
+=balenaEtcher= （图形界面）：
+与 Windows 相同操作步骤。
+
+=dd 命令= （命令行）：
+#+begin_src bash
+sudo dd if=/path/to/endeavouros.iso of=/dev/sdX bs=4M status=progress oflag=sync
+#+end_src
+
+注意：将 =/dev/sdX= 替换为你的 U 盘设备号（如 =/dev/sdb= ）。可以通过 =lsblk= 或 =sudo fdisk -l= 查看。
+
+=Ventoy= （推荐长期使用）：
+1. 安装 Ventoy：https://www.ventoy.net/
+2. 将 U 盘分为两个分区（第一个为 Ventoy 分区，第二个可用于存储数据）
+3. 将 ISO 文件复制到 Ventoy 分区即可启动
+
+=Rufus= 也提供 Linux 版本。
+
+**** macOS 系统
+
+=balenaEtcher= （推荐）：
+与 Windows 相同操作步骤。
+
+=dd 命令= ：
+#+begin_src bash
+sudo dd if=/path/to/endeavouros.iso of=/dev/diskN bs=4m status=progress
+#+end_src
+
+注意：使用 =diskutil list= 查看 U 盘编号。刻录完成后使用 =diskutil eject /dev/diskN= 弹出 U 盘。
+
+| 工具         | 平台          | 难度 | 特点                       |
+|--------------+---------------+------+----------------------------|
+| Rufus        | Windows/Linux | 简单 | 轻量快速，支持多种分区方案 |
+| balenaEtcher | Win/Mac/Linux | 简单 | 跨平台，界面简洁           |
+| Ventoy       | Win/Mac/Linux | 简单 | 多 ISO 共存，无需反复刻录  |
+| dd           | Linux/Mac     | 中等 | 命令行，高效               |
+
+** 启动并进入安装环境
+
+加载 ISO 镜像后，系统会进入桌面环境。EndeavourOS 提供实时桌面环境，可以在安装前体验系统界面。
+[[file:../../static/content-org/windows/EndeavourOS.org/VirtualBox_ArchLinux_13_05_2026_11_07_40.png]]
+
+点击 ~Start th Installer~ 开始安装：
+[[file:../../static/content-org/windows/EndeavourOS.org/VirtualBox_ArchLinux_13_05_2026_11_07_52.png]]
+EndeavourOS 提供两种安装方式：
+- =在线安装= — 使用最新的软件包和桌面环境
+- =离线安装= — 使用预打包的系统镜像
+
+选择「在线安装」可以获得最新的系统体验。
+
+[[file:../../static/content-org/windows/EndeavourOS.org/VirtualBox_ArchLinux_13_05_2026_11_08_00.png]]
+稍等片刻会出现如下的欢迎界面：
+[[file:../../static/content-org/windows/EndeavourOS.org/VirtualBox_ArchLinux_13_05_2026_11_08_31.png]]
+选择美式英语，如果选择简体中文，后续的一些目录啥的都会自动设置成中文，后续命令行的操作会比较麻烦，这里就先设置成英语，
+后面安装简体中文字体就可以正常显示中文：
+[[file:../../static/content-org/windows/EndeavourOS.org/VirtualBox_ArchLinux_13_05_2026_11_08_40.png]]
+在此选择时区为上海。
+[[file:../../static/content-org/windows/EndeavourOS.org/VirtualBox_ArchLinux_13_05_2026_11_08_51.png]]
+选择键盘
+[[file:../../static/content-org/windows/EndeavourOS.org/VirtualBox_ArchLinux_13_05_2026_11_09_01.png]]
+EndeavourOS 支持多种桌面环境，包括：
+- GNOME — 现代简洁的界面
+- KDE Plasma — 功能丰富的可定制桌面
+- XFCE — 轻量级，适合老旧硬件
+- Cinnamon — 类似 Windows 的操作体验
+- 其他桌面环境...
+
+根据个人喜好和硬件配置选择合适的桌面环境。
+
+这里选择 桌面环境，这里选择轻量级的 Xfce4
+
+[[file:../../static/content-org/windows/EndeavourOS.org/VirtualBox_ArchLinux_13_05_2026_11_09_17.png]]
+选择需要安装的软件包
+[[file:../../static/content-org/windows/EndeavourOS.org/VirtualBox_ArchLinux_13_05_2026_11_09_24.png]]
+选择启动器
+[[file:../../static/content-org/windows/EndeavourOS.org/VirtualBox_ArchLinux_13_05_2026_11_09_36.png]]
+设置硬盘，这里简化操作，选择整个硬盘都用来安装系统，你可以根据实际情况做分区。
+[[file:../../static/content-org/windows/EndeavourOS.org/VirtualBox_ArchLinux_13_05_2026_11_09_55.png]]
+设置账号和密码。
+[[file:../../static/content-org/windows/EndeavourOS.org/VirtualBox_ArchLinux_13_05_2026_11_10_03.png]]
+最后确认相关的信息，然后按 ~Install~ 确认安装。
+[[file:../../static/content-org/windows/EndeavourOS.org/VirtualBox_ArchLinux_13_05_2026_11_10_08.png]]
+点击 ~Install Now~ 进行安装。
+[[file:../../static/content-org/windows/EndeavourOS.org/VirtualBox_ArchLinux_13_05_2026_11_10_14.png]]
+这里会显示安装的进度，稍等回来确认是否安装完成。
+
+[[file:../../static/content-org/windows/EndeavourOS.org/VirtualBox_ArchLinux_13_05_2026_13_13_54.png]]
+这里显示安装完成，把 U 盘取出，勾选 ~Restart now~ ，然后点击 ~Done~ 。
+
+** 安装完成
+
+[[file:../../static/content-org/windows/EndeavourOS.org/VirtualBox_ArchLinux_13_05_2026_14_06_57.png]]
+
+重新启动后的界面如图。
+
+[[file:../../static/content-org/windows/EndeavourOS.org/VirtualBox_ArchLinux_13_05_2026_13_26_45.png]]
+
+登录系统后界面如图示。
+
+* 安装后配置
+
+** 更新系统
+
+#+begin_src bash
+sudo pacman -Syu
+#+end_src
+
+** 使用 stow 管理配置文件
+
+=stow= 是一个 GNU 项目，用于通过符号链接的方式将配置文件（dotfiles）从统一目录管理起来，广泛用于在多台机器间同步配置。
+
+*** 什么是 stow
+
+stow 的核心理念是将所有 dotfile 集中放在一个仓库目录中（如 =~/.dotfiles=），然后通过符号链接将文件分发到它们应该在的位置。这样只需一个 git 仓库就能管理所有配置，新机器上 clone 下来跑一条命令即可完整恢复。
+
+*** stow 的优势
+
+- =备份简单= — 一个 git 仓库包含所有配置
+- =迁移便捷= — 新机器 clone 后运行 =stow= 即可自动链接
+- =版本控制= — 所有配置文件纳入 git，方便追踪修改历史
+- =原子操作= — stow/unstow 可以随时切换，不影响原始文件
+- =跨发行版通用= — home 目录下的配置文件在不同系统间大多通用
+
+*** 安装 stow
+
+在 Arch/EndeavourOS 上：
+
+#+begin_src bash
+sudo pacman -S stow
+#+end_src
+
+*** 目录结构
+
+推荐使用如下目录结构：
+
+#+begin_src text
+~/.dotfiles/
+├── bash/
+│   └── .bashrc
+├── vim/
+│   └── .vimrc
+├── git/
+│   └── .gitconfig
+├── tmux/
+│   └── .tmux.conf
+└── nvim/
+    └── config/
+        └── init.lua
+#+end_src
+
+每个子目录对应一个"软件包"（package），stow 会将该目录内的文件链接到上级目录（即 =~/=）。
+
+*** 基本操作
+
+#+begin_src bash
+cd ~/.dotfiles
+
+stow bash         # 将 bash/ 下的文件链接到 ~
+stow git vim nvim # 同时链接多个包
+stow -R bash      # 重新链接（配置文件有更新时）
+stow -D bash      # 删除 bash 的符号链接（取消管理）
+stow -D *         # 取消所有符号链接
+stow --adopt      # 将现有文件替换为符号链接（谨慎使用）
+#+end_src
+
+=--adopt= 选项会强制用符号链接替换当前目录下的文件，适用于接管已有的配置文件。
+
+*** 使用前注意事项
+
+stow 在执行时会检查目标文件是否已存在。如果目标位置已有文件（非 stow 创建的符号链接），stow 会报错，不会覆盖。此时需要手动处理：
+
+1. 如果是旧配置文件，先备份：
+   #+begin_src bash
+   mv ~/.bashrc ~/.bashrc.bak
+   #+end_src
+2. 然后再执行 stow。
+3. 对比新旧配置的差异，确保没有遗漏重要设置。
+
+*** 完整流程示例
+
+以管理 =.bashrc= 为例：
+
+1. 创建目录结构：
+   #+begin_src bash
+   mkdir -p ~/.dotfiles/bash
+   #+end_src
+2. 将现有的 =~/.bashrc= 移入仓库：
+   #+begin_src bash
+   mv ~/.bashrc ~/.dotfiles/bash/.bashrc
+   #+end_src
+3. 初始化 git 仓库并提交：
+   #+begin_src bash
+   cd ~/.dotfiles
+   git init
+   git add .
+   git commit -m "feat: initial dotfiles"
+   #+end_src
+4. 执行 stow：
+   #+begin_src bash
+   stow bash
+   #+end_src
+5. 验证链接是否正确：
+   #+begin_src bash
+   ls -la ~/.bashrc
+   # 输出类似：.bashrc -> /home/user/.dotfiles/bash/.bashrc
+   #+end_src
+
+在新机器上：
+
+#+begin_src bash
+git clone https://github.com/yourname/dotfiles.git ~/.dotfiles
+cd ~/.dotfiles
+stow bash git vim tmux nvim
+#+end_src
+
+*** 配合版本控制
+
+建议将 =~/.dotfiles= 托管到 GitHub/Gitee：
+
+#+begin_src bash
+cd ~/.dotfiles
+git remote add origin https://github.com/yourname/dotfiles.git
+git push -u origin master
+#+end_src
+
+使用私有仓库可以保护包含敏感信息（如 =.gitconfig= 中的用户名/邮箱）的文件。
+
+*** 常见问题
+
+- =stow 报 "existing target is not a symlink"= ：目标文件已存在，先手动移走或备份
+- =符号链接指向错误路径= ：检查是否在 =~/.dotfiles= 目录下执行 stow
+- =某些目录无法链接= ：有些软件会自己创建目录，确保目标父目录存在后再 stow
+
+** Docker
+
+*** 安装 Docker
+
+#+begin_src bash
+sudo pacman -S docker
+#+end_src
+
+启动 Docker 服务并设置开机自启：
+
+#+begin_src bash
+sudo systemctl start docker
+sudo systemctl enable docker
+#+end_src
+
+将当前用户加入 =docker= 用户组，避免每次都要用 =sudo=：
+
+#+begin_src bash
+sudo usermod -aG docker $USER
+# 重新登录后生效，或执行：
+newgrp docker
+#+end_src
+
+*** 国内镜像配置
+
+Arch Linux 默认 Docker 镜像源在国内访问较慢，建议配置国内镜像加速器。创建或编辑配置文件：
+
+#+begin_src bash
+sudo mkdir -p /etc/docker
+sudo tee /etc/docker/daemon.json << 'EOF'
+{
+  "registry-mirrors": [
+    "https://docker.1ms.run",
+    "https://docker.xuanyuan.me"
+  ]
+}
+EOF
+sudo systemctl restart docker
+#+end_src
+
+常见国内镜像源（任选其一或组合使用）：
+- 阿里云：需要登录阿里云容器镜像服务获取专属加速地址
+- DaoCloud：https://www.daocloud.io/mirror
+- 中科大：https://docker.mirrors.ustc.edu.cn
+- 网易：https://hub-mirror.c.163.com
+
+验证配置是否生效：
+
+#+begin_src bash
+docker info | grep -A 10 "Registry Mirrors"
+#+end_src
+
+*** 使用 stow 管理 Docker 配置
+
+=Docker CLI= 的配置文件 =~/.docker/config.json= 也可以纳入 dotfiles 管理。
+
+1. 创建目录并将配置文件纳入仓库：
+   #+begin_src bash
+   mkdir -p ~/.dotfiles/docker
+   # 如果已有配置：
+   mv ~/.docker/config.json ~/.dotfiles/docker/config.json
+   #+end_src
+
+2. 执行 stow：
+   #+begin_src bash
+   cd ~/.dotfiles
+   stow docker
+   #+end_src
+
+3. 验证链接：
+   #+begin_src bash
+   ls -la ~/.docker/config.json
+   #+end_src
+
+后续在其他机器上运行 =stow docker= 即可同步 Docker 配置，包括镜像加速器、认证信息等。
+
+*** Docker 镜像操作
+
+#+begin_src bash
+# 拉取镜像（默认从 Docker Hub）
+docker pull ubuntu:latest
+docker pull nginx:alpine
+
+# 查看本地镜像
+docker images
+docker image ls
+
+# 删除镜像
+docker rmi ubuntu:latest
+docker rmi $(docker images -q)   # 删除所有本地镜像（谨慎）
+
+# 导出镜像为 tar 文件
+docker save -o ubuntu.tar ubuntu:latest
+
+# 导入 tar 文件为镜像
+docker load -i ubuntu.tar
+
+# 构建镜像（根据 Dockerfile）
+docker build -t myapp:latest .
+
+# 查看镜像详细信息
+docker inspect ubuntu:latest
+
+# 清理悬挂（dangling）镜像
+docker image prune
+docker image prune -a   # 清理所有未使用的镜像
+#+end_src
+
+*** Docker 容器操作
+
+#+begin_src bash
+# 运行容器（交互式）
+docker run -it ubuntu /bin/bash
+
+# 运行容器（后台守护）
+docker run -d --name myapp -p 8080:80 nginx:alpine
+
+# 查看运行中的容器
+docker ps
+docker ps -a    # 包含已停止的容器
+
+# 停止容器
+docker stop myapp
+
+# 启动已停止的容器
+docker start myapp
+
+# 重启容器
+docker restart myapp
+
+# 删除容器（需先停止）
+docker rm myapp
+docker rm -f myapp   # 强制删除运行中的容器
+
+# 进入运行中的容器
+docker exec -it myapp /bin/bash
+
+# 查看容器日志
+docker logs -f myapp
+docker logs --tail 100 myapp
+
+# 查看容器资源占用
+docker stats
+
+# 查看容器进程
+docker top myapp
+
+# 复制文件到/从容器
+docker cp ./local/file myapp:/container/path
+docker cp myapp:/container/path ./local
+#+end_src
+
+常用容器参数说明：
+- =-d= — 后台运行（detached）
+- =-it= — 交互式终端（interactive + tty）
+- =--name= — 指定容器名称
+- =-p 8080:80= — 端口映射（主机端口:容器端口）
+- =-v /host/path:/container/path= — 挂载卷
+- =-e VAR=value= — 设置环境变量
+- =--network= — 指定网络
+
+*** Docker 网络
+
+#+begin_src bash
+# 查看网络列表
+docker network ls
+
+# 创建自定义网络（便于容器间通信）
+docker network create mynet
+
+# 运行容器并加入网络
+docker run -d --network mynet --name db mysql
+
+# 将已有容器加入网络
+docker network connect mynet webapp
+
+# 断开容器与网络的连接
+docker network disconnect mynet webapp
+
+# 删除网络
+docker network rm mynet
+#+end_src
+
+*** Docker 空间清理
+
+#+begin_src bash
+# 清理停止的容器
+docker container prune
+
+# 清理未使用的镜像
+docker image prune           # 仅清理悬挂镜像
+docker image prune -a        # 清理所有未使用镜像
+
+# 清理未使用的卷（谨慎，删除后数据丢失）
+docker volume prune
+
+# 清理未使用的网络（一般不需要手动清理）
+docker network prune
+
+# 一键清理（容器、镜像、卷、网络）
+docker system prune
+
+# 彻底清理（包括构建缓存）
+docker system prune --all --volumes
+
+# 查看磁盘占用
+docker system df
+docker system df -v   # 详细信息
+#+end_src
+
+构建缓存也是占用空间的大户。如果想彻底清理构建缓存：
+
+#+begin_src bash
+docker builder prune -a --volumes
+#+end_src
+
+建议定期执行 =docker system prune -f= 保持磁盘清洁。
+
+** 常用软件安装
+
+#+begin_src bash
+yay -S visual-studio-code-bin    # VS Code
+yay -S google-chrome            # Chrome 浏览器
+yay -S netease-cloud-music      # 网易云音乐
+yay -S wps-office               # WPS Office
+#+end_src
+
+* 常见问题
+
+** VirtualBox 中无法识别 USB 设备
+
+确保已安装 VirtualBox 扩展包，并在虚拟机设置中启用 USB 控制器。
+
+** 屏幕分辨率异常
+
+安装 =virtualbox-guest-utils= 和 =virtualbox-guest-drivers= 包。
+
+#+begin_src bash
+sudo pacman -S virtualbox-guest-utils
+sudo systemctl enable vboxservice
+sudo systemctl start vboxservice
+#+end_src
+
+** 网络连接问题
+
+检查 NetworkManager 服务状态：
+
+#+begin_src bash
+sudo systemctl status NetworkManager
+sudo systemctl restart NetworkManager
+#+end_src
