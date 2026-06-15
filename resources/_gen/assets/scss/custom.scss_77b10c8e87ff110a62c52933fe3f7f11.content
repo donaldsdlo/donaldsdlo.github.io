@@ -1,0 +1,1 @@
+@charset "UTF-8";.container.compact,.container.extended{max-width:95%;width:95%}@media(min-width:768px){.container.extended{--left-sidebar-max-width:10%;--right-sidebar-max-width:25%;gap:10px}}@media(min-width:1280px){.container.extended{--left-sidebar-max-width:10%;--right-sidebar-max-width:25%}}.container.extended{gap:10px}

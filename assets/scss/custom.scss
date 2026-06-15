@@ -1,0 +1,30 @@
+/* 自定义宽度覆盖：博客整体 95% */
+
+/* 博客容器占视口 95% */
+.container.compact,
+.container.extended {
+    max-width: 95%;
+    width: 95%;
+}
+
+/* extended 模式：按百分比动态分配三栏宽度 */
+@media (min-width: 768px) {
+    .container.extended {
+        --left-sidebar-max-width: 10%;
+        --right-sidebar-max-width: 25%;
+        gap: 10px;
+    }
+}
+
+/* 大屏保持相同比例，更宽裕 */
+@media (min-width: 1280px) {
+    .container.extended {
+        --left-sidebar-max-width: 10%;
+        --right-sidebar-max-width: 25%;
+    }
+}
+
+/* 三个垂直分区之间间隔 10px */
+.container.extended {
+    gap: 10px;
+}
