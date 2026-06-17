@@ -1,3 +1,32 @@
+/* 自定义字体：移植自 manateelazycat.github.io */
+@font-face {
+    font-family: mottoFont;
+    src: url("/fonts/SCRIPTIN.ttf") format("TrueType");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: angelinaFont;
+    src: url("/fonts/angelina.ttf") format("TrueType");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: jinkaiFont;
+    src: url("/fonts/jinkai.ttf") format("TrueType");
+    font-display: swap;
+}
+
+:root {
+    --sys-font-family: jinkaiFont, -apple-system, BlinkMacSystemFont, "Segoe UI", "Droid Sans", "Helvetica Neue";
+    --base-font-family: jinkaiFont, var(--sys-font-family), sans-serif;
+}
+
+/* 站点标题使用 angelinaFont */
+.site-title {
+    font-family: angelinaFont, var(--base-font-family) !important;
+}
+
 /* 自定义宽度覆盖：博客整体 95% */
 
 /* 博客容器占视口 95% */
