@@ -1,7 +1,7 @@
 ---
 title: "压缩 WSL 虚拟机文件"
 date: 2026-06-03
-lastmod: 2026-06-03T15:15:52+08:00
+lastmod: 2026-07-01T13:28:00+08:00
 tags: ["WSL"]
 draft: false
 ---

@@ -2,7 +2,7 @@
 title: "windows 开发环境配置"
 author: ["Donald Lo"]
 date: 2026-01-15
-lastmod: 2026-02-24T16:17:13+08:00
+lastmod: 2026-06-28T08:15:00+08:00
 tags: ["windows", "dev"]
 draft: false
 ---
@@ -51,6 +51,31 @@ draft: false
     - [使用aria2加速下载](#使用aria2加速下载)
     - [查找软件](#查找软件)
     - [Listary 应用启动器和文件快速搜索](#listary-应用启动器和文件快速搜索)
+        - [两种唤起方式](#两种唤起方式)
+        - [拼音首字母模糊搜索](#拼音首字母模糊搜索)
+        - [搜索结果操作](#搜索结果操作)
+        - [快速切换定位](#快速切换定位)
+            - [文件保存/打开对话框中搜索路径](#文件保存-打开对话框中搜索路径)
+            - [Ctrl+G 快速跳转](#ctrl-plus-g-快速跳转)
+            - [历史记录选择](#历史记录选择)
+        - [搜索语法进阶](#搜索语法进阶)
+            - [指定父文件夹名称](#指定父文件夹名称)
+            - [搜索过滤器](#搜索过滤器)
+            - [工程文件指定目录](#工程文件指定目录)
+        - [自定义关键字快速启动](#自定义关键字快速启动)
+            - [设置入口](#设置入口)
+            - [四类关键字](#四类关键字)
+            - [添加自定义关键字](#添加自定义关键字)
+            - [常用关键字示例](#常用关键字示例)
+        - [搭配 Everything 快速搜索文件](#搭配-everything-快速搜索文件)
+            - [基本全盘搜索](#基本全盘搜索)
+            - [当前目录搜索](#当前目录搜索)
+            - [带过滤条件的搜索](#带过滤条件的搜索)
+        - [Web 搜索功能](#web-搜索功能)
+            - [内置 Web 搜索](#内置-web-搜索)
+            - [自定义 Web 搜索](#自定义-web-搜索)
+        - [结合 CMD 实现特定功能](#结合-cmd-实现特定功能)
+            - [快速新建空文件](#快速新建空文件)
     - [PDF 查看工具](#pdf-查看工具)
     - [改键工具](#改键工具)
     - [Busybox-常用的命令行工具](#busybox-常用的命令行工具)
@@ -83,6 +108,7 @@ draft: false
     - [软件更新](#软件更新)
     - [卸载软件](#卸载软件)
     - [删除软件的旧版本](#删除软件的旧版本)
+    - [删除缓存文件](#删除缓存文件)
 - [字体](#字体)
     - [查找字体](#查找字体)
     - [下载字体](#下载字体)
@@ -443,18 +469,18 @@ Windows系统中有一些常见的内置环境变量，它们提供了有关操�
 -   `%SystemRoot%` ： `Windows` 操作系统的根目录，通常是 `C:\Windows` 。
 -   `%PATH%` ：存储可执行文件的搜索路径。当你在命令行中输入命令时，系统会按顺序在这些路径中查找对应的可执行文件。
 -   `%TEMP%` / `%TMP%` ：用于存放临时文件的目录。 `Windows` 和应用程序通常在这个目录中创建临时文件。
--   `%ProgramFiles%=：指向默认的程序文件目录，通常是系统中安装的大部分应用程序的存放位置。默认是: =C:\Program Files` 。
--   `%ProgramFiles(x86)%` ：在64位 `Windows=上，指向32位应用程序的默认安装目录。通常是: =C:\Program Files (x86)`  。
+-   `%ProgramFiles%` ：指向默认的程序文件目录，通常是系统中安装的大部分应用程序的存放位置。默认是: `C:\Program Files` 。
+-   `%ProgramFiles(x86)%` ：在64位 `Windows` 上，指向32位应用程序的默认安装目录。通常是: `C:\Program Files (x86)`  。
 -   `%HOMEDRIVE%` ：当前用户的主目录所在的驱动器号。通常是： `C:` 。
 -   `%HOMEPATH%` ：当前用户的主目录路径，不包含驱动器号，默认值： `\Users\<用户名>。`
--   `%USERPROFILE%=：当前用户的主目录的完整路径，包括驱动器号。通常是： =C:\Users\<用户名>。`
+-   `%USERPROFILE%` ：当前用户的主目录的完整路径，包括驱动器号。通常是： `C:\Users\<用户名>。`
 -   `%APPDATA%` ：指向当前用户的应用程序数据目录，通常用于存放用户配置文件和应用程序数据。通常是： `C:\Users\<用户名>\AppData\Roaming。`
 -   `%LOCALAPPDATA%` ：指向当前用户的本地应用程序数据目录，与 `%APPDATA%` 类似，但数据不会在网络中漫游。通常是： `C:\Users\<用户名>\AppData\Local。`
 -   `%COMSPEC%` ：指向命令解释器（通常是 `cmd.exe` ）的路径。通常是： `C:\Windows\System32\cmd.exe` 。
 -   `%WINDIR%` ：另一个指向 `Windows` 目录的变量，通常与 `%SystemRoot%` 相同。通常是： `C:\Windows` 。
--   `%NUMBER_OF_PROCESSORS%=：指示当前系统中可用的处理器核心数量。示例: =2` （具体取决于具体硬件配置）。
--   `%PROCESSOR_ARCHITECTURE%=：指示处理器架构类型（例如x86、AMD64）。示例: =AMD64` （表示64位架构）。
--   `%PROCESSOR_IDENTIFIER%=： 提供关于处理器的信息，包括型号和制造商。如: =Intel64 Family 6 Model 158 Stepping 10, GenuineIntel` 。
+-   `%NUMBER_OF_PROCESSORS%` ：指示当前系统中可用的处理器核心数量。示例: `2` （具体取决于具体硬件配置）。
+-   `%PROCESSOR_ARCHITECTURE%` ：指示处理器架构类型（例如x86、AMD64）。示例: `AMD64` （表示64位架构）。
+-   `%PROCESSOR_IDENTIFIER%` ： 提供关于处理器的信息，包括型号和制造商。如: `Intel64 Family 6 Model 158 Stepping 10, GenuineIntel` 。
 -   `%ALLUSERSPROFILE%` ：指向所有用户的公共配置文件目录，通常用于共享应用程序数。通常是： `C:\ProgramData` 。
 -   `%USERPROFILE%` ：当前用户的配置文件的位置，通常是： `C:\Users\<用户名>`
 
@@ -498,11 +524,11 @@ Windows系统中有一些常见的内置环境变量，它们提供了有关操�
 
 Windows 支持三种链接类型：
 
-| 类型      | 说明         | 跨分区 | 硬链接限制 |
-|---------|------------|-----|-------|
-| 符号链接（软链接） | 指向目标文件或目录的指针 | 是  | 无     |
-| 硬链接    | 同一文件系统的多个入口 | 否  | 需要同一分区 |
-| 目录链接  | 符号链接的目录版本 | 是  | 仅限管理员 |
+| 类型      | 说明         | 跨分区 | 硬链接限制 |   |
+|---------|------------|-----|-------|---|
+| 符号链接（软链接） | 指向目标文件或目录的指针 | 是  | 无     |   |
+| 硬链接    | 同一文件系统的多个入口 | 否  | 需要同一分区 |   |
+| 目录链接  | 符号链接的目录版本 | 是  | 仅限管理员 |   |
 
 
 ### 创建软链接 {#创建软链接}
@@ -938,6 +964,245 @@ scoop install listary
 安装图中标注的顺序操作设置，其他的设置就不一一举例了。
 
 
+#### 两种唤起方式 {#两种唤起方式}
+
+Listary 提供两种唤起搜索框的方式：
+
+1.  **双击 `Ctrl` 键** ：在任意位置双击 Ctrl 键，搜索框出现在屏幕中央，可以搜索并启动应用程序或打开文件。搜索完毕后搜索框会自动消失，随用随取，用完即走。
+2.  **在文件夹空白处直接输入** ：在文件资源管理器的空白处点击一下，然后直接输入英文关键字，搜索框出现在屏幕下方。如果要找的文件在当前页面，光标会自动定位到匹配的文件上，按回车直接打开。这种方式的优势在于搜索的 **当前目录** 与资源管理器当前打开的目录一致，可以快速定位当前文件夹中的文件。
+
+
+#### 拼音首字母模糊搜索 {#拼音首字母模糊搜索}
+
+Listary 不仅支持关键词模糊查找，也支持用拼音首字母进行模糊查找，甚至还可以拆字搜索。
+
+例如，想搜索名为"市场会议"的文件，输入"市议"或"s y"都可以找到。
+
+使用拼音首字母搜索时，可能存在多个首字母相同的结果。但只要一两次选择你想要打开的文件或程序，下次搜索时 Listary 会 **自动将常用结果排在前面** ，根据启动和搜索历史记录不断优化排序。
+
+如果只想搜索文件（排除程序），在搜索词后加空格即可限制结果只展示文件。
+
+
+#### 搜索结果操作 {#搜索结果操作}
+
+在得到搜索结果后，Listary 提供多种文件处理方式。在搜索结果上右键，可以：
+
+-   **发送到** 指定位置
+-   **为文件设置搜索关键词**
+-   **复制文件路径**
+-   **打开文件所在文件夹**
+-   其他右键菜单操作
+
+
+#### 快速切换定位 {#快速切换定位}
+
+当你知道文件路径，却厌倦了在资源管理器中一层层打开文件夹时，Listary 的快速切换功能可以帮到你：
+
+
+##### 文件保存/打开对话框中搜索路径 {#文件保存-打开对话框中搜索路径}
+
+当你在下载文件选择保存目录时，在选择目录的提示框下方会浮现 Listary 搜索框，直接搜索文件路径即可定位到目标文件夹。
+
+
+##### Ctrl+G 快速跳转 {#ctrl-plus-g-快速跳转}
+
+如果你要保存的路径已在另一个资源管理器窗口中打开，使用 `Ctrl+G` 可以立即跳转到当前正在使用的文件所在的文件夹。
+
+
+##### 历史记录选择 {#历史记录选择}
+
+还可以在历史记录中选择最近打开的文件夹，在文件"另存为"时尤其方便。
+
+
+#### 搜索语法进阶 {#搜索语法进阶}
+
+
+##### 指定父文件夹名称 {#指定父文件夹名称}
+
+当搜索结果过多时，可以附加尾缀 `\` 到关键字后，表明它是父文件夹路径的一部分，快速缩小搜索范围。
+
+示例：搜索 Listary 在 Windows 文件夹内：
+
+```text
+win\Lis
+win\ Lis
+Lis win\
+```
+
+
+##### 搜索过滤器 {#搜索过滤器}
+
+键入搜索过滤器关键字后加冒号，可以搜索特定文件扩展名或文件夹：
+
+| 过滤器    | 说明 | 示例             |
+|--------|----|----------------|
+| `folder:` | 文件夹 | `folder:game`    |
+| `file:`   | 文件 | `file:config`    |
+| `doc:`    | 文档 | `doc:report`     |
+| `pic:`    | 图片 | `pic:wallpaper`  |
+| `audio:`  | 音频 | `audio:podcast`  |
+| `video:`  | 视频 | `video:tutorial` |
+
+示例：搜索名称包含 game 的文件夹，输入 `folder:game` 或 `game folder:` 。
+
+
+##### 工程文件指定目录 {#工程文件指定目录}
+
+工程功能让你在指定的目录下搜索文件，而不是全局搜索。
+
+将常用的工作目录添加到工程列表，并给它设置关键字。之后可以在任意地方通过 `关键字 搜索词` 来搜索该文件夹下的文件。
+
+例如：将 `C:\Users\username\Projects` 添加为工程，关键字设为 `pj` ，之后输入 `pj readme` 即可在该目录下搜索。
+
+
+#### 自定义关键字快速启动 {#自定义关键字快速启动}
+
+通过自定义关键字，可以为常用程序设置简短的触发词，实现快速启动。
+
+
+##### 设置入口 {#设置入口}
+
+双击 `Ctrl` 唤起 Listary → 输入 `opt` → 选择 `关键字` 选项卡。
+
+
+##### 四类关键字 {#四类关键字}
+
+| 类型 | 说明           | 示例                         |
+|----|--------------|----------------------------|
+| Web | 打开网页或进行 Web 搜索 | `bd 关键词` 百度搜索、 `gg 关键词` 谷歌搜索 |
+| 目录 | 快速打开指定文件夹 | `dl` 打开下载文件夹          |
+| 命令 | 执行系统命令或脚本 | `cmd` 打开命令提示符         |
+| 自定义 | 启动指定路径的应用程序 | `py` 启动 Python             |
+
+
+##### 添加自定义关键字 {#添加自定义关键字}
+
+以添加 `py` 关键字启动 Python 为例：
+
+1.  点击 `添加` 按钮，选择 `自定义` 类型
+2.  填写关键字（如 `py` ）、显示名称、描述
+3.  设置路径：指向 Python 的安装路径（如通过 Scoop 安装则为 `~/scoop/apps/python/current/python.exe` ）
+4.  保存即可
+
+**获取程序路径的方法** ：在 Windows 搜索栏找到程序快捷方式，右键 → `打开文件位置` → 再次右键快捷方式 → `属性` → 复制 `目标` 栏中的路径。也可以在文件资源管理器中按 `Shift+右键` → `复制为路径` 。
+
+
+##### 常用关键字示例 {#常用关键字示例}
+
+| 关键字 | 程序      | 说明          |
+|-----|---------|-------------|
+| `py`  | Python    | 启动 Python 解释器 |
+| `mat` | MATLAB    | 启动 MATLAB   |
+| `ps`  | Photoshop | 启动 Photoshop |
+| `vs`  | VS Code   | 启动 VS Code  |
+| `dl`  | 下载文件夹 | 打开 Downloads |
+
+
+#### 搭配 Everything 快速搜索文件 {#搭配-everything-快速搜索文件}
+
+Listary 可以调用 Everything 进行全盘文件搜索，速度远超 Windows 自带搜索。
+
+
+##### 基本全盘搜索 {#基本全盘搜索}
+
+在自定义关键字中设置：
+
+-   **关键字** ： `ev` （可自定义）
+-   **路径** ：Everything 的安装路径（Scoop 安装为 `~/scoop/apps/everything/current/Everything64.exe` ）
+-   **参数** ： `-s {query}`
+
+使用时输入 `ev 搜索关键词` 即可调用 Everything 进行全盘搜索。
+
+
+##### 当前目录搜索 {#当前目录搜索}
+
+若希望只在当前资源管理器目录中搜索，修改参数为：
+
+```text
+-s " """%path%""" {query} "
+```
+
+注意：此功能需要使用 **第二种唤起方式** （在文件夹空白处直接输入），因为只有这种方式 Listary 才能获取当前目录路径。
+
+
+##### 带过滤条件的搜索 {#带过滤条件的搜索}
+
+Everything 支持通过搜索语法过滤文件类型，将过滤条件写入参数即可：
+
+| 功能      | 参数               | 示例                |
+|---------|------------------|-------------------|
+| 搜索图片文件 | `-s pic:{query}`   | `ev pic:wallpaper`  |
+| 搜索 PDF 文件 | `-s pdf:{query}`   | `ev pdf:manual`     |
+| 搜索文档文件 | `-s doc:{query}`   | `ev doc:report`     |
+| 搜索音频文件 | `-s audio:{query}` | `ev audio:podcast`  |
+| 搜索视频文件 | `-s video:{query}` | `ev video:tutorial` |
+
+参数中的 `pic:` 、 `pdf:` 等是 Everything 的搜索语法，对应 Everything 搜索栏中直接输入的文本。
+
+
+#### Web 搜索功能 {#web-搜索功能}
+
+Listary 内置了常用搜索引擎的关键字，也可以自定义 Web 搜索。
+
+
+##### 内置 Web 搜索 {#内置-web-搜索}
+
+| 关键字   | 搜索引擎 | 示例         |
+|-------|------|------------|
+| `bd 关键词` | 百度搜索 | `bd Listary` |
+| `gg 关键词` | 谷歌搜索 | `gg Listary` |
+
+
+##### 自定义 Web 搜索 {#自定义-web-搜索}
+
+可以添加任意网站的搜索功能。方法是分析目标网站的搜索 URL，将搜索词替换为 `{query}` 。
+
+例如添加谷歌翻译：
+
+1.  在谷歌翻译网站中输入一个测试词，观察 URL 格式
+2.  将测试词替换为 `{query}`: `https://translate.google.com/?sl=auto&tl=zh-CN&text={query}`
+3.  在 Listary 关键字设置中添加 Web 类型，填入关键字（如 `fy` ）和上述 URL
+
+更多示例：
+
+| 关键字 | URL                                                           | 说明      |
+|-----|---------------------------------------------------------------|---------|
+| `fy`   | `https://translate.google.com/?sl=auto&tl=zh-CN&text={query}` | 谷歌翻译  |
+| `bili` | `https://search.bilibili.com/all?keyword={query}`             | B站搜索   |
+| `gh`   | `https://github.com/search?q={query}`                         | GitHub 搜索 |
+| `bk`   | `https://baike.baidu.com/item/{query}`                        | 百度百科  |
+| `wj`   | `https://zh.wikipedia.org/wiki/{query}`                       | 维基百科  |
+| `cd`   | `https://www.zdic.net/hans/{query}`                           | 汉典查字  |
+| `zh`   | `https://www.zhihu.com/search?type=content&q={query}`         | 知乎搜索  |
+| `db`   | `https://movie.douban.com/subject_search?search_text={query}` | 豆瓣电影  |
+| `wk`   | `https://wenku.baidu.com/search?word={query}`                 | 百度文库  |
+| `yk`   | `https://so.youku.com/search_video/q_{query}`                 | 优酷搜索  |
+| `eb`   | `http://cn.epubee.com/books/?s={query}`                       | 电子书搜索 |
+
+如果 URL 中不包含 `{query}` 参数，则关键字会直接打开该网页。
+
+
+#### 结合 CMD 实现特定功能 {#结合-cmd-实现特定功能}
+
+通过 Listary 的 `命令` 类型关键字，可以执行 CMD 命令或 BAT/VBS 脚本。
+
+
+##### 快速新建空文件 {#快速新建空文件}
+
+设置一个命令类型关键字：
+
+-   **关键字** ： `nf` （new file）
+-   **命令** ：
+
+<!--listend-->
+
+```bash
+fsutil file createnew "{cur_path}\{query}" 0
+```
+
+使用时输入 `nf readme.md` 即可在当前目录创建空文件。注意此功能需要使用 **第二种唤起方式** 以确保 `{cur_path}` 正确获取当前目录。
+
+
 ### PDF 查看工具 {#pdf-查看工具}
 
 ```bash
@@ -1259,6 +1524,13 @@ Removing opencode: 1.1.18 1.1.20
 Removing zed: 0.218.7
 Removing zotero: 7.0.31
 Everything is shiny now!
+```
+
+
+### 删除缓存文件 {#删除缓存文件}
+
+```bash
+scoop cache rm *
 ```
 
 
@@ -1772,16 +2044,16 @@ pacman -S mingw-w64-ucrt-x86_64-tree
 
 ### Pacman 常用命令总结 {#pacman-常用命令总结}
 
-| 命令                   | 说明         |
-|----------------------|------------|
-| pacman -Syu            | 更新系统和所有包 |
-| pacman -S &lt;包名&gt; | 安装软件包   |
-| pacman -R &lt;包名&gt; | 删除软件包   |
-| pacman -Rns &lt;包名&gt; | 删除软件包及其依赖和配置 |
-| pacman -Ss &lt;关键词&gt; | 搜索软件包   |
-| pacman -Q              | 列出已安装的软件包 |
-| pacman -Qi &lt;包名&gt; | 显示软件包详细信息 |
-| pacman -Qu             | 列出可更新的软件包 |
+| 命令                   | 说明         |   |
+|----------------------|------------|---|
+| pacman -Syu            | 更新系统和所有包 |   |
+| pacman -S &lt;包名&gt; | 安装软件包   |   |
+| pacman -R &lt;包名&gt; | 删除软件包   |   |
+| pacman -Rns &lt;包名&gt; | 删除软件包及其依赖和配置 |   |
+| pacman -Ss &lt;关键词&gt; | 搜索软件包   |   |
+| pacman -Q              | 列出已安装的软件包 |   |
+| pacman -Qi &lt;包名&gt; | 显示软件包详细信息 |   |
+| pacman -Qu             | 列出可更新的软件包 |   |
 
 
 ## Python 环境安装和配置 {#python-环境安装和配置}
@@ -1862,22 +2134,22 @@ Poetry是另一个现代Python项目管理工具，与UV有许多相似之处：
 
 ###### 功能对比表 {#功能对比表}
 
-| 功能特性   | UV           | pip+virtualenv        | Conda  | Poetry   |
-|--------|--------------|-----------------------|--------|----------|
-| 实现语言   | Rust         | Python                | Python | Python   |
-| 速度       | 比pip快10-100倍 | 基准线                | 慢于pip | 快于pip  |
-| 内存使用   | 非常高效     | 较高                  | 高     | 中等     |
-| 环境管理   | 内置         | 需要单独工具          | 内置   | 内置     |
-| 依赖解析   | 快速、现代解析器 | 基础                  | 全面   | 现代解析器 |
-| 非Python包支持 | 否           | 否                    | 是     | 否       |
-| 锁文件     | 是           | 否(基本requirements.txt) | 是     | 是       |
-| 项目结构化 | 是           | 否                    | 否     | 是       |
-| 包发布     | 是           | 是(需要twine)         | 是     | 是       |
-| 兼容性     | 与现有pip生态系统兼容 | 标准Python工具        | 自有生态系统 | 更固执己见的方法 |
-| 错误处理   | 清晰的错误信息 | 基本                  | 良好   | 良好     |
-| 资源占用   | 最小         | 中等                  | 重     | 中等     |
-| 科学计算焦点 | 否           | 否                    | 是     | 否       |
-| 跨平台一致性 | 是           | 有限                  | 优秀   | 良好     |
+| 功能特性   | UV           | pip+virtualenv        | Conda  | Poetry   |   |
+|--------|--------------|-----------------------|--------|----------|---|
+| 实现语言   | Rust         | Python                | Python | Python   |   |
+| 速度       | 比pip快10-100倍 | 基准线                | 慢于pip | 快于pip  |   |
+| 内存使用   | 非常高效     | 较高                  | 高     | 中等     |   |
+| 环境管理   | 内置         | 需要单独工具          | 内置   | 内置     |   |
+| 依赖解析   | 快速、现代解析器 | 基础                  | 全面   | 现代解析器 |   |
+| 非Python包支持 | 否           | 否                    | 是     | 否       |   |
+| 锁文件     | 是           | 否(基本requirements.txt) | 是     | 是       |   |
+| 项目结构化 | 是           | 否                    | 否     | 是       |   |
+| 包发布     | 是           | 是(需要twine)         | 是     | 是       |   |
+| 兼容性     | 与现有pip生态系统兼容 | 标准Python工具        | 自有生态系统 | 更固执己见的方法 |   |
+| 错误处理   | 清晰的错误信息 | 基本                  | 良好   | 良好     |   |
+| 资源占用   | 最小         | 中等                  | 重     | 中等     |   |
+| 科学计算焦点 | 否           | 否                    | 是     | 否       |   |
+| 跨平台一致性 | 是           | 有限                  | 优秀   | 良好     |   |
 
 总的来说，UV结合了现有工具的最佳特性，同时通过其Rust实现提供了显著的性能优势。对于寻求更快、更可靠的Python包管理解决方案的开发者来说，UV是一个极具吸引力的选择，特别是对于大型项目或CI/CD环境。
 
@@ -2667,12 +2939,12 @@ nrm test
 
 ##### 其他常用镜像源 {#其他常用镜像源}
 
-| 镜像源 | 地址                                              |
-|-----|-------------------------------------------------|
-| 官方 npm | <https://registry.npmjs.org>                      |
-| 淘宝 npm | <https://registry.npmmirror.com>                  |
-| 腾讯云 | <https://mirrors.cloud.tencent.com/npm/>          |
-| 华为云 | <https://mirrors.huaweicloud.com/repository/npm/> |
+| 镜像源 | 地址                                              |   |
+|-----|-------------------------------------------------|---|
+| 官方 npm | <https://registry.npmjs.org>                      |   |
+| 淘宝 npm | <https://registry.npmmirror.com>                  |   |
+| 腾讯云 | <https://mirrors.cloud.tencent.com/npm/>          |   |
+| 华为云 | <https://mirrors.huaweicloud.com/repository/npm/> |   |
 
 
 #### Yarn 镜像配置（可选） {#yarn-镜像配置-可选}
@@ -2999,11 +3271,11 @@ scoop install rustup
 
 安装完成后，根据 <https://mirrors.tuna.tsinghua.edu.cn/help/rustup/> 中的提示设置环境变量：
 
-| 变量名             | 值                                                   |
-|-----------------|-----------------------------------------------------|
-| RUSTUP_DIST_SERVER | <https://mirrors.tuna.tsinghua.edu.cn/rustup>        |
-| RUSTUP_UPDATE_ROOT | <https://mirrors.tuna.tsinghua.edu.cn/rustup/rustup> |
-| CARGO_HOME         | D:\Scoop\persist\rustup\\.cargo                      |
+| 变量名             | 值                                                   |   |
+|-----------------|-----------------------------------------------------|---|
+| RUSTUP_DIST_SERVER | <https://mirrors.tuna.tsinghua.edu.cn/rustup>        |   |
+| RUSTUP_UPDATE_ROOT | <https://mirrors.tuna.tsinghua.edu.cn/rustup/rustup> |   |
+| CARGO_HOME         | D:\Scoop\persist\rustup\\.cargo                      |   |
 
 安装工具链
 
@@ -3271,75 +3543,10 @@ D:\Scoop\apps\msys2\current\usr\bin
 
 #### 项目文件 {#项目文件}
 
-```c
-#include <stdio.h>
-#include <stdlib.h>
-
-// 计算阶乘的函数
-unsigned long long factorial(int n) {
-    if (n <= 1) return 1;
-    return n * factorial(n - 1);
-}
-
-// 计算斐波那契数列的函数
-int fibonacci(int n) {
-    if (n <= 0) return 0;
-    if (n == 1) return 1;
-    return fibonacci(n - 1) + fibonacci(n - 2);
-}
-
-int main(int argc, char *argv[]) {
-    printf("=== C Program Demo ===\n\n");
-
-    // 演示：计算阶乘
-    printf("Factorial calculations:\n");
-    for (int i = 0; i <= 10; i++) {
-        printf("  %d! = %llu\n", i, factorial(i));
-    }
-
-    printf("\n");
-
-    // 演示：斐波那契数列
-    printf("Fibonacci sequence:\n");
-    printf("  ");
-    for (int i = 0; i < 15; i++) {
-        printf("%d ", fibonacci(i));
-    }
-    printf("\n");
-
-    printf("\n=== End of Demo ===\n");
-
-    return 0;
-}
-```
-
 transclude: <../../codes/c/gcc-hello/hello.c>  :src c
 
 
 #### Makefile {#makefile}
-
-```makefile
-# Makefile for hello.c
-
-CC = gcc
-CFLAGS = -Wall -Wextra -g -O0
-TARGET = hello
-SRC = hello.c
-
-.PHONY: all clean debug
-
-all: $(TARGET)
-
-$(TARGET): $(SRC)
-$(CC) $(CFLAGS) -o $(TARGET) $(SRC)
-
-clean:
-rm -f $(TARGET) $(TARGET).exe
-
-# 用于 GDB 调试的目标
-debug: $(TARGET)
-gdb ./$(TARGET)
-```
 
 
 #### 编译和运行 {#编译和运行}
@@ -3414,409 +3621,26 @@ cmake-hello/
 
 #### CMakeLists.txt {#cmakelists-dot-txt}
 
-```cmake
-cmake_minimum_required(VERSION 3.10)
-project(CMakeHello VERSION 1.0.0 LANGUAGES C)
-
-# 设置 C 标准
-set(CMAKE_C_STANDARD 99)
-set(CMAKE_C_STANDARD_REQUIRED ON)
-
-# 设置输出目录
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-
-# 包含头文件目录
-include_directories(${CMAKE_SOURCE_DIR}/include)
-
-# 源文件
-set(SOURCES
-  src/main.c
-  src/math_utils.c
-  src/string_utils.c
-)
-
-# 创建可执行文件
-add_executable(cmake_hello ${SOURCES})
-
-# 设置编译选项
-target_compile_options(cmake_hello PRIVATE
-  -Wall
-  -Wextra
-  -Wpedantic
-)
-
-# 生成 compile_commands.json（用于代码补全和静态分析）
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-
-# 安装目标
-install(TARGETS cmake_hello
-  RUNTIME DESTINATION bin
-)
-```
-
 
 #### 头文件：math_utils.h {#头文件-math-utils-dot-h}
-
-```c
-#ifndef MATH_UTILS_H
-#define MATH_UTILS_H
-
-// 数学工具函数头文件
-
-// 计算阶乘
-unsigned long long factorial(int n);
-
-// 计算幂
-double power(double base, int exp);
-
-// 计算平方根（牛顿迭代法）
-double sqrt_newton(double n);
-
-// 判断素数
-int is_prime(int n);
-
-// 计算最大公约数
-int gcd(int a, int b);
-
-// 计算最小公倍数
-int lcm(int a, int b);
-
-#endif // MATH_UTILS_H
-```
 
 
 #### 头文件：string_utils.h {#头文件-string-utils-dot-h}
 
-```c
-#ifndef STRING_UTILS_H
-#define STRING_UTILS_H
-
-#include <stddef.h>
-
-// 字符串工具函数头文件
-
-// 计算字符串长度
-size_t my_strlen(const char *str);
-
-// 复制字符串
-char *my_strcpy(char *dest, const char *src);
-
-// 连接字符串
-char *my_strcat(char *dest, const char *src);
-
-// 比较字符串
-int my_strcmp(const char *s1, const char *s2);
-
-// 反转字符串
-void my_strrev(char *str);
-
-// 判断回文字符串
-int is_palindrome(const char *str);
-
-// 将字符串转换为大写
-void to_upper(char *str);
-
-// 将字符串转换为小写
-void to_lower(char *str);
-
-#endif // STRING_UTILS_H
-```
-
 
 #### 源文件：main.c {#源文件-main-dot-c}
-
-```c
-#include <stdio.h>
-#include "math_utils.h"
-#include "string_utils.h"
-
-int main(void) {
-    printf("=== CMake Multi-File Project Demo ===\n\n");
-
-    // 演示数学工具函数
-    printf("=== Math Utils Demo ===\n");
-    printf("Factorial of 5: %llu\n", factorial(5));
-    printf("2^10: %.2f\n", power(2.0, 10));
-    printf("sqrt(2): %.6f\n", sqrt_newton(2.0));
-    printf("Is 17 prime? %s\n", is_prime(17) ? "Yes" : "No");
-    printf("GCD(48, 18): %d\n", gcd(48, 18));
-    printf("LCM(4, 6): %d\n", lcm(4, 6));
-
-    printf("\n=== String Utils Demo ===\n");
-    char str1[100] = "Hello";
-    char str2[100] = "World";
-    char str3[100] = "A man a plan a canal Panama";
-
-    printf("Original string: %s\n", str1);
-    printf("Length: %zu\n", my_strlen(str1));
-
-    my_strcat(str1, " ");
-    my_strcat(str1, str2);
-    printf("After concatenation: %s\n", str1);
-
-    to_upper(str1);
-    printf("Uppercase: %s\n", str1);
-
-    to_lower(str1);
-    printf("Lowercase: %s\n", str1);
-
-    my_strrev(str2);
-    printf("Reversed 'World': %s\n", str2);
-
-    // 移除空格后检查回文
-    printf("\n=== Palindrome Check ===\n");
-    printf("String: \"%s\"\n", str3);
-    printf("Is palindrome (ignoring spaces): %s\n",
-           is_palindrome(str3) ? "Yes" : "No");
-
-    printf("\n=== End of Demo ===\n");
-
-    return 0;
-}
-```
 
 
 #### 源文件：math_utils.c {#源文件-math-utils-dot-c}
 
-```c
-#include "math_utils.h"
-#include <math.h>
-
-unsigned long long factorial(int n) {
-    if (n < 0) return 0;
-    if (n <= 1) return 1;
-
-    unsigned long long result = 1;
-    for (int i = 2; i <= n; i++) {
-        result *= i;
-    }
-    return result;
-}
-
-double power(double base, int exp) {
-    if (exp == 0) return 1.0;
-
-    double result = 1.0;
-    int positive_exp = exp > 0 ? exp : -exp;
-
-    for (int i = 0; i < positive_exp; i++) {
-        result *= base;
-    }
-
-    return exp > 0 ? result : 1.0 / result;
-}
-
-double sqrt_newton(double n) {
-    if (n < 0) return -1.0;
-    if (n == 0) return 0.0;
-
-    double x = n;
-    double epsilon = 1e-10;
-
-    while (fabs(x * x - n) > epsilon) {
-        x = (x + n / x) / 2.0;
-    }
-
-    return x;
-}
-
-int is_prime(int n) {
-    if (n <= 1) return 0;
-    if (n <= 3) return 1;
-    if (n % 2 == 0 || n % 3 == 0) return 0;
-
-    for (int i = 5; i * i <= n; i += 6) {
-        if (n % i == 0 || n % (i + 2) == 0) return 0;
-    }
-
-    return 1;
-}
-
-int gcd(int a, int b) {
-    a = a < 0 ? -a : a;
-    b = b < 0 ? -b : b;
-
-    while (b != 0) {
-        int temp = b;
-        b = a % b;
-        a = temp;
-    }
-
-    return a;
-}
-
-int lcm(int a, int b) {
-    if (a == 0 || b == 0) return 0;
-    return (a / gcd(a, b)) * b;
-}
-```
-
 
 #### 源文件：string_utils.c {#源文件-string-utils-dot-c}
-
-```c
-#include "string_utils.h"
-#include <ctype.h>
-
-size_t my_strlen(const char *str) {
-    size_t len = 0;
-    while (str[len] != '\0') {
-        len++;
-    }
-    return len;
-}
-
-char *my_strcpy(char *dest, const char *src) {
-    char *original = dest;
-    while ((*dest++ = *src++) != '\0');
-    return original;
-}
-
-char *my_strcat(char *dest, const char *src) {
-    char *original = dest;
-
-    // 移动到 dest 的末尾
-    while (*dest != '\0') {
-        dest++;
-    }
-
-    // 复制 src
-    while ((*dest++ = *src++) != '\0');
-
-    return original;
-}
-
-int my_strcmp(const char *s1, const char *s2) {
-    while (*s1 && *s1 == *s2) {
-        s1++;
-        s2++;
-    }
-    return (unsigned char)*s1 - (unsigned char)*s2;
-}
-
-void my_strrev(char *str) {
-    if (!str || !*str) return;
-
-    int len = my_strlen(str);
-    for (int i = 0; i < len / 2; i++) {
-        char temp = str[i];
-        str[i] = str[len - 1 - i];
-        str[len - 1 - i] = temp;
-    }
-}
-
-int is_palindrome(const char *str) {
-    if (!str) return 0;
-
-    int left = 0;
-    int right = my_strlen(str) - 1;
-
-    while (left < right) {
-        // 跳过非字母数字字符
-        while (left < right && !isalnum((unsigned char)str[left])) left++;
-        while (left < right && !isalnum((unsigned char)str[right])) right--;
-
-        if (tolower((unsigned char)str[left]) != tolower((unsigned char)str[right])) {
-            return 0;
-        }
-
-        left++;
-        right--;
-    }
-
-    return 1;
-}
-
-void to_upper(char *str) {
-    while (*str) {
-        *str = toupper((unsigned char)*str);
-        str++;
-    }
-}
-
-void to_lower(char *str) {
-    while (*str) {
-        *str = tolower((unsigned char)*str);
-        str++;
-    }
-}
-```
 
 
 #### Windows 构建脚本 {#windows-构建脚本}
 
-```bat
-    @echo off
-    REM Windows build script for CMake project
-
-    echo Building CMake Hello World Project...
-
-    REM Create build directory
-    if not exist build mkdir build
-    cd build
-
-    REM Configure with CMake
-    echo Configuring with CMake...
-    cmake -G "MinGW Makefiles" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
-
-    if %ERRORLEVEL% NEQ 0 (
-        echo CMake configuration failed!
-        exit /b 1
-    )
-
-    REM Build the project
-    echo Building project...
-    cmake --build .
-
-    if %ERRORLEVEL% NEQ 0 (
-        echo Build failed!
-        exit /b 1
-    )
-
-    REM Copy compile_commands.json to project root for language servers
-    copy compile_commands.json ..\compile_commands.json
-
-    echo.
-    echo Build successful! Executable: build/bin/cmake_hello.exe
-    echo compile_commands.json generated for language server support.
-
-    cd ..
-```
-
 
 #### Unix/Linux 构建脚本 {#unix-linux-构建脚本}
-
-```bash
-#!/bin/bash
-# Unix/Linux/macOS build script for CMake project
-
-set -e
-
-echo "Building CMake Hello World Project..."
-
-# Create build directory
-mkdir -p build
-cd build
-
-# Configure with CMake
-echo "Configuring with CMake..."
-cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
-
-# Build the project
-echo "Building project..."
-cmake --build .
-
-# Copy compile_commands.json to project root for language servers
-cp compile_commands.json ../compile_commands.json
-
-echo ""
-echo "Build successful! Executable: build/bin/cmake_hello"
-echo "compile_commands.json generated for language server support."
-
-cd ..
-```
 
 
 #### 构建和使用 {#构建和使用}
@@ -3968,17 +3792,17 @@ Is palindrome (ignoring spaces): Yes
 
 ### C/C++ 开发工具使用总结 {#c-c-plus-plus-开发工具使用总结}
 
-| 工具         | 用途    | MSYS2 包名                              |
-|------------|-------|---------------------------------------|
-| gcc          | C 编译器 | mingw-w64-ucrt-x86_64-gcc               |
-| g++          | C++ 编译器 | mingw-w64-ucrt-x86_64-gcc               |
-| gdb          | 调试器  | mingw-w64-ucrt-x86_64-gdb               |
-| clang-format | 代码格式化 | mingw-w64-ucrt-x86_64-clang-format      |
-| clang-tidy   | 静态分析 | mingw-w64-ucrt-x86_64-clang-tools-extra |
-| clangd       | LSP 服务器 | mingw-w64-ucrt-x86_64-clang-tools-extra |
-| ctags        | 代码标签 | mingw-w64-ucrt-x86_64-ctags             |
-| cmake        | 构建系统 | mingw-w64-ucrt-x86_64-cmake             |
-| ninja        | 快速构建 | mingw-w64-ucrt-x86_64-ninja             |
+| 工具         | 用途    | MSYS2 包名                              |   |
+|------------|-------|---------------------------------------|---|
+| gcc          | C 编译器 | mingw-w64-ucrt-x86_64-gcc               |   |
+| g++          | C++ 编译器 | mingw-w64-ucrt-x86_64-gcc               |   |
+| gdb          | 调试器  | mingw-w64-ucrt-x86_64-gdb               |   |
+| clang-format | 代码格式化 | mingw-w64-ucrt-x86_64-clang-format      |   |
+| clang-tidy   | 静态分析 | mingw-w64-ucrt-x86_64-clang-tools-extra |   |
+| clangd       | LSP 服务器 | mingw-w64-ucrt-x86_64-clang-tools-extra |   |
+| ctags        | 代码标签 | mingw-w64-ucrt-x86_64-ctags             |   |
+| cmake        | 构建系统 | mingw-w64-ucrt-x86_64-cmake             |   |
+| ninja        | 快速构建 | mingw-w64-ucrt-x86_64-ninja             |   |
 
 
 ## TexLive {#texlive}
@@ -4986,10 +4810,10 @@ mysql> SELECT host, user FROM mysql.user WHERE user = 'root';
 
 ```bash
 +-----------+------+
-| host      | user |
+| host | user |  |
 +-----------+------+
-| %         | root |
-| localhost | root |
+| %         | root |  |
+| localhost | root |  |
 +-----------+------+
 2 rows in set (0.003 sec)
 ```
@@ -5751,12 +5575,12 @@ Vim（Vi IMproved）是一个高度可配置的文本编辑器，以其强大的
 
 Vim 采用独特的模式编辑系统，不同模式下相同的按键会有不同的功能：
 
-| 模式            | 说明           | 切换方式          |
-|---------------|--------------|---------------|
-| 普通模式 (Normal) | 默认模式，用于浏览和执行命令 | 按 `Esc` 键进入   |
-| 插入模式 (Insert) | 用于输入和编辑文本 | 按 `i/a/o` 等键进入 |
-| 可视模式 (Visual) | 用于选择文本   | 按 `v/V/Ctrl+v` 进入 |
-| 命令行模式 (Command) | 用于执行保存、退出等命令 | 按 `:` 进入       |
+| 模式            | 说明           | 切换方式          |   |
+|---------------|--------------|---------------|---|
+| 普通模式 (Normal) | 默认模式，用于浏览和执行命令 | 按 `Esc` 键进入   |   |
+| 插入模式 (Insert) | 用于输入和编辑文本 | 按 `i/a/o` 等键进入 |   |
+| 可视模式 (Visual) | 用于选择文本   | 按 `v/V/Ctrl+v` 进入 |   |
+| 命令行模式 (Command) | 用于执行保存、退出等命令 | 按 `:` 进入       |   |
 
 
 #### 模式之间的转换 {#模式之间的转换}
@@ -5765,9 +5589,9 @@ Vim 采用独特的模式编辑系统，不同模式下相同的按键会有不�
                     按 i/a/o/I/A/O
         普通模式 -------------------> 插入模式
             ^                            |
-            |                            |
+            |   |  |
        按 Esc 或 Ctrl+[                  |
-            |                            v
+            | v |
         命令行模式 <------------------- 可视模式
                     按 v/V/Ctrl+v
 ```
@@ -5898,57 +5722,57 @@ Receiving objects: 100% (21/21), 9.68 KiB | 2.42 MiB/s, done.
 
 #### 基本移动 {#基本移动}
 
-| 按键 | 功能     |
-|----|--------|
-| `h` | 向左移动一个字符 |
-| `j` | 向下移动一行 |
-| `k` | 向上移动一行 |
-| `l` | 向右移动一个字符 |
+| 按键 | 功能     |   |
+|----|--------|---|
+| `h` | 向左移动一个字符 |   |
+| `j` | 向下移动一行 |   |
+| `k` | 向上移动一行 |   |
+| `l` | 向右移动一个字符 |   |
 
 
 #### 单词移动 {#单词移动}
 
-| 按键 | 功能       |
-|----|----------|
-| `w`  | 跳到下一个单词的开头 |
-| `e`  | 跳到当前单词的结尾 |
-| `b`  | 跳到上一个单词的开头 |
-| `ge` | 跳到上一个单词的结尾 |
+| 按键 | 功能       |   |
+|----|----------|---|
+| `w`  | 跳到下一个单词的开头 |   |
+| `e`  | 跳到当前单词的结尾 |   |
+| `b`  | 跳到上一个单词的开头 |   |
+| `ge` | 跳到上一个单词的结尾 |   |
 
 
 #### 行内移动 {#行内移动}
 
-| 按键 | 功能          |
-|----|-------------|
-| `0`  | 跳到行首      |
-| `^`  | 跳到行首第一个非空字符 |
-| `$`  | 跳到行尾      |
-| `g_` | 跳到行尾最后一个非空字符 |
-| `fm` | 跳到下一个字符 m 的位置 |
-| `Fm` | 跳到上一个字符 m 的位置 |
+| 按键 | 功能          |   |
+|----|-------------|---|
+| `0`  | 跳到行首      |   |
+| `^`  | 跳到行首第一个非空字符 |   |
+| `$`  | 跳到行尾      |   |
+| `g_` | 跳到行尾最后一个非空字符 |   |
+| `fm` | 跳到下一个字符 m 的位置 |   |
+| `Fm` | 跳到上一个字符 m 的位置 |   |
 
 
 #### 屏幕移动 {#屏幕移动}
 
-| 按键        | 功能    |
-|-----------|-------|
-| `gg`        | 跳到文件开头 |
-| `G`         | 跳到文件末尾 |
-| `nG` 或 `:n` | 跳到第 n 行 |
-| `Ctrl+u`    | 向上翻半页 |
-| `Ctrl+d`    | 向下翻半页 |
-| `Ctrl+b`    | 向上翻一页 |
-| `Ctrl+f`    | 向下翻一页 |
-| `H`         | 跳到屏幕顶部 |
-| `M`         | 跳到屏幕中间 |
-| `L`         | 跳到屏幕底部 |
+| 按键        | 功能    |   |
+|-----------|-------|---|
+| `gg`        | 跳到文件开头 |   |
+| `G`         | 跳到文件末尾 |   |
+| `nG` 或 `:n` | 跳到第 n 行 |   |
+| `Ctrl+u`    | 向上翻半页 |   |
+| `Ctrl+d`    | 向下翻半页 |   |
+| `Ctrl+b`    | 向上翻一页 |   |
+| `Ctrl+f`    | 向下翻一页 |   |
+| `H`         | 跳到屏幕顶部 |   |
+| `M`         | 跳到屏幕中间 |   |
+| `L`         | 跳到屏幕底部 |   |
 
 
 #### 括号匹配 {#括号匹配}
 
-| 按键 | 功能                   |
-|----|----------------------|
-| `%` | 在匹配的括号之间跳转（如 ()、[]、{}） |
+| 按键 | 功能                   |   |
+|----|----------------------|---|
+| `%` | 在匹配的括号之间跳转（如 ()、[]、{}） |   |
 
 
 ### Vim 选择文本 {#vim-选择文本}
@@ -5956,11 +5780,11 @@ Receiving objects: 100% (21/21), 9.68 KiB | 2.42 MiB/s, done.
 
 #### 可视模式类型 {#可视模式类型}
 
-| 按键     | 模式   | 说明   |
-|--------|------|------|
-| `v`      | 字符可视模式 | 选择单个字符 |
-| `V`      | 行可视模式 | 选择整行 |
-| `Ctrl+v` | 块可视模式 | 选择矩形区域 |
+| 按键     | 模式   | 说明   |   |
+|--------|------|------|---|
+| `v`      | 字符可视模式 | 选择单个字符 |   |
+| `V`      | 行可视模式 | 选择整行 |   |
+| `Ctrl+v` | 块可视模式 | 选择矩形区域 |   |
 
 
 #### 选择操作示例 {#选择操作示例}
@@ -5977,13 +5801,13 @@ Receiving objects: 100% (21/21), 9.68 KiB | 2.42 MiB/s, done.
 
 选中后可以进行各种操作：
 
-| 按键 | 操作           |
-|----|--------------|
-| `d` | 删除选中的内容 |
-| `y` | 复制（yank）选中的内容 |
-| `c` | 删除选中的内容并进入插入模式 |
-| `>` | 向右缩进       |
-| `<` | 向左缩进       |
+| 按键 | 操作           |   |
+|----|--------------|---|
+| `d` | 删除选中的内容 |   |
+| `y` | 复制（yank）选中的内容 |   |
+| `c` | 删除选中的内容并进入插入模式 |   |
+| `>` | 向右缩进       |   |
+| `<` | 向左缩进       |   |
 
 
 ### Vim 搜索和替换 {#vim-搜索和替换}
@@ -5991,14 +5815,14 @@ Receiving objects: 100% (21/21), 9.68 KiB | 2.42 MiB/s, done.
 
 #### 搜索 {#搜索}
 
-| 命令       | 功能         |
-|----------|------------|
-| `/pattern` | 向前搜索 pattern |
-| `?pattern` | 向后搜索 pattern |
-| `n`        | 跳到下一个匹配项 |
-| `N`        | 跳到上一个匹配项 |
-| `*`        | 向前搜索当前单词 |
-| `#`        | 向后搜索当前单词 |
+| 命令       | 功能         |   |
+|----------|------------|---|
+| `/pattern` | 向前搜索 pattern |   |
+| `?pattern` | 向后搜索 pattern |   |
+| `n`        | 跳到下一个匹配项 |   |
+| `N`        | 跳到上一个匹配项 |   |
+| `*`        | 向前搜索当前单词 |   |
+| `#`        | 向后搜索当前单词 |   |
 
 搜索技巧：
 
@@ -6023,15 +5847,15 @@ Receiving objects: 100% (21/21), 9.68 KiB | 2.42 MiB/s, done.
 
 替换示例：
 
-| 命令               | 说明                 |
-|------------------|--------------------|
-| `:s/foo/bar`       | 当前行第一个 foo 替换为 bar |
-| `:s/foo/bar/g`     | 当前行所有 foo 替换为 bar |
-| `:%s/foo/bar/g`    | 全文 foo 替换为 bar  |
-| `:%s/foo/bar/gc`   | 全文替换，每次确认   |
-| `:5,10s/foo/bar/g` | 第 5-10 行 foo 替换为 bar |
-| `:%s/^\s\+//g`     | 删除所有行首空格     |
-| `:%s/\s\+$//g`     | 删除所有行尾空格     |
+| 命令               | 说明                 |   |
+|------------------|--------------------|---|
+| `:s/foo/bar`       | 当前行第一个 foo 替换为 bar |   |
+| `:s/foo/bar/g`     | 当前行所有 foo 替换为 bar |   |
+| `:%s/foo/bar/g`    | 全文 foo 替换为 bar  |   |
+| `:%s/foo/bar/gc`   | 全文替换，每次确认   |   |
+| `:5,10s/foo/bar/g` | 第 5-10 行 foo 替换为 bar |   |
+| `:%s/^\s\+//g`     | 删除所有行首空格     |   |
+| `:%s/\s\+$//g`     | 删除所有行尾空格     |   |
 
 
 ### Vim 打开文件 {#vim-打开文件}
@@ -6050,13 +5874,13 @@ vim +/pattern filename " 打开文件并跳到第一个匹配
 
 #### Vim 内打开文件 {#vim-内打开文件}
 
-| 命令             | 功能          |
-|----------------|-------------|
-| `:e filename`    | 编辑另一个文件（关闭当前） |
-| `:new filename`  | 在新窗口水平打开文件 |
-| `:vnew filename` | 在新窗口垂直打开文件 |
-| `:sp filename`   | 水平分割窗口打开文件 |
-| `:vsp filename`  | 垂直分割窗口打开文件 |
+| 命令             | 功能          |   |
+|----------------|-------------|---|
+| `:e filename`    | 编辑另一个文件（关闭当前） |   |
+| `:new filename`  | 在新窗口水平打开文件 |   |
+| `:vnew filename` | 在新窗口垂直打开文件 |   |
+| `:sp filename`   | 水平分割窗口打开文件 |   |
+| `:vsp filename`  | 垂直分割窗口打开文件 |   |
 
 
 ### Vim 文件切换 {#vim-文件切换}
@@ -6066,40 +5890,40 @@ vim +/pattern filename " 打开文件并跳到第一个匹配
 
 当使用 `vim file1 file2` 打开多个文件时：
 
-| 命令           | 功能        |
-|--------------|-----------|
-| `:next` 或 `:n` | 切换到下一个文件 |
-| `:prev` 或 `:N` | 切换到上一个文件 |
-| `:first`       | 切换到第一个文件 |
-| `:last`        | 切换到最后一个文件 |
-| `:args`        | 显示当前打开的文件列表 |
-| `:n filename`  | 切换到指定文件 |
+| 命令           | 功能        |   |
+|--------------|-----------|---|
+| `:next` 或 `:n` | 切换到下一个文件 |   |
+| `:prev` 或 `:N` | 切换到上一个文件 |   |
+| `:first`       | 切换到第一个文件 |   |
+| `:last`        | 切换到最后一个文件 |   |
+| `:args`        | 显示当前打开的文件列表 |   |
+| `:n filename`  | 切换到指定文件 |   |
 
 
 #### 多窗口切换 {#多窗口切换}
 
-| 按键/命令  | 功能         |
-|--------|------------|
-| `Ctrl+w w` | 切换到下一个窗口 |
-| `Ctrl+w h` | 切换到左边窗口 |
-| `Ctrl+w j` | 切换到下边窗口 |
-| `Ctrl+w k` | 切换到上边窗口 |
-| `Ctrl+w l` | 切换到右边窗口 |
-| `Ctrl+w c` | 关闭当前窗口 |
-| `Ctrl+w o` | 只保留当前窗口，关闭其他 |
+| 按键/命令  | 功能         |   |
+|--------|------------|---|
+| `Ctrl+w w` | 切换到下一个窗口 |   |
+| `Ctrl+w h` | 切换到左边窗口 |   |
+| `Ctrl+w j` | 切换到下边窗口 |   |
+| `Ctrl+w k` | 切换到上边窗口 |   |
+| `Ctrl+w l` | 切换到右边窗口 |   |
+| `Ctrl+w c` | 关闭当前窗口 |   |
+| `Ctrl+w o` | 只保留当前窗口，关闭其他 |   |
 
 
 #### 缓冲区（Buffer）管理 {#缓冲区-buffer-管理}
 
-| 命令               | 功能        |
-|------------------|-----------|
-| `:ls` 或 `:buffers` | 列出所有缓冲区 |
-| `:b n`             | 切换到第 n 个缓冲区 |
-| `:b filename`      | 切换到指定缓冲区 |
-| `:bn`              | 切换到下一个缓冲区 |
-| `:bp`              | 切换到上一个缓冲区 |
-| `:bd`              | 删除当前缓冲区 |
-| `:bd n`            | 删除第 n 个缓冲区 |
+| 命令               | 功能        |   |
+|------------------|-----------|---|
+| `:ls` 或 `:buffers` | 列出所有缓冲区 |   |
+| `:b n`             | 切换到第 n 个缓冲区 |   |
+| `:b filename`      | 切换到指定缓冲区 |   |
+| `:bn`              | 切换到下一个缓冲区 |   |
+| `:bp`              | 切换到上一个缓冲区 |   |
+| `:bd`              | 删除当前缓冲区 |   |
+| `:bd n`            | 删除第 n 个缓冲区 |   |
 
 
 ### Vim 退出 {#vim-退出}
@@ -6107,17 +5931,17 @@ vim +/pattern filename " 打开文件并跳到第一个匹配
 
 #### 保存和退出命令 {#保存和退出命令}
 
-| 命令                | 功能        |
-|-------------------|-----------|
-| `:q`                | 退出（如果已保存） |
-| `:q!`               | 强制退出不保存 |
-| `:w`                | 保存文件    |
-| `:w filename`       | 另存为      |
-| `:wq` 或 `:x` 或 `ZZ` | 保存并退出  |
-| `:wq!`              | 强制保存并退出 |
-| `:qa`               | 退出所有窗口 |
-| `:qa!`              | 强制退出所有窗口不保存 |
-| `:wqa`              | 保存所有窗口并退出 |
+| 命令                | 功能        |   |
+|-------------------|-----------|---|
+| `:q`                | 退出（如果已保存） |   |
+| `:q!`               | 强制退出不保存 |   |
+| `:w`                | 保存文件    |   |
+| `:w filename`       | 另存为      |   |
+| `:wq` 或 `:x` 或 `ZZ` | 保存并退出  |   |
+| `:wq!`              | 强制保存并退出 |   |
+| `:qa`               | 退出所有窗口 |   |
+| `:qa!`              | 强制退出所有窗口不保存 |   |
+| `:wqa`              | 保存所有窗口并退出 |   |
 
 
 #### 常用退出组合 {#常用退出组合}
@@ -6451,19 +6275,19 @@ git merge origin/main
 
 ### 常用 Git 命令参考 {#常用-git-命令参考}
 
-| 命令                    | 说明       |
-|-----------------------|----------|
-| git init                | 初始化新仓库 |
-| git clone &lt;url&gt;   | 克隆远程仓库 |
-| git status              | 查看当前状态 |
-| git add &lt;file&gt;    | 添加文件到暂存区 |
-| git commit -m "message" | 提交更改   |
-| git push                | 推送到远程仓库 |
-| git pull                | 拉取远程更新 |
-| git log                 | 查看提交历史 |
-| git branch              | 列出/创建/删除分支 |
-| git checkout            | 切换分支或恢复文件 |
-| git merge               | 合并分支   |
+| 命令                    | 说明       |   |
+|-----------------------|----------|---|
+| git init                | 初始化新仓库 |   |
+| git clone &lt;url&gt;   | 克隆远程仓库 |   |
+| git status              | 查看当前状态 |   |
+| git add &lt;file&gt;    | 添加文件到暂存区 |   |
+| git commit -m "message" | 提交更改   |   |
+| git push                | 推送到远程仓库 |   |
+| git pull                | 拉取远程更新 |   |
+| git log                 | 查看提交历史 |   |
+| git branch              | 列出/创建/删除分支 |   |
+| git checkout            | 切换分支或恢复文件 |   |
+| git merge               | 合并分支   |   |
 
 
 ## Rsync {#rsync}
@@ -6497,23 +6321,23 @@ rsync [选项] 源路径 目标路径
 
 ### 常用参数说明 {#常用参数说明}
 
-| 参数          | 说明              |
-|-------------|-----------------|
-| `-r`          | 递归复制子目录    |
-| `-a`          | 归档模式，保留权限、时间戳等 |
-| `-v`          | 显示详细信息      |
-| `-z`          | 传输时压缩数据    |
-| `-n`          | 模拟执行，不真正传输 |
-| `-P`          | 显示进度并支持断点续传 |
-| `--delete`    | 删除目标目录中不存在于源目录的文件 |
-| `--progress`  | 显示传输进度      |
-| `--exclude`   | 排除特定文件或目录 |
-| `--include`   | 指定包含的文件模式 |
-| `--bwlimit`   | 限制传输带宽（单位：KB/s） |
-| `--max-size`  | 最大文件大小限制  |
-| `--min-size`  | 最小文件大小限制  |
-| `-e ssh`      | 使用 SSH 协议传输 |
-| `--link-dest` | 增量备份时指定基准目录 |
+| 参数          | 说明              |   |
+|-------------|-----------------|---|
+| `-r`          | 递归复制子目录    |   |
+| `-a`          | 归档模式，保留权限、时间戳等 |   |
+| `-v`          | 显示详细信息      |   |
+| `-z`          | 传输时压缩数据    |   |
+| `-n`          | 模拟执行，不真正传输 |   |
+| `-P`          | 显示进度并支持断点续传 |   |
+| `--delete`    | 删除目标目录中不存在于源目录的文件 |   |
+| `--progress`  | 显示传输进度      |   |
+| `--exclude`   | 排除特定文件或目录 |   |
+| `--include`   | 指定包含的文件模式 |   |
+| `--bwlimit`   | 限制传输带宽（单位：KB/s） |   |
+| `--max-size`  | 最大文件大小限制  |   |
+| `--min-size`  | 最小文件大小限制  |   |
+| `-e ssh`      | 使用 SSH 协议传输 |   |
+| `--link-dest` | 增量备份时指定基准目录 |   |
 
 
 ### 本地同步示例 {#本地同步示例}
@@ -6630,16 +6454,16 @@ rsync -avP --partial D:\large-file.iso D:\destination\
 
 ### 常用组合命令速查 {#常用组合命令速查}
 
-| 用途    | 命令                                                         |
-|-------|------------------------------------------------------------|
-| 本地同步 | rsync -av source/ dest/                                      |
-| 带进度显示 | rsync -avP source/ dest/                                     |
-| 镜像同步 | rsync -av --delete source/ dest/                             |
-| 同步前模拟 | rsync -avn --delete source/ dest/                            |
-| 带压缩远程同步 | rsync -avz source/ user@remote:/path/                        |
-| 限制带宽 | rsync -avz --bwlimit=1000 source/ dest/                      |
-| 排除文件同步 | rsync -av --exclude='\*.log' --exclude='.git/' source/ dest/ |
-| 增量备份 | rsync -av --link-dest=/backup/prev source/ backup/current/   |
+| 用途    | 命令                                                         |   |
+|-------|------------------------------------------------------------|---|
+| 本地同步 | rsync -av source/ dest/                                      |   |
+| 带进度显示 | rsync -avP source/ dest/                                     |   |
+| 镜像同步 | rsync -av --delete source/ dest/                             |   |
+| 同步前模拟 | rsync -avn --delete source/ dest/                            |   |
+| 带压缩远程同步 | rsync -avz source/ user@remote:/path/                        |   |
+| 限制带宽 | rsync -avz --bwlimit=1000 source/ dest/                      |   |
+| 排除文件同步 | rsync -av --exclude='\*.log' --exclude='.git/' source/ dest/ |   |
+| 增量备份 | rsync -av --link-dest=/backup/prev source/ backup/current/   |   |
 
 
 ### 备份重要数据到移动硬盘 {#备份重要数据到移动硬盘}
@@ -6702,15 +6526,15 @@ pause
 
 ### 常用参数说明 {#常用参数说明}
 
-| 参数         | 说明              |
-|------------|-----------------|
-| `-a`         | 归档模式，保留权限、时间戳等 |
-| `-v`         | 显示详细信息      |
-| `-z`         | 传输时压缩数据    |
-| `--delete`   | 删除目标目录中不存在于源目录的文件 |
-| `--progress` | 显示传输进度      |
-| `--exclude`  | 排除特定文件或目录 |
-| `--bwlimit`  | 限制传输带宽（单位：KB/s） |
+| 参数         | 说明              |   |
+|------------|-----------------|---|
+| `-a`         | 归档模式，保留权限、时间戳等 |   |
+| `-v`         | 显示详细信息      |   |
+| `-z`         | 传输时压缩数据    |   |
+| `--delete`   | 删除目标目录中不存在于源目录的文件 |   |
+| `--progress` | 显示传输进度      |   |
+| `--exclude`  | 排除特定文件或目录 |   |
+| `--bwlimit`  | 限制传输带宽（单位：KB/s） |   |
 
 
 ### 常见问题 {#常见问题}

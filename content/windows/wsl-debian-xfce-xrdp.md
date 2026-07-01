@@ -2,7 +2,7 @@
 title: "WSL Debian XFCE with XRDP"
 author: ["Donald Lo"]
 date: 2026-01-28
-lastmod: 2026-01-28T16:21:11+08:00
+lastmod: 2026-07-01T13:28:00+08:00
 tags: ["WSL", "XRDP"]
 draft: false
 ---
