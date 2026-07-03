@@ -2,7 +2,7 @@
 title: "Claude Code 完整使用指南"
 author: ["Donald Lo"]
 date: 2026-07-03
-lastmod: 2026-07-03T09:23:00+08:00
+lastmod: 2026-07-03T10:00:00+08:00
 tags: ["claude-code", "AI", "coding"]
 draft: false
 ---
@@ -434,7 +434,7 @@ docker compose up -d
 
 ### Skill 是什么 {#skill-是什么}
 
-Skill 是 Claude Code 的扩展机制。你写一个 `SKILL.md` 文件，里面放指令，Claude Code 就多了一项能力。Skill 和 `CLAUDE.md` 的区别：=CLAUDE.md= 的内容每次会话都加载，Skill 的内容只在调用时加载——省 token。
+Skill 是 Claude Code 的扩展机制。你写一个 `SKILL.md` 文件，里面放指令，Claude Code 就多了一项能力。Skill 和 `CLAUDE.md` 的区别： `CLAUDE.md` 的内容每次会话都加载，Skill 的内容只在调用时加载——省 token。
 
 什么时候该创建 Skill？当你发现自己反复粘贴同一段指令、检查清单、或多步骤流程到聊天里时，就该把它变成 Skill。
 
@@ -728,7 +728,7 @@ task-api/
 
 ### CLAUDE.md 的作用 {#claude-dot-md-的作用}
 
-在项目根目录创建 =CLAUDE.md=，写上项目规范，Claude Code 每次启动都会读：
+在项目根目录创建 `CLAUDE.md` ，写上项目规范，Claude Code 每次启动都会读：
 
 ```markdown
 # Task API 项目规范
