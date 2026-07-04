@@ -2,7 +2,7 @@
 title: "EndeavourOS"
 author: ["Donald Lo"]
 date: 2026-05-13
-lastmod: 2026-07-01T13:27:00+08:00
+lastmod: 2026-07-04T11:50:00+08:00
 tags: ["EndeavourOS", "Arch", "Linux"]
 draft: false
 ---
@@ -919,6 +919,371 @@ draft: false
         - [代码块中的中文注释在 PDF 中显示为方框](#代码块中的中文注释在-pdf-中显示为方框)
         - [目录中标题编号和正文不一致](#目录中标题编号和正文不一致)
     - [参考链接](#参考链接)
+- [命令行](#命令行)
+    - [Shell（Bash 基础与配置）](#shell-bash-基础与配置)
+        - [Bash 快捷键](#bash-快捷键)
+            - [提示](#提示)
+        - [命令历史](#命令历史)
+            - [history 命令与配置](#history-命令与配置)
+            - [快速引用](#快速引用)
+            - [Ctrl+R 反向搜索](#ctrl-plus-r-反向搜索)
+        - [别名（alias）](#别名-alias)
+            - [基本操作](#基本操作)
+            - [常用别名示例](#常用别名示例)
+            - [查看别名实际命令](#查看别名实际命令)
+        - [函数](#函数)
+            - [定义方式](#定义方式)
+            - [函数 vs 别名](#函数-vs-别名)
+            - [实用函数示例](#实用函数示例)
+        - [提示符定制（PS1）](#提示符定制-ps1)
+            - [常用转义序列](#常用转义序列)
+            - [颜色设置](#颜色设置)
+            - [集成 Git 分支](#集成-git-分支)
+            - [推荐 PS1 配置](#推荐-ps1-配置)
+        - [命令替换与管道](#命令替换与管道)
+            - [命令替换](#命令替换)
+            - [管道](#管道)
+                - [历史背景](#历史背景)
+                - [基本语法与工作原理](#基本语法与工作原理)
+                - [单行管道与多行管道](#单行管道与多行管道)
+                - [管道与重定向的区别](#管道与重定向的区别)
+                - [管道的退出码与 PIPESTATUS](#管道的退出码与-pipestatus)
+                - [管道中的 stderr 处理](#管道中的-stderr-处理)
+                - [实用管道组合示例](#实用管道组合示例)
+                    - [日志分析](#日志分析)
+                    - [系统管理](#系统管理)
+                    - [文本处理](#文本处理)
+                    - [网络调试](#网络调试)
+                    - [文件批量操作](#文件批量操作)
+                - [管道的性能考量](#管道的性能考量)
+                - [命名管道（FIFO）](#命名管道-fifo)
+                - [管道与 here-string / here-document](#管道与-here-string-here-document)
+                - [进程替换与管道](#进程替换与管道)
+                - [管道编程最佳实践](#管道编程最佳实践)
+            - [tee](#tee)
+            - [xargs](#xargs)
+        - [引号规则](#引号规则)
+            - [三种引号对比](#三种引号对比)
+            - [示例](#示例)
+            - [`$'...'` 常用转义](#dot-dot-dot-常用转义)
+        - [通配符（Globbing）](#通配符-globbing)
+            - [基本通配符](#基本通配符)
+            - [globstar（\*\*递归匹配）](#globstar-递归匹配)
+            - [extglob（扩展通配符）](#extglob-扩展通配符)
+    - [文件与目录操作](#文件与目录操作)
+        - [目录导航](#目录导航)
+            - [cd 常用方式](#cd-常用方式)
+            - [目录栈：pushd / popd / dirs](#目录栈-pushd-popd-dirs)
+        - [列出文件](#列出文件)
+            - [ls 常用选项](#ls-常用选项)
+            - [tree 命令](#tree-命令)
+        - [创建](#创建)
+        - [复制](#复制)
+            - [cp 常用选项](#cp-常用选项)
+            - [cp 与符号链接交互简述](#cp-与符号链接交互简述)
+        - [移动与重命名](#移动与重命名)
+            - [mv 常用选项](#mv-常用选项)
+            - [批量重命名](#批量重命名)
+        - [删除](#删除)
+            - [安全删除习惯](#安全删除习惯)
+        - [文件权限](#文件权限)
+            - [权限模型](#权限模型)
+            - [chmod](#chmod)
+            - [常见权限值](#常见权限值)
+        - [文件属主](#文件属主)
+        - [特殊权限](#特殊权限)
+            - [SUID / SGID / Sticky Bit](#suid-sgid-sticky-bit)
+            - [查看特殊权限](#查看特殊权限)
+            - [设置特殊权限](#设置特殊权限)
+        - [umask](#umask)
+            - [概念](#概念)
+            - [常用 umask 值](#常用-umask-值)
+            - [查看与修改](#查看与修改)
+        - [file 命令](#file-命令)
+        - [stat 命令](#stat-命令)
+            - [三种时间戳](#三种时间戳)
+            - [常用格式](#常用格式)
+        - [touch 修改时间戳](#touch-修改时间戳)
+    - [文件查找与搜索](#文件查找与搜索)
+        - [find 命令](#find-命令)
+            - [按名称查找](#按名称查找)
+            - [按类型查找](#按类型查找)
+            - [按时间查找](#按时间查找)
+            - [按大小查找](#按大小查找)
+            - [按权限/属主查找](#按权限-属主查找)
+            - [组合条件](#组合条件)
+            - [执行操作](#执行操作)
+            - [常用模式](#常用模式)
+        - [locate 命令](#locate-命令)
+            - [locate vs find](#locate-vs-find)
+        - [fd（现代 find 替代）](#fd-现代-find-替代)
+        - [fzf（模糊查找器）](#fzf-模糊查找器)
+            - [基本交互](#基本交互)
+            - [Shell 集成快捷键](#shell-集成快捷键)
+            - [自定义预览](#自定义预览)
+            - [常用选项](#常用选项)
+        - [ripgrep（rg）](#ripgrep-rg)
+            - [常用选项](#常用选项)
+            - [常用搜索模式](#常用搜索模式)
+            - [文件类型列表](#文件类型列表)
+        - [rga（ripgrep-all）](#rga-ripgrep-all)
+    - [文本处理三剑客](#文本处理三剑客)
+        - [grep](#grep)
+            - [基本正则 vs 扩展正则](#基本正则-vs-扩展正则)
+            - [常用选项](#常用选项)
+            - [固定字符串搜索（-F）](#固定字符串搜索-f)
+            - [PCRE 正则（-P）](#pcre-正则-p)
+            - [实用模式](#实用模式)
+        - [sed](#sed)
+            - [基本语法](#基本语法)
+            - [常用操作](#常用操作)
+                - [替换（s）](#替换-s)
+                - [删除行（d）](#删除行-d)
+                - [打印行（p）](#打印行-p)
+                - [追加/插入（a/i）](#追加-插入-a-i)
+                - [其他操作](#其他操作)
+            - [行地址](#行地址)
+            - [-i 原地编辑](#i-原地编辑)
+            - [-n 静默模式](#n-静默模式)
+            - [常见示例](#常见示例)
+        - [awk](#awk)
+            - [基本结构](#基本结构)
+            - [字段分隔与引用](#字段分隔与引用)
+            - [常用内置变量](#常用内置变量)
+            - [条件与动作](#条件与动作)
+            - [实用示例](#实用示例)
+                - [提取列](#提取列)
+                - [求和与平均](#求和与平均)
+                - [格式化输出](#格式化输出)
+                - [按条件过滤](#按条件过滤)
+                - [统计词频](#统计词频)
+            - [printf 格式化](#printf-格式化)
+        - [组合使用](#组合使用)
+            - [grep + sed + awk 管道](#grep-plus-sed-plus-awk-管道)
+            - [处理 CSV](#处理-csv)
+            - [处理日志](#处理日志)
+        - [其他实用文本命令](#其他实用文本命令)
+            - [sort](#sort)
+            - [uniq](#uniq)
+            - [cut](#cut)
+            - [tr](#tr)
+            - [wc](#wc)
+            - [tee](#tee)
+            - [column](#column)
+            - [paste](#paste)
+            - [comm](#comm)
+            - [diff / patch](#diff-patch)
+    - [pacman 与 AUR 深入](#pacman-与-aur-深入)
+        - [pacman 完整用法](#pacman-完整用法)
+            - [安装命令](#安装命令)
+            - [卸载命令](#卸载命令)
+            - [查询命令](#查询命令)
+            - [文件归属查询](#文件归属查询)
+            - [清理缓存](#清理缓存)
+            - [数据库操作](#数据库操作)
+            - [pacman.conf 配置](#pacman-dot-conf-配置)
+            - [pacman hooks](#pacman-hooks)
+            - [降级与 pacnew 处理](#降级与-pacnew-处理)
+        - [镜像源配置](#镜像源配置)
+            - [reflector 自动选速](#reflector-自动选速)
+            - [手动编辑 mirrorlist](#手动编辑-mirrorlist)
+            - [国内镜像推荐](#国内镜像推荐)
+        - [AUR 与 yay/paru](#aur-与-yay-paru)
+            - [AUR 概念](#aur-概念)
+            - [yay](#yay)
+            - [paru](#paru)
+            - [AUR 安全](#aur-安全)
+        - [pacman 命令速查表](#pacman-命令速查表)
+            - [安装类](#安装类)
+            - [卸载类](#卸载类)
+            - [查询类](#查询类)
+            - [维护类](#维护类)
+    - [systemd 与服务管理](#systemd-与服务管理)
+        - [systemctl 核心操作](#systemctl-核心操作)
+            - [服务管理](#服务管理)
+            - [Unit 类型](#unit-类型)
+            - [列出 units](#列出-units)
+            - [mask/unmask](#mask-unmask)
+            - [daemon-reload / daemon-reexec](#daemon-reload-daemon-reexec)
+        - [journalctl 日志](#journalctl-日志)
+            - [基本查看](#基本查看)
+            - [过滤](#过滤)
+            - [输出格式](#输出格式)
+            - [日志持久化](#日志持久化)
+            - [日志清理](#日志清理)
+        - [systemd 定时器（timer）](#systemd-定时器-timer)
+            - [timer 与 cron 对比](#timer-与-cron-对比)
+            - [创建 timer unit](#创建-timer-unit)
+            - [示例：定时缓存清理](#示例-定时缓存清理)
+            - [相对时间 timer](#相对时间-timer)
+        - [系统管理命令](#系统管理命令)
+            - [timedatectl](#timedatectl)
+            - [localectl](#localectl)
+            - [hostnamectl](#hostnamectl)
+        - [用户级 systemd](#用户级-systemd)
+            - [用户服务管理](#用户服务管理)
+            - [loginctl enable-linger](#loginctl-enable-linger)
+        - [systemd-run 临时运行](#systemd-run-临时运行)
+        - [分析工具](#分析工具)
+            - [systemd-analyze](#systemd-analyze)
+    - [进程管理](#进程管理)
+        - [查看进程](#查看进程)
+            - [ps 命令](#ps-命令)
+            - [top / htop / btop](#top-htop-btop)
+                - [top](#top)
+                - [htop](#htop)
+                - [btop](#btop)
+            - [pgrep / pkill](#pgrep-pkill)
+        - [信号与控制](#信号与控制)
+            - [常用信号](#常用信号)
+            - [kill / killall](#kill-killall)
+            - [终端快捷键](#终端快捷键)
+        - [后台与前台](#后台与前台)
+            - [&amp; 与 jobs](#and-与-jobs)
+            - [nohup](#nohup)
+            - [disown](#disown)
+        - [优先级](#优先级)
+            - [nice / renice](#nice-renice)
+            - [top 中调整](#top-中调整)
+        - [资源限制](#资源限制)
+            - [ulimit](#ulimit)
+            - [/etc/security/limits.conf](#etc-security-limits-dot-conf)
+    - [磁盘与文件系统](#磁盘与文件系统)
+        - [查看磁盘信息](#查看磁盘信息)
+            - [lsblk](#lsblk)
+            - [blkid](#blkid)
+            - [df](#df)
+            - [du](#du)
+            - [ncdu](#ncdu)
+            - [fdisk](#fdisk)
+        - [挂载与卸载](#挂载与卸载)
+            - [mount / umount](#mount-umount)
+            - [常用挂载选项](#常用挂载选项)
+            - [挂载 ISO](#挂载-iso)
+            - [挂载 NFS / SMB](#挂载-nfs-smb)
+            - [findmnt](#findmnt)
+        - [/etc/fstab](#etc-fstab)
+            - [格式](#格式)
+            - [常见条目示例](#常见条目示例)
+            - [x-systemd.automount](#x-systemd-dot-automount)
+            - [修复 fstab 错误](#修复-fstab-错误)
+        - [分区与格式化](#分区与格式化)
+            - [fdisk / cfdisk](#fdisk-cfdisk)
+            - [gdisk / cgdisk](#gdisk-cgdisk)
+            - [parted](#parted)
+            - [mkfs 系列](#mkfs-系列)
+            - [swap 分区与 swap 文件](#swap-分区与-swap-文件)
+        - [文件系统维护](#文件系统维护)
+            - [fsck](#fsck)
+            - [扩展文件系统](#扩展文件系统)
+        - [SMART 磁盘健康](#smart-磁盘健康)
+            - [smartctl](#smartctl)
+    - [压缩与归档](#压缩与归档)
+        - [tar](#tar)
+            - [创建归档](#创建归档)
+            - [解包](#解包)
+            - [查看归档内容](#查看归档内容)
+            - [追加文件](#追加文件)
+            - [排除文件](#排除文件)
+            - [快速参考表](#快速参考表)
+        - [单独压缩工具](#单独压缩工具)
+            - [gzip / gunzip](#gzip-gunzip)
+            - [bzip2 / bunzip2](#bzip2-bunzip2)
+            - [xz / unxz](#xz-unxz)
+            - [压缩率对比](#压缩率对比)
+            - [zstd](#zstd)
+        - [zip / unzip](#zip-unzip)
+        - [7z（p7zip）](#7z-p7zip)
+        - [常见扩展名速查表](#常见扩展名速查表)
+        - [zstd 在 pacman 中的应用](#zstd-在-pacman-中的应用)
+    - [网络命令](#网络命令)
+        - [网络连接查看](#网络连接查看)
+            - [ip addr / ip link](#ip-addr-ip-link)
+            - [ip route](#ip-route)
+            - [ping](#ping)
+            - [ss](#ss)
+            - [nmcli](#nmcli)
+            - [nmtui](#nmtui)
+        - [DNS 查询](#dns-查询)
+            - [dig / nslookup / host](#dig-nslookup-host)
+            - [resolvectl](#resolvectl)
+            - [/etc/resolv.conf 与 systemd-resolved](#etc-resolv-dot-conf-与-systemd-resolved)
+        - [下载工具](#下载工具)
+            - [curl](#curl)
+            - [wget](#wget)
+            - [aria2c](#aria2c)
+        - [SSH 基础](#ssh-基础)
+            - [ssh 连接与 scp 传输](#ssh-连接与-scp-传输)
+            - [ssh-keygen 密钥生成](#ssh-keygen-密钥生成)
+            - [~/.ssh/config 简化配置](#dot-ssh-config-简化配置)
+            - [ssh-copy-id 免密登录](#ssh-copy-id-免密登录)
+            - [安全配置（/etc/ssh/sshd_config）](#安全配置-etc-ssh-sshd-config)
+        - [防火墙](#防火墙)
+            - [iptables / nftables 基本概念](#iptables-nftables-基本概念)
+            - [ufw 简化防火墙](#ufw-简化防火墙)
+            - [个人 PC 防火墙建议](#个人-pc-防火墙建议)
+        - [网络排查流程](#网络排查流程)
+    - [用户与权限](#用户与权限)
+        - [用户管理](#用户管理)
+            - [useradd / userdel / usermod](#useradd-userdel-usermod)
+            - [/etc/passwd 字段含义](#etc-passwd-字段含义)
+            - [id 命令](#id-命令)
+            - [who / w / whoami](#who-w-whoami)
+        - [组管理](#组管理)
+            - [groupadd / groupdel / groupmod](#groupadd-groupdel-groupmod)
+            - [gpasswd](#gpasswd)
+            - [usermod -aG 追加附加组](#usermod-ag-追加附加组)
+            - [groups 查看用户组](#groups-查看用户组)
+            - [/etc/group 字段含义](#etc-group-字段含义)
+        - [sudo 配置](#sudo-配置)
+            - [/etc/sudoers 与 visudo](#etc-sudoers-与-visudo)
+            - [sudoers 语法](#sudoers-语法)
+            - [sudo 常用选项](#sudo-常用选项)
+            - [_etc/sudoers.d_ 目录（推荐方法）](#etc-sudoers-dot-d-目录-推荐方法)
+        - [su 命令](#su-命令)
+        - [登录 Shell vs 非登录 Shell](#登录-shell-vs-非登录-shell)
+        - [密码管理](#密码管理)
+            - [passwd](#passwd)
+            - [chage 密码策略](#chage-密码策略)
+            - [/etc/shadow 字段](#etc-shadow-字段)
+        - [PAM 概念简介](#pam-概念简介)
+    - [Shell 脚本入门](#shell-脚本入门)
+        - [脚本基础](#脚本基础)
+            - [shebang](#shebang)
+            - [执行方法](#执行方法)
+            - [特殊变量](#特殊变量)
+        - [变量](#变量)
+            - [赋值与引用](#赋值与引用)
+            - [默认值与替换](#默认值与替换)
+            - [字符串操作](#字符串操作)
+            - [整数运算](#整数运算)
+        - [条件判断](#条件判断)
+            - [test / [ ]](#test)
+            - [ ](#680--org8ef8717)
+            - [if / elif / else / fi](#if-elif-else-fi)
+        - [循环](#循环)
+            - [for...in](#for-dot-dot-dot-in)
+            - [C 风格 for](#c-风格-for)
+            - [while](#while)
+            - [until](#until)
+            - [break / continue](#break-continue)
+        - [函数](#函数)
+            - [定义与调用](#定义与调用)
+            - [参数传递](#参数传递)
+            - [返回值](#返回值)
+            - [local 变量](#local-变量)
+        - [数组](#数组)
+            - [普通数组](#普通数组)
+            - [关联数组](#关联数组)
+        - [常用技巧](#常用技巧)
+            - [set 安全选项](#set-安全选项)
+            - [trap 信号捕获](#trap-信号捕获)
+            - [getopts 处理命令行选项](#getopts-处理命令行选项)
+            - [调试](#调试)
+        - [实用脚本示例](#实用脚本示例)
+            - [批量文件重命名](#批量文件重命名)
+            - [系统备份脚本](#系统备份脚本)
+            - [定时缓存清理脚本](#定时缓存清理脚本)
 
 </div>
 <!--endtoc-->
@@ -15729,3 +16094,6000 @@ pandoc input.md --pdf-engine=xelatex -V monofont="Noto Sans Mono CJK SC" -o outp
 -   [Zotero Style Repository](https://www.zotero.org/styles) — CSL 引文样式文件下载
 -   [ctex 宏包](https://ctan.org/pkg/ctex) — 中文 LaTeX 排版宏包
 -   [typst](https://typst.app/) — 新一代排版系统
+
+
+## 命令行 {#命令行}
+
+
+### Shell（Bash 基础与配置） {#shell-bash-基础与配置}
+
+
+#### Bash 快捷键 {#bash-快捷键}
+
+| 快捷键   | 功能                    |
+|-------|-----------------------|
+| `Ctrl+A` | 光标移到行首            |
+| `Ctrl+E` | 光标移到行末            |
+| `Ctrl+F` | 光标右移一个字符        |
+| `Ctrl+B` | 光标左移一个字符        |
+| `Alt+F`  | 光标右移一个单词        |
+| `Alt+B`  | 光标左移一个单词        |
+| `Ctrl+U` | 删除光标前全部内容      |
+| `Ctrl+K` | 删除光标后全部内容      |
+| `Ctrl+W` | 删除光标前一个单词      |
+| `Ctrl+H` | 删除光标前一个字符 (`Backspace`) |
+| `Ctrl+D` | 删除光标处字符 / 空行时退出 |
+| `Ctrl+R` | 反向搜索历史命令        |
+| `Ctrl+P` | 上一条历史命令 (`↑`)    |
+| `Ctrl+N` | 下一条历史命令 (`↓`)    |
+| `Ctrl+Z` | 挂起当前任务            |
+| `Ctrl+C` | 终止当前命令            |
+| `Ctrl+L` | 清屏                    |
+
+
+##### 提示 {#提示}
+
+-   `Ctrl+R` 后输入关键字可增量搜索，再按 `Ctrl+R` 继续往上翻
+-   `Ctrl+Z` 挂起后用 `fg` 恢复前台、 `bg` 恢复后台
+-   `Alt+.` 可插入上一条命令的最后一个参数（等同于 `!$` 展开）
+
+
+#### 命令历史 {#命令历史}
+
+
+##### history 命令与配置 {#history-命令与配置}
+
+``````````````````bash
+history
+history 20
+history -c
+history -d 100
+``````````````````
+
+| 变量           | 作用        | 常用值                 |
+|--------------|-----------|---------------------|
+| `HISTSIZE`     | 内存中保留的历史条数 | 10000                  |
+| `HISTFILESIZE` | 磁盘文件保留的历史条数 | 20000                  |
+| `HISTCONTROL`  | 控制记录方式 | `ignoredups:erasedups` |
+| `HISTIGNORE`   | 忽略的命令模式 | `"ls:cd:exit"`         |
+
+`HISTCONTROL` 值说明：
+
+| 值            | 含义        |
+|--------------|-----------|
+| `ignorespace` | 以空格开头的命令不记录 |
+| `ignoredups`  | 连续重复命令只记一次 |
+| `erasedups`   | 去除之前的重复条目 |
+
+在 `~/.bashrc` 中配置：
+
+``````````````````bash
+export HISTSIZE=10000
+export HISTFILESIZE=20000
+export HISTCONTROL=ignoredups:erasedups
+export HISTIGNORE="ls:cd:cd -:exit:history"
+shopt -s histappend
+``````````````````
+
+
+##### 快速引用 {#快速引用}
+
+| 语法     | 含义          | 示例                     |
+|--------|-------------|------------------------|
+| `!!`     | 上一条命令    | `sudo !!`                |
+| `!$`     | 上一条命令最后一个参数 | `mkdir foo; cd !$`       |
+| `!^`     | 上一条命令第一个参数 | `cp a.txt b.txt; cat !^` |
+| `!n`     | 第 n 条历史命令 | `!1100`                  |
+| `!-n`    | 倒数第 n 条   | `!-3`                    |
+| `!str`   | 最近以 str 开头的命令 | `!vim`                   |
+| `!?str?` | 最近包含 str 的命令 | `!?config?`              |
+
+
+##### Ctrl+R 反向搜索 {#ctrl-plus-r-反向搜索}
+
+``````````````````bash
+(reverse-i-search)`git': git push origin main
+``````````````````
+
+-   输入 `Ctrl+R` 后键入关键词实时匹配
+-   再按 `Ctrl+R` 继续往上翻匹配项
+-   `Ctrl+S` 反向（向下）搜索（需先禁用终端 XON/XOFF： `stty -ixon` ）
+-   `Enter` 执行， `Esc` 编辑，=Ctrl+G= 取消
+
+
+#### 别名（alias） {#别名-alias}
+
+
+##### 基本操作 {#基本操作}
+
+``````````````````bash
+alias
+alias ll='ls -lh'
+alias la='ls -lAh'
+unalias ll
+unalias -a
+``````````````````
+
+
+##### 常用别名示例 {#常用别名示例}
+
+``````````````````bash
+alias ll='ls -lh'
+alias la='ls -lAh'
+alias ls='ls --color=auto'
+alias grep='grep --color=auto'
+alias egrep='egrep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias cp='cp -i'
+alias mv='mv -i'
+alias rm='rm -I'
+alias mkdir='mkdir -p'
+alias df='df -h'
+alias du='du -h'
+alias free='free -h'
+alias ..='cd ..'
+alias ...='cd ../..'
+alias gs='git status'
+alias gl='git log --oneline -20'
+alias gd='git diff'
+``````````````````
+
+在 `~/.bashrc` 中写入即可永久生效。
+
+
+##### 查看别名实际命令 {#查看别名实际命令}
+
+``````````````````bash
+type ll
+alias ll='ls -lh'
+command ll
+\ll
+``````````````````
+
+`command` 或前置反斜杠可绕过别名执行原始命令。
+
+
+#### 函数 {#函数}
+
+
+##### 定义方式 {#定义方式}
+
+``````````````````bash
+funcname() {
+    body
+}
+``````````````````
+
+或：
+
+``````````````````bash
+function funcname {
+    body
+}
+``````````````````
+
+
+##### 函数 vs 别名 {#函数-vs-别名}
+
+| 特性 | alias             | function               |
+|----|-------------------|------------------------|
+| 参数 | 只能追加到末尾    | 支持位置参数 `$1 $2`   |
+| 逻辑 | 无                | 可包含循环/条件/子函数 |
+| 嵌套 | 不支持            | 支持                   |
+| 复杂度 | 简单命令替换      | 任意复杂逻辑           |
+| 调试 | `type alias_name` | `declare -f func_name` |
+
+
+##### 实用函数示例 {#实用函数示例}
+
+``````````````````bash
+mkcd() {
+    mkdir -p "$1" && cd "$1"
+}
+``````````````````
+
+``````````````````bash
+extract() {
+    if [ -f "$1" ]; then
+        case "$1" in
+            *.tar.bz2) tar xjf "$1" ;;
+            *.tar.gz)  tar xzf "$1" ;;
+            *.tar.xz)  tar xJf "$1" ;;
+            *.bz2)     bunzip2 "$1" ;;
+            *.rar)     unrar x "$1" ;;
+            *.gz)      gunzip "$1" ;;
+            *.tar)     tar xf "$1" ;;
+            *.tbz2)    tar xjf "$1" ;;
+            *.tgz)     tar xzf "$1" ;;
+            *.zip)     unzip "$1" ;;
+            *.Z)       uncompress "$1" ;;
+            *.7z)      7z x "$1" ;;
+            *)         echo "无法识别: '$1'" ;;
+        esac
+    else
+        echo "'$1' 不是有效文件"
+    fi
+}
+``````````````````
+
+``````````````````bash
+backup() {
+    cp "$1" "${1}.bak.$(date +%Y%m%d%H%M%S)"
+}
+``````````````````
+
+``````````````````bash
+portcheck() {
+    ss -tlnp | grep ":$1 "
+}
+``````````````````
+
+
+#### 提示符定制（PS1） {#提示符定制-ps1}
+
+
+##### 常用转义序列 {#常用转义序列}
+
+| 转义 | 含义              |
+|----|-----------------|
+| `\u` | 用户名            |
+| `\h` | 主机名（短）      |
+| `\H` | 主机名（完整）    |
+| `\w` | 当前目录完整路径  |
+| `\W` | 当前目录名        |
+| `\d` | 日期              |
+| `\t` | 时间（24h）       |
+| `\T` | 时间（12h）       |
+| `\n` | 换行              |
+| `\$` | 普通用户 `$` , root=# |
+| `\j` | 后台任务数        |
+| `\!` | 历史命令编号      |
+
+
+##### 颜色设置 {#颜色设置}
+
+颜色格式： `\[\e[色号m\]`
+
+| 色号 | 颜色 | 色号 | 颜色 |
+|----|----|----|----|
+| 30 | 黑 | 40 | 黑底 |
+| 31 | 红 | 41 | 红底 |
+| 32 | 绿 | 42 | 绿底 |
+| 33 | 黄 | 43 | 黄底 |
+| 34 | 蓝 | 44 | 蓝底 |
+| 35 | 紫 | 45 | 紫底 |
+| 36 | 青 | 46 | 青底 |
+| 37 | 白 | 47 | 白底 |
+| 0  | 重置 | 1  | 粗体 |
+
+
+##### 集成 Git 分支 {#集成-git-分支}
+
+``````````````````bash
+parse_git_branch() {
+    git branch 2>/dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
+}
+``````````````````
+
+
+##### 推荐 PS1 配置 {#推荐-ps1-配置}
+
+``````````````````bash
+PS1='\[\e[1;32m\]\u@\h\[\e[0m\]:\[\e[1;34m\]\w\[\e[0;33m\]$(parse_git_branch)\[\e[0m\]\$ '
+``````````````````
+
+效果： `user@host:~/project (main)$`
+
+另一种简洁双行风格：
+
+``````````````````bash
+PS1='\[\e[1;36m\]\w\[\e[0;33m\]$(parse_git_branch)\[\e[0m\]\n\$ '
+``````````````````
+
+
+#### 命令替换与管道 {#命令替换与管道}
+
+
+##### 命令替换 {#命令替换}
+
+| 语法        | 说明         |
+|-----------|------------|
+| `$(cmd)`    | 推荐写法，可嵌套 |
+| `` `cmd` `` | 旧写法，不可嵌套，难转义 |
+
+``````````````````bash
+echo "Kernel: $(uname -r)"
+echo "Files: $(ls | wc -l)"
+echo "Nested: $(basename $(dirname /usr/bin/git))"
+``````````````````
+
+
+##### 管道 {#管道}
+
+管道（Pipeline）是 Unix/Linux 系统中最具革命性的设计之一，也是 Shell 编程的核心构件。它用竖线符号 `|` 将多个命令串联起来，使前一个命令的标准输出（stdout）自动成为后一个命令的标准输入（stdin），从而让简单的命令组合成强大的数据处理流水线。这种设计哲学体现了 Unix 的核心理念：每个程序只做好一件事，通过管道将它们组合起来完成复杂任务。
+
+
+###### 历史背景 {#历史背景}
+
+管道的概念诞生于 1973 年的贝尔实验室，由 Unix 的共同创造者 Doug McIlroy 提出。McIlroy 早在 1964 年就写下了关于"管道连接"的构想备忘录，但直到近十年后，这一想法才在 Unix 中真正落地。Ken Thompson 和 Dennis Ritchie 在 1973 年的 Unix 第三版中实现了管道系统调用，从此改变了人们对命令行工具的思考方式。
+
+在管道出现之前，用户必须将一个命令的输出重定向到临时文件，再将该文件作为下一个命令的输入。例如要统计某文件中包含特定字符串的行数，需要这样操作：
+
+``````````````````bash
+grep "pattern" input.txt > temp1.txt
+wc -l temp1.txt
+rm temp1.txt
+``````````````````
+
+管道的出现将这种繁琐的三步操作简化为一条简洁的命令：
+
+``````````````````bash
+grep "pattern" input.txt | wc -l
+``````````````````
+
+这不仅减少了输入量，更重要的是消除了临时文件的管理负担，也让数据在命令间实时流动，极大提高了效率。McIlroy 曾将管道的发明描述为 Unix 哲学的自然延伸——让程序像工厂流水线一样协作，每个程序只负责一道工序，数据像水流一样在工序之间自动传递。
+
+管道的符号 `|` 选择了竖线，形象地暗示了数据的"管道"传输。在早期 Unix 终端上，竖线的视觉效果恰好像一根连接两端的管子，这个符号选择一直沿用至今。
+
+
+###### 基本语法与工作原理 {#基本语法与工作原理}
+
+``````````````````bash
+cmd1 | cmd2 | cmd3
+``````````````````
+
+管道的基本语法非常简单：在两个命令之间放置 `|` 符号。Shell 会在内核层面创建一个管道（pipe），将左侧命令的 stdout 文件描述符连接到右侧命令的 stdin 文件描述符。这意味着数据在两个进程之间通过内核缓冲区直接传递，不需要经过磁盘 I/O，因此管道操作极为高效。
+
+**关键特性** ：
+
+-   管道中每个命令都在独立的子进程中并行运行，而非顺序执行。Shell 会同时启动管道中的所有命令，数据在它们之间实时流动
+-   管道的返回值为 **最后一个命令** 的退出码。如果你想检查管道中某个中间命令是否失败，需要使用 `PIPESTATUS` 或 `set -o pipefail`
+-   管道只能传递 stdout。如果左侧命令向 stderr 输出了信息，这些信息 **不会** 进入管道，而是直接显示在终端上
+-   管道是单向的：数据只能从左向右流动，不能反向传递
+
+
+###### 单行管道与多行管道 {#单行管道与多行管道}
+
+对于较短的管道，直接写在一行即可：
+
+``````````````````bash
+ls | grep "\.sh$"
+``````````````````
+
+当管道较长时，可以使用反斜杠换行，提高可读性：
+
+``````````````````bash
+cat access.log \
+  | grep "404" \
+  | awk '{print $7}' \
+  | sort \
+  | uniq -c \
+  | sort -rn \
+  | head -20
+``````````````````
+
+这种写法中每个管道符 `|` 都放在行首，使得整个数据流的方向一目了然，便于理解和维护。
+
+
+###### 管道与重定向的区别 {#管道与重定向的区别}
+
+管道和重定向都是改变数据流向的机制，但它们的原理完全不同：
+
+| 特性 | 管道 =cmd1        | cmd2=                    | 重定向 `cmd > file` |
+|----|-----------------|--------------------------|------------------|
+| 连接对象 | 进程到进程        | 进程到文件/文件到进程    |                  |
+| 数据载体 | 内核管道缓冲区（内存） | 磁盘文件或设备文件       |                  |
+| 效率 | 高（纯内存传输）  | 较低（涉及磁盘 I/O）     |                  |
+| 持久性 | 临时，命令结束即消失 | 数据持久保存在文件中     |                  |
+| 灵活性 | 只能连接 stdout→stdin | 可重定向 stdin、stdout、stderr |                  |
+
+理解两者的区别非常重要：管道是进程间的"实时对话"，重定向是进程与文件之间的"信件往来"。在实际使用中，管道和重定向常常配合使用——用管道串联多个命令处理数据，最后用重定向将结果保存到文件。
+
+
+###### 管道的退出码与 PIPESTATUS {#管道的退出码与-pipestatus}
+
+管道的退出码默认只反映最后一个命令的状态：
+
+``````````````````bash
+# 即使 grep 找不到匹配（退出码 1），整个管道的退出码取决于 wc
+echo "hello" | grep "xyz" | wc -l
+echo $?  # 输出 0（wc 成功），而非 1（grep 失败）
+``````````````````
+
+这在排查问题时会造成困惑：管道明明没有产生预期输出，但退出码却显示成功。Bash 提供了 `PIPESTATUS` 数组来查看管道中每个命令的退出码：
+
+``````````````````bash
+echo "hello" | grep "xyz" | wc -l
+echo ${PIPESTATUS[@]}  # 输出类似：0 1 0
+# 分别对应 echo、grep、wc 的退出码
+``````````````````
+
+`PIPESTATUS` 数组在每次管道执行后都会被重置，因此必须在管道执行后立即读取。如果你希望管道中任何一个命令失败都导致整个管道返回失败，可以使用 `set -o pipefail` ：
+
+``````````````````bash
+set -o pipefail
+echo "hello" | grep "xyz" | wc -l
+echo $?  # 输出 1（grep 失败，pipefail 使管道返回最右边的非零退出码）
+``````````````````
+
+`pipefail` 在编写脚本时特别重要，它可以确保管道中任何环节的错误都不会被静默忽略。建议在脚本的开头加上 `set -euo pipefail` ，这会同时启用严格错误处理（=set -e= ）、未定义变量检查（=set -u= ）和管道错误传播（=set -o pipefail= ）。
+
+
+###### 管道中的 stderr 处理 {#管道中的-stderr-处理}
+
+默认情况下，管道只传递 stdout，stderr 会直接显示在终端上。如果需要将 stderr 也纳入管道处理，需要先用重定向将 stderr 合并到 stdout：
+
+``````````````````bash
+# 将 stderr 合并到 stdout 后再通过管道
+command 2>&1 | grep "error"
+
+# 仅将 stderr 通过管道，stdout 丢弃
+command 2>&1 1>/dev/null | grep "error"
+
+# 同时捕获 stdout 和 stderr 到不同文件
+command > stdout.txt 2> stderr.txt
+``````````````````
+
+`2>&1` 的含义是"将文件描述符 2（stderr）重定向到文件描述符 1（stdout）当前指向的位置"。注意重定向的顺序很重要—— `2>&1` 必须写在 `1>/dev/null` 之前，否则 stderr 会跟随 stdout 一起被丢弃。
+
+
+###### 实用管道组合示例 {#实用管道组合示例}
+
+管道的真正威力在于将简单命令组合成复杂的数据处理流水线。以下是一些在实际工作中经常用到的管道组合：
+
+<!--list-separator-->
+
+-  日志分析
+
+    分析 Nginx/Apache 访问日志是最经典的管道应用场景：
+
+    ``````````````````bash
+    # 统计访问量最大的 20 个 URL
+    cat access.log | awk '{print $7}' | sort | uniq -c | sort -rn | head -20
+
+    # 统计各 HTTP 状态码的出现次数
+    cat access.log | awk '{print $9}' | sort | uniq -c | sort -rn
+
+    # 查找 404 错误最多的 URL
+    cat access.log | grep "404" | awk '{print $7}' | sort | uniq -c | sort -rn | head -10
+
+    # 统计每个 IP 的访问次数（排查异常流量）
+    cat access.log | awk '{print $1}' | sort | uniq -c | sort -rn | head -20
+
+    # 查找某时间段内的请求
+    cat access.log | awk '$4 >= "[01/Jul/2026:00:00" && $4 < "[01/Jul/2026:12:00"' | wc -l
+
+    # 统计每小时的请求量
+    cat access.log | awk '{print $4}' | cut -d: -f2 | sort | uniq -c
+    ``````````````````
+
+<!--list-separator-->
+
+-  系统管理
+
+    ``````````````````bash
+    # 查看占用内存最多的 10 个进程
+    ps aux | sort -k4 -rn | head -10
+
+    # 查看占用 CPU 最多的 10 个进程
+    ps aux | sort -k3 -rn | head -10
+
+    # 统计当前用户的进程数
+    ps aux | grep "^$USER" | wc -l
+
+    # 查看所有监听端口
+    ss -tlnp | grep LISTEN
+
+    # 找出最大的 10 个文件
+    du -ah / | sort -rh | head -10
+
+    # 统计某目录下各类文件的数目
+    find . -type f | sed 's/.*\.//' | sort | uniq -c | sort -rn
+
+    # 列出所有已安装但不再被依赖的孤立包（Arch Linux）
+    pacman -Qdtq
+
+    # 批量清理孤立包
+    pacman -Qdtq | sudo pacman -Rns -
+    ``````````````````
+
+<!--list-separator-->
+
+-  文本处理
+
+    ``````````````````bash
+    # 统计文件中每个单词的出现频率
+    cat document.txt | tr -s '[:space:]' '\n' | sort | uniq -c | sort -rn | head -20
+
+    # 去除文件中的重复行并保持原始顺序
+    cat data.txt | awk '!seen[$0]++'
+
+    # 提取 CSV 文件的特定列
+    cat data.csv | cut -d',' -f1,3,5
+
+    # 将 DOS 换行符（CRLF）转换为 Unix 换行符（LF）
+    cat file_dos.txt | tr -d '\r' > file_unix.txt
+
+    # 反转文件每一行的字符顺序
+    cat words.txt | rev
+
+    # 提取文件中所有的 URL
+    cat page.html | grep -oE 'https?://[^"]+' | sort -u
+
+    # 合并多个文件并去重
+    cat file1.txt file2.txt file3.txt | sort -u
+    ``````````````````
+
+<!--list-separator-->
+
+-  网络调试
+
+    ``````````````````bash
+    # 查看本机 IP 地址
+    ip addr show | grep "inet " | grep -v "127.0.0.1" | awk '{print $2}'
+
+    # 扫描本地网络中的活跃主机
+    arp -a | awk '{print $2}' | tr -d '()'
+
+    # 查看 TCP 连接状态统计
+    ss -ta | awk 'NR>1 {print $1}' | sort | uniq -c | sort -rn
+
+    # 提取 DNS 查询中的域名
+    tcpdump -i any port 53 -l -nn 2>/dev/null | grep "A?" | awk '{print $NF}'
+    ``````````````````
+
+<!--list-separator-->
+
+-  文件批量操作
+
+    ``````````````````bash
+    # 批量重命名：将所有 .TXT 改为 .txt
+    find . -name "*.TXT" | sed 's/.TXT$//' | xargs -I{} mv {}.TXT {}.txt
+
+    # 批量压缩日志文件
+    find /var/log -name "*.log" -mtime +7 | xargs gzip
+
+    # 统计当前目录下各子目录的大小
+    du -sh */ | sort -rh
+
+    # 查找并删除空目录
+    find . -type d -empty | xargs rmdir
+
+    # 批量转换图片格式（需要 ImageMagick）
+    find . -name "*.png" | xargs -I{} convert {} {}.jpg
+    ``````````````````
+
+
+###### 管道的性能考量 {#管道的性能考量}
+
+虽然管道非常方便，但在处理大量数据时需要注意性能问题：
+
+-   `无用管道反模式` ：当 `cat` 命令仅用于将文件内容送入管道时，可以直接用命令读取文件来替代。例如 `cat file | grep pattern` 可以简化为 `grep pattern file` ，省去了启动 `cat` 进程的开销
+-   `缓冲区问题` ：管道中的命令默认使用块缓冲（buffer size 通常为 4KB 或 64KB），这意味着输出可能不会立即到达下一个命令。如果需要实时看到输出，可以使用 `stdbuf` 调整缓冲模式：
+
+<!--listend-->
+
+``````````````````bash
+# 将 grep 的输出改为行缓冲，实时传递给下游
+stdbuf -oL grep "pattern" logfile | awk '{print $1}'
+``````````````````
+
+-   `管道容量限制` ：Linux 管道的缓冲区容量通常是 64KB（=pipe capacity= ，可通过 `/proc/sys/fs/pipe-max-size` 查看）。如果下游命令处理速度跟不上上游命令的产出速度，上游命令会被内核阻塞，直到下游消费了数据腾出空间。这种背压（backpressure）机制防止了内存被无限占用
+-   `子进程开销` ：管道中每个命令都会 fork 一个子进程。在循环中大量使用管道可能导致进程创建开销成为瓶颈
+
+
+###### 命名管道（FIFO） {#命名管道-fifo}
+
+除了 Shell 中的匿名管道，Linux 还提供了一种称为"命名管道"或 FIFO（First In, First Out）的特殊文件类型。命名管道在文件系统中有一个可见的路径名，不相关的进程可以通过这个路径名进行通信，而无需拥有父子关系。
+
+创建命名管道使用 `mkfifo` 命令：
+
+``````````````````bash
+# 创建命名管道
+mkfifo /tmp/mypipe
+
+# 在终端 A 中：向管道写入数据
+echo "Hello from process A" > /tmp/mypipe
+
+# 在终端 B 中：从管道读取数据
+cat < /tmp/mypipe
+# 输出：Hello from process A
+``````````````````
+
+命名管道的一个重要特性是：写入端在打开管道后会 **阻塞** ，直到有读取端打开同一个管道；反之亦然。这种同步机制确保了数据不会丢失——写入端不会在无人接收时继续写入，读取端也不会在无人发送时空读。
+
+``````````````````bash
+# 用命名管道实现进程间实时通信
+mkfifo /tmp/worker_pipe
+
+# 工作进程：持续处理任务
+while read task; do
+    echo "Processing: $task"
+    echo "Done: $task"
+done < /tmp/worker_pipe > /tmp/result_pipe &
+
+# 调度进程：发送任务并获取结果
+mkfifo /tmp/result_pipe
+echo "task1" > /tmp/worker_pipe
+cat < /tmp/result_pipe
+
+# 清理
+rm /tmp/worker_pipe /tmp/result_pipe
+``````````````````
+
+命名管道的实际用途包括：在同一台机器上不同进程之间传递数据、实现简单的生产者-消费者模式、在不使用网络套接字的情况下进行进程间通信等。
+
+
+###### 管道与 here-string / here-document {#管道与-here-string-here-document}
+
+管道也可以与 Bash 的 here-string（=&lt;&lt;&lt;= ）和 here-document（=&lt;&lt;= ）配合使用，为命令提供输入而无需创建临时文件：
+
+``````````````````bash
+# here-string：将字符串直接送入管道
+grep "apple" <<< "apple banana cherry"
+
+# here-string 结合管道
+tr '[:lower:]' '[:upper:]' <<< "hello world" | tee output.txt
+
+# here-document 结合管道
+cat << EOF | sort | uniq
+banana
+apple
+cherry
+apple
+banana
+EOF
+``````````````````
+
+here-string 和 here-document 本质上是 Shell 提供的轻量级"虚拟文件"，它们将文本内容直接送入命令的 stdin，无需在磁盘上创建任何临时文件，既方便又高效。
+
+
+###### 进程替换与管道 {#进程替换与管道}
+
+Bash 还提供了进程替换（Process Substitution）机制，它扩展了管道的能力。进程替换的语法为 `<(cmd)` 或 `>(cmd)` ，它会在 `/dev/fd/` 下创建一个临时的文件描述符，使得命令的输出可以像文件一样被其他命令读取：
+
+``````````````````bash
+# 比较两个目录的差异
+diff <(ls dir1) <(ls dir2)
+
+# 比较两个命令的输出
+diff <(grep "error" log1.txt) <(grep "error" log2.txt)
+
+# 将进程替换与管道结合
+cat <(echo "Header"; cat data.txt) | sort
+``````````````````
+
+进程替换解决了管道只能单向传递数据到单个目标的问题。当你需要将多个命令的输出同时提供给一个命令时（如 `diff` 需要两个输入），进程替换是唯一的 Shell 原生方案。
+
+
+###### 管道编程最佳实践 {#管道编程最佳实践}
+
+-   `每个管道环节只做一件事` ：遵循 Unix 哲学，让每个命令在管道中完成一个明确的转换步骤。避免在一个 `awk` 中做太多处理，可以拆分成多个简单步骤
+-   `使用 =set -o pipefail=` ：在脚本中启用管道错误传播，确保任何环节的失败都能被捕获
+-   `避免 =cat 反模式=` ：=cat file | cmd= 通常可以用 `cmd < file` 或直接 `cmd file` 替代，减少不必要的进程创建
+-   `注意 =IFS` 影响= ：管道中的 `read` 命令受 `IFS` （内部字段分隔符）影响，如果字段中包含空格或制表符，可能需要临时修改 `IFS`
+-   `处理文件名中的空格` ：通过管道传递文件名时，使用 `find -print0` 配合 `xargs -0` ，或使用 `find -exec` 来安全处理包含空格或特殊字符的文件名
+-   `调试管道` ：可以逐步构建管道，每次添加一个环节并观察输出，这样可以准确定位问题出在哪一步
+
+
+##### tee {#tee}
+
+``````````````````bash
+cmd | tee output.log
+cmd | tee -a output.log
+``````````````````
+
+`tee` 读取 stdin 同时输出到 stdout 和文件。 `-a` 追加模式。
+
+``````````````````bash
+make 2>&1 | tee build.log
+``````````````````
+
+
+##### xargs {#xargs}
+
+``````````````````bash
+find . -name "*.tmp" | xargs rm
+find . -name "*.bak" -print0 | xargs -0 rm
+find . -type f -name "*.c" | xargs grep "TODO"
+find . -type f | xargs -I{} chmod 644 {}
+find . -name "*.log" | xargs -P4 gzip
+``````````````````
+
+| 选项   | 作用                            |
+|------|-------------------------------|
+| `-I{}` | 替换字符串，指定占位符          |
+| `-0`   | 以 null 分隔输入（配合 `find -print0` ） |
+| `-n N` | 每次传 N 个参数给命令           |
+| `-P N` | 并行执行 N 个进程               |
+| `-t`   | 打印执行的命令                  |
+| `-p`   | 交互确认                        |
+
+
+#### 引号规则 {#引号规则}
+
+
+##### 三种引号对比 {#三种引号对比}
+
+| 引号     | 名称   | 变量展开 | 命令替换 | 转义字符 | 用途      |
+|--------|------|------|------|------|---------|
+| `'...'`  | 单引号 | 否   | 否   | 否   | 字面量字符串 |
+| `"... "` | 双引号 | 是   | 是   | 部分 | 允许展开的字符串 |
+| `$'...'` | ANSI引用 | 否   | 否   | 是   | 需要转义字符时使用 |
+
+
+##### 示例 {#示例}
+
+``````````````````bash
+name=world
+echo 'Hello $name'
+echo "Hello $name"
+echo $'Hello\tworld\n'
+echo "Path: \$HOME"
+echo 'Path: $HOME'
+``````````````````
+
+输出：
+
+``````````````````text
+Hello $name
+Hello world
+Hello	world
+Path: $HOME
+Path: $HOME
+``````````````````
+
+
+##### `$'...'` 常用转义 {#dot-dot-dot-常用转义}
+
+| 转义     | 含义    |
+|--------|-------|
+| `\n`     | 换行    |
+| `\t`     | 制表符  |
+| `\\`     | 反斜杠  |
+| `\'`     | 单引号  |
+| `\xHH`   | 十六进制 |
+| `\uHHHH` | Unicode |
+
+``````````````````bash
+echo $'Red text: \e[31mERROR\e[0m'
+echo $'Line1\nLine2\nLine3'
+``````````````````
+
+
+#### 通配符（Globbing） {#通配符-globbing}
+
+
+##### 基本通配符 {#基本通配符}
+
+| 模式      | 匹配           | 示例             |
+|---------|--------------|----------------|
+| `*`       | 任意数量任意字符 | `*.txt`, `lib*`  |
+| `?`       | 恰好一个字符   | `file?.log`      |
+| `[...]`   | 方括号中任一字符 | `[abc]`, `[a-z]` |
+| `[!...]`  | 不在方括号中的字符 | `[!0-9]`         |
+| `{a,b,c}` | 展开为多个模式（花括号展开） | `*.{js,ts}`      |
+
+``````````````````bash
+ls *.txt
+ls file[123].log
+ls *.{jpg,png,gif}
+mkdir -p project/{src,test,docs}
+``````````````````
+
+
+##### globstar（\*\*递归匹配） {#globstar-递归匹配}
+
+``````````````````bash
+shopt -s globstar
+ls **/*.py
+du -sh **/node_modules
+``````````````````
+
+`**` 匹配任意层目录。需先 `shopt -s globstar` 开启。
+
+
+##### extglob（扩展通配符） {#extglob-扩展通配符}
+
+``````````````````bash
+shopt -s extglob
+``````````````````
+
+| 模式         | 匹配       |
+|------------|----------|
+| `?(pattern)` | 匹配 0 或 1 次 |
+| `*(pattern)` | 匹配 0 或多次 |
+| `+(pattern)` | 匹配 1 或多次 |
+| `@(pattern)` | 恰好匹配 1 次 |
+| `!(pattern)` | 不匹配     |
+
+``````````````````bash
+ls !(*.log)
+rm *(*.bak|*.tmp)
+ls *@(test|spec).js
+``````````````````
+
+在 `~/.bashrc` 中建议永久开启：
+
+``````````````````bash
+shopt -s globstar extglob
+``````````````````
+
+
+### 文件与目录操作 {#文件与目录操作}
+
+
+#### 目录导航 {#目录导航}
+
+
+##### cd 常用方式 {#cd-常用方式}
+
+``````````````````bash
+cd /etc
+cd ~
+cd -
+cd ~/projects
+cd ..
+``````````````````
+
+`cd -` 切换到上一次所在目录（利用 `$OLDPWD` ）。
+
+
+##### 目录栈：pushd / popd / dirs {#目录栈-pushd-popd-dirs}
+
+| 命令        | 作用         |
+|-----------|------------|
+| `pushd dir` | 切换到 dir 并压入栈 |
+| `pushd +n`  | 切换到栈中第 n 个目录 |
+| `pushd`     | 交换栈顶两个目录 |
+| `popd`      | 弹出栈顶并切换 |
+| `popd +n`   | 弹出第 n 个目录 |
+| `dirs`      | 显示目录栈   |
+| `dirs -v`   | 带编号显示   |
+| `dirs -c`   | 清空栈       |
+
+``````````````````bash
+pushd /var/log
+pushd /etc
+dirs -v
+ 0  /etc
+ 1  /var/log
+ 2  ~
+pushd +1
+popd
+``````````````````
+
+
+#### 列出文件 {#列出文件}
+
+
+##### ls 常用选项 {#ls-常用选项}
+
+| 选项                        | 作用         |
+|---------------------------|------------|
+| `-l`                        | 长格式       |
+| `-a`                        | 显示隐藏文件 |
+| `-h`                        | 人类可读大小 |
+| `-t`                        | 按修改时间排序（新优先） |
+| `-S`                        | 按大小排序   |
+| `-r`                        | 反转排序     |
+| `--group-directories-first` | 目录排在文件前 |
+| `-1`                        | 每行一个     |
+| `-R`                        | 递归列出     |
+
+``````````````````bash
+ls -lah
+ls -lt
+ls -lhS
+ls -lah --group-directories-first
+ls -laR
+``````````````````
+
+
+##### tree 命令 {#tree-命令}
+
+``````````````````bash
+tree
+tree -L 2
+tree -a
+tree -I 'node_modules|.git'
+tree -h --du
+tree -d -L 3
+``````````````````
+
+| 选项     | 作用             |
+|--------|----------------|
+| `-L n`   | 最大深度         |
+| `-a`     | 显示隐藏文件     |
+| `-I pat` | 排除匹配模式     |
+| `-d`     | 只显示目录       |
+| `-h`     | 人类可读大小     |
+| `--du`   | 显示每个目录的磁盘用量 |
+| `-F`     | 类型指示符（/目录 \*可执行） |
+
+
+#### 创建 {#创建}
+
+``````````````````bash
+mkdir -p project/src/utils
+touch newfile.txt
+touch -t 202601011200 file.txt
+mktemp
+mktemp -d
+mktemp /tmp/script.XXXXXX.sh
+``````````````````
+
+| 命令/选项   | 作用                               |
+|---------|----------------------------------|
+| `mkdir -p`  | 递归创建，不报错已存在目录         |
+| `mkdir -m`  | 同时设置权限                       |
+| `touch`     | 创建空文件 / 更新时间戳            |
+| `touch -t`  | 设置指定时间（ `[[CC]YY]MMDDhhmm[.ss]]` ） |
+| `mktemp`    | 创建安全的临时文件                 |
+| `mktemp -d` | 创建临时目录                       |
+
+
+#### 复制 {#复制}
+
+
+##### cp 常用选项 {#cp-常用选项}
+
+| 选项 | 作用                               |
+|----|----------------------------------|
+| `-r` | 递归复制目录                       |
+| `-a` | 归档模式（ `-rpd--preserve=all` ）保留所有属性 |
+| `-u` | 仅复制较新的文件（增量备份）       |
+| `-v` | 显示过程                           |
+| `-i` | 覆盖前确认                         |
+| `-d` | 保留链接（复制链接本身而非目标）   |
+| `-L` | 跟随链接，复制链接指向的文件       |
+| `-P` | 不跟随链接，保留硬链接结构         |
+
+``````````````````bash
+cp file.txt backup/
+cp -r src/ dst/
+cp -a /home/user/data /backup/
+cp -uv *.jpg /media/usb/
+cp -d symlink_file dst/
+``````````````````
+
+
+##### cp 与符号链接交互简述 {#cp-与符号链接交互简述}
+
+复制含符号链接的目录时，默认行为取决于 cp 版本。关键选项：
+
+-   `-a` / `-d` ：保留符号链接
+-   `-L` ：跟随符号链接，复制实际文件内容
+-   `-P` ：严格保留链接
+
+
+#### 移动与重命名 {#移动与重命名}
+
+
+##### mv 常用选项 {#mv-常用选项}
+
+| 选项 | 作用    |
+|----|-------|
+| `-i` | 覆盖前确认 |
+| `-v` | 显示过程 |
+| `-n` | 不覆盖已存在 |
+| `-u` | 仅移动较新文件 |
+
+``````````````````bash
+mv old.txt new.txt
+mv file.txt ../
+mv -iv *.log /var/log/archive/
+mv -n important.txt /backup/
+``````````````````
+
+
+##### 批量重命名 {#批量重命名}
+
+``````````````````bash
+rename 's/\.JPG$/.jpg/' *.JPG
+rename 's/^/2026-/' *.txt
+rename 'y/A-Z/a-z/' *
+``````````````````
+
+Arch Linux 的 `rename` 默认是 Perl 版，支持正则替换。
+
+基本语法： `rename 'expr' files`
+
+``````````````````bash
+rename 's/ /_/g' *
+rename 's/\(\d\)/-$1/g' *
+``````````````````
+
+
+#### 删除 {#删除}
+
+``````````````````bash
+rm file.txt
+rm -r directory/
+rm -rf directory/
+rm -i file.txt
+rmdir empty_dir/
+``````````````````
+
+| 选项 | 作用        |
+|----|-----------|
+| `-r` | 递归删除目录 |
+| `-f` | 强制，不确认不报错 |
+| `-i` | 每个文件确认 |
+| `-I` | 删除超过3个文件时确认 |
+| `-d` | 删除空目录  |
+
+
+##### 安全删除习惯 {#安全删除习惯}
+
+1.  先用 `ls` 确认目标，再执行 `rm`
+2.  危险操作用 `-i` 或 `-I`
+3.  避免在脚本中使用 `rm -rf /$VAR=（ =$VAR` 为空时灾难性后果）
+4.  可设置别名 <kbd>rm='rm -I'</kbd>
+5.  `rmdir` 仅删除空目录，更安全
+6.  考虑安装 `trash-cli` 代替 `rm` ：
+
+<!--listend-->
+
+``````````````````bash
+trash-put file.txt
+trash-list
+trash-restore
+trash-empty
+``````````````````
+
+
+#### 文件权限 {#文件权限}
+
+
+##### 权限模型 {#权限模型}
+
+每个文件有三组权限：属主（owner）、属组（group）、其他人（others），每组三个位：
+
+| 权限 | 文件含义 | 目录含义   | 八进制值 |
+|----|------|--------|------|
+| `r` | 读取内容 | 列出目录内容 | 4    |
+| `w` | 修改内容 | 创建/删除目录内文件 | 2    |
+| `x` | 执行 | 进入目录（cd） | 1    |
+
+显示格式： `-rwxr-xr--` → 属主 `rwx` ，属组 `r-x` ，其他人 `r--`
+
+
+##### chmod {#chmod}
+
+符号模式：
+
+``````````````````bash
+chmod u+x script.sh
+chmod g-w file.txt
+chmod o=r file.txt
+chmod a+x script.sh
+chmod u+rwx,g+rx,o+rx script.sh
+``````````````````
+
+| 符号 | 目标         | 操作符 | 权限 |
+|----|------------|-----|----|
+| `u` | 属主         | `+` | 添加 |
+| `g` | 属组     = `-` | 移除 |    |
+| `o` | 其他人       | `=` | 设置 |
+| `a` | 所有人       |     |    |
+
+数字模式：
+
+``````````````````bash
+chmod 755 script.sh
+chmod 644 file.txt
+chmod 600 private.key
+chmod 700 ~/private-dir
+chmod 400 read-only.key
+``````````````````
+
+
+##### 常见权限值 {#常见权限值}
+
+| 权限值      | 八进制 | 用途       |
+|----------|-----|----------|
+| `rw-r--r--` | 644 | 普通文件默认 |
+| `rwxr-xr-x` | 755 | 可执行文件/目录默认 |
+| `rw-------` | 600 | 私有文件（密钥等） |
+| `rwx------` | 700 | 私有目录   |
+| `r--r--r--` | 444 | 只读文件   |
+
+递归修改：
+
+``````````````````bash
+chmod -R 755 /opt/app/
+find . -type d -exec chmod 755 {} +
+find . -type f -exec chmod 644 {} +
+``````````````````
+
+
+#### 文件属主 {#文件属主}
+
+``````````````````bash
+chown user file.txt
+chown user:group file.txt
+chown :group file.txt
+chown -R user:group /opt/app/
+chgrp group file.txt
+chgrp -R group /opt/app/
+``````````````````
+
+| 命令                | 作用                 |
+|-------------------|--------------------|
+| `chown user file`   | 修改属主             |
+| `chown :group file` | 修改属组             |
+| `chown u:g file`    | 同时修改属主和属组   |
+| `chown -R`          | 递归修改             |
+| `chgrp group file`  | 修改属组（等同 `chown :g` ） |
+
+
+#### 特殊权限 {#特殊权限}
+
+
+##### SUID / SGID / Sticky Bit {#suid-sgid-sticky-bit}
+
+| 特殊权限   | 八进制 | 字母  | 文件作用 | 目录作用    |
+|--------|-----|-----|------|---------|
+| SUID       | 4   | `u+s` | 以属主身份执行 | （通常无意义） |
+| SGID       | 2   | `g+s` | 以属组身份执行 | 新文件继承属组 |
+| Sticky Bit | 1   | `o+t` | （通常无意义） | 仅属主可删除自己的文件 |
+
+
+##### 查看特殊权限 {#查看特殊权限}
+
+在 `ls -l` 输出中，特殊权限占位在执行位上：
+
+``````````````````bash
+ls -l /usr/bin/passwd
+-rwsr-xr-x 1 root root ... /usr/bin/passwd
+ls -ld /tmp
+drwxrwxrwt 15 root root ... /tmp
+``````````````````
+
+-   `s` （小写）：SUID/SGID 且有执行权限
+-   `S` （大写）：SUID/SGID 但无执行权限
+-   `t` （小写）：Sticky 且有执行权限
+-   `T` （大写）：Sticky 但无执行权限
+
+
+##### 设置特殊权限 {#设置特殊权限}
+
+``````````````````bash
+chmod u+s /usr/local/bin/script
+chmod g+s /shared/project
+chmod 2775 /shared/project
+chmod o+t /shared/dropbox
+chmod 1777 /shared/dropbox
+``````````````````
+
+四位八进制中第一位为特殊权限：SUID=4, SGID=2, Sticky=1。
+
+
+#### umask {#umask}
+
+
+##### 概念 {#概念}
+
+`umask` 是一个掩码值，从默认权限中去除对应位：
+
+-   文件默认权限： `666` （rw-rw-rw-）
+-   目录默认权限： `777` （rwxrwxrwx）
+-   实际权限 = 默认权限 AND (NOT umask)
+
+
+##### 常用 umask 值 {#常用-umask-值}
+
+| umask | 文件权限 | 目录权限 | 场景    |
+|-------|------|------|-------|
+| 022   | 644  | 755  | 默认（共享） |
+| 002   | 664  | 775  | 组协作  |
+| 027   | 640  | 750  | 较严格  |
+| 077   | 600  | 700  | 私有（最严格） |
+
+
+##### 查看与修改 {#查看与修改}
+
+``````````````````bash
+umask
+umask -S
+umask 027
+``````````````````
+
+在 `~/.bashrc` 或 `~/.bash_profile` 中设置永久值：
+
+``````````````````bash
+umask 027
+``````````````````
+
+
+#### file 命令 {#file-命令}
+
+``````````````````bash
+file /etc/passwd
+file /usr/bin/ls
+file script.sh
+file image.png
+file -b filename
+file -i filename
+file -z compressed.tar.gz
+``````````````````
+
+| 选项 | 作用       |
+|----|----------|
+| `-b` | 不显示文件名 |
+| `-i` | MIME 类型  |
+| `-z` | 查看压缩文件内部类型 |
+| `-L` | 跟随符号链接 |
+
+
+#### stat 命令 {#stat-命令}
+
+``````````````````bash
+stat file.txt
+stat -c '%s' file.txt
+stat -c '%a %U %G %n' file.txt
+stat -f /
+``````````````````
+
+
+##### 三种时间戳 {#三种时间戳}
+
+| 时间  | 含义              | 查看           |
+|-----|-----------------|--------------|
+| atime | 最近访问时间（读内容） | `stat -c '%x'` |
+| mtime | 最近修改时间（改内容） | `stat -c '%y'` |
+| ctime | 最近状态改变时间（改权限/属主等） | `stat -c '%z'` |
+
+注意： `ctime` **不是** 创建时间，是 inode 元数据最后变更时间。Linux 一般不记录创建时间（部分文件系统支持 `crtime` ，需 `debugfs` 查看）。
+
+
+##### 常用格式 {#常用格式}
+
+``````````````````bash
+stat -c '%n: %s bytes, modified %y' *
+stat -c '%a' script.sh
+stat -c '%F' /dev/sda1
+``````````````````
+
+| 格式 | 含义   |
+|----|------|
+| `%n` | 文件名 |
+| `%s` | 大小（字节） |
+| `%a` | 八进制权限 |
+| `%A` | 人类可读权限 |
+| `%U` | 属主   |
+| `%G` | 属组   |
+| `%y` | mtime  |
+| `%z` | ctime  |
+| `%x` | atime  |
+| `%F` | 文件类型 |
+
+
+#### touch 修改时间戳 {#touch-修改时间戳}
+
+``````````````````bash
+touch file.txt
+touch -a file.txt
+touch -m file.txt
+touch -t 202603151030 file.txt
+touch -d "2026-01-01 12:00:00" file.txt
+touch -r reference.txt target.txt
+``````````````````
+
+| 选项      | 作用                          |
+|---------|-----------------------------|
+| `-a`      | 仅修改 atime                  |
+| `-m`      | 仅修改 mtime                  |
+| `-t`      | 指定时间 `[[CC]YY]MMDDhhmm[.ss]]` |
+| `-d`      | 用字符串指定日期              |
+| `-r file` | 参照另一文件的时间戳          |
+
+注意：修改 atime/mtime 会同时更新 ctime，无法单独修改 ctime（除非用 `debugfs` 等底层工具）。
+
+
+### 文件查找与搜索 {#文件查找与搜索}
+
+
+#### find 命令 {#find-命令}
+
+find 是最强大的文件查找工具，直接遍历文件系统，支持丰富的过滤和操作。
+
+
+##### 按名称查找 {#按名称查找}
+
+``````````````````bash
+find . -name "*.conf"
+find /etc -name "*.d"
+find . -iname "readme*"
+find . -name "*.JPG" -o -name "*.png"
+``````````````````
+
+| 选项     | 作用            |
+|--------|---------------|
+| `-name`  | 按文件名匹配（区分大小写） |
+| `-iname` | 按文件名匹配（不区分大小写） |
+| `-path`  | 按完整路径匹配  |
+| `-ipath` | 按完整路径匹配（不区分大小写） |
+
+通配符需加引号防止 Shell 展开。
+
+
+##### 按类型查找 {#按类型查找}
+
+``````````````````bash
+find . -type f
+find /var -type d
+find . -type l
+find /dev -type b
+find /dev -type c
+``````````````````
+
+| 类型 | 含义 | 类型 | 含义 |
+|----|----|----|----|
+| `f` | 普通文件 | `b` | 块设备 |
+| `d` | 目录 | `c` | 字符设备 |
+| `l` | 符号链接 | `p` | 管道 |
+| `s` | 套接字 |     |      |
+
+
+##### 按时间查找 {#按时间查找}
+
+``````````````````bash
+find . -mtime -7
+find . -mtime +30
+find . -atime -1
+find . -ctime 0
+find . -mmin -60
+find . -newer reference.txt
+find . -anewer reference.txt
+find . -newermt "2026-06-01"
+``````````````````
+
+| 选项           | 含义                                        |
+|--------------|-------------------------------------------|
+| `-mtime n`     | n 天前修改（+n 超过 n 天，-n n 天内）       |
+| `-atime n`     | n 天前访问                                  |
+| `-ctime n`     | n 天前状态改变                              |
+| `-mmin n`      | n 分钟前修改                                |
+| `-amin n`      | n 分钟前访问                                |
+| `-cmin n`      | n 分钟前状态改变                            |
+| `-newer file`  | 比 file 更新（mtime）                       |
+| `-anewer file` | 比 file 更新（atime）                       |
+| `-newerXY`     | X=time(atime/mtime/ctime), Y=time/reference |
+
+时间数值语义： `+n` 表示超过 n， `-n` 表示 n 以内， `n` 表示恰好在第 n 天/分钟。
+
+
+##### 按大小查找 {#按大小查找}
+
+``````````````````bash
+find . -size +100M
+find . -size -1k
+find . -size 0
+find . -empty
+find . -size +10M -size -100M
+``````````````````
+
+| 选项       | 含义     |
+|----------|--------|
+| `-size n`  | 等于 n 个单位 |
+| `-size +n` | 大于 n   |
+| `-size -n` | 小于 n   |
+| `-empty`   | 空文件或空目录 |
+
+单位： `c` 字节， `k` KiB， `M` MiB， `G` GiB。默认 512 字节块。
+
+
+##### 按权限/属主查找 {#按权限-属主查找}
+
+``````````````````bash
+find . -perm 755
+find / -perm -4000
+find / -perm /2000
+find . -user root
+find . -group docker
+find . -nouser
+find . -nogroup
+``````````````````
+
+| 选项          | 含义               |
+|-------------|------------------|
+| `-perm mode`  | 权限恰好等于 mode  |
+| `-perm -mode` | 权限包含 mode 所有位（AND） |
+| `-perm /mode` | 权限包含 mode 任一位（OR） |
+| `-user name`  | 属主匹配           |
+| `-group name` | 属组匹配           |
+| `-nouser`     | 没有对应属主（UID 无用户） |
+| `-nogroup`    | 没有对应属组（GID 无组） |
+
+
+##### 组合条件 {#组合条件}
+
+``````````````````bash
+find . -name "*.log" -mtime +7 -type f
+find . \( -name "*.log" -o -name "*.tmp" \) -type f
+find . -name "*.conf" ! -path "*/backup/*"
+find . -type f -size +1M -a -mtime -7
+``````````````````
+
+| 操作符 | 含义  | 优先级 |
+|-----|-----|-----|
+| =! = | 非    | 最高 |
+| `-a` | 与（默认） | 中  |
+| `-o` | 或    | 最低 |
+
+括号需转义 `\( \)` 或引号包裹， `()` 是 Shell 特殊字符。
+
+
+##### 执行操作 {#执行操作}
+
+``````````````````bash
+find . -name "*.tmp" -exec rm {} \;
+find . -name "*.log" -exec gzip {} +
+find . -name "*.bak" -delete
+find . -type f -ls
+find . -name "*.py" -printf '%p %s\n'
+find . -name "*.conf" -exec grep -l "ERROR" {} +
+``````````````````
+
+| 选项              | 含义                       |
+|-----------------|--------------------------|
+| `-exec cmd {} \;` | 对每个匹配项执行一次命令   |
+| `-exec cmd {} +`  | 将多个匹配项作为参数一次执行（更高效） |
+| `-delete`         | 删除匹配文件（比 `-exec rm` 更安全高效） |
+| `-ls`             | 以 `ls -dils` 格式列出     |
+| `-printf fmt`     | 自定义输出格式             |
+
+`-exec ... \;` vs `-exec ... +` 区别：前者每个文件调一次命令，后者尽量把多个文件合并为一次调用，显著提升性能。
+
+
+##### 常用模式 {#常用模式}
+
+``````````````````bash
+find /var/log -name "*.log" -mtime +7 -delete
+find . -type f -size +100M -ls
+find / -perm -4000 -type f 2>/dev/null
+find ~/.cache -type f -atime +30 -delete
+find . -name "__pycache__" -type d -exec rm -rf {} +
+find . -name ".DS_Store" -delete
+find . -type f -newermt "2026-06-01" -name "*.py"
+find /tmp -user "$USER" -mtime +3 -delete
+``````````````````
+
+
+#### locate 命令 {#locate-命令}
+
+``````````````````bash
+locate filename
+locate -i readme
+locate -c "*.conf"
+locate -r "\.py$"
+sudo updatedb
+``````````````````
+
+| 选项      | 作用         |
+|---------|------------|
+| `-i`      | 忽略大小写   |
+| `-c`      | 只计数       |
+| `-r`      | 基本正则匹配 |
+| `--regex` | 扩展正则匹配 |
+| `-n N`    | 限制输出条数 |
+| `-b`      | 只匹配 basename |
+
+
+##### locate vs find {#locate-vs-find}
+
+| 特性 | locate            | find          |
+|----|-------------------|---------------|
+| 速度 | 极快（查数据库）  | 较慢（遍历文件系统） |
+| 实时性 | 非实时，依赖 `updatedb` | 实时          |
+| 灵活性 | 只能按名称/路径   | 按类型/大小/时间/权限等 |
+| 权限 | 可能看到无权限文件 | 自动过滤无权限 |
+| 新文件 | 更新前查不到      | 立即可查      |
+| 适用场景 | 快速定位已知文件名 | 复杂条件查找  |
+
+`updatedb` 通常由 cron 或 timer 每日执行一次。Arch 默认安装 `mlocate` 包。
+
+
+#### fd（现代 find 替代） {#fd-现代-find-替代}
+
+``````````````````bash
+fd pattern
+fd -e conf nginx
+fd -t f -e py "import"
+fd -t d __pycache__
+fd -H ".env"
+fd -I node_modules
+fd --changed-within 7d
+fd --changed-before 2026-01-01
+fd -S +100M
+fd -x rm {}  # 对每个结果执行命令
+fd -X grep "TODO"  # 批量执行
+``````````````````
+
+| 选项               | 作用                |
+|------------------|-------------------|
+| `-e ext`           | 按扩展名（可多次使用） |
+| `-t type`          | 按类型（f/d/l/x）   |
+| `-H`               | 包含隐藏文件        |
+| `-I`               | 包含 .gitignore 忽略的文件 |
+| `--changed-within` | 指定时间内修改      |
+| `--changed-before` | 指定时间前修改      |
+| `-S size`          | 按大小（+100M, -1k） |
+| `-x cmd`           | 对每个结果执行（替换 {}） |
+| `-X cmd`           | 批量执行            |
+| `-d depth`         | 最大搜索深度        |
+| `-p`               | 匹配完整路径        |
+
+fd 默认：正则匹配、忽略隐藏文件和 .gitignore 规则、彩色输出、默认递归。
+
+
+#### fzf（模糊查找器） {#fzf-模糊查找器}
+
+
+##### 基本交互 {#基本交互}
+
+``````````````````bash
+fzf
+find . -type f | fzf
+vim $(fzf)
+cat $(fzf --preview 'head -20 {}')
+``````````````````
+
+
+##### Shell 集成快捷键 {#shell-集成快捷键}
+
+| 快捷键   | 功能        |
+|-------|-----------|
+| `Ctrl+R` | 模糊搜索命令历史 |
+| `Ctrl+T` | 模糊查找文件并粘贴路径 |
+| `Alt+C`  | 模糊跳转目录 |
+
+需在 `~/.bashrc` 中启用：
+
+``````````````````bash
+eval "$(fzf --bash)"
+``````````````````
+
+
+##### 自定义预览 {#自定义预览}
+
+``````````````````bash
+fzf --preview 'bat --style=numbers --color=always {} | head -50'
+fzf --preview 'tree -C {} | head -30'
+fzf --preview 'file {} && echo "---" && head -10 {}'
+``````````````````
+
+
+##### 常用选项 {#常用选项}
+
+| 选项             | 作用                |
+|----------------|-------------------|
+| `--multi` / `-m` | 多选（Tab 选择，Enter 确认） |
+| `--reverse`      | 从上往下显示列表    |
+| `--height N%`    | 窗口高度百分比      |
+| `--border`       | 边框                |
+| `--preview cmd`  | 预览窗口            |
+| `--query str`    | 初始查询            |
+| `--prompt str`   | 提示符              |
+
+
+#### ripgrep（rg） {#ripgrep-rg}
+
+``````````````````bash
+rg "pattern"
+rg -i "error" *.log
+rg -t py "import"
+rg -g "!*test*" "TODO"
+rg --hidden "config"
+rg -l "ERROR"
+rg -c "WARNING"
+rg -n "pattern"
+rg -w "main"
+rg -C 3 "error"
+rg -A 5 "exception"
+rg -B 2 "function"
+``````````````````
+
+
+##### 常用选项 {#常用选项}
+
+| 选项          | 作用                           |
+|-------------|------------------------------|
+| `-i`          | 忽略大小写                     |
+| `-t type`     | 按文件类型（py, js, rust, html, ...） |
+| `-T type`     | 排除文件类型                   |
+| `-g glob`     | 包含/排除 glob（!=开头为排除） |
+| `--hidden`    | 搜索隐藏文件                   |
+| `--no-ignore` | 忽略 .gitignore                |
+| `-l`          | 只输出匹配的文件名             |
+| `-c`          | 输出每个文件匹配计数           |
+| `-n`          | 显示行号                       |
+| `-w`          | 全词匹配                       |
+| `-A N`        | 匹配行后 N 行上下文            |
+| `-B N`        | 匹配行前 N 行上下文            |
+| `-C N`        | 前后各 N 行上下文              |
+| `--color`     | 彩色输出                       |
+| `-e pattern`  | 多模式搜索（可多次 `-e` ）     |
+| `-f file`     | 从文件读取模式                 |
+| `-r str`      | 替换输出（不修改文件）         |
+
+
+##### 常用搜索模式 {#常用搜索模式}
+
+``````````````````bash
+rg "TODO|FIXME|HACK"
+rg -e "ERROR" -e "WARN" -e "CRITICAL"
+rg "function\s+\w+\(" -t js
+rg "\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b"
+rg "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
+rg "https?://[^\s<>\"']+"
+rg -P '[\x{4e00}-\x{9fff}]'
+rg -l "password|secret" --type-add 'config:*.conf' --type-add 'env:.env*' -t config -t env
+``````````````````
+
+
+##### 文件类型列表 {#文件类型列表}
+
+``````````````````bash
+rg --type-list
+``````````````````
+
+常用类型：py, js, ts, rust, go, java, c, cpp, html, css, markdown, json, yaml。
+
+
+#### rga（ripgrep-all） {#rga-ripgrep-all}
+
+rga 在 rg 基础上可搜索 PDF、DOCX、EPUB、SQLite、压缩包等二进制文件内部。
+
+``````````````````bash
+rga "keyword" document.pdf
+rga "pattern" *.docx
+rga -i "error" *.epub
+rga "query" archive.tar.gz
+rga --type pdf "toc"
+rga -l "secret" .
+``````````````````
+
+| 选项             | 作用           |
+|----------------|--------------|
+| `--type pdf`     | 只搜索 PDF     |
+| `--type docx`    | 只搜索 DOCX    |
+| `--type zip`     | 只搜索压缩包   |
+| `--type sqlite`  | 只搜索 SQLite 数据库 |
+| `--rga-adapters` | 指定适配器列表 |
+
+安装： `pacman -S ripgrep-all`
+
+
+### 文本处理三剑客 {#文本处理三剑客}
+
+
+#### grep {#grep}
+
+
+##### 基本正则 vs 扩展正则 {#基本正则-vs-扩展正则}
+
+| 特性       | 基本正则（默认） | 扩展正则（ `-E` ） |   |   |
+|----------|----------|--------------|---|---|
+| `+` 一次或多次 | 需写 `\+`    | 直接使用     |   |   |
+| `?` 零或一次 | 需写 `\?`    | 直接使用     |   |   |
+| `{n,m}`    | 需写 `\{n,m\}` | 直接使用     |   |   |
+| `(...)` 分组 | 需写 `\(...\)` | 直接使用     |   |   |
+| =          | = 或｜需写 `\｜` | 直接使用     |   |   |
+
+建议：涉及 `+?`  `{}()|` 时统一用 `grep -E` 或 `egrep` 。
+
+
+##### 常用选项 {#常用选项}
+
+| 选项            | 作用                        |
+|---------------|---------------------------|
+| `-i`            | 忽略大小写                  |
+| `-v`            | 反转匹配（排除）            |
+| `-c`            | 统计匹配行数                |
+| `-l`            | 只输出有匹配的文件名        |
+| `-n`            | 显示行号                    |
+| `-r`            | 递归搜索目录                |
+| `-w`            | 全词匹配                    |
+| `-A N`          | 匹配行后 N 行               |
+| `-B N`          | 匹配行前 N 行               |
+| `-C N`          | 前后各 N 行                 |
+| `--color`       | 彩色高亮（ `auto/always/never` ） |
+| `-E`            | 扩展正则                    |
+| `-F`            | 固定字符串（无正则，更快）  |
+| `-P`            | PCRE 正则                   |
+| `-e pattern`    | 多模式（或关系）            |
+| `--include`     | 只搜索匹配的文件            |
+| `--exclude`     | 排除文件                    |
+| `--exclude-dir` | 排除目录                    |
+
+
+##### 固定字符串搜索（-F） {#固定字符串搜索-f}
+
+``````````````````bash
+grep -F "ERROR:" logfile
+grep -F -f patterns.txt data.txt
+``````````````````
+
+`-F` 禁用正则引擎，纯字符串匹配，速度快。适合搜索不含正则元字符的固定文本，或从文件读取多个关键词。
+
+
+##### PCRE 正则（-P） {#pcre-正则-p}
+
+``````````````````bash
+grep -P '\d{4}-\d{2}-\d{2}' log.txt
+grep -P '[\x{4e00}-\x{9fff}]' file.txt
+grep -P '\b[\w.+-]+@[\w-]+\.[\w.]+\b' contacts.txt
+grep -P 'https?://[\w./\-?=&%#]+' page.html
+grep -P '\b(?:\d{1,3}\.){3}\d{1,3}\b' access.log
+``````````````````
+
+常用 PCRE 模式：
+
+| 模式                          | 匹配    |
+|-----------------------------|-------|
+| `[\x{4e00}-\x{9fff}]+`        | 中文字符 |
+| `\b[\w.+-]+@[\w-]+\.[\w.]+\b` | 邮箱    |
+| `https?://[\w./\-?=&%#]+`     | URL     |
+| `\b(?:\d{1,3}\.){3}\d{1,3}\b` | IPv4 地址 |
+| `\b\d{4}-\d{2}-\d{2}\b`       | 日期格式 |
+
+
+##### 实用模式 {#实用模式}
+
+``````````````````bash
+grep -rn "TODO" --include="*.py" .
+grep -rl "ERROR" /var/log/
+grep -rc "WARN" *.log
+grep -v "^#" config.conf
+grep -v "^$" file.txt
+grep -E "^(error|warn|critical)" syslog
+grep --exclude-dir={node_modules,.git,vendor} -rn "import" .
+grep -C 2 "exception" app.log
+grep -E "^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}" access.log | sort | uniq -c | sort -rn | head
+``````````````````
+
+
+#### sed {#sed}
+
+
+##### 基本语法 {#基本语法}
+
+``````````````````bash
+sed 'command' file
+sed -e 'cmd1' -e 'cmd2' file
+sed -f script.sed file
+command | sed 'command'
+``````````````````
+
+
+##### 常用操作 {#常用操作}
+
+
+###### 替换（s） {#替换-s}
+
+``````````````````bash
+sed 's/old/new/' file.txt
+sed 's/old/new/g' file.txt
+sed 's/old/new/3' file.txt
+sed 's/old/new/gi' file.txt
+sed 's|/usr/local|/opt/app|g' file.txt
+sed 's/[ \t]*$//' file.txt
+sed 's/^/    /' file.txt
+``````````````````
+
+| 标志     | 含义             |
+|--------|----------------|
+| `g`      | 全局替换（否则只替换首次） |
+| `i`      | 忽略大小写       |
+| `N`      | 只替换第 N 次出现 |
+| `p`      | 打印替换的行（配合 `-n` ） |
+| `w file` | 替换行写入文件   |
+
+定界符可用任意字符（当模式含 `/` 时，用 `s|||` 或 `s#=#` 更清晰）。
+
+
+###### 删除行（d） {#删除行-d}
+
+``````````````````bash
+sed '/^$/d' file.txt
+sed '/^#/d' file.txt
+sed '/DEBUG/d' file.txt
+sed '1,5d' file.txt
+sed '$d' file.txt
+sed '1d;$d' file.txt
+``````````````````
+
+
+###### 打印行（p） {#打印行-p}
+
+``````````````````bash
+sed -n '10,20p' file.txt
+sed -n '/error/p' file.txt
+sed -n '/^##/p' README.md
+``````````````````
+
+需配合 `-n` ，否则每行都会打印一次（匹配行打印两次）。
+
+
+###### 追加/插入（a/i） {#追加-插入-a-i}
+
+``````````````````bash
+sed '/\[mysql\]/a\user=root' my.cnf
+sed '1i\#!/bin/bash' script.txt
+sed '/^exit/a\echo "Done"' script.sh
+``````````````````
+
+`a` 在匹配行后追加， `i` 在匹配行前插入。
+
+
+###### 其他操作 {#其他操作}
+
+``````````````````bash
+sed 's/^/# /' file.txt
+sed -n '2p' file.txt
+sed 'y/abc/xyz/' file.txt
+sed '=' file.txt
+``````````````````
+
+`ys/tr/source/dest/` 逐字符替换（类似 `tr` ）。 `=` 打印行号。
+
+
+##### 行地址 {#行地址}
+
+| 地址        | 含义              |
+|-----------|-----------------|
+| `5`         | 第 5 行           |
+| `5,10`      | 第 5 到 10 行     |
+| `5,+3`      | 第 5 行及之后 3 行 |
+| `$`         | 最后一行          |
+| `/pattern/` | 匹配 pattern 的行 |
+| `/p1/,/p2/` | 从匹配 p1 到匹配 p2 的范围 |
+| `1~2`       | 从第 1 行起每隔 2 行 |
+
+``````````````````bash
+sed -n '/BEGIN/,/END/p' file.txt
+sed '1~2d' file.txt
+sed -n '5,/^$/p' file.txt
+``````````````````
+
+
+##### -i 原地编辑 {#i-原地编辑}
+
+``````````````````bash
+sed -i 's/old/new/g' file.txt
+sed -i.bak 's/old/new/g' file.txt
+sed -i 's/^#Port 22/Port 2222/' /etc/ssh/sshd_config
+``````````````````
+
+`-i` 直接修改文件。 `-i.bak` 先备份为 `file.bak` 再修改。强烈建议加备份后缀。
+
+
+##### -n 静默模式 {#n-静默模式}
+
+``````````````````bash
+sed -n '10p' file.txt
+sed -n '/ERROR/p' logfile
+sed -n '1,5p' file.txt
+sed -n '/start/,/end/p' file.txt
+``````````````````
+
+`-n` 抑制自动打印，只输出 `p` 命令指定的行。
+
+
+##### 常见示例 {#常见示例}
+
+``````````````````bash
+sed '/^$/d' file.txt
+sed '/^\s*#/d' file.txt
+sed -i 's/PORT=8080/PORT=9090/' .env
+sed -n '50,100p' large.log
+sed 's/[ \t]*$//' file.txt
+sed 's/\r$//' winfile.txt
+sed -n '/2026-07-01 10:/,/2026-07-01 11:/p' app.log
+sed -e '1i\# Auto-generated' -e 's/foo/bar/g' file.txt
+sed '/^$/d; /^\s*#/d' config.conf
+``````````````````
+
+
+#### awk {#awk}
+
+
+##### 基本结构 {#基本结构}
+
+``````````````````bash
+awk 'BEGIN{...} /pattern/{...} END{...}' file
+awk -F: '{print $1}' /etc/passwd
+``````````````````
+
+执行顺序：
+
+1.  `BEGIN` 块（处理前执行一次）
+2.  逐行处理：匹配 `/pattern/` 则执行 `{...}`
+3.  `END` 块（处理后执行一次）
+
+
+##### 字段分隔与引用 {#字段分隔与引用}
+
+``````````````````bash
+awk -F: '{print $1}' /etc/passwd
+awk -F',' '{print $2}' data.csv
+awk -F'\t' '{print $1, $3}' data.tsv
+awk '{print $1}' file.txt
+awk '{print $NF}' file.txt
+awk '{print $(NF-1)}' file.txt
+awk '{print $0}' file.txt
+``````````````````
+
+| 变量      | 含义      |
+|---------|---------|
+| `$0`      | 整行      |
+| `$1`      | 第 1 个字段 |
+| `$NF`     | 最后一个字段 |
+| `$(NF-1)` | 倒数第 2 个字段 |
+
+默认分隔符为空白（空格/Tab 连续算一个）。 `-F` 指定分隔符。
+
+
+##### 常用内置变量 {#常用内置变量}
+
+| 变量       | 含义      | 示例                |
+|----------|---------|-------------------|
+| `NR`       | 当前记录号（行号） | `NR==1` 首行        |
+| `NF`       | 当前记录字段数 | `$NF` 最后字段      |
+| `FS`       | 输入字段分隔符 | `BEGIN{FS`","}=     |
+| `RS`       | 输入记录分隔符 | `BEGIN{RS`""}= 多行记录 |
+| `OFS`      | 输出字段分隔符 | `BEGIN{OFS`"\t"}=   |
+| `ORS`      | 输出记录分隔符 |                     |
+| `FILENAME` | 当前文件名 |                     |
+| `FNR`      | 当前文件中的记录号 |                     |
+
+``````````````````bash
+awk 'BEGIN{FS=","; OFS="\t"} {print $1, $3}' data.csv
+awk 'NR==1{print "Header: "$0; next} {print $1}' file.txt
+awk '{print NR": "$0}' file.txt
+``````````````````
+
+
+##### 条件与动作 {#条件与动作}
+
+``````````````````bash
+awk '/error/{print NR, $0}' logfile
+awk '$3 > 100 {print $1, $3}' data.txt
+awk 'NR>=10 && NR<=20' file.txt
+awk '$1 == "GET" {count++} END{print count}' access.log
+awk 'NR==1 || /pattern/' file.txt
+``````````````````
+
+条件写在 `{` 前，满足条件才执行动作。省略条件则对所有行执行。
+
+
+##### 实用示例 {#实用示例}
+
+
+###### 提取列 {#提取列}
+
+``````````````````bash
+awk '{print $1, $4}' access.log
+awk -F: '{print $1, $3, $7}' /etc/passwd
+awk -F',' 'NR>1{print $2}' data.csv
+``````````````````
+
+
+###### 求和与平均 {#求和与平均}
+
+``````````````````bash
+awk '{sum+=$1} END{print "Sum:", sum}' numbers.txt
+awk '{sum+=$1; count++} END{print "Avg:", sum/count}' numbers.txt
+awk -F: '{sum+=$3} END{print "Total UID sum:", sum}' /etc/passwd
+``````````````````
+
+
+###### 格式化输出 {#格式化输出}
+
+``````````````````bash
+awk '{printf "%-20s %10s %10s\n", $1, $2, $3}' data.txt
+awk -F: 'BEGIN{printf "%-20s %5s %s\n", "User", "UID", "Shell"} {printf "%-20s %5s %s\n", $1, $3, $7}' /etc/passwd
+``````````````````
+
+
+###### 按条件过滤 {#按条件过滤}
+
+``````````````````bash
+awk '$5 >= 400 && $5 < 500 {print $0}' data.txt
+awk '/2026-07-01/ && /ERROR/ {print}' app.log
+awk '$3 == "GET" {get++} $3 == "POST" {post++} END{print "GET:", get, "POST:", post}' access.log
+awk 'NR>1 && $2 != "" {print}' data.txt
+``````````````````
+
+
+###### 统计词频 {#统计词频}
+
+``````````````````bash
+awk '{for(i=1;i<=NF;i++) freq[$i]++} END{for(w in freq) print freq[w], w}' file.txt | sort -rn | head -20
+``````````````````
+
+
+##### printf 格式化 {#printf-格式化}
+
+| 格式    | 含义       |
+|-------|----------|
+| `%d`    | 十进制整数 |
+| `%f`    | 浮点数     |
+| `%s`    | 字符串     |
+| `%x`    | 十六进制   |
+| `%c`    | 字符       |
+| `%-Ns`  | 左对齐，宽 N |
+| `%N.mf` | 宽 N，小数 m 位 |
+
+``````````````````bash
+awk '{printf "Name: %-15s Score: %5.1f\n", $1, $2}' grades.txt
+awk '{printf "%s\t%d\n", $1, $2}' data.txt
+``````````````````
+
+
+#### 组合使用 {#组合使用}
+
+
+##### grep + sed + awk 管道 {#grep-plus-sed-plus-awk-管道}
+
+``````````````````bash
+grep "ERROR" app.log | sed 's/\[ERROR\] //' | awk '{print $1, $2}' | sort | uniq -c | sort -rn
+``````````````````
+
+``````````````````bash
+grep "404" access.log | awk '{print $7}' | sort | uniq -c | sort -rn | head -20
+``````````````````
+
+``````````````````bash
+awk -F',' 'NR>1{print $3}' sales.csv | sort | uniq -c | sort -rn
+``````````````````
+
+``````````````````bash
+grep -v "^#" config.conf | sed '/^$/d' | awk -F= '{print $1}'
+``````````````````
+
+``````````````````bash
+sed -n '/2026-07-01/,/2026-07-02/p' app.log | grep "ERROR" | awk '{print $2, $0}' | sort
+``````````````````
+
+
+##### 处理 CSV {#处理-csv}
+
+``````````````````bash
+awk -F',' 'NR>1 && $4 > 1000 {print $1, $2, $4}' sales.csv
+head -1 sales.csv; awk -F',' 'NR>1{print $0 | "sort -t, -k4 -rn"}' sales.csv | head -10
+awk -F',' 'NR>1{sum[$3]+=$4} END{for(k in sum) print k, sum[k]}' sales.csv | sort -k2 -rn
+``````````````````
+
+
+##### 处理日志 {#处理日志}
+
+``````````````````bash
+awk '{ip[$1]++} END{for(i in ip) print ip[i], i}' access.log | sort -rn | head -20
+grep "200" access.log | awk '{total+=$10} END{print "Total bytes:", total}'
+awk '{print $9}' access.log | sort | uniq -c | sort -rn
+grep -E "ERROR|WARN" app.log | awk '{errdate=substr($1,1,10); count[errdate]++} END{for(d in count) print d, count[d]}' | sort
+``````````````````
+
+
+#### 其他实用文本命令 {#其他实用文本命令}
+
+
+##### sort {#sort}
+
+``````````````````bash
+sort file.txt
+sort -r file.txt
+sort -n numbers.txt
+sort -t: -k3 -n /etc/passwd
+sort -u file.txt
+sort -k2,2 -k1,1 file.txt
+sort -R file.txt
+``````````````````
+
+| 选项     | 作用            |
+|--------|---------------|
+| `-n`     | 数值排序        |
+| `-r`     | 逆序            |
+| `-t sep` | 指定分隔符      |
+| `-k N`   | 按第 N 列排序   |
+| `-u`     | 去重            |
+| `-R`     | 随机排序        |
+| `-h`     | 人类可读数字排序（1K 2M） |
+| `-f`     | 忽略大小写      |
+| `-b`     | 忽略前导空白    |
+
+
+##### uniq {#uniq}
+
+``````````````````bash
+sort file.txt | uniq
+sort file.txt | uniq -c
+sort file.txt | uniq -d
+sort file.txt | uniq -u
+sort file.txt | uniq -c | sort -rn
+``````````````````
+
+| 选项   | 作用        |
+|------|-----------|
+| `-c`   | 显示出现次数 |
+| `-d`   | 只显示重复行 |
+| `-u`   | 只显示不重复行 |
+| `-i`   | 忽略大小写  |
+| `-f N` | 跳过前 N 个字段比较 |
+| `-s N` | 跳过前 N 个字符比较 |
+
+`uniq` 只处理相邻重复行，必须先用 `sort` 排序。
+
+
+##### cut {#cut}
+
+``````````````````bash
+cut -d: -f1 /etc/passwd
+cut -d',' -f2,4 data.csv
+cut -c1-10 file.txt
+cut -c5- file.txt
+cut -b1-20 file.txt
+``````````````````
+
+| 选项                 | 作用        |
+|--------------------|-----------|
+| `-d sep`             | 分隔符（默认 Tab） |
+| `-f list`            | 提取字段    |
+| `-c list`            | 提取字符范围 |
+| `-b list`            | 提取字节范围 |
+| `--complement`       | 补集（取反） |
+| `--output-delimiter` | 输出分隔符  |
+
+list 格式： `N` 第 N 个， `N-M` 范围， `N-` 从 N 到末尾， `-M` 从开头到 M。
+
+
+##### tr {#tr}
+
+``````````````````bash
+echo "HELLO" | tr 'A-Z' 'a-z'
+echo "hello world" | tr 'a-z' 'A-Z'
+echo "hello   world" | tr -s ' '
+cat file.txt | tr -d '\r' > unixfile.txt
+echo "abc123" | tr -d '0-9'
+echo "hello world" | tr ' ' '\n'
+echo "hello" | tr 'a-z' 'n-za-m'
+``````````````````
+
+| 选项 | 作用              |
+|----|-----------------|
+| `-d` | 删除字符          |
+| `-s` | 压缩重复字符      |
+| `-c` | 补集（取反）      |
+| `-t` | 截断 SET2 到 SET1 长度 |
+
+
+##### wc {#wc}
+
+``````````````````bash
+wc file.txt
+wc -l file.txt
+wc -w file.txt
+wc -c file.txt
+wc -m file.txt
+find . -name "*.py" | xargs wc -l | tail -1
+``````````````````
+
+| 选项 | 作用  |
+|----|-----|
+| `-l` | 行数  |
+| `-w` | 词数  |
+| `-c` | 字节数 |
+| `-m` | 字符数 |
+| `-L` | 最长行长度 |
+
+
+##### tee {#tee}
+
+``````````````````bash
+cmd | tee output.txt
+cmd | tee -a output.txt
+cmd | tee >(cmd1) >(cmd2) | cmd3
+make 2>&1 | tee build.log
+``````````````````
+
+
+##### column {#column}
+
+``````````````````bash
+cat data.txt | column -t
+cat data.csv | column -t -s','
+ps aux | head -1; ps aux | grep nginx | column -t
+``````````````````
+
+| 选项     | 作用        |
+|--------|-----------|
+| `-t`     | 表格模式    |
+| `-s sep` | 指定分隔符  |
+| `-o sep` | 输出分隔符（默认空格） |
+
+
+##### paste {#paste}
+
+``````````````````bash
+paste file1.txt file2.txt
+paste -d',' file1.txt file2.txt
+paste - - < data.txt
+``````````````````
+
+| 选项     | 作用        |
+|--------|-----------|
+| `-d sep` | 分隔符（默认 Tab） |
+| =- - =   | 同一文件合并相邻行 |
+
+
+##### comm {#comm}
+
+``````````````````bash
+sort a.txt > a_sorted.txt
+sort b.txt > b_sorted.txt
+comm a_sorted.txt b_sorted.txt
+comm -23 a_sorted.txt b_sorted.txt
+comm -13 a_sorted.txt b_sorted.txt
+comm -12 a_sorted.txt b_sorted.txt
+``````````````````
+
+| 选项 | 输出              |
+|----|-----------------|
+| (无) | 三列：仅在A / 仅在B / 共有 |
+| `-1` | 隐藏第 1 列（仅在 A 的） |
+| `-2` | 隐藏第 2 列（仅在 B 的） |
+| `-3` | 隐藏第 3 列（共有的） |
+
+要求两个文件必须已排序。
+
+常用：
+
+-   `comm -23 A B` ：只在 A 中有，B 中没有
+-   `comm -13 A B` ：只在 B 中有，A 中没有
+-   `comm -12 A B` ：A 和 B 共有
+
+
+##### diff / patch {#diff-patch}
+
+``````````````````bash
+diff -u old.txt new.txt
+diff -u old.txt new.txt > changes.patch
+diff -ruN olddir/ newdir/ > full.patch
+patch -p1 < changes.patch
+patch -R < changes.patch
+diff --side-by-side file1.txt file2.txt
+``````````````````
+
+| 选项             | 作用       |
+|----------------|----------|
+| `-u`             | 统一格式（推荐） |
+| `-r`             | 递归比较目录 |
+| `-N`             | 处理新增/删除的文件 |
+| `-w`             | 忽略空白差异 |
+| `-i`             | 忽略大小写 |
+| `--side-by-side` | 并排显示   |
+| `-q`             | 仅报告是否不同 |
+
+`patch -p1` ：去掉路径中第一层目录。 `-R` 反向还原。
+
+
+### pacman 与 AUR 深入 {#pacman-与-aur-深入}
+
+
+#### pacman 完整用法 {#pacman-完整用法}
+
+
+##### 安装命令 {#安装命令}
+
+`pacman -S` 系列命令是日常最常用的操作：
+
+| 命令                 | 作用           |
+|--------------------|--------------|
+| `pacman -S pkg`      | 安装指定包     |
+| `pacman -Ss keyword` | 搜索包（支持正则） |
+| `pacman -Si pkg`     | 查看包详细信息（远程仓库） |
+| `pacman -Sl repo`    | 列出指定仓库的所有包 |
+| `pacman -Sg group`   | 列出包组内所有包 |
+| `pacman -Syyu`       | 强制刷新所有数据库并升级系统 |
+
+``````````````````bash
+sudo pacman -S neovim git base-devel
+sudo pacman -Ss "^vim"
+sudo pacman -Si linux
+sudo pacman -Sl core
+sudo pacman -Sg base-devel
+sudo pacman -Syyu
+``````````````````
+
+`Syyu` 中两个 `y` 的含义：第一个 `y` 刷新本地数据库，第二个 `y` 强制从服务器重新下载即使本地认为已最新， `u` 升级所有过时包。平时用 `-Syu` 即可，数据库异常时用 `-Syyu` 。
+
+注意： **永远不要** 在 `-Sy` 后不跟 `u` 就安装包（即 `pacman -Sy pkg` ），这会导致部分升级，可能破坏系统。
+
+
+##### 卸载命令 {#卸载命令}
+
+卸载的关键区别在于依赖处理方式：
+
+| 命令              | 作用                 |
+|-----------------|--------------------|
+| `pacman -R pkg`   | 仅移除包本身，保留依赖和配置 |
+| `pacman -Rs pkg`  | 移除包及其不再被需要的依赖 |
+| `pacman -Rns pkg` | 移除包 + 不再需要的依赖 + 配置文件 |
+
+``````````````````bash
+sudo pacman -R nsd
+sudo pacman -Rs nsd
+sudo pacman -Rns nsd
+``````````````````
+
+`-Rns` 是最推荐的卸载方式。 `-n` 清理 `/etc/` 下被标记为 `backup` 的配置文件，普通 `-R` 会将它们保留为 `.pacsave` 文件。
+
+若依赖仍被其他包需要， `-Rs` 不会移除该依赖，可安全使用。
+
+
+##### 查询命令 {#查询命令}
+
+`-Q` 系列是本地包数据库查询，日常使用频率极高：
+
+| 命令                 | 作用              |
+|--------------------|-----------------|
+| `pacman -Q`          | 列出所有已安装包  |
+| `pacman -Qi pkg`     | 查看已安装包的详细信息 |
+| `pacman -Ql pkg`     | 列出包安装的所有文件 |
+| `pacman -Qo /path`   | 查询文件属于哪个包 |
+| `pacman -Qs keyword` | 在已安装包中搜索  |
+| `pacman -Qdt`        | 列出孤立包（不再被依赖的包） |
+| `pacman -Qe`         | 列出显式安装的包  |
+| `pacman -Qd`         | 列出作为依赖安装的包 |
+| `pacman -Qm`         | 列出从 AUR 等外部来源安装的包 |
+
+``````````````````bash
+pacman -Qi linux | head -20
+pacman -Ql bash | grep bin
+pacman -Qo /usr/bin/ssh
+pacman -Qs vim
+pacman -Qdt
+pacman -Qe
+pacman -Qd
+pacman -Qm
+``````````````````
+
+`Qe` 和 `Qd` 的区别：显式安装（ `--asexplicit` ）是你主动 `pacman -S` 安装的；依赖安装（ `--asdeps` ）是被其他包拉入的。 `Qdt` 找出的孤立包可以安全卸载。
+
+
+##### 文件归属查询 {#文件归属查询}
+
+`pacman -Qo` 只能查询已安装包的文件。对于未安装的文件归属查询，使用 `pkgfile` ：
+
+``````````````````bash
+sudo pacman -S pkgfile
+sudo pkgfile -u
+pkgfile /usr/bin/ssh
+pkgfile -l openssh
+``````````````````
+
+`pkgfile` 维护独立数据库，需定期 `pkgfile -u` 更新。
+
+
+##### 清理缓存 {#清理缓存}
+
+pacman 下载的包缓存在 `/var/cache/pacman/pkg/` ，会持续增长：
+
+| 命令            | 作用                |
+|---------------|-------------------|
+| `pacman -Sc`    | 删除当前未安装的包缓存 |
+| `pacman -Scc`   | 删除\*所有\*缓存（危险，无法降级） |
+| `paccache -r`   | 保留最近 3 个版本，删除其余 |
+| `paccache -rk1` | 保留最近 1 个版本   |
+
+``````````````````bash
+sudo pacman -Sc
+sudo paccache -r
+sudo paccache -rk2
+``````````````````
+
+`paccache` 来自 `pacman-contrib` 包，比 `-Sc` 更安全，保留最近 N 个版本用于降级。
+
+
+##### 数据库操作 {#数据库操作}
+
+`-D` 用于修改包的安装原因标记：
+
+``````````````````bash
+sudo pacman -D --asexplicit python
+sudo pacman -D --asdeps python
+``````````````````
+
+将包标记为 `--asdeps` 后，若没有其他包依赖它，下次 `pacman -Qdt` 就会列出它。这是保持系统整洁的重要手段：安装仅为了编译 AUR 包的依赖时，先 `--asdeps` 安装，后续 `-Rns $(pacman -Qdtq)` 清理。
+
+
+##### pacman.conf 配置 {#pacman-dot-conf-配置}
+
+`/etc/pacman.conf` 的关键选项：
+
+``````````````````cfg
+[options]
+Color
+ILoveCandy
+ParallelDownloads = 5
+IgnorePkg = linux linux-headers
+CheckSpace
+``````````````````
+
+| 选项                  | 作用           |
+|---------------------|--------------|
+| `Color`               | 彩色输出       |
+| `ILoveCandy`          | 吃豆人动画进度条 |
+| `ParallelDownloads=N` | 并行下载包数，建议 5-10 |
+| `IgnorePkg`           | 升级时跳过指定包 |
+| `CheckSpace`          | 安装前检查磁盘空间 |
+
+
+##### pacman hooks {#pacman-hooks}
+
+hooks 在 pacman 特定事件前后自动执行，放在 `/etc/pacman.d/hooks/` ：
+
+``````````````````bash
+mkdir -p /etc/pacman.d/hooks
+``````````````````
+
+示例——每次升级后自动清理孤立包（谨慎使用）：
+
+``````````````````cfg
+[Trigger]
+Operation = Remove
+Type = Package
+Target = *
+
+[Action]
+Description = Cleaning orphan packages...
+When = PostTransaction
+Depends = pacman
+Exec = /usr/bin/pacman -Qdtq | /usr/bin/pacman -Rns - 2>/dev/null || true
+``````````````````
+
+示例——升级后自动更新 grub：
+
+``````````````````cfg
+[Trigger]
+Operation = Upgrade
+Type = Package
+Target = grub
+
+[Action]
+Description = Updating grub after upgrade...
+When = PostTransaction
+Depends = grub
+Exec = /usr/bin/grub-mkconfig -o /boot/grub/grub.cfg
+``````````````````
+
+
+##### 降级与 pacnew 处理 {#降级与-pacnew-处理}
+
+从本地缓存降级：
+
+``````````````````bash
+ls /var/cache/pacman/pkg/ | grep linux
+sudo pacman -U /var/cache/pacman/pkg/linux-6.6.1-1-x86_64.pkg.tar.zst
+``````````````````
+
+若无缓存，可从 [Arch Linux Archive](https://archive.archlinux.org/) 下载历史版本。
+
+`pacnew/pacsave/pacorig` 文件处理：
+
+| 文件类型   | 含义                  |
+|--------|---------------------|
+| `.pacnew`  | 包新版本的默认配置，与现有配置冲突时生成 |
+| `.pacsave` | 卸载包时保存的旧配置（=-Rn= 会删除） |
+| `.pacorig` | 旧版 pacman 生成，现已弃用 |
+
+``````````````````bash
+pacdiff
+``````````````````
+
+`pacdiff` 来自 `pacman-contrib` ，使用 `vimdiff` 交互式合并 `pacnew` 文件。设置编辑器：
+
+``````````````````bash
+DIFFPROG=vimdiff pacdiff
+DIFFPROG=meld pacdiff
+``````````````````
+
+
+#### 镜像源配置 {#镜像源配置}
+
+
+##### reflector 自动选速 {#reflector-自动选速}
+
+``````````````````bash
+sudo pacman -S reflector
+reflector --country China --latest 10 --sort rate --save /etc/pacman.d/mirrorlist
+reflector --latest 20 --sort rate --save /etc/pacman.d/mirrorlist --protocol https
+``````````````````
+
+| 参数               | 作用          |
+|------------------|-------------|
+| `--country`        | 限制国家      |
+| `--latest N`       | 只取最近同步的 N 个镜像 |
+| `--sort rate`      | 按下载速率排序 |
+| `--sort delay`     | 按延迟排序    |
+| `--protocol https` | 只用 HTTPS    |
+| `--save`           | 输出文件路径  |
+
+开机自动更新镜像（systemd timer）：
+
+``````````````````bash
+systemctl enable reflector.timer
+systemctl start reflector.timer
+``````````````````
+
+
+##### 手动编辑 mirrorlist {#手动编辑-mirrorlist}
+
+``````````````````bash
+sudo vim /etc/pacman.d/mirrorlist
+``````````````````
+
+将期望的镜像放在文件最前面，pacman 按顺序尝试。
+
+
+##### 国内镜像推荐 {#国内镜像推荐}
+
+| 镜像站   | 地址                                                            |
+|-------|---------------------------------------------------------------|
+| 清华 TUNA | `https://mirrors.tuna.tsinghua.edu.cn/archlinux/$repo/os/$arch` |
+| 中科大 USTC | `https://mirrors.ustc.edu.cn/archlinux/$repo/os/$arch`          |
+| 北外 BFSU | `https://mirrors.bfsu.edu.cn/archlinux/$repo/os/$arch`          |
+
+手动写入示例：
+
+``````````````````bash
+sudo tee /etc/pacman.d/mirrorlist << 'EOF'
+Server = https://mirrors.tuna.tsinghua.edu.cn/archlinux/$repo/os/$arch
+Server = https://mirrors.ustc.edu.cn/archlinux/$repo/os/$arch
+Server = https://mirrors.bfsu.edu.cn/archlinux/$repo/os/$arch
+EOF
+sudo pacman -Syy
+``````````````````
+
+
+#### AUR 与 yay/paru {#aur-与-yay-paru}
+
+
+##### AUR 概念 {#aur-概念}
+
+AUR（Arch User Repository）是社区驱动的包仓库，不包含二进制包，只包含 `PKGBUILD` 构建脚本。流程：
+
+1.  用户提交 `PKGBUILD` + `.SRCINFO`
+2.  其他用户下载 `PKGBUILD` ， `makepkg` 自动下载源码、编译、打包
+3.  `pacman -U` 安装生成的 `.pkg.tar.zst`
+
+<!--listend-->
+
+``````````````````bash
+git clone https://aur.archlinux.org/yay.git
+cd yay
+makepkg -si
+``````````````````
+
+`makepkg` 关键参数：
+
+| 参数 | 作用      |
+|----|---------|
+| `-s` | 自动安装构建依赖 |
+| `-i` | 构建完成后安装 |
+| `-c` | 构建后清理工作目录 |
+| `-f` | 强制重新构建 |
+
+
+##### yay {#yay}
+
+yay 是最流行的 AUR 助手，用 Go 编写：
+
+``````````````````bash
+yay -S visual-studio-code-bin
+yay -Ss fuzzel
+yay -Si waybar
+yay -Syyu
+yay -Rns visual-studio-code-bin
+yay -c
+yay -Qdtq
+``````````````````
+
+yay 配置：
+
+``````````````````bash
+yay --save --afterclean
+yay --save --editmenu
+yay --save --answerclean All
+yay --save --answerdiff None
+yay --getpkgbuild
+``````````````````
+
+| 配置项          | 作用             |
+|--------------|----------------|
+| `--afterclean`  | 安装后清理构建文件 |
+| `--editmenu`    | 构建前允许编辑 PKGBUILD |
+| `--answerclean` | 清理提示默认回答 |
+| `--answerdiff`  | 差异提示默认回答 |
+
+配置存储在 `~/.config/yay/config.json` 。
+
+
+##### paru {#paru}
+
+paru 是另一个流行 AUR 助手，用 Rust 编写，更接近 pacman 参数风格：
+
+``````````````````bash
+sudo pacman -S paru
+paru -S visual-studio-code-bin
+paru -Ss fuzzel
+paru -Syu
+paru -Rns visual-studio-code-bin
+``````````````````
+
+paru 默认在构建前显示 PKGBUILD 供审查，更安全。配置文件： `~/.config/paru/paru.conf`
+
+``````````````````cfg
+[options]
+BottomUp
+NewsOnUpgrade
+CleanAfter
+RemoveMake
+SudoLoop
+``````````````````
+
+
+##### AUR 安全 {#aur-安全}
+
+AUR 包 `没有` 经过官方审核，安全靠社区监督。关键原则：
+
+1.  **查看 PKGBUILD** ：检查 `source` 行是否从官方渠道下载，检查 `build()` 和 `package()` 是否有可疑操作
+2.  **查看投票数和评论** ：高投票、活跃评论的包更可信
+3.  **检查维护者** ：活跃维护者比孤立包更安全
+4.  **检查依赖链** ：过多不合理的依赖是红旗
+
+<!--listend-->
+
+``````````````````bash
+yay -Si pkgname
+yay -G pkgname
+cd pkgname && cat PKGBUILD
+``````````````````
+
+`yay -G` 只下载 PKGBUILD 不构建，适合审查。
+
+
+#### pacman 命令速查表 {#pacman-命令速查表}
+
+
+##### 安装类 {#安装类}
+
+| 命令             | 说明    |
+|----------------|-------|
+| `pacman -S pkg`  | 安装包  |
+| `pacman -Ss kw`  | 搜索    |
+| `pacman -Si pkg` | 远程包信息 |
+| `pacman -Syu`    | 更新系统 |
+| `pacman -Syyu`   | 强制刷新并更新 |
+| `pacman -Sg grp` | 列出包组 |
+| `pacman -U file` | 从本地文件安装 |
+
+
+##### 卸载类 {#卸载类}
+
+| 命令                          | 说明          |
+|-----------------------------|-------------|
+| `pacman -R pkg`               | 仅移除包      |
+| `pacman -Rs pkg`              | 移除包 + 无用依赖 |
+| `pacman -Rns pkg`             | 移除包 + 依赖 + 配置 |
+| `pacman -Rns $(pacman -Qdtq)` | 清理所有孤立包 |
+
+
+##### 查询类 {#查询类}
+
+| 命令               | 说明   |
+|------------------|------|
+| `pacman -Q`        | 所有已安装包 |
+| `pacman -Qi pkg`   | 已安装包信息 |
+| `pacman -Ql pkg`   | 包文件列表 |
+| `pacman -Qo /path` | 文件归属 |
+| `pacman -Qe`       | 显式安装 |
+| `pacman -Qd`       | 依赖安装 |
+| `pacman -Qdt`      | 孤立包 |
+| `pacman -Qm`       | 外部来源包 |
+
+
+##### 维护类 {#维护类}
+
+| 命令                     | 说明         |
+|------------------------|------------|
+| `pacman -Sc`             | 清理未安装包缓存 |
+| `pacman -Scc`            | 清理所有缓存 |
+| `paccache -r`            | 保留最近3版本 |
+| `pacman -D --asdeps`     | 标记为依赖   |
+| `pacman -D --asexplicit` | 标记为显式   |
+| `pacdiff`                | 处理 pacnew 文件 |
+
+
+### systemd 与服务管理 {#systemd-与服务管理}
+
+
+#### systemctl 核心操作 {#systemctl-核心操作}
+
+
+##### 服务管理 {#服务管理}
+
+| 命令                       | 作用        |
+|--------------------------|-----------|
+| `systemctl start svc`      | 启动服务    |
+| `systemctl stop svc`       | 停止服务    |
+| `systemctl restart svc`    | 重启服务    |
+| `systemctl reload svc`     | 重载配置（不中断服务） |
+| `systemctl status svc`     | 查看服务状态 |
+| `systemctl enable svc`     | 开机自启    |
+| `systemctl disable svc`    | 取消自启    |
+| `systemctl is-active svc`  | 是否正在运行 |
+| `systemctl is-enabled svc` | 是否已启用  |
+
+``````````````````bash
+sudo systemctl start sshd
+sudo systemctl status sshd
+sudo systemctl enable --now sshd
+sudo systemctl is-active sshd
+sudo systemctl is-enabled sshd
+``````````````````
+
+`enable --now` 等价于 `enable + start` ， `disable --now` 等价于 `disable + stop` 。
+
+`reload` 与 `restart` 的区别： `reload` 让服务重新读取配置文件而不停止进程（如 `nginx -s reload` ）， `restart` 完全停止再启动。并非所有服务支持 =reload=。
+
+
+##### Unit 类型 {#unit-类型}
+
+| 类型    | 扩展名     | 用途     |
+|-------|---------|--------|
+| service | `.service` | 后台服务 |
+| target  | `.target`  | 分组/运行级别 |
+| socket  | `.socket`  | 套接字激活 |
+| timer   | `.timer`   | 定时任务 |
+| mount   | `.mount`   | 挂载点   |
+| path    | `.path`    | 路径监控 |
+| slice   | `.slice`   | 资源分组 |
+| scope   | `.scope`   | 外部创建的进程组 |
+
+``````````````````bash
+systemctl list-units --type=service
+systemctl list-units --type=timer
+systemctl list-units --type=target
+``````````````````
+
+
+##### 列出 units {#列出-units}
+
+| 命令                                  | 作用                  |
+|-------------------------------------|---------------------|
+| `systemctl list-units`                | 列出已加载的活动 unit |
+| `systemctl list-units --all`          | 列出所有 unit（含 inactive） |
+| `systemctl list-unit-files`           | 列出所有 unit 文件及状态 |
+| `systemctl list-units --type=service` | 按类型过滤            |
+| `systemctl list-units --state=failed` | 按状态过滤            |
+
+``````````````````bash
+systemctl list-units --type=service --state=running
+systemctl list-unit-files --type=service | grep enabled
+systemctl list-units --state=failed
+``````````````````
+
+
+##### mask/unmask {#mask-unmask}
+
+`mask` 在 `/etc/systemd/system/` 创建指向 `/dev/null` 的软链接， **彻底阻止** 服务被启动（即使手动 `start` 也不行）：
+
+``````````````````bash
+sudo systemctl mask dbus-org.freedesktop.NetworkManager.service
+sudo systemctl unmask dbus-org.freedesktop.NetworkManager.service
+``````````````````
+
+与 `disable` 的区别： `disable` 只是移除自启软链接，手动 `start` 仍可启动； `mask` 是完全禁止。
+
+
+##### daemon-reload / daemon-reexec {#daemon-reload-daemon-reexec}
+
+| 命令                      | 作用                       |
+|-------------------------|--------------------------|
+| `systemctl daemon-reload` | 重新加载所有 unit 文件（修改后必须执行） |
+| `systemctl daemon-reexec` | 重新执行 systemd 进程本身（严重问题时使用） |
+
+``````````````````bash
+sudo systemctl daemon-reload
+``````````````````
+
+每次手动新建或修改 `.service` 文件后，都必须 `daemon-reload` ，否则 systemd 不会识别变更。
+
+
+#### journalctl 日志 {#journalctl-日志}
+
+
+##### 基本查看 {#基本查看}
+
+| 命令                              | 作用             |
+|---------------------------------|----------------|
+| `journalctl`                      | 查看所有日志     |
+| `journalctl -b`                   | 本次启动的日志   |
+| `journalctl -b -1`                | 上次启动的日志   |
+| `journalctl -k`                   | 仅内核日志       |
+| `journalctl -u svc`               | 指定 unit 的日志 |
+| `journalctl -f`                   | 实时跟踪（类似 tail -f） |
+| `journalctl -n 50`                | 最近 50 条       |
+| `journalctl --since "2025-01-01"` | 起始时间         |
+| `journalctl --until "1 hour ago"` | 截止时间         |
+
+``````````````````bash
+journalctl -b
+journalctl -b -1
+journalctl -u sshd
+journalctl -u sshd --since "2025-06-01" --until "2025-06-02"
+journalctl -f -u nginx
+journalctl -n 100
+journalctl --since "09:00" --until "12:00"
+journalctl --since yesterday
+``````````````````
+
+时间格式支持： `"2025-01-01 12:00:00"` 、 `"yesterday"` 、 `"1 hour ago"` 、 `"09:00"` 。
+
+
+##### 过滤 {#过滤}
+
+| 参数         | 作用      |
+|------------|---------|
+| `-p err`     | 按优先级过滤 |
+| `-g pattern` | 按正则过滤日志内容 |
+| `--uid=1000` | 指定用户 ID |
+| `--pid=1234` | 指定进程 ID |
+| `--system`   | 仅系统日志 |
+| `--user`     | 仅用户日志 |
+
+优先级从高到低：
+
+| 优先级  | 数值 | 说明 |
+|------|----|----|
+| emerg   | 0  | 紧急 |
+| alert   | 1  | 警报 |
+| crit    | 2  | 严重 |
+| err     | 3  | 错误 |
+| warning | 4  | 警告 |
+| notice  | 5  | 通知 |
+| info    | 6  | 信息 |
+| debug   | 7  | 调试 |
+
+``````````````````bash
+journalctl -p err -b
+journalctl -p warning..err -b
+journalctl -g "connection refused" --since today
+journalctl --uid 1000
+journalctl _PID=1234
+``````````````````
+
+`-p warning..err` 表示从 warning 到 err 的范围。
+
+
+##### 输出格式 {#输出格式}
+
+| 格式             | 说明       |
+|----------------|----------|
+| `-o short`       | 默认格式   |
+| `-o short-iso`   | ISO 时间戳 |
+| `-o cat`         | 仅消息正文，无元数据 |
+| `-o json-pretty` | 格式化 JSON |
+| `-o verbose`     | 所有字段   |
+
+``````````````````bash
+journalctl -u sshd -n 5 -o cat
+journalctl -u sshd -n 5 -o json-pretty
+journalctl -u sshd -n 5 -o short-iso
+``````````````````
+
+`-o cat` 适合脚本处理，只输出消息本身。
+
+
+##### 日志持久化 {#日志持久化}
+
+默认日志仅存内存，重启后丢失。设为持久化：
+
+``````````````````bash
+sudo mkdir -p /var/log/journal
+sudoedit /etc/systemd/journald.conf
+``````````````````
+
+``````````````````cfg
+[Journal]
+Storage=persistent
+SystemMaxUse=500M
+SystemMaxFileSize=50M
+MaxRetentionSec=1month
+``````````````````
+
+| 选项                 | 作用      |
+|--------------------|---------|
+| `Storage=persistent` | 日志写入磁盘 |
+| `Storage=volatile`   | 仅存内存  |
+| `SystemMaxUse`       | 日志最大占用空间 |
+| `SystemMaxFileSize`  | 单个日志文件最大值 |
+| `MaxRetentionSec`    | 日志最长保留时间 |
+
+``````````````````bash
+sudo systemctl restart systemd-journald
+``````````````````
+
+
+##### 日志清理 {#日志清理}
+
+``````````````````bash
+journalctl --disk-usage
+sudo journalctl --vacuum-size=200M
+sudo journalctl --vacuum-time=2weeks
+sudo journalctl --vacuum-files=5
+``````````````````
+
+| 参数             | 作用        |
+|----------------|-----------|
+| `--vacuum-size`  | 清理至指定总大小 |
+| `--vacuum-time`  | 清理指定时间之前的日志 |
+| `--vacuum-files` | 只保留 N 个日志文件 |
+
+
+#### systemd 定时器（timer） {#systemd-定时器-timer}
+
+
+##### timer 与 cron 对比 {#timer-与-cron-对比}
+
+| 特性 | systemd timer         | cron       |
+|----|-----------------------|------------|
+| 精度 | 秒级                  | 分钟级     |
+| 依赖 | 可指定依赖的 service unit | 无         |
+| 日志 | 自动进入 journal      | 需手动重定向 |
+| 错过执行 | 可配置（Persistent= ） | 不执行     |
+| 随机延迟 | 支持 RandomizedDelaySec | 需额外脚本 |
+| 用户级 | 原生支持              | 需要 crontab |
+
+
+##### 创建 timer unit {#创建-timer-unit}
+
+timer 需要配套的 `.service` 文件，timer 负责触发，service 负责执行：
+
+`/etc/systemd/system/backup.timer` ：
+
+``````````````````cfg
+[Unit]
+Description=Daily backup timer
+
+[Timer]
+OnCalendar=*-*-* 03:00:00
+Persistent=true
+RandomizedDelaySec=30min
+
+[Install]
+WantedBy=timers.target
+``````````````````
+
+=/etc/systemd/system/backup.service=：
+
+``````````````````cfg
+[Unit]
+Description=Daily backup
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/backup.sh
+``````````````````
+
+| Timer 参数           | 说明            |
+|--------------------|---------------|
+| `OnCalendar`         | 日历式触发时间  |
+| `OnUnitActiveSec`    | 相对上次激活的时间间隔 |
+| `OnBootSec`          | 开机后的时间间隔 |
+| `Persistent=true`    | 错过的执行在下次启动时补执行 |
+| `RandomizedDelaySec` | 随机延迟，避免多个任务同时触发 |
+| `AccuracySec`        | 触发精度（默认 1min） |
+
+`OnCalendar` 时间格式：
+
+| 表达式               | 含义         |
+|-------------------|------------|
+| `*-*-* 03:00:00`     | 每天 3:00    |
+| `*-*-* *:0/15:00`    | 每 15 分钟   |
+| `Weekly`             | 每周一 00:00 |
+| `Daily`              | 每天 00:00   |
+| `Monthly`            | 每月 1 日 00:00 |
+| `Mon *-*-* 09:00:00` | 每周一 9:00  |
+
+``````````````````bash
+systemd-analyze calendar "*-*-* 03:00:00"
+systemd-analyze calendar "Weekly"
+``````````````````
+
+启用 timer：
+
+``````````````````bash
+sudo systemctl daemon-reload
+sudo systemctl enable --now backup.timer
+systemctl list-timers
+``````````````````
+
+`注意` ：只需 enable `.timer` ，不要 enable `.service` ，否则会在每次 boot 时执行。
+
+
+##### 示例：定时缓存清理 {#示例-定时缓存清理}
+
+`/etc/systemd/system/paccache.timer` ：
+
+``````````````````cfg
+[Unit]
+Description=Weekly paccache cleanup
+
+[Timer]
+OnCalendar=Weekly
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+``````````````````
+
+`/etc/systemd/system/paccache.service` ：
+
+``````````````````cfg
+[Unit]
+Description=Run paccache
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/paccache -r
+``````````````````
+
+``````````````````bash
+sudo systemctl enable --now paccache.timer
+systemctl list-timers
+``````````````````
+
+
+##### 相对时间 timer {#相对时间-timer}
+
+使用 `OnUnitActiveSec` 实现间隔触发：
+
+``````````````````cfg
+[Timer]
+OnUnitActiveSec=1h
+OnUnitActiveSec=5min
+Persistent=true
+``````````````````
+
+`OnUnitActiveSec=1h` 表示上次执行后 1 小时再次触发，适合需要固定间隔重复执行的任务。
+
+
+#### 系统管理命令 {#系统管理命令}
+
+
+##### timedatectl {#timedatectl}
+
+| 命令                                     | 作用      |
+|----------------------------------------|---------|
+| `timedatectl`                            | 查看时间状态 |
+| `timedatectl set-timezone Asia/Shanghai` | 设置时区  |
+| `timedatectl set-ntp true`               | 启用 NTP 同步 |
+| `timedatectl list-timezones`             | 列出可用时区 |
+
+``````````````````bash
+timedatectl
+timedatectl set-timezone Asia/Shanghai
+timedatectl set-ntp true
+timedatectl list-timezones | grep Shanghai
+``````````````````
+
+时区也可通过软链接设置： `ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime`
+
+
+##### localectl {#localectl}
+
+| 命令                                    | 作用            |
+|---------------------------------------|---------------|
+| `localectl`                             | 查看当前 locale 和键盘 |
+| `localectl set-locale LANG=en_US.UTF-8` | 设置 locale     |
+| `localectl set-keymap us`               | 设置控制台键盘  |
+| `localectl set-x11-keymap us`           | 设置 X 键盘     |
+| `localectl list-locales`                | 列出可用 locale |
+| `localectl list-keymaps`                | 列出可用键盘映射 |
+
+``````````````````bash
+localectl
+localectl set-locale LANG=en_US.UTF-8
+localectl set-keymap us
+localectl list-locales | grep -i utf
+``````````````````
+
+需先在 `/etc/locale.gen` 取消对应行注释并 `locale-gen` 。
+
+
+##### hostnamectl {#hostnamectl}
+
+| 命令                              | 作用   |
+|---------------------------------|------|
+| `hostnamectl`                     | 查看主机信息 |
+| `hostnamectl set-hostname myhost` | 设置主机名 |
+| `hostnamectl set-chassis laptop`  | 设置设备类型 |
+
+``````````````````bash
+hostnamectl
+hostnamectl set-hostname arch-desktop
+``````````````````
+
+主机名同时写入 `/etc/hostname` 和内核。
+
+
+#### 用户级 systemd {#用户级-systemd}
+
+
+##### 用户服务管理 {#用户服务管理}
+
+``````````````````bash
+systemctl --user start pulseaudio
+systemctl --user status pulseaudio
+systemctl --user enable pulseaudio
+systemctl --user list-units --type=service
+systemctl --user list-unit-files --type=service
+``````````````````
+
+用户 unit 文件目录： `~/.config/systemd/user/`
+
+``````````````````bash
+mkdir -p ~/.config/systemd/user
+systemctl --user daemon-reload
+``````````````````
+
+示例——用户级 ssh-agent：
+
+`~/.config/systemd/user/ssh-agent.service` ：
+
+``````````````````cfg
+[Unit]
+Description=SSH key agent
+
+[Service]
+Type=simple
+Environment=SSH_AUTH_SOCK=%t/ssh-agent.socket
+ExecStart=/usr/bin/ssh-agent -D -a %t/ssh-agent.socket
+
+[Install]
+WantedBy=default.target
+``````````````````
+
+``````````````````bash
+systemctl --user enable --now ssh-agent
+``````````````````
+
+
+##### loginctl enable-linger {#loginctl-enable-linger}
+
+默认用户服务在用户注销后停止。=enable-linger= 让用户服务在未登录时也保持运行：
+
+``````````````````bash
+loginctl enable-linger $USER
+loginctl show-user $USER | grep Linger
+``````````````````
+
+这会将用户名写入 `/var/lib/systemd/linger/` 。对于用户级定时器、后台服务（如 syncthing）至关重要。
+
+
+#### systemd-run 临时运行 {#systemd-run-临时运行}
+
+`systemd-run` 在临时 systemd unit 中运行命令，获得日志隔离、资源控制等好处：
+
+``````````````````bash
+systemd-run --user --scope firefox
+systemd-run --property=MemoryMax=512M --scope firefox
+systemd-run --property=CPUQuota=50% --scope make -j4
+``````````````````
+
+| 参数                   | 作用                  |
+|----------------------|---------------------|
+| `--scope`              | 在当前 session 运行（前台可交互） |
+| `--unit=NAME`          | 指定 unit 名称        |
+| `--property=KEY=VALUE` | 设置属性              |
+| `--user`               | 在用户实例运行        |
+| `--pty`                | 分配伪终端            |
+
+`--scope` 模式不会 fork 到后台，适合交互式程序。不加 `--scope` 则以 `.service` 模式运行在后台。
+
+
+#### 分析工具 {#分析工具}
+
+
+##### systemd-analyze {#systemd-analyze}
+
+| 命令                              | 作用          |
+|---------------------------------|-------------|
+| `systemd-analyze`                 | 查看启动总耗时 |
+| `systemd-analyze blame`           | 各 unit 启动耗时排名 |
+| `systemd-analyze critical-chain`  | 关键路径分析  |
+| `systemd-analyze plot > boot.svg` | 生成启动时间图（SVG） |
+| `systemd-analyze dot > deps.dot`  | 生成依赖关系图 |
+| `systemd-analyze calendar EXPR`   | 解析日历表达式 |
+
+``````````````````bash
+systemd-analyze
+systemd-analyze blame | head -20
+systemd-analyze critical-chain
+systemd-analyze plot > /tmp/boot.svg
+systemd-analyze calendar "Weekly"
+``````````````````
+
+`blame` 输出按耗时降序排列，帮助找到拖慢启动的服务。 `critical-chain` 显示启动过程的关键路径，比 `blame` 更有分析价值。
+
+
+### 进程管理 {#进程管理}
+
+
+#### 查看进程 {#查看进程}
+
+
+##### ps 命令 {#ps-命令}
+
+两种常见风格：
+
+``````````````````bash
+ps aux
+ps -ef
+``````````````````
+
+| 风格     | 说明              | 起源     |
+|--------|-----------------|--------|
+| `ps aux` | BSD 风格，无 `-` 前缀 | BSD      |
+| `ps -ef` | POSIX 风格，有 `-` 前缀 | System V |
+
+`aux` 各列含义：
+
+| 列      | 含义          |
+|--------|-------------|
+| USER    | 所属用户      |
+| PID     | 进程 ID       |
+| %CPU    | CPU 占用率    |
+| %MEM    | 内存占用率    |
+| VSZ     | 虚拟内存大小（KB） |
+| RSS     | 物理内存大小（KB） |
+| TTY     | 终端（=?= 表示无终端） |
+| STAT    | 进程状态      |
+| START   | 启动时间      |
+| TIME    | 累计 CPU 时间 |
+| COMMAND | 命令名        |
+
+STAT 状态码：
+
+| 码   | 含义           |
+|-----|--------------|
+| R    | 运行中         |
+| S    | 可中断睡眠     |
+| D    | 不可中断睡眠（等待 I/O） |
+| Z    | 僵尸进程       |
+| T    | 被暂停         |
+| &lt; | 高优先级       |
+| N    | 低优先级       |
+| s    | 会话领导者     |
+| +    | 前台进程组     |
+
+自定义列输出：
+
+``````````````````bash
+ps -eo pid,user,%cpu,%mem,rss,comm --sort=-%mem | head -20
+ps -eo pid,tid,rtprio,ni,pri,comm
+ps -eo pid,user,args | grep nginx
+``````````````````
+
+常用组合：
+
+``````````````````bash
+ps aux --sort=-%mem | head -10
+ps aux --sort=-%cpu | head -10
+ps -u root -o pid,comm
+ps -p $(pgrep -d, nginx) -o pid,ppid,%cpu,comm
+``````````````````
+
+
+##### top / htop / btop {#top-htop-btop}
+
+
+###### top {#top}
+
+``````````````````bash
+top
+top -o %MEM
+top -u username
+top -p 1234
+``````````````````
+
+top 交互键：
+
+| 键  | 作用            |
+|----|---------------|
+| `M` | 按内存排序      |
+| `P` | 按 CPU 排序     |
+| `T` | 按时间排序      |
+| `k` | 杀进程（输入 PID 和信号） |
+| `r` | 调整 renice 值  |
+| `u` | 过滤用户        |
+| `f` | 选择显示列      |
+| `q` | 退出            |
+
+
+###### htop {#htop}
+
+``````````````````bash
+sudo pacman -S htop
+htop
+``````````````````
+
+htop 比 top 的优势：支持鼠标、水平滚动、树形视图、直接操作（F9 杀、F7 降优先级、F8 升优先级）。
+
+| 键      | 作用      |
+|--------|---------|
+| `F5`    | 树形/列表视图切换 |
+| `F6`    | 选择排序列 |
+| `F7/F8` | 降低/升高优先级 |
+| `F9`    | 发送信号  |
+| `F10`   | 退出      |
+| `/`     | 搜索进程  |
+| `\`     | 过滤进程  |
+| `t`     | 树形视图  |
+| `H`     | 显示/隐藏用户线程 |
+| `K`     | 显示/隐藏内核线程 |
+
+
+###### btop {#btop}
+
+``````````````````bash
+sudo pacman -S btop
+btop
+``````````````````
+
+btop 额外优势：GPU 使用率显示、磁盘 I/O 图表、网络流量图表、更美观的 UI。
+
+
+##### pgrep / pkill {#pgrep-pkill}
+
+按名称或属性查找/发送信号：
+
+``````````````````bash
+pgrep nginx
+pgrep -l nginx
+pgrep -a nginx
+pgrep -u root nginx
+pgrep -P 1234
+pgrep -f "python script.py"
+``````````````````
+
+| 参数       | 作用          |
+|----------|-------------|
+| `-l`       | 同时显示进程名 |
+| `-a`       | 显示完整命令行 |
+| `-u user`  | 按用户过滤    |
+| `-P PID`   | 查找指定 PID 的子进程 |
+| `-f`       | 匹配完整命令行（含参数） |
+| `-d delim` | 自定义分隔符  |
+
+`pkill` 语法与 `pgrep` 相同，但直接发送信号：
+
+``````````````````bash
+pkill nginx
+pkill -u baduser
+pkill -f "python script.py"
+pkill -9 nginx
+pkill -HUP nginx
+``````````````````
+
+
+#### 信号与控制 {#信号与控制}
+
+
+##### 常用信号 {#常用信号}
+
+| 信号    | 数值 | 含义        | 默认行为       |
+|-------|----|-----------|------------|
+| SIGHUP  | 1  | 挂起/重载配置 | 终止           |
+| SIGINT  | 2  | 中断（Ctrl+C） | 终止           |
+| SIGQUIT | 3  | 退出（Ctrl+\\） | 终止 + core dump |
+| SIGKILL | 9  | 强制终止    | 终止（不可捕获） |
+| SIGTERM | 15 | 优雅终止    | 终止           |
+| SIGTSTP | 20 | 暂停（Ctrl+Z） | 停止           |
+| SIGCONT | 18 | 继续        | 继续           |
+| SIGUSR1 | 10 | 用户自定义1 | 终止           |
+| SIGUSR2 | 12 | 用户自定义2 | 终止           |
+
+
+##### kill / killall {#kill-killall}
+
+``````````````````bash
+kill 1234
+kill -15 1234
+kill -9 1234
+kill -l
+kill -s HUP $(pgrep nginx)
+``````````````````
+
+`kill` 默认发送 SIGTERM(15)，给进程优雅退出的机会。 `kill -9` 是最后手段，进程无法捕获或忽略，但不会执行清理逻辑。
+
+`killall` 按名称发送信号：
+
+``````````````````bash
+killall nginx
+killall -9 firefox
+killall -HUP nginx
+killall -u username
+``````````````````
+
+`killall` 比 `pkill` 更严格匹配进程名（需精确匹配）， `pkill -f` 更灵活。
+
+
+##### 终端快捷键 {#终端快捷键}
+
+| 快捷键   | 信号    | 行为            |
+|-------|-------|---------------|
+| `Ctrl+C` | SIGINT  | 终止前台进程    |
+| `Ctrl+Z` | SIGTSTP | 暂停前台进程到后台 |
+| `Ctrl+\` | SIGQUIT | 终止并生成 core dump |
+
+`Ctrl+\` 在 `Ctrl+C` 无效时可尝试，某些程序会忽略 SIGINT 但不忽略 SIGQUIT。
+
+
+#### 后台与前台 {#后台与前台}
+
+
+##### &amp; 与 jobs {#and-与-jobs}
+
+``````````````````bash
+make -j4 &
+sleep 100 &
+jobs
+jobs -l
+fg %1
+bg %2
+``````````````````
+
+| 命令      | 作用             |
+|---------|----------------|
+| `cmd &`   | 后台运行         |
+| `jobs`    | 列出当前 shell 的后台任务 |
+| `jobs -l` | 显示 PID         |
+| `fg %N`   | 将任务 N 调到前台 |
+| `bg %N`   | 让暂停的任务 N 在后台继续 |
+
+`%N` 是 jobs 编号（非 PID）， `fg` 不加参数默认调最近一个任务。
+
+
+##### nohup {#nohup}
+
+`nohup` 让命令忽略 SIGHUP，终端关闭后继续运行：
+
+``````````````````bash
+nohup ./long-task.sh &
+nohup ./long-task.sh > output.log 2>&1 &
+``````````````````
+
+默认输出重定向到 `nohup.out` ，建议显式指定输出文件。
+
+
+##### disown {#disown}
+
+`disown` 将已有后台任务从当前 shell 的任务表移除，使其不受 shell 退出影响：
+
+``````````````````bash
+./long-task.sh
+Ctrl+Z
+bg
+disown %1
+disown -h %1
+disown -a
+``````````````````
+
+`disown -h` 使任务不受 SIGHUP 影响但仍保留在 jobs 表中。 `disown` 与 `nohup` 的区别： `nohup` 在启动时预防， `disown` 在运行后补救。
+
+
+#### 优先级 {#优先级}
+
+
+##### nice / renice {#nice-renice}
+
+Linux 进程优先级范围 -20（最高）到 19（最低），默认 0。\*数值越小优先级越高\*。
+
+``````````````````bash
+nice -n 10 ./low-priority-task.sh
+nice -n -5 ./high-priority-task.sh
+renice -n 5 -p 1234
+renice -n -3 -p 1234
+renice -n 5 -u username
+``````````````````
+
+| 命令                  | 作用         |
+|---------------------|------------|
+| `nice -n N cmd`       | 以优先级 N 启动命令 |
+| `renice -n N -p PID`  | 修改运行中进程的优先级 |
+| `renice -n N -u user` | 修改用户所有进程的优先级 |
+
+普通用户只能升高 nice 值（降低优先级，0→19），降低 nice 值需要 root。
+
+
+##### top 中调整 {#top-中调整}
+
+在 top 中按 `r` ，输入 PID 和新 nice 值。htop 中选中进程按 `F7` （升优先级）/ `F8` （降优先级）。
+
+
+#### 资源限制 {#资源限制}
+
+
+##### ulimit {#ulimit}
+
+``````````````````bash
+ulimit -a
+ulimit -n
+ulimit -u
+ulimit -c
+ulimit -n 65535
+ulimit -c unlimited
+``````````````````
+
+| 选项 | 作用         | 默认值（典型） |
+|----|------------|---------|
+| `-n` | 最大打开文件数 | 1024      |
+| `-u` | 最大用户进程数 | 63457     |
+| `-c` | core dump 大小 | 0         |
+| `-f` | 最大文件大小 | unlimited |
+| `-m` | 最大内存大小 | unlimited |
+| `-v` | 最大虚拟内存 | unlimited |
+| `-t` | 最大 CPU 时间 | unlimited |
+
+`ulimit` 只影响当前 shell 及其子进程， `hard limit` 不能超过 `soft limit` 可临时调整。
+
+
+##### /etc/security/limits.conf {#etc-security-limits-dot-conf}
+
+持久化限制配置：
+
+
+### 磁盘与文件系统 {#磁盘与文件系统}
+
+
+#### 查看磁盘信息 {#查看磁盘信息}
+
+
+##### lsblk {#lsblk}
+
+``````````````````bash
+lsblk
+lsblk -f
+lsblk -o NAME,SIZE,FSTYPE,MOUNTPOINT,UUID
+lsblk -d -o NAME,SIZE,MODEL /dev/sd?
+``````````````````
+
+| 参数     | 作用              |
+|--------|-----------------|
+| `-f`     | 显示文件系统类型、UUID、挂载点 |
+| `-o COL` | 自定义输出列      |
+| `-d`     | 不显示分区（仅磁盘） |
+| `-7`     | 以 7 模式显示（ASCII） |
+
+输出示例解读： `MAJ:MIN` 为主次设备号， `RM` 为可移除标志， `RO` 为只读标志。
+
+
+##### blkid {#blkid}
+
+``````````````````bash
+blkid
+blkid /dev/sda1
+blkid -U "xxxx-xxxx"
+blkid -t TYPE=ext4
+``````````````````
+
+| 参数         | 作用              |
+|------------|-----------------|
+| 无参         | 列出所有块设备的 UUID 和类型 |
+| `-U UUID`    | 按 UUID 查找设备  |
+| `-t TYPE=fs` | 按文件系统类型过滤 |
+| `-o export`  | 以 key=value 格式输出 |
+
+
+##### df {#df}
+
+``````````````````bash
+df -h
+df -i
+df -hT
+df -h /home
+``````````````````
+
+| 参数       | 作用          |
+|----------|-------------|
+| `-h`       | 人类可读大小  |
+| `-i`       | 显示 inode 使用情况 |
+| `-T`       | 显示文件系统类型 |
+| `-x tmpfs` | 排除指定类型  |
+
+`-i` 很重要：即使磁盘空间充足，inode 耗尽也无法创建新文件（大量小文件场景）。
+
+
+##### du {#du}
+
+``````````````````bash
+du -sh /home
+du -sh /home/*
+du --max-depth=1 /home
+du -sh --max-depth=2 /var
+du -sh /var/log/* | sort -rh | head -10
+``````````````````
+
+| 参数                | 作用          |
+|-------------------|-------------|
+| `-s`                | 只显示总计    |
+| `-h`                | 人类可读      |
+| `--max-depth=N`     | 显示 N 层子目录 |
+| `-c`                | 最后显示总计  |
+| `--apparent-size`   | 显示表观大小（非磁盘占用） |
+| `--exclude=pattern` | 排除匹配的路径 |
+
+
+##### ncdu {#ncdu}
+
+交互式磁盘分析工具：
+
+``````````````````bash
+sudo pacman -S ncdu
+ncdu /home
+ncdu --exclude-caches /
+ncdu -x /
+``````````````````
+
+| 按键    | 作用     |
+|-------|--------|
+| `j/k`   | 上下移动 |
+| `Enter` | 进入目录 |
+| `d`     | 删除文件 |
+| `n/s`   | 按名称/大小排序 |
+| `e`     | 显示隐藏文件 |
+| `q`     | 退出     |
+| `?`     | 帮助     |
+
+`-x` 不跨越文件系统边界（不进入其他挂载点）。
+
+ncdu 2.x 使用 JSON 导出模式，扫描和浏览分离：
+
+``````````````````bash
+ncdu -0 -o /tmp/scan.json /home
+ncdu -f /tmp/scan.json
+``````````````````
+
+
+##### fdisk {#fdisk}
+
+``````````````````bash
+sudo fdisk -l
+sudo fdisk -l /dev/sda
+``````````````````
+
+`-l` 仅查看分区表，不做修改。交互式分区操作见后文。
+
+
+#### 挂载与卸载 {#挂载与卸载}
+
+
+##### mount / umount {#mount-umount}
+
+``````````````````bash
+sudo mount /dev/sda2 /mnt
+sudo mount -t ext4 /dev/sda2 /mnt
+sudo mount -o ro /dev/sda2 /mnt
+sudo umount /mnt
+sudo umount /dev/sda2
+``````````````````
+
+| 参数         | 作用           |
+|------------|--------------|
+| `-t fstype`  | 指定文件系统类型 |
+| `-o options` | 挂载选项       |
+| `-a`         | 挂载 fstab 中所有条目 |
+| `-v`         | 详细输出       |
+
+查看当前挂载：
+
+``````````````````bash
+mount | grep sda
+findmnt
+findmnt /dev/sda2
+``````````````````
+
+
+##### 常用挂载选项 {#常用挂载选项}
+
+| 选项             | 作用                |
+|----------------|-------------------|
+| `ro`             | 只读                |
+| `rw`             | 读写（默认）        |
+| `noexec`         | 禁止执行二进制文件  |
+| `nosuid`         | 忽略 SUID 位        |
+| `nodev`          | 忽略设备文件        |
+| `noatime`        | 不更新访问时间（提升性能） |
+| `nodiratime`     | 不更新目录访问时间  |
+| `uid=N`          | 指定所有者 UID（FAT/NTFS） |
+| `gid=N`          | 指定所属组 GID（FAT/NTFS） |
+| `fmask=0133`     | 文件权限掩码（FAT） |
+| `dmask=0022`     | 目录权限掩码（FAT） |
+| `iocharset=utf8` | 字符集（NTFS/FAT）  |
+
+`noatime` 是 SSD 和 HDD 都推荐的性能优化选项。 `noexec,nosuid,nodev` 常用于 `/tmp` 和移动存储。
+
+
+##### 挂载 ISO {#挂载-iso}
+
+``````````````````bash
+sudo mount -o loop,ro archlinux-2025.06.01-x86_64.iso /mnt/iso
+sudo umount /mnt/iso
+``````````````````
+
+`-o loop` 将 ISO 文件模拟为块设备。
+
+
+##### 挂载 NFS / SMB {#挂载-nfs-smb}
+
+NFS：
+
+``````````````````bash
+sudo pacman -S nfs-utils
+sudo mount -t nfs server:/export/data /mnt/nfs
+sudo mount -t nfs -o vers=4,soft server:/export/data /mnt/nfs
+``````````````````
+
+SMB/CIFS：
+
+``````````````````bash
+sudo pacman -S cifs-utils
+sudo mount -t cifs //server/share /mnt/smb -o username=user,password=pass,uid=1000,gid=1000
+sudo mount -t cifs //server/share /mnt/smb -o credentials=/etc/smbcreds,uid=1000
+``````````````````
+
+凭据文件 `/etc/smbcreds` ：
+
+``````````````````cfg
+username=user
+password=pass
+domain=WORKGROUP
+``````````````````
+
+``````````````````bash
+sudo chmod 600 /etc/smbcreds
+``````````````````
+
+
+##### findmnt {#findmnt}
+
+``````````````````bash
+findmnt
+findmnt -t ext4
+findmnt /dev/sda2
+findmnt -R /mnt
+findmnt -D
+``````````````````
+
+| 参数       | 作用      |
+|----------|---------|
+| `-t type`  | 按文件系统类型过滤 |
+| `-R /path` | 递归显示子挂载 |
+| `-D`       | 以 df 风格显示 |
+| `-S`       | 按源设备过滤 |
+
+`findmnt` 以树形显示挂载关系，比 `mount | grep` 更直观。
+
+
+#### /etc/fstab {#etc-fstab}
+
+
+##### 格式 {#格式}
+
+``````````````````cfg
+# <device/UUID/Label>  <mount>  <type>  <options>  <dump>  <pass>
+UUID=xxxx-xxxx        /        ext4    rw,relatime  0       1
+UUID=yyyy-yyyy        /home    ext4    rw,relatime  0       2
+UUID=zzzz-zzzz        /boot    vfat    rw,defaults  0       2
+/dev/sda3             none     swap    defaults     0       0
+tmpfs                 /tmp     tmpfs   rw,nosuid,nodev,size=4G  0  0
+``````````````````
+
+各字段说明：
+
+| 字段 | 说明                                                          |
+|----|-------------------------------------------------------------|
+| 设备 | 可用 `/dev/sdXN` 、 `UUID==` 、 `LABEL==` 或 `PARTUUID==`     |
+| 挂载点 | 目标目录（swap 为 `none` ）                                   |
+| 文件系统 | ext4/xfs/btrfs/vfat/swap/tmpfs 等                             |
+| 选项 | 挂载选项，多个用逗号分隔， `defaults` 含 rw,suid,dev,exec,auto,nouser,async |
+| dump | dump 工具备份标志（0=不备份，通常为 0）                       |
+| pass | fsck 检查顺序（0=不检查，1=根分区，2=其他分区）               |
+
+**推荐使用 UUID 而非 /dev/sdXN** ，因为设备名在硬件变动时可能改变，UUID 不变。
+
+获取 UUID：
+
+``````````````````bash
+blkid
+lsblk -f
+findmnt -n -o UUID /dev/sda2
+``````````````````
+
+
+##### 常见条目示例 {#常见条目示例}
+
+根分区：
+
+``````````````````cfg
+UUID=a1b2c3d4  /      ext4  rw,relatime,noatime  0  1
+``````````````````
+
+EFI 分区：
+
+``````````````````cfg
+UUID=EFI-UUID  /boot  vfat  rw,defaults,fmask=0133,dmask=0022  0  2
+``````````````````
+
+Btrfs 子卷：
+
+``````````````````cfg
+UUID=btrfs-uuid  /      btrfs  rw,relatime,compress=zstd,subvol=/@        0  0
+UUID=btrfs-uuid  /home  btrfs  rw,relatime,compress=zstd,subvol=/@home    0  0
+``````````````````
+
+Swap：
+
+``````````````````cfg
+UUID=swap-uuid  none  swap  defaults  0  0
+/swapfile       none  swap  defaults  0  0
+``````````````````
+
+Tmpfs：
+
+``````````````````cfg
+tmpfs  /tmp  tmpfs  rw,nosuid,nodev,size=4G,mode=1777  0  0
+``````````````````
+
+
+##### x-systemd.automount {#x-systemd-dot-automount}
+
+按需挂载，首次访问时才真正 mount，避免开机卡在等待 NFS/移动设备：
+
+``````````````````cfg
+//server/share  /mnt/smb  cifs  _netdev,noauto,x-systemd.automount,x-systemd.idle-timeout=5min,x-systemd.mount-timeout=10,credentials=/etc/smbcreds,uid=1000  0  0
+``````````````````
+
+| automount 选项            | 作用          |
+|-------------------------|-------------|
+| `x-systemd.automount`     | 按需挂载      |
+| `x-systemd.idle-timeout`  | 空闲超时自动卸载 |
+| `x-systemd.mount-timeout` | 挂载超时      |
+| `noauto`                  | 不在 boot 时自动挂载 |
+| `_netdev`                 | 标记需要网络  |
+
+``````````````````bash
+sudo systemctl daemon-reload
+sudo systemctl restart local-fs.target
+``````````````````
+
+
+##### 修复 fstab 错误 {#修复-fstab-错误}
+
+fstab 配置错误会导致进入 emergency mode。修复步骤：
+
+``````````````````bash
+mount -o remount,rw /
+vim /etc/fstab
+mount -a
+systemctl default
+``````````````````
+
+若 `/` 也是只读的：
+
+``````````````````bash
+mount -n -o remount,rw /
+``````````````````
+
+`-n` 不更新 `/etc/mtab` （在 `/` 只读时有用）。
+
+注释掉错误行是最快的方式，确认其他行正确后再修复。
+
+
+#### 分区与格式化 {#分区与格式化}
+
+
+##### fdisk / cfdisk {#fdisk-cfdisk}
+
+fdisk 是标准分区工具，cfdisk 是其 curses 交互版本，更适合初学者：
+
+``````````````````bash
+sudo fdisk /dev/sda
+sudo cfdisk /dev/sda
+``````````````````
+
+cfdisk 优势：可视化分区表、方向键操作、实时预览、GPT/MBR 选择界面。
+
+fdisk 交互命令：
+
+| 命令 | 作用     |
+|----|--------|
+| `m` | 帮助     |
+| `p` | 打印分区表 |
+| `n` | 新建分区 |
+| `d` | 删除分区 |
+| `t` | 修改分区类型 |
+| `w` | 写入磁盘（生效） |
+| `q` | 退出不保存 |
+
+GPT 分区类型（ `t` 后输入）：
+
+| 类型代码 | 用途                 |
+|------|--------------------|
+| `1`    | EFI System Partition |
+| `19`   | Linux swap           |
+| `20`   | Linux filesystem     |
+| `23`   | Linux root (x86-64)  |
+| `24`   | Linux root (ARM64)   |
+| `28` = | Linux home           |
+
+
+##### gdisk / cgdisk {#gdisk-cgdisk}
+
+GPT 专用分区工具：
+
+``````````````````bash
+sudo gdisk /dev/nvme0n1
+sudo cgdisk /dev/nvme0n1
+``````````````````
+
+gdisk 交互命令与 fdisk 类似， `L` 列出所有分区类型， `w` 写入。gdisk 只支持 GPT，若磁盘是 MBR 会提示转换。
+
+
+##### parted {#parted}
+
+parted 支持脚本化操作，适合自动化部署：
+
+``````````````````bash
+sudo parted /dev/sda print
+sudo parted /dev/sda mklabel gpt
+sudo parted /dev/sda mkpart primary ext4 1MiB 512MiB
+sudo parted /dev/sda mkpart primary ext4 512MiB 100%
+sudo parted /dev/sda set 1 esp on
+sudo parted /dev/sda rm 3
+``````````````````
+
+| 命令                      | 作用        |
+|-------------------------|-----------|
+| `mklabel gpt`             | 创建 GPT 分区表 |
+| `mklabel msdos`           | 创建 MBR 分区表 |
+| `mkpart pri fs start end` | 创建分区    |
+| `set N esp on`            | 设置 EFI 分区标志 |
+| `set N boot on`           | 设置启动标志 |
+| `rm N`                    | 删除分区    |
+| `print`                   | 显示分区表  |
+| `resizepart N end`        | 调整分区大小 |
+
+起始位置用 `1MiB` 而非 `0` ，确保 1MiB 对齐。
+
+
+##### mkfs 系列 {#mkfs-系列}
+
+格式化命令：
+
+| 命令            | 文件系统 | 适用场景      |
+|---------------|------|-----------|
+| `mkfs.ext4`     | ext4  | 通用 Linux 文件系统 |
+| `mkfs.xfs`      | XFS   | 大文件/高性能 |
+| `mkfs.btrfs`    | Btrfs | 快照/COW/子卷 |
+| `mkfs.fat -F32` | FAT32 | EFI 分区/U 盘 |
+| `mkfs.ntfs -f`  | NTFS  | Windows 兼容  |
+
+``````````````````bash
+sudo mkfs.ext4 /dev/sda2
+sudo mkfs.ext4 -L home /dev/sda3
+sudo mkfs.xfs /dev/sda4
+sudo mkfs.btrfs -L data /dev/sda5
+sudo mkfs.fat -F32 /dev/sda1
+sudo mkfs.ntfs -f -L windows /dev/sda6
+``````````````````
+
+ext4 常用选项：
+
+| 参数           | 作用                   |
+|--------------|----------------------|
+| `-L label`     | 设置卷标               |
+| `-m N`         | 保留块百分比（默认 5%，大分区建议 1%） |
+| `-T largefile` | 减少 inode 数量（大文件场景） |
+
+``````````````````bash
+sudo mkfs.ext4 -m 1 -L data /dev/sdb1
+``````````````````
+
+
+##### swap 分区与 swap 文件 {#swap-分区与-swap-文件}
+
+swap 分区：
+
+``````````````````bash
+sudo mkswap /dev/sda3
+sudo swapon /dev/sda3
+sudo swapoff /dev/sda3
+swapon --show
+free -h
+``````````````````
+
+swap 文件（更灵活，推荐）：
+
+``````````````````bash
+sudo fallocate -l 4G /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+``````````````````
+
+若文件系统不支持 `fallocate` （如 Btrfs），用 `dd` ：
+
+``````````````````bash
+sudo dd if=/dev/zero of=/swapfile bs=1M count=4096 status=progress
+``````````````````
+
+Btrfs 上的 swap 文件需要特殊处理：
+
+``````````````````bash
+sudo btrfs subvolume create /swap
+sudo truncate -s 0 /swap/swapfile
+sudo chattr +C /swap/swapfile
+sudo fallocate -l 4G /swap/swapfile
+sudo chmod 600 /swap/swapfile
+sudo mkswap /swap/swapfile
+sudo swapon /swap/swapfile
+``````````````````
+
+Btrfs 要求 swap 文件禁用 COW（ `chattr +C` ），且不能是压缩的。
+
+调整 swappiness（内核使用 swap 的倾向，0-200，默认 60）：
+
+``````````````````bash
+cat /proc/sys/vm/swappiness
+sudo sysctl vm.swappiness=10
+``````````````````
+
+持久化：
+
+``````````````````cfg
+vm.swappiness=10
+``````````````````
+
+写入 `/etc/sysctl.d/99-swappiness.conf` 。
+
+
+#### 文件系统维护 {#文件系统维护}
+
+
+##### fsck {#fsck}
+
+``````````````````bash
+sudo umount /dev/sda2
+sudo fsck /dev/sda2
+sudo fsck -f /dev/sda2
+sudo fsck -y /dev/sda2
+sudo fsck -t ext4 /dev/sda2
+``````````````````
+
+| 参数        | 作用               |
+|-----------|------------------|
+| `-f`        | 强制检查（即使标记为干净） |
+| `-y`        | 对所有问题回答 yes |
+| `-n`        | 对所有问题回答 no（只检查不修复） |
+| `-t fstype` | 指定文件系统类型   |
+
+**fsck 必须在分区未挂载或以只读挂载时运行** ，对根分区需从 live USB 启动。
+
+ext4 专用 `e2fsck` ：
+
+``````````````````bash
+sudo e2fsck -f -y /dev/sda2
+sudo e2fsck -p /dev/sda2
+``````````````````
+
+`-p` 自动安全修复，不需要用户干预。
+
+开机自动 fsck 由 fstab 的 `pass` 字段控制（1 或 2 会检查，0 不检查）。
+
+
+##### 扩展文件系统 {#扩展文件系统}
+
+扩展分区后需要扩展文件系统才能使用新增空间。
+
+ext4：
+
+``````````````````bash
+sudo resize2fs /dev/sda2
+sudo resize2fs /dev/sda2 50G
+``````````````````
+
+`resize2fs` 默认扩展到分区最大大小。ext4 支持在线扩展（无需卸载）。
+
+XFS：
+
+``````````````````bash
+sudo xfs_growfs /mnt/data
+sudo xfs_growfs -D 50G /mnt/data
+``````````````````
+
+XFS 只能增大不能缩小，且必须挂载后操作。 `-D` 指定目标大小，不指定则使用分区最大空间。
+
+Btrfs：
+
+``````````````````bash
+sudo btrfs filesystem resize max /mnt/data
+sudo btrfs filesystem resize -5G /mnt/data
+sudo btrfs filesystem resize +10G /mnt/data
+sudo btrfs filesystem df /mnt/data
+``````````````````
+
+Btrfs 支持在线增大和缩小，但缩小需谨慎。
+
+
+#### SMART 磁盘健康 {#smart-磁盘健康}
+
+
+##### smartctl {#smartctl}
+
+``````````````````bash
+sudo pacman -S smartmontools
+sudo smartctl -a /dev/sda
+sudo smartctl -H /dev/sda
+sudo smartctl -l error /dev/sda
+sudo smartctl -l selftest /dev/sda
+sudo smartctl -t short /dev/sda
+sudo smartctl -t long /dev/sda
+``````````````````
+
+| 命令          | 作用          |
+|-------------|-------------|
+| `-a`          | 显示所有 SMART 信息 |
+| `-H`          | 健康状态概要  |
+| `-l error`    | 错误日志      |
+| `-l selftest` | 自检日志      |
+| `-t short`    | 短时间自检（几分钟） |
+| `-t long`     | 长时间自检（数小时） |
+| `-i`          | 设备基本信息  |
+
+NVMe SSD 用 `smartctl -a /dev/nvme0n1` ，输出与 SATA 不同。
+
+关键 SMART 属性（HDD）：
+
+| ID  | 属性                   | 说明               |
+|-----|----------------------|------------------|
+| 5   | Reallocated_Sector_Ct  | 重新分配扇区数（&gt;0 需警惕） |
+| 10  | Spin_Retry_Count       | 主轴重试次数       |
+| 187 | Reported_Uncorrect     | 不可纠正错误       |
+| 188 | Command_Timeout        | 命令超时           |
+| 197 | Current_Pending_Sector | 待处理扇区         |
+| 198 | Offline_Uncorrectable  | 离线不可纠正       |
+| 199 | UDMA_CRC_Error_Count   | 传输 CRC 错误（数据线问题） |
+
+启用定期自动检测（systemd timer）：
+
+``````````````````bash
+sudo systemctl enable smartd.service
+sudo systemctl start smartd.service
+sudoedit /etc/smartd.conf
+``````````````````
+
+`/etc/smartd.conf` 示例：
+
+``````````````````cfg
+DEVICESCAN -a -m root -M test -s (S/../.././02|L/../../6/03)
+``````````````````
+
+此配置：每天 2:00 短检测，每周六 3:00 长检测，检测到问题邮件通知 root。
+
+
+### 压缩与归档 {#压缩与归档}
+
+
+#### tar {#tar}
+
+`tar` 是 Linux 下最常用的归档工具，本身只做打包（归档），通过调用外部压缩工具实现压缩。习惯上用后缀区分压缩格式。
+
+
+##### 创建归档 {#创建归档}
+
+| 命令后缀         | 创建命令                    | 说明     |
+|--------------|-------------------------|--------|
+| `.tar`           | `tar -cvf archive.tar`      | 纯归档，无压缩 |
+| `.tar.gz / .tgz` | `tar -czvf archive.tar.gz`  | gzip 压缩 |
+| `.tar.bz2`       | `tar -cjvf archive.tar.bz2` | bzip2 压缩 |
+| `.tar.xz`        | `tar -cJvf archive.tar.xz`  | xz 压缩  |
+
+常用选项：
+
+| 选项 | 说明           |
+|----|--------------|
+| `-c` | 创建归档       |
+| `-x` | 解包           |
+| `-t` | 查看归档内容（不解包） |
+| `-v` | 显示处理过程   |
+| `-f` | 指定归档文件名（必须放最后） |
+| `-z` | gzip 压缩/解压 |
+| `-j` | bzip2 压缩/解压 |
+| `-J` | xz 压缩/解压   |
+
+``````````````````bash
+tar -czvf backup.tar.gz /home/user/documents/
+tar -cjvf project.tar.bz2 ./src/
+tar -cJvf data.tar.xz ./data/
+``````````````````
+
+
+##### 解包 {#解包}
+
+`tar -xvf` 可以自动检测压缩格式，无需手动指定 `-z/-j/-J` ：
+
+``````````````````bash
+tar -xvf archive.tar.gz
+tar -xvf archive.tar.bz2
+tar -xvf archive.tar.xz
+tar -xvf archive.tar.gz -C /target/dir/
+``````````````````
+
+
+##### 查看归档内容 {#查看归档内容}
+
+``````````````````bash
+tar -tvf archive.tar.gz
+``````````````````
+
+
+##### 追加文件 {#追加文件}
+
+仅 **未压缩** 的纯 `.tar` 归档支持追加：
+
+``````````````````bash
+tar -rvf archive.tar newfile.txt
+tar -rvf archive.tar extra_dir/
+``````````````````
+
+若需向压缩归档追加，只能先解包、添加、重新打包。
+
+
+##### 排除文件 {#排除文件}
+
+``````````````````bash
+tar -czvf backup.tar.gz --exclude='*.log' /home/user/
+tar -czvf backup.tar.gz --exclude-from=exclude.txt /home/user/
+``````````````````
+
+`exclude.txt` 每行一个排除模式：
+
+``````````````````bash
+*.log
+*.tmp
+.cache/
+node_modules/
+``````````````````
+
+
+##### 快速参考表 {#快速参考表}
+
+| 格式       | 创建        | 解包       | 查看       |
+|----------|-----------|----------|----------|
+| `.tar`     | `tar -cvf`  | `tar -xvf` | `tar -tvf` |
+| `.tar.gz`  | `tar -czvf` | `tar -xvf` | `tar -tvf` |
+| `.tar.bz2` | `tar -cjvf` | `tar -xvf` | `tar -tvf` |
+| `.tar.xz`  | `tar -cJvf` | `tar -xvf` | `tar -tvf` |
+
+
+#### 单独压缩工具 {#单独压缩工具}
+
+单独压缩工具只能压缩 **单个文件** ，不能打包目录。若要压缩目录，需先 `tar` 打包再压缩（或直接用 `tar` 的 `-z/-j/-J` 选项）。
+
+
+##### gzip / gunzip {#gzip-gunzip}
+
+| 选项 | 说明           |
+|----|--------------|
+| `-k` | 保留原文件     |
+| `-r` | 递归压缩目录中的文件 |
+| `-9` | 最大压缩率（最慢） |
+| `-1` | 最快压缩（压缩率最低） |
+| `-d` | 解压（等同于 gunzip） |
+
+``````````````````bash
+gzip file.txt
+gzip -k file.txt
+gzip -r dir/
+gzip -9 file.txt
+gunzip file.txt.gz
+gzip -d file.txt.gz
+``````````````````
+
+压缩后原文件被删除（ `gzip` 默认行为），加 `-k` 保留。
+
+
+##### bzip2 / bunzip2 {#bzip2-bunzip2}
+
+| 选项 | 说明            |
+|----|---------------|
+| `-k` | 保留原文件      |
+| `-9` | 最大压缩率      |
+| `-d` | 解压（等同于 bunzip2） |
+
+``````````````````bash
+bzip2 -k file.txt
+bzip2 -9 largefile.bin
+bunzip2 file.txt.bz2
+``````````````````
+
+bzip2 压缩率高于 gzip，但速度更慢。
+
+
+##### xz / unxz {#xz-unxz}
+
+| 选项 | 说明               |
+|----|------------------|
+| `-k` | 保留原文件         |
+| `-T` | 多线程（=-T 0= 使用全部核心） |
+| `-9` | 最大压缩率         |
+| `-d` | 解压（等同于 unxz） |
+
+``````````````````bash
+xz -k file.txt
+xz -T0 -9 hugefile.bin
+unxz file.txt.xz
+``````````````````
+
+xz 压缩率最高，但速度最慢。多线程可显著加速。
+
+
+##### 压缩率对比 {#压缩率对比}
+
+压缩同一个大文本文件的大致结果：
+
+| 工具    | 压缩率 | 压缩速度 | 解压速度 | 后缀   |
+|-------|-----|------|------|------|
+| `gzip`  | 中  | 快   | 快   | `.gz`  |
+| `bzip2` | 高  | 慢   | 慢   | `.bz2` |
+| `xz`    | 最高 | 最慢 | 中   | `.xz`  |
+| `zstd`  | 中高 | 很快 | 很快 | `.zst` |
+
+
+##### zstd {#zstd}
+
+`zstd` （Zstandard）由 Facebook 开发，在压缩率和速度之间取得了优秀的平衡。解压速度恒定且非常快。
+
+| 选项      | 说明                |
+|---------|-------------------|
+| `-k`      | 保留原文件          |
+| `-T`      | 多线程              |
+| `-1~`     | 最快压缩，最低压缩率 |
+| `-19`     | 最慢压缩，最高压缩率（标准范围） |
+| `--ultra` | 解锁 -20~-22 级别，需更多内存 |
+
+``````````````````bash
+zstd file.txt
+zstd -k -19 file.txt
+zstd -T0 file.txt
+zstd -d file.txt.zst
+``````````````````
+
+zstd 的核心优势：压缩速度远超 xz/bzip2，压缩率接近 xz，解压速度极快。
+
+
+#### zip / unzip {#zip-unzip}
+
+`zip` 可以直接打包并压缩目录，无需先 `tar` ，这在 Windows 交互场景中很实用。
+
+| 操作    | 命令                                 |
+|-------|------------------------------------|
+| 创建    | `zip -r archive.zip dir/`            |
+| 解压    | `unzip archive.zip`                  |
+| 查看内容 | `unzip -l archive.zip`               |
+| 加密    | `zip -e -r archive.zip dir/`         |
+| 排除文件 | `zip -r archive.zip dir/ -x "*.log"` |
+| 更新    | `zip -u archive.zip changed_file`    |
+| 解压到指定目录 | `unzip archive.zip -d /target/`      |
+
+``````````````````bash
+zip -r project.zip ./src/
+zip -e -r secret.zip ./docs/
+unzip project.zip -d ~/restore/
+unzip -l project.zip
+zip -r archive.zip . -x "*.tmp" -x ".git/*"
+``````````````````
+
+
+#### 7z（p7zip） {#7z-p7zip}
+
+7-Zip 在高压缩率场景中表现优异，特别是 `LZMA2` 算法。
+
+| 操作 | 命令                         |
+|----|----------------------------|
+| 创建 | `7z a archive.7z dir/`       |
+| 解压 | `7z x archive.7z`            |
+| 查看内容 | `7z l archive.7z`            |
+| 高压缩率 | `7z a -mx=9 archive.7z dir/` |
+| 加密 | `7z a -p archive.7z dir/`    |
+
+``````````````````bash
+7z a backup.7z /home/user/docs/
+7z a -mx=9 -p backup.7z sensitive_data/
+7z x backup.7z -o/target/dir/
+7z l backup.7z
+``````````````````
+
+`-mx=9` 为最高压缩级别， `-p` 启用密码加密（交互输入）。
+
+
+#### 常见扩展名速查表 {#常见扩展名速查表}
+
+| 扩展名     | 对应工具    | 解压命令               |
+|---------|---------|--------------------|
+| `.tar`     | tar         | `tar -xvf`             |
+| `.tar.gz`  | tar + gzip  | `tar -xvf`             |
+| `.tgz`     | tar + gzip  | `tar -xvf`             |
+| `.tar.bz2` | tar + bzip2 | `tar -xvf`             |
+| `.tar.xz`  | tar + xz    | `tar -xvf`             |
+| `.gz`      | gzip        | `gunzip` 或 `gzip -d`  |
+| `.bz2`     | bzip2       | `bunzip2` 或 `bzip2 -d` |
+| `.xz`      | xz          | `unxz` 或 `xz -d`      |
+| `.zst`     | zstd        | `zstd -d` 或 `unzstd`  |
+| `.zip`     | zip         | `unzip`                |
+| `.7z`      | 7-Zip       | `7z x`                 |
+
+
+#### zstd 在 pacman 中的应用 {#zstd-在-pacman-中的应用}
+
+Arch Linux 自 2019 年起默认使用 `zstd` 压缩软件包（ `.pkg.tar.zst` ），替代了之前的 `.pkg.tar.xz` 。
+
+优势：
+
+-   解压速度提升约 **14 倍** （zstd vs xz）
+-   压缩率仅略低于 xz
+-   `pacman` 安装软件包时明显加速
+
+相关 `pacman` 配置（ `/etc/pacman.conf` ）：
+
+``````````````````bash
+CompressionMethod zstd
+``````````````````
+
+`makepkg` 构建包时的压缩设置（ `/etc/makepkg.conf` ）：
+
+``````````````````bash
+PKGEXT='.pkg.tar.zst'
+SRCEXT='.src.tar.zst'
+COMPRESSZST=(zstd -c -T0 -19 -)
+``````````````````
+
+
+### 网络命令 {#网络命令}
+
+
+#### 网络连接查看 {#网络连接查看}
+
+
+##### ip addr / ip link {#ip-addr-ip-link}
+
+`ip` 命令取代了已废弃的 `ifconfig` ，属于 `iproute2` 工具集。
+
+| 命令                    | 说明         |
+|-----------------------|------------|
+| `ip addr`               | 显示所有接口 IP 地址 |
+| `ip addr show eth0`     | 显示指定接口信息 |
+| `ip link`               | 显示链路层信息 |
+| `ip link set eth0 up`   | 启用接口     |
+| `ip link set eth0 down` | 禁用接口     |
+
+``````````````````bash
+ip addr
+ip -br addr
+ip addr show eth0
+ip link show
+``````````````````
+
+`ip -br addr` 以简洁格式输出，日常最常用。
+
+
+##### ip route {#ip-route}
+
+``````````````````bash
+ip route
+ip route show default
+ip route add default via 192.168.1.1
+``````````````````
+
+默认网关通常标记为 `default` 或 `default via` 。
+
+
+##### ping {#ping}
+
+``````````````````bash
+ping -c 4 8.8.8.8
+ping -c 4 archlinux.org
+``````````````````
+
+| 选项   | 说明       |
+|------|----------|
+| `-c N` | 发送 N 个包后停止 |
+| `-i N` | 间隔 N 秒  |
+| `-W N` | 超时 N 秒  |
+| `-s N` | 包大小     |
+
+Ctrl+C 中断并显示统计。
+
+
+##### ss {#ss}
+
+`ss` 取代了 `netstat` ，速度更快。
+
+| 选项 | 说明        |
+|----|-----------|
+| `-t` | TCP 连接    |
+| `-u` | UDP 连接    |
+| `-l` | 监听中的端口 |
+| `-p` | 显示进程信息 |
+| `-n` | 不解析域名（数字格式） |
+| `-a` | 所有连接    |
+
+``````````````````bash
+ss -tlnp
+ss -tuln
+ss -s
+ss -t state established
+``````````````````
+
+`ss -tlnp` 是最常用的组合：查看 TCP 监听端口及对应进程。
+
+
+##### nmcli {#nmcli}
+
+`nmcli` 是 NetworkManager 的命令行接口，Arch 桌面环境通常使用 NetworkManager 管理网络。
+
+| 操作       | 命令                                              |
+|----------|-------------------------------------------------|
+| 查看连接状态 | `nmcli general status`                            |
+| 查看所有连接 | `nmcli connection show`                           |
+| 查看 WiFi 列表 | `nmcli device wifi list`                          |
+| 连接 WiFi  | `nmcli device wifi connect "SSID" password "pwd"` |
+| 断开连接   | `nmcli device disconnect eth0`                    |
+| 启用/禁用连接 | `nmcli connection up/down "连接名"`               |
+| 重新扫描 WiFi | `nmcli device wifi rescan`                        |
+
+``````````````````bash
+nmcli device wifi list
+nmcli device wifi connect "MyWiFi" password "mypassword"
+nmcli connection show --active
+nmcli connection down "MyWiFi"
+nmcli connection up "MyWiFi"
+``````````````````
+
+
+##### nmtui {#nmtui}
+
+`nmtui` 是 NetworkManager 的文本界面，适合交互式操作：
+
+``````````````````bash
+nmtui
+``````````````````
+
+菜单选项：
+
+-   `Activate a connection` ：连接/断开网络
+-   `Edit a connection` ：编辑连接配置
+-   `Set system hostname` ：设置主机名
+
+
+#### DNS 查询 {#dns-查询}
+
+
+##### dig / nslookup / host {#dig-nslookup-host}
+
+| 命令                       | 说明               |
+|--------------------------|------------------|
+| `dig archlinux.org`        | 完整 DNS 查询（默认 A 记录） |
+| `dig archlinux.org AAAA`   | 查询 IPv6 记录     |
+| `dig archlinux.org MX`     | 查询邮件记录       |
+| `dig archlinux.org NS`     | 查询域名服务器     |
+| `dig +short archlinux.org` | 仅显示结果 IP      |
+| `nslookup archlinux.org`   | 简洁查询           |
+| `host archlinux.org`       | 最简洁的查询输出   |
+
+``````````````````bash
+dig +short archlinux.org
+nslookup archlinux.org
+host archlinux.org
+dig archlinux.org MX +short
+``````````````````
+
+`dig` 输出最详细（包含 QUERY/ANSWER/AUTHORITY 段），=host= 最简洁。
+
+
+##### resolvectl {#resolvectl}
+
+Arch 默认使用 `systemd-resolved` 做 DNS 缓存和解析：
+
+``````````````````bash
+resolvectl query archlinux.org
+resolvectl status
+resolvectl statistics
+``````````````````
+
+
+##### /etc/resolv.conf 与 systemd-resolved {#etc-resolv-dot-conf-与-systemd-resolved}
+
+`systemd-resolved` 运行后， `/etc/resolv.conf` 通常是指向 `/run/systemd/resolve/stub-resolv.conf` 的符号链接，指向本地 DNS 存根解析器（127.0.0.53）。
+
+``````````````````bash
+ls -la /etc/resolv.conf
+resolvectl status
+``````````````````
+
+若需手动指定 DNS：
+
+``````````````````bash
+resolvectl dns eth0 8.8.8.8 1.1.1.1
+resolvectl domain eth0 ~
+``````````````````
+
+或在 NetworkManager 配置中设置：
+
+``````````````````bash
+nmcli connection modify "连接名" ipv4.dns "8.8.8.8 1.1.1.1"
+nmcli connection up "连接名"
+``````````````````
+
+
+#### 下载工具 {#下载工具}
+
+
+##### curl {#curl}
+
+`curl` 是最通用的网络请求工具，支持多种协议。
+
+| 选项                | 说明                         |
+|-------------------|----------------------------|
+| `-o file`           | 输出到指定文件               |
+| `-O`                | 用远程文件名保存             |
+| `-L`                | 跟随重定向                   |
+| `-s`                | 静默模式                     |
+| `-S`                | 配合 `-s` 显示错误           |
+| `-v`                | 显示详细请求过程             |
+| `-H "K: V"`         | 添加请求头                   |
+| `-X POST`           | 指定请求方法                 |
+| `--data`            | 发送 POST 数据               |
+| `-k`                | 跳过 SSL 证书验证            |
+| `-C -`              | 断点续传                     |
+| `--connect-timeout` | 连接超时（秒）               |
+| `-w format`         | 输出格式（如 `-w "%{http_code}"` ） |
+
+下载文件：
+
+``````````````````bash
+curl -O https://example.com/file.tar.gz
+curl -o myfile.tar.gz https://example.com/file.tar.gz
+curl -L -O https://example.com/redirect-file
+curl -C - -O https://example.com/largefile.iso
+``````````````````
+
+API 调用示例：
+
+``````````````````bash
+curl -s https://api.github.com/users/archlinux | head -20
+curl -X POST -H "Content-Type: application/json" --data '{"key":"value"}' https://api.example.com/endpoint
+curl -s -o /dev/null -w "%{http_code}" https://archlinux.org
+``````````````````
+
+
+##### wget {#wget}
+
+`wget` 侧重下载，递归和镜像功能强于 `curl` 。
+
+| 选项       | 说明                   |
+|----------|----------------------|
+| `-c`       | 断点续传               |
+| `-q`       | 静默模式               |
+| `-O file`  | 指定输出文件名         |
+| `-r`       | 递归下载               |
+| `--mirror` | 镜像网站（ `-r -N -l inf` ） |
+| `-np`      | 不爬父目录             |
+| `-nc`      | 不覆盖已有文件         |
+| `-nd`      | 不创建目录结构         |
+| `--accept` | 只下载指定后缀         |
+| `--reject` | 排除指定后缀           |
+
+``````````````````bash
+wget -c https://example.com/largefile.iso
+wget -q -O /tmp/file.txt https://example.com/data.txt
+wget --mirror --convert-links --adjust-extension --page-requisites https://example.com
+wget -r -np -nd --accept=pdf https://example.com/docs/
+``````````````````
+
+镜像网站常用组合：
+
+``````````````````bash
+wget --mirror --convert-links --adjust-extension --page-requisites --no-parent https://example.com/
+``````````````````
+
+
+##### aria2c {#aria2c}
+
+`aria2c` 支持多线程、多源、BT 下载。
+
+| 选项      | 说明         |
+|---------|------------|
+| `-x 16`   | 单服务器最大 16 连接 |
+| `-s 16`   | 单文件最大 16 连接 |
+| `-j 5`    | 同时下载 5 个文件 |
+| `-c`      | 断点续传     |
+| `-d dir`  | 下载到指定目录 |
+| `-o file` | 指定输出文件名 |
+
+``````````````````bash
+aria2c -x 16 -s 16 https://example.com/largefile.iso
+aria2c -c -d ~/Downloads https://example.com/file.zip
+aria2c -j 5 -i urls.txt
+aria2c https://example.com/file.torrent
+aria2c 'magnet:?xt=urn:btih:...'
+``````````````````
+
+`urls.txt` 每行一个 URL， `-i` 批量下载。
+
+
+#### SSH 基础 {#ssh-基础}
+
+
+##### ssh 连接与 scp 传输 {#ssh-连接与-scp-传输}
+
+``````````````````bash
+ssh user@hostname
+ssh -p 2222 user@hostname
+scp file.txt user@hostname:/remote/path/
+scp -r dir/ user@hostname:/remote/path/
+scp user@hostname:/remote/file.txt ./local/
+``````````````````
+
+| 命令                           | 说明 |
+|------------------------------|----|
+| `ssh user@host`                | 远程登录 |
+| `ssh -p PORT user@host`        | 指定端口 |
+| `scp local user@host:remote`   | 上传文件 |
+| `scp -r dir/ user@host:remote` | 上传目录 |
+| `scp user@host:remote local`   | 下载文件 |
+
+
+##### ssh-keygen 密钥生成 {#ssh-keygen-密钥生成}
+
+``````````````````bash
+ssh-keygen -t ed25519 -C "myemail@example.com"
+ssh-keygen -t ed25519 -f ~/.ssh/id_server1 -C "server1"
+``````````````````
+
+推荐使用 `ed25519` 算法（更安全、密钥更短）。若需兼容旧系统可用 `rsa` ：
+
+``````````````````bash
+ssh-keygen -t rsa -b 4096 -C "myemail@example.com"
+``````````````````
+
+
+##### ~/.ssh/config 简化配置 {#dot-ssh-config-简化配置}
+
+创建 `~/.ssh/config` 后，可以用简短的别名连接服务器：
+
+``````````````````bash
+Host myserver
+    HostName 203.0.113.10
+    User admin
+    Port 2222
+    IdentityFile ~/.ssh/id_server1
+
+Host github
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/id_github
+
+Host dev
+    HostName 192.168.1.100
+    User developer
+    ForwardAgent yes
+``````````````````
+
+之后只需：
+
+``````````````````bash
+ssh myserver
+ssh dev
+``````````````````
+
+常用配置项：
+
+| 配置项                | 说明     |
+|--------------------|--------|
+| `HostName`            | 服务器地址 |
+| `User`                | 登录用户名 |
+| `Port`                | SSH 端口 |
+| `IdentityFile`        | 指定私钥路径 |
+| `ForwardAgent`        | 转发 Agent |
+| `ProxyJump`           | 跳板机   |
+| `ServerAliveInterval` | 心跳间隔（秒） |
+
+
+##### ssh-copy-id 免密登录 {#ssh-copy-id-免密登录}
+
+``````````````````bash
+ssh-copy-id user@hostname
+ssh-copy-id -i ~/.ssh/id_ed25519.pub user@hostname
+ssh-copy-id -p 2222 user@hostname
+``````````````````
+
+将公钥复制到服务器的 `~/.ssh/authorized_keys` ，之后无需输入密码。
+
+
+##### 安全配置（/etc/ssh/sshd_config） {#安全配置-etc-ssh-sshd-config}
+
+若在本机运行 `sshd` 服务，关键安全配置：
+
+``````````````````bash
+Port 22
+PermitRootLogin no
+PasswordAuthentication no
+MaxAuthTries 3
+AllowUsers myuser
+``````````````````
+
+修改后重启服务：
+
+``````````````````bash
+sudo systemctl restart sshd
+``````````````````
+
+
+#### 防火墙 {#防火墙}
+
+
+##### iptables / nftables 基本概念 {#iptables-nftables-基本概念}
+
+`nftables` 是 `iptables` 的继任者，语法更统一，性能更好。Arch 推荐使用 `nftables` 。
+
+`iptables` 四表五链的概念：
+
+-   **表** ： `filter` （默认）、 `nat` 、 `mangle` 、 `raw`
+-   **链** ： `INPUT` 、 `OUTPUT` 、 `FORWARD` 、 `PREROUTING` 、 `POSTROUTING`
+
+`nftables` 取消了表的概念区分，统一语法。日常使用推荐 `ufw` 简化管理。
+
+
+##### ufw 简化防火墙 {#ufw-简化防火墙}
+
+`ufw=（Uncomplicated Firewall）是 =iptables/nftables` 的前端，大幅简化操作：
+
+| 操作         | 命令                                          |
+|------------|---------------------------------------------|
+| 启用         | `sudo ufw enable`                             |
+| 禁用         | `sudo ufw disable`                            |
+| 查看状态     | `sudo ufw status`                             |
+| 查看详细状态 | `sudo ufw status verbose`                     |
+| 允许端口     | `sudo ufw allow 22`                           |
+| 允许服务     | `sudo ufw allow ssh`                          |
+| 拒绝端口     | `sudo ufw deny 80`                            |
+| 删除规则     | `sudo ufw delete allow 22`                    |
+| 允许指定 IP  | `sudo ufw allow from 192.168.1.0/24`          |
+| 允许 IP 访问指定端口 | `sudo ufw allow from 10.0.0.1 to any port 22` |
+| 重置所有规则 | `sudo ufw reset`                              |
+
+``````````````````bash
+sudo ufw enable
+sudo ufw allow ssh
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+sudo ufw allow from 192.168.1.0/24
+sudo ufw status numbered
+``````````````````
+
+初始化设置流程：
+
+``````````````````bash
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+sudo ufw allow ssh
+sudo ufw enable
+sudo ufw status verbose
+``````````````````
+
+
+##### 个人 PC 防火墙建议 {#个人-pc-防火墙建议}
+
+个人桌面电脑一般不需要复杂防火墙配置：
+
+-   桌面环境通常不在公网暴露服务端口
+-   路由器 NAT 已提供基本保护
+-   若需开放 SSH 供外部访问，才需要配置防火墙规则
+-   推荐最小配置： `ufw default deny incoming` + `ufw default allow outgoing`
+
+
+#### 网络排查流程 {#网络排查流程}
+
+遇到网络问题时，按以下顺序排查：
+
+``````````````````bash
+ping -c 3 8.8.8.8
+ip addr
+ip route
+ss -tlnp
+curl -s -o /dev/null -w "%{http_code}" https://archlinux.org
+dig archlinux.org
+resolvectl status
+``````````````````
+
+排查逻辑：
+
+| 步骤 | 命令                 | 检查目标   |
+|----|--------------------|--------|
+| 1  | `ping 8.8.8.8`       | 基础网络连通性 |
+| 2  | `ping archlinux.org` | DNS 是否正常 |
+| 3  | `ip addr`            | 接口是否有 IP |
+| 4  | `ip route`           | 默认网关是否存在 |
+| 5  | `ss -tlnp`           | 端口是否在监听 |
+| 6  | `curl`               | HTTP 层是否可达 |
+| 7  | `dig / resolvectl`   | DNS 解析详情 |
+
+若 `ping IP` 通但 `ping 域名` 不通 → DNS 问题
+若 `ping` 不通 → 检查 `ip addr` 和 `ip route`
+若 `ping` 通但 `curl` 不通 → 防火墙/代理问题
+
+
+### 用户与权限 {#用户与权限}
+
+
+#### 用户管理 {#用户管理}
+
+
+##### useradd / userdel / usermod {#useradd-userdel-usermod}
+
+| 命令      | 常用选项                            | 说明       |
+|---------|---------------------------------|----------|
+| `useradd` | `-m -s /bin/bash -G wheel username` | 创建用户   |
+| `userdel` | `-r username`                       | 删除用户及家目录 |
+| `usermod` | `-aG group username`                | 追加附加组 |
+| `usermod` | `-s /bin/zsh username`              | 修改默认 Shell |
+| `usermod` | `-l newname oldname`                | 修改用户名 |
+
+``````````````````bash
+sudo useradd -m -s /bin/bash -G wheel,audio,video newuser
+sudo passwd newuser
+sudo usermod -aG docker newuser
+sudo usermod -s /bin/zsh newuser
+sudo userdel -r olduser
+``````````````````
+
+`-m` 创建家目录， `-aG` 追加附加组（不要漏 `-a` ，否则会覆盖已有附加组）。
+
+Arch 创建用户常用完整流程：
+
+``````````````````bash
+sudo useradd -m -s /bin/bash -G wheel,audio,video,storage newuser
+sudo passwd newuser
+``````````````````
+
+
+##### /etc/passwd 字段含义 {#etc-passwd-字段含义}
+
+每行格式： `用户名:密码占位:UID:GID:GECOS:家目录:Shell`
+
+``````````````````bash
+newuser:x:1000:1000:Full Name:/home/newuser:/bin/bash
+``````````````````
+
+| 字段  | 说明                              |
+|-----|---------------------------------|
+| 用户名 | 登录名                            |
+| `x`   | 密码占位，实际密码在 `/etc/shadow` |
+| UID   | 用户 ID（0=root，1000+普通用户）  |
+| GID   | 主组 ID                           |
+| GECOS | 全名/注释                         |
+| 家目录 | 用户主目录路径                    |
+| Shell | 登录 Shell（ `/sbin/nologin` 表示禁止登录） |
+
+
+##### id 命令 {#id-命令}
+
+``````````````````bash
+id
+id username
+id -u username
+id -G username
+``````````````````
+
+| 选项 | 说明         |
+|----|------------|
+| `-u` | 仅显示 UID   |
+| `-g` | 仅显示主 GID |
+| `-G` | 显示所有 GID |
+| `-n` | 配合以上显示名称而非数字 |
+
+
+##### who / w / whoami {#who-w-whoami}
+
+| 命令     | 说明        |
+|--------|-----------|
+| `whoami` | 当前用户名  |
+| `who`    | 所有已登录用户 |
+| `w`      | 已登录用户及其当前活动 |
+
+``````````````````bash
+whoami
+who
+w
+``````````````````
+
+
+#### 组管理 {#组管理}
+
+
+##### groupadd / groupdel / groupmod {#groupadd-groupdel-groupmod}
+
+``````````````````bash
+sudo groupadd mygroup
+sudo groupdel mygroup
+sudo groupmod -n newgroup oldgroup
+``````````````````
+
+
+##### gpasswd {#gpasswd}
+
+`gpasswd` 是组管理的高级工具：
+
+| 命令                     | 说明    |
+|------------------------|-------|
+| `gpasswd -a user group`  | 添加用户到组 |
+| `gpasswd -d user group`  | 从组中移除用户 |
+| `gpasswd -A admin group` | 设置组管理员 |
+| `gpasswd group`          | 设置组密码 |
+
+``````````````````bash
+sudo gpasswd -a newuser docker
+sudo gpasswd -d olduser docker
+``````````````````
+
+
+##### usermod -aG 追加附加组 {#usermod-ag-追加附加组}
+
+``````````````````bash
+sudo usermod -aG wheel,audio,video newuser
+``````````````````
+
+**切记** ：用 `-aG` 而不是 `-G` 。 `usermod -G` 会 **覆盖** 附加组列表， `-aG` 才是追加。
+
+追加后需要重新登录才生效，或临时生效：
+
+``````````````````bash
+su - $USER
+``````````````````
+
+
+##### groups 查看用户组 {#groups-查看用户组}
+
+``````````````````bash
+groups
+groups username
+``````````````````
+
+
+##### /etc/group 字段含义 {#etc-group-字段含义}
+
+每行格式： `组名:密码占位:GID:组成员列表`
+
+``````````````````bash
+wheel:x:10:newuser,admin
+docker:x:982:newuser
+``````````````````
+
+| 字段 | 说明             |
+|----|----------------|
+| 组名 | 组名称           |
+| `x`  | 密码占位         |
+| GID  | 组 ID            |
+| 成员列表 | 附加组成员（主组成员不在此显示） |
+
+
+#### sudo 配置 {#sudo-配置}
+
+
+##### /etc/sudoers 与 visudo {#etc-sudoers-与-visudo}
+
+**必须** 使用 `visudo` 编辑 `/etc/sudoers` ，它会做语法检查，防止配置错误导致 `sudo` 失效：
+
+``````````````````bash
+sudo visudo
+``````````````````
+
+默认使用 `vi` 编辑器，可指定其他编辑器：
+
+``````````````````bash
+sudo EDITOR=nano visudo
+sudo EDITOR=vim visudo
+``````````````````
+
+
+##### sudoers 语法 {#sudoers-语法}
+
+格式： `用户/%组 主机=(运行身份) 命令`
+
+``````````````````bash
+root ALL=(ALL) ALL
+%wheel ALL=(ALL) ALL
+newuser ALL=(ALL) ALL
+newuser ALL=(ALL) NOPASSWD: ALL
+newuser ALL=(root) NOPASSWD: /usr/bin/pacman, /usr/bin/mount
+%admin ALL=(root) /usr/bin/systemctl
+``````````````````
+
+| 示例                                           | 说明                   |
+|----------------------------------------------|----------------------|
+| `root ALL=(ALL) ALL`                           | root 可在任何主机以任何身份执行任何命令 |
+| `%wheel ALL=(ALL) ALL`                         | wheel 组成员可执行任何命令（需密码） |
+| `newuser ALL=(ALL) NOPASSWD: ALL`              | newuser 无需密码执行任何命令 |
+| `newuser ALL=(root) NOPASSWD: /usr/bin/pacman` | 仅允许无密码运行 pacman |
+| `%admin ALL=(root) /usr/bin/systemctl`         | admin 组可用 systemctl |
+
+NOPASSWD 仅对指定命令生效，未列出的命令仍需密码。
+
+
+##### sudo 常用选项 {#sudo-常用选项}
+
+| 选项      | 说明                   |
+|---------|----------------------|
+| `-u user` | 以指定用户身份执行     |
+| `-i`      | 模拟初始登录（完整 login shell） |
+| `-s`      | 启动一个 shell（非登录 shell） |
+| `-l`      | 列出当前用户可执行的 sudo 命令 |
+
+``````````````````bash
+sudo -u postgres psql
+sudo -i
+sudo -s
+sudo -l
+``````````````````
+
+`sudo -i` vs `sudo -s` ：
+
+-   `sudo -i` ：模拟完整登录，加载所有 profile，工作目录变为家目录
+-   `sudo -s` ：仅启动 shell，环境基本不变
+
+
+##### _etc/sudoers.d_ 目录（推荐方法） {#etc-sudoers-dot-d-目录-推荐方法}
+
+推荐在 `/etc/sudoers.d/` 下创建独立文件，而非直接修改 `/etc/sudoers` ：
+
+``````````````````bash
+echo "newuser ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/newuser
+sudo chmod 440 /etc/sudoers.d/newuser
+``````````````````
+
+`/etc/sudoers` 中已包含 `@includedir /etc/sudoers.d` （或旧版写法 `#includedir /etc/sudoers.d` ），该目录下的文件自动生效。
+
+优势：
+
+-   每用户一个文件，管理清晰
+-   删除用户时直接删除对应文件
+-   不影响主 `sudoers` 文件
+
+
+#### su 命令 {#su-命令}
+
+| 命令            | 说明                |
+|---------------|-------------------|
+| `su`            | 切换到 root（需 root 密码） |
+| `su -`          | 切换到 root 并模拟完整登录环境 |
+| `su - username` | 切换到指定用户并加载其环境 |
+| `su username`   | 切换到指定用户但保留当前环境 |
+
+``````````````````bash
+su -
+su - postgres
+su username
+``````````````````
+
+`su` vs `su -` ：
+
+-   `su` ：保留当前用户的环境变量（PATH、家目录等）
+-   `su -` ：重新初始化环境，如同直接登录该用户
+
+
+#### 登录 Shell vs 非登录 Shell {#登录-shell-vs-非登录-shell}
+
+| 特性 | 登录 Shell ( `su -/ssh` )           | 非登录 Shell ( `su/图形终端` )    |
+|----|-----------------------------------|----------------------------|
+| 加载文件 | `/etc/profile` ,  `~/.bash_profile` | `/etc/bash.bashrc` ,  `~/.bashrc` |
+| PATH | 完整                                | 可能不完整                        |
+| 环境变量 | 全部初始化                          | 继承父 Shell                      |
+
+Bash 加载顺序：
+
+-   **登录 Shell** ： `/etc/profile` → `~/.bash_profile` （或 `~/.bash_login` 或 `~/.profile` ）
+-   **非登录 Shell** ： `/etc/bash.bashrc` → `~/.bashrc`
+
+Zsh 加载顺序：
+
+-   **登录 Shell** ： `/etc/zsh/zprofile` → `~/.zprofile` → `~/.zshrc` → `~/.zlogin`
+-   **非登录 Shell** ： `~/.zshrc`
+
+
+#### 密码管理 {#密码管理}
+
+
+##### passwd {#passwd}
+
+``````````````````bash
+passwd
+passwd username
+sudo passwd -l username
+sudo passwd -u username
+sudo passwd -d username
+sudo passwd -e username
+``````````````````
+
+| 选项 | 说明       |
+|----|----------|
+| `-l` | 锁定账户   |
+| `-u` | 解锁账户   |
+| `-d` | 删除密码（空密码） |
+| `-e` | 强制下次登录修改密码 |
+| `-S` | 查看密码状态 |
+
+
+##### chage 密码策略 {#chage-密码策略}
+
+``````````````````bash
+sudo chage -l username
+sudo chage -M 90 username
+sudo chage -m 7 username
+sudo chage -W 14 username
+sudo chage -I 30 username
+sudo chage -E 2026-12-31 username
+``````````````````
+
+| 选项      | 说明                 |
+|---------|--------------------|
+| `-l`      | 查看密码策略         |
+| `-M days` | 密码最大有效期       |
+| `-m days` | 密码最小修改间隔     |
+| `-W days` | 过期前警告天数       |
+| `-I days` | 过期后锁定天数（-1 不锁定） |
+| `-E date` | 账户过期日期         |
+| `-d date` | 最后修改日期（0 强制下次登录修改密码） |
+
+
+##### /etc/shadow 字段 {#etc-shadow-字段}
+
+每行格式： `用户名:加密密码:最后修改:最小间隔:最大有效期:警告:禁用:过期日期:保留`
+
+``````````````````bash
+newuser:$6$salt$hash:19500:0:99999:7:::
+``````````````````
+
+| 字段  | 说明                              |
+|-----|---------------------------------|
+| 用户名 | 登录名                            |
+| 加密密码 | `$6$=（SHA-512），`!\*= 或 `!!*` 表示锁定 |
+| 最后修改 | 距 1970-01-01 的天数              |
+| 最小间隔 | 两次修改之间的最小天数            |
+| 最大有效期 | 密码有效天数                      |
+| 警告  | 过期前多少天开始警告              |
+| 禁用  | 过期后多少天锁定                  |
+| 过期日期 | 账户过期日（距 1970-01-01 的天数） |
+
+
+#### PAM 概念简介 {#pam-概念简介}
+
+`PAM` （Pluggable Authentication Modules，可插拔认证模块）是 Linux 的认证框架，将认证逻辑从应用程序中解耦。
+
+核心概念：
+
+-   应用程序（ `login` 、 `su` 、 `sudo` 、 `sshd` 等）通过 PAM API 调用认证
+-   每个服务在 `/etc/pam.d/` 下有配置文件
+-   配置文件定义认证流程：使用哪些模块、参数、控制标志
+
+`/etc/pam.d/` 目录内容示例：
+
+``````````````````bash
+ls /etc/pam.d/
+``````````````````
+
+常见服务配置： `login` 、 `su` 、 `sudo` 、 `sshd` 、 `passwd`
+
+配置行格式： `类型 控制标志 模块路径 参数`
+
+| 类型       | 说明    |
+|----------|-------|
+| `auth`     | 身份验证 |
+| `account`  | 账户有效性检查 |
+| `password` | 密码更新 |
+| `session`  | 会话管理 |
+
+相关配置目录：
+
+-   `/etc/security/` ：PAM 模块的全局配置（如 `limits.conf` 资源限制）
+-   `/etc/pam.d/` ：各服务的 PAM 配置
+
+日常使用中很少直接修改 PAM 配置，了解概念即可。若需调整认证策略（如限制 `su` 仅限 wheel 组），才需要编辑对应文件。
+
+
+### Shell 脚本入门 {#shell-脚本入门}
+
+
+#### 脚本基础 {#脚本基础}
+
+
+##### shebang {#shebang}
+
+脚本第一行指定解释器：
+
+``````````````````bash
+#!/bin/bash
+#!/usr/bin/env bash
+#!/bin/sh
+``````````````````
+
+`#!/usr/bin/env bash` 更具可移植性，通过 `env` 查找 `bash` 路径，不硬编码 `/bin/bash` 。
+
+
+##### 执行方法 {#执行方法}
+
+| 方式                                | 说明                            |
+|-----------------------------------|-------------------------------|
+| `bash script.sh`                    | 直接用 bash 执行，无需执行权限  |
+| `chmod +x script.sh && ./script.sh` | 赋予执行权限后直接运行          |
+| `source script.sh`                  | 在当前 Shell 中执行（=. script.sh= 同效） |
+
+``````````````````bash
+bash myscript.sh
+chmod +x myscript.sh
+./myscript.sh
+source myscript.sh
+``````````````````
+
+`source` 与 `./` 的区别：
+
+-   `source` ：在当前 Shell 环境中执行，脚本中的变量和函数在当前 Shell 可用
+-   `./` ：启动子 Shell 执行，变量不会影响当前 Shell
+
+
+##### 特殊变量 {#特殊变量}
+
+| 变量    | 说明            |
+|-------|---------------|
+| `$0`    | 脚本名          |
+| `$1~$9` | 第 1~9 个参数   |
+| `${10}` | 第 10 个及以上参数需花括号 |
+| `$@`    | 所有参数（各自独立，保留空格） |
+| `$*`    | 所有参数（合为一个字符串） |
+| `$#=`   | 参数个数        |
+| `$$`    | 当前脚本 PID    |
+| `$?`    | 上一条命令的退出码 |
+| `$!`    | 最近一个后台进程 PID |
+
+`$@` vs `$*` 在引号中的区别：
+
+``````````````````bash
+for arg in "$@"; do echo "$arg"; done
+for arg in "$*"; do echo "$arg"; done
+``````````````````
+
+`"$@"` 保留每个参数的独立性， `"$*"` 把所有参数拼成一个字符串。绝大多数情况用 `"$@"` 。
+
+
+#### 变量 {#变量}
+
+
+##### 赋值与引用 {#赋值与引用}
+
+``````````````````bash
+name="Arch Linux"
+echo $name
+echo ${name}
+echo "Welcome to ${name}!"
+echo 'Welcome to ${name}!'
+``````````````````
+
+-   赋值时等号两边 **不能有空格**
+-   双引号中变量会展开，单引号中不会
+-   `${}` 花括号用于区分变量名边界
+
+
+##### 默认值与替换 {#默认值与替换}
+
+| 语法                | 说明                         |
+|-------------------|----------------------------|
+| `${var:-default}`   | var 未设或为空时返回 default，不修改 var |
+| `${var:=default}`   | var 未设或为空时赋值为 default 并返回 |
+| `${var:+alternate}` | var 非空时返回 alternate     |
+| `${var:?error}`     | var 未设或为空时输出 error 并退出 |
+
+``````````````````bash
+echo ${EDITOR:-vim}
+echo ${EDITOR:=nano}
+echo ${VERBOSE:+--verbose}
+echo ${DB_HOST:?"DB_HOST is not set"}
+``````````````````
+
+
+##### 字符串操作 {#字符串操作}
+
+| 语法                   | 说明      |
+|----------------------|---------|
+| `${#var}`              | 字符串长度 |
+| `${var%pattern}`       | 从末尾最短匹配删除 |
+| `${var%%pattern}`      | 从末尾最长匹配删除 |
+| `${var#pattern}`       | 从开头最短匹配删除 |
+| `${var##pattern}`      | 从开头最长匹配删除 |
+| `${var:offset:length}` | 子串截取  |
+| `${var/old/new}`       | 替换第一个匹配 |
+| `${var//old/new}`      | 替换所有匹配 |
+
+``````````````````bash
+file="archive.tar.gz"
+echo ${#file}
+echo ${file%.gz}
+echo ${file%%.*}
+echo ${file#*.}
+echo ${file##*.}
+echo ${file:0:6}
+echo ${file:8:3}
+echo ${file/tar/zip}
+path="/home/user/docs/readme.txt"
+echo ${path##*/}
+echo ${path%/*}
+``````````````````
+
+`%` 和 `%%` 从末尾删除（最短/最长匹配）， `#` 和 `##` 从开头删除。
+
+
+##### 整数运算 {#整数运算}
+
+| 方式        | 说明          |
+|-----------|-------------|
+| `$((expr))` | 推荐方式      |
+| `let`       | 等效算术运算  |
+| `expr`      | 不推荐（需转义，功能有限） |
+
+``````````````````bash
+a=10
+b=3
+echo $((a + b))
+echo $((a * b))
+echo $((a / b))
+echo $((a % b))
+echo $((2 ** 10))
+let c=a+b
+``````````````````
+
+`$(())` 中变量不需要 `$` 前缀。
+
+
+#### 条件判断 {#条件判断}
+
+
+##### test / [ ] {#test}
+
+| 类型  | 操作符                                                                     |
+|-----|-------------------------------------------------------------------------|
+| 文件测试 | `-f` （普通文件） `-d` （目录） `-e` （存在） `-r` （可读） `-w` （可写） `-x` （可执行） `-s` （非空文件） |
+| 字符串测试 | `-z` （空串） `-n` （非空串） `= （相等） =!` （不等）                     |
+| 数值比较 | `-eq` `-ne` `-gt` `-ge` `-lt` `-le`                                        |
+
+``````````````````bash
+[ -f /etc/passwd ] && echo "file exists"
+[ -d /tmp ] && echo "directory exists"
+[ -x /usr/bin/pacman ] && echo "executable"
+[ -z "$VAR" ] && echo "VAR is empty"
+[ "$A" -eq "$B" ] && echo "equal"
+[ "$A" -gt 10 ] && echo "greater than 10"
+``````````````````
+
+注意：
+
+-   `[ ]` 中各元素之间 **必须有空格**
+-   字符串比较用 `=` ，数值比较用 `-eq` 等
+-   变量加引号防止空值报错
+
+
+#####  {#680--org8ef8717}
+
+`[[ ]]` 是 Bash 增强版，支持模式匹配和逻辑运算：
+
+``````````````````bash
+[[ -f file.txt && -r file.txt ]]
+[[ "$str" == *.txt ]]
+[[ "$str" =~ ^[0-9]+$ ]]
+[[ "$a" -gt 0 && "$a" -lt 100 ]]
+``````````````````
+
+优势：
+
+-   支持 =~ 正则匹配
+-   支持逻辑 `&&` 和 `||=（不需要 =-a` / `-o` ）
+-   模式匹配（ == 右侧可用通配符）
+-   变量不加引号也不会因空值报错
+
+
+##### if / elif / else / fi {#if-elif-else-fi}
+
+``````````````````bash
+if [[ -f /etc/arch-release ]]; then
+    echo "This is Arch Linux"
+elif [[ -f /etc/debian_version ]]; then
+    echo "This is Debian/Ubuntu"
+else
+    echo "Unknown distro"
+fi
+``````````````````
+
+实用模式：
+
+``````````````````bash
+if ! ping -c 1 -W 2 archlinux.org &>/dev/null; then
+    echo "Network unreachable"
+fi
+
+if [[ $# -lt 1 ]]; then
+    echo "Usage: $0 <filename>"
+    exit 1
+fi
+``````````````````
+
+
+#### 循环 {#循环}
+
+
+##### for...in {#for-dot-dot-dot-in}
+
+``````````````````bash
+for pkg in git vim zsh curl; do
+    sudo pacman -S --noconfirm "$pkg"
+done
+
+for f in *.jpg; do
+    echo "Processing: $f"
+done
+``````````````````
+
+
+##### C 风格 for {#c-风格-for}
+
+``````````````````bash
+for ((i=0; i<10; i++)); do
+    echo "Count: $i"
+done
+``````````````````
+
+
+##### while {#while}
+
+``````````````````bash
+count=0
+while [[ $count -lt 5 ]]; do
+    echo "Count: $count"
+    ((count++))
+done
+``````````````````
+
+逐行读取文件：
+
+``````````````````bash
+while IFS= read -r line; do
+    echo "Line: $line"
+done < input.txt
+``````````````````
+
+`IFS=` 防止去除前后空格， `-r` 防止反斜杠转义。
+
+
+##### until {#until}
+
+`until` 是 `while` 的反义：条件为 **假** 时循环，为 **真** 时退出：
+
+``````````````````bash
+until ping -c 1 -W 2 archlinux.org &>/dev/null; do
+    echo "Waiting for network..."
+    sleep 5
+done
+echo "Network is up!"
+``````````````````
+
+
+##### break / continue {#break-continue}
+
+``````````````````bash
+for i in {1..10}; do
+    [[ $i -eq 5 ]] && continue
+    [[ $i -eq 8 ]] && break
+    echo "$i"
+done
+``````````````````
+
+`continue` 跳过本次循环， `break` 退出整个循环。
+
+
+#### 函数 {#函数}
+
+
+##### 定义与调用 {#定义与调用}
+
+``````````````````bash
+greet() {
+    local name="${1:-World}"
+    echo "Hello, $name!"
+}
+
+greet
+greet "Arch User"
+``````````````````
+
+
+##### 参数传递 {#参数传递}
+
+函数内使用 `$1`, `$2` ... 访问参数，=$0= 仍然是脚本名（不是函数名）：
+
+``````````````````bash
+add() {
+    echo $(( $1 + $2 ))
+}
+
+result=$(add 3 5)
+echo "3 + 5 = $result"
+``````````````````
+
+
+##### 返回值 {#返回值}
+
+Bash 函数的 `return` 只能返回 0~255 的整数（退出码），不是返回数据。返回数据用 `echo` ：
+
+``````````````````bash
+is_even() {
+    [[ $(( $1 % 2 )) -eq 0 ]]
+}
+
+check_file() {
+    if [[ -f "$1" ]]; then
+        echo "exists"
+        return 0
+    else
+        echo "not found"
+        return 1
+    fi
+}
+
+result=$(check_file "/etc/passwd")
+echo "$result"
+``````````````````
+
+`return` 用于表示成功/失败， `echo` 用于返回数据。
+
+
+##### local 变量 {#local-变量}
+
+``````````````````bash
+counter() {
+    local i=0
+    while [[ $i -lt 3 ]]; do
+        echo "i = $i"
+        ((i++))
+    done
+}
+``````````````````
+
+`local` 限制变量作用域在函数内，避免污染全局命名空间。函数内所有变量都应使用 `local` 。
+
+
+#### 数组 {#数组}
+
+
+##### 普通数组 {#普通数组}
+
+``````````````````bash
+arr=(apple banana cherry)
+arr[3]="date"
+echo ${arr[0]}
+echo ${arr[@]}
+echo ${#arr[@]}
+``````````````````
+
+| 操作                  | 说明          |
+|---------------------|-------------|
+| `${arr[i]}`           | 访问第 i 个元素 |
+| `${arr[@]}`           | 所有元素      |
+| `${arr[*]}`           | 所有元素（合为一个字符串） |
+| `${#arr[@]}`          | 数组长度      |
+| `${arr[@]:start:len}` | 切片          |
+
+遍历数组：
+
+``````````````````bash
+pkgs=(git vim zsh curl)
+for pkg in "${pkgs[@]}"; do
+    echo "Installing: $pkg"
+done
+``````````````````
+
+
+##### 关联数组 {#关联数组}
+
+使用 `declare -A` 声明关联数组（类似字典/哈希表）：
+
+``````````````````bash
+declare -A config
+config[editor]="vim"
+config[shell]="zsh"
+config[terminal]="alacritty"
+
+echo "Editor: ${config[editor]}"
+
+for key in "${!config[@]}"; do
+    echo "$key = ${config[$key]}"
+done
+``````````````````
+
+| 操作             | 说明  |
+|----------------|-----|
+| `${config[key]}` | 按键访问 |
+| `${!config[@]}`  | 所有键 |
+| `${config[@]}`   | 所有值 |
+| `${#config[@]}`  | 键值对数量 |
+
+
+#### 常用技巧 {#常用技巧}
+
+
+##### set 安全选项 {#set-安全选项}
+
+``````````````````bash
+set -e
+set -u
+set -o pipefail
+``````````````````
+
+| 选项              | 说明             |
+|-----------------|----------------|
+| `set -e`          | 命令失败时立即退出 |
+| `set -u`          | 引用未定义变量时报错退出 |
+| `set -o pipefail` | 管道中任一命令失败则整个管道失败 |
+
+推荐在脚本开头加上：
+
+``````````````````bash
+#!/usr/bin/env bash
+set -euo pipefail
+``````````````````
+
+`set -e` 注意事项： `if` 条件中的命令失败不会触发退出，这是预期行为。
+
+
+##### trap 信号捕获 {#trap-信号捕获}
+
+`trap` 用于捕获信号并在脚本退出时清理资源：
+
+``````````````````bash
+cleanup() {
+    rm -f "$tmpfile"
+    echo "Cleanup done"
+}
+
+tmpfile=$(mktemp)
+trap cleanup EXIT
+
+echo "Working..." > "$tmpfile"
+``````````````````
+
+常用信号：
+
+| 信号   | 说明             |
+|------|----------------|
+| `EXIT` | 脚本退出时（无论何种原因） |
+| `INT`  | Ctrl+C 中断      |
+| `TERM` | kill 默认信号    |
+| `ERR`  | 命令失败时（配合 set -e） |
+
+``````````````````bash
+trap 'echo "Interrupted!"; exit 130' INT
+trap 'rm -f /tmp/mylockfile' EXIT
+``````````````````
+
+
+##### getopts 处理命令行选项 {#getopts-处理命令行选项}
+
+``````````````````bash
+#!/usr/bin/env bash
+set -euo pipefail
+
+usage() {
+    echo "Usage: $0 [-v] [-o output] input"
+    exit 1
+}
+
+verbose=0
+output=""
+
+while getopts "vo:" opt; do
+    case $opt in
+        v) verbose=1 ;;
+        o) output="$OPTARG" ;;
+        *) usage ;;
+    esac
+done
+shift $((OPTIND - 1))
+
+input="${1:-}"
+[[ -z "$input" ]] && usage
+
+echo "Input: $input"
+[[ -n "$output" ]] && echo "Output: $output"
+[[ $verbose -eq 1 ]] && echo "Verbose mode"
+``````````````````
+
+`getopts` 语法：
+
+-   `"vo:"` ： `v` 无参数， `o:` 有参数（OPTARG）
+-   `$OPTIND` ：下一个待处理参数的索引
+-   `shift $((OPTIND-1))` ：移除已处理的选项参数
+
+
+##### 调试 {#调试}
+
+| 方式                | 说明      |
+|-------------------|---------|
+| `bash -x script.sh` | 执行前打印每条命令 |
+| `bash -v script.sh` | 打印读取的每一行 |
+| `bash -n script.sh` | 仅语法检查，不执行 |
+
+``````````````````bash
+bash -x myscript.sh
+bash -n myscript.sh
+``````````````````
+
+脚本内局部调试：
+
+``````````````````bash
+set -x
+some_complex_command
+set +x
+``````````````````
+
+
+#### 实用脚本示例 {#实用脚本示例}
+
+
+##### 批量文件重命名 {#批量文件重命名}
+
+将目录下所有 `.JPG` 文件改为小写 `.jpg` ，并添加日期前缀：
+
+``````````````````bash
+#!/usr/bin/env bash
+set -euo pipefail
+
+date_prefix=$(date +%Y%m%d)
+
+for f in *.JPG; do
+    [[ -f "$f" ]] || continue
+    newname="${date_prefix}_${f%.JPG}.jpg"
+    mv -n "$f" "$newname"
+    echo "Renamed: $f -> $newname"
+done
+
+echo "Done."
+``````````````````
+
+`-n` 防止覆盖已有文件， `continue` 跳过无匹配的情况。
+
+
+##### 系统备份脚本 {#系统备份脚本}
+
+打包家目录关键子目录，排除大文件和缓存：
+
+``````````````````bash
+#!/usr/bin/env bash
+set -euo pipefail
+
+backup_dir="/mnt/backup"
+timestamp=$(date +%Y%m%d_%H%M%S)
+archive="${backup_dir}/home_backup_${timestamp}.tar.zst"
+
+exclude_file="/tmp/backup_exclude.txt"
+
+cat > "$exclude_file" << 'EOF'
+*.cache/
+*.local/share/Trash/
+*.local/share/Steam/
+*node_modules/
+*.git/
+*.tmp
+EOF
+
+tar --exclude-from="$exclude_file" \
+    -cf - \
+    ~/Documents ~/Projects ~/dotfiles \
+    | zstd -T0 -19 > "$archive"
+
+echo "Backup saved: $archive"
+echo "Size: $(du -h "$archive" | cut -f1)"
+rm -f "$exclude_file"
+``````````````````
+
+
+##### 定时缓存清理脚本 {#定时缓存清理脚本}
+
+清理 pacman 缓存和临时文件，保留最近 3 个版本：
+
+``````````````````bash
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "=== Cache Cleanup ==="
+echo "Time: $(date)"
+
+echo "Cleaning pacman cache (keep 3 versions)..."
+sudo paccache -r -k 3
+
+echo "Cleaning uninstalled package cache..."
+sudo paccache -ruk0
+
+echo "Cleaning systemd journal (keep 2 weeks)..."
+sudo journalctl --vacuum-time=2weeks
+
+echo "Cleaning tmp files..."
+find /tmp -maxdepth 1 -type f -mtime +7 -delete 2>/dev/null || true
+
+echo "Cleaning thumbnail cache..."
+rm -rf ~/.cache/thumbnails/*
+
+echo "Disk usage:"
+df -h / /home
+
+echo "=== Cleanup Done ==="
+``````````````````
+
+配合 `crontab` 或 `systemd timer` 定期执行：
+
+``````````````````bash
+crontab -e
+0 3 * * 0 /home/user/scripts/cache-cleanup.sh >> /var/log/cleanup.log 2>&1
+``````````````````
+
+或使用 systemd timer：
+
+``````````````````bash
+mkdir -p ~/.config/systemd/user
+
+cat > ~/.config/systemd/user/cache-cleanup.service << 'EOF'
+[Unit]
+Description=Cache Cleanup
+
+[Service]
+Type=oneshot
+ExecStart=/home/user/scripts/cache-cleanup.sh
+EOF
+
+cat > ~/.config/systemd/user/cache-cleanup.timer << 'EOF'
+[Unit]
+Description=Weekly Cache Cleanup
+
+[Timer]
+OnCalendar=Sun *-*-* 03:00:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+EOF
+
+systemctl --user enable --now cache-cleanup.timer
+``````````````````
