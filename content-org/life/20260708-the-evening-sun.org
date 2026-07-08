@@ -1,0 +1,31 @@
+#+TITLE: 霞光万道
+#+HUGO_TAGS: 生活
+#+CATEGORIES: 生活
+#+DATE: 2026-07-07
+#+AUTHOR:
+#+HUGO_SECTION: life
+#+HUGO_BASE_DIR: ../../
+#+OPTIONS: line-break:t
+#+HUGO_AUTO_SET_LASTMOD: t
+#+DRAFT: false
+#+HUGO_DRAFT: false
+#+hugo_front_matter_format: yaml
+#+STARTUP: latexpreview
+#+STARTUP: inlineimages
+
+
+晚上去吃了心心念念的油泼面，点完餐，等了很久也没上面，进来的年轻人居然带了狗，
+狗居然还上了桌，搞得晚饭吃得一点心情都没有。
+
+闷闷不乐地上了地铁，一路没精打采。到站下车的时候，抬头一看——
+
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
+#+ATTR_LATEX: :width 0.8\textwidth
+[[file:../../static/content-org/life/20260708-the-evening-sun.org/2026-07-08_14-22-18_038752fa4365d74f11d060302f515a60.jpg]]
+
+霞光铺满了半边天，云层被染得层层叠叠，从金红到橘黄再到淡紫，像是有人在天上泼了一碗更大更豪迈的油泼面——只不过这碗泼的是光。
+
+那一刻站在站台上，什么狗上桌、什么脏东西，全都不重要了。心里那团闷气，就这么被晚风吹散了。
+
+日子大概就是这样吧，一顿好饭可以被一只狗毁掉，但一段好风景又能把心情捞回来。

@@ -19856,3 +19856,6792 @@ EOF
 
 systemctl --user enable --now cache-cleanup.timer
 #+end_src
+
+* Markdown
+
+Markdown 是一种轻量级标记语言，它让你用简单的纯文本符号就能写出结构清晰的文档。无论是写博客、记笔记、编写项目文档，还是给开源项目写 README，Markdown 都是最流行的选择。它之所以如此受欢迎，核心原因只有一个：你可以专注于内容本身，而不用把精力浪费在排版上。想象一下，你正在写一篇文章，如果你想加粗某个词，只需要在它两边加上两个星号，比如 =**重要**= 就会显示为 *重要* ；如果你想插入一个链接，只需写 =[链接文字](网址)= 。就这么简单，不需要打开任何菜单，不需要点击任何按钮，你的手始终不需要离开键盘。
+
+** Markdown 的诞生与演变
+
+*** 起源：一个人对排版工具的不满
+
+2004 年，Aaron Swartz 和 John Gruber 共同设计了 Markdown。John Gruber 在他的博客 [[https://daringfireball.net/projects/markdown/][Daring Fireball]] 上正式发布了这个项目。Gruber 的动机非常直接——他厌倦了 HTML 标签的繁琐。写 HTML 时，仅仅是加粗一段文字就需要写 =<strong>文字</strong>= ，插入一个链接要写 ~<a href="网址">文字</a>~ ，这些尖括号和标签严重打断了写作的思路。Gruber 希望有一种方式，让写作的人既能享受格式化输出的效果，又能像写纯文本邮件一样自然流畅。
+
+Markdown 的设计哲学深受早期互联网文本交流方式的影响。在 HTML 还没有普及的年代，人们已经在纯文本邮件和 Usenet 新闻组中自发地形成了一套约定：用星号表示强调，用大于号表示引用，用连字符画分割线。Markdown 本质上就是把这些散落各处的约定收集起来，统一规范，然后赋予它们确切的 HTML 输出含义。所以 Markdown 并非凭空发明，它更像是对互联网文化中已经存在的"民间标准"的一次正式确认。
+
+Aaron Swartz 作为联合设计者，为 Markdown 注入了"易于阅读"的理念。他坚持认为，即使不做任何渲染，Markdown 源文件本身也应该是人类可读的。这个原则深刻影响了 Markdown 的后续发展，也解释了为什么 Markdown 文件看起来比 HTML 源代码舒服得多——它首先是为人的眼睛设计的，其次才是为机器解析设计的。
+
+*** 标准化的困境与 CommonMark
+
+Gruber 发布 Markdown 之后，并没有继续推动它的标准化。Markdown 的原始规范非常简短，很多边界情况没有定义清楚，比如嵌套列表怎么写、标题后面要不要空行、不同标记能否混用等等。随着 Markdown 越来越流行，各个实现者开始自行填补这些空白，结果就是不同的 Markdown 解析器对同一段文本的渲染结果不一样。
+
+这种情况在 GitHub、Reddit、Stack Overflow 等平台各自实现自己的 Markdown 变体后变得尤为严重。你在 GitHub 上写的一段 Markdown，复制到 Reddit 上可能显示就不对。一个叫做 =Markdown: Dingus= 的测试页面甚至成了开发者检查不同解析器行为差异的工具。
+
+2012 年，Jeff Atwood 等人发起了 CommonMark 项目，目标是为 Markdown 创建一个明确的、无歧义的、经过充分测试的规范。CommonMark 的规范文档长达数百页，包含了上万条测试用例，覆盖了各种边界情况。虽然 Gruber 本人并不支持 CommonMark（他反对使用"Markdown"这个名称），但 CommonMark 已经成为事实上最严格的 Markdown 标准，很多现代解析器都以其为基础。
+
+*** GitHub Flavored Markdown（GFM）
+
+GitHub 在 2017 年正式基于 CommonMark 制定了自己的 Markdown 扩展规范，称为 GitHub Flavored Markdown，简称 GFM。GFM 在 CommonMark 的基础上增加了以下实用功能：
+
+- 任务列表（Task Lists）— 用 =- [ ]= 和 =[x]= 表示待办和已完成
+- 删除线 — 用 =~~文字~~= 表示
+- 表格 — 用竖线和连字符绘制
+- 自动链接 — 直接识别 URL
+- 围栏代码块 — 用三个反引号包围代码
+
+GFM 是当今最广泛使用的 Markdown 变体，绝大多数教程和工具默认支持的都是 GFM。你在 GitHub 上的 README、Issue、Pull Request、评论中写的都是 GFM。
+
+*** Pandoc 与学术 Markdown
+
+Pandoc 被称为文档转换的"瑞士军刀"，它极大地扩展了 Markdown 的应用范围。Pandoc 支持从 Markdown 转换为 HTML、LaTeX、PDF、Word、EPUB、幻灯片等几十种格式，同时引入了许多学术写作需要的扩展：脚注、数学公式、文献引用、元数据块（YAML front matter）等。使用 Pandoc 以后，Markdown 不再只是一个"写网页的工具"，而变成了一个严肃的学术写作工具。很多研究者用 Markdown 写论文初稿，然后用 Pandoc 转换成 LaTeX PDF 提交给期刊。
+
+*** 当前生态
+
+今天的 Markdown 生态已经非常成熟：
+
+| 工具/平台             | 类型       | 特点                             |
+|-----------------------+------------+----------------------------------|
+| VS Code               | 编辑器     | 插件丰富，实时预览，集成终端     |
+| Obsidian              | 笔记应用   | 双向链接，知识图谱，插件生态     |
+| Typora                | 编辑器     | 所见即所得，极简设计             |
+| Mark Text             | 编辑器     | 开源，跨平台，所见即所得         |
+| Hugo                  | 静态站生成 | 极快构建，支持 org-mode 源文件   |
+| Jekyll                | 静态站生成 | GitHub Pages 原生支持            |
+| mdBook                | 文档工具   | 适合写技术文档和书籍             |
+| Pandoc                | 转换工具   | 支持几十种格式互转               |
+| GitHub                | 平台       | GFM 标准，README/Issue/Wiki      |
+| GitLab                | 平台       | 兼容 GFM，支持数学公式           |
+| Notion                | 笔记应用   | 块编辑器，支持 Markdown 导入导出 |
+| Emacs (markdown-mode) | 编辑器     | 兼顾代码与文档，org-mode 生态    |
+
+** 基础语法详解
+
+下面我们从最简单的开始，逐步掌握 Markdown 的每一个语法点。每个语法都配有详细说明和实际例子。
+
+*** 段落与换行
+
+Markdown 中，段落就是连续的文字，段落之间用一个空行分隔。这是最基本的规则，也是最容易被忽略的规则。
+
+如果你只是在两行文字之间按了一次回车键（即一个换行符），Markdown 会把它们当作同一个段落，渲染时会把它们合并成一行。如果你确实想在段落内换行，有两种方式：
+
+1. 在行尾加两个空格再按回车（这是原始 Markdown 的方式，比较隐晦）
+2. 在两行之间加一个空行（推荐，更直观）
+
+#+begin_src markdown
+这是第一段。Markdown 会把连续的文字当作一个段落，
+即使你在编辑器里换行了，渲染出来还是同一行。
+
+这是第二段。两个段落之间有一个空行，
+所以渲染出来会有明显的段落间距。
+#+end_src
+
+实际效果：
+
+这是第一段。Markdown 会把连续的文字当作一个段落，即使你在编辑器里换行了，渲染出来还是同一行。
+
+这是第二段。两个段落之间有一个空行，所以渲染出来会有明显的段落间距。
+
+一个常见的错误是忘记加空行，导致本应分开的段落被合并在一起。记住：段落之间必须有一个完全空白的行。
+
+*** 标题
+
+标题用 =#= 号表示， =#= 的数量对应标题的级别。一个 =#= 是一级标题（最大），两个是二级，以此类推，最多到六级。
+
+#+begin_src markdown
+# 一级标题
+
+## 二级标题
+
+### 三级标题
+
+#### 四级标题
+
+##### 五级标题
+
+###### 六级标题
+#+end_src
+
+标题的 =#= 号后面必须加一个空格，这是很多初学者容易忽略的。 =#标题= 是无效的， =# 标题= 才是正确的。
+
+还有一种写法是在文字下面用等号或连字符画线，这分别是二级和一级标题的另一种表示方式。这种写法来自 Markdown 的原始规范，现在用得少了，但有些文档里还能看到：
+
+#+begin_src markdown
+一级标题
+========
+
+二级标题
+--------
+#+end_src
+
+实际使用中，一般只用一到四级标题，五级和六级用得很少。文章的结构通常是这样的：一级标题是文章标题，二级标题是主要章节，三级标题是子章节，四级标题用于更细的分点。
+
+*** 强调
+
+强调是 Markdown 中使用最频繁的格式之一，有三种级别：
+
+#+begin_src markdown
+*斜体文字*
+
+**加粗文字**
+
+***加粗斜体文字***
+#+end_src
+
+实际效果： *斜体文字* / **加粗文字** / ***加粗斜体文字***
+
+你也可以用下划线代替星号，效果完全一样： =_斜体_= 、 =__加粗__= 。两种写法没有任何功能差异，选择你喜欢的即可，但在同一个文档中保持一致是好习惯。
+
+一个实用的技巧是在强调标记和周围文字之间留出空格来避免歧义。例如，写 =这是一个 **重要** 的概念= 比写 =这是一个**重要**的概念= 更清晰，虽然两种写法在大多数解析器中效果相同。
+
+*** 删除线
+
+删除线是 GFM 扩展的语法，原始 Markdown 不支持，但现在几乎所有平台都支持了：
+
+#+begin_src markdown
+~~这段文字被删除了~~
+#+end_src
+
+实际效果： ~~这段文字被删除了~~
+
+删除线的典型用法包括：在修订文档时标注被删除的内容，或者表示某个价格已经失效（比如 =~~原价 99 元~~ 现价 49 元= ）。
+
+*** 列表
+
+列表是组织信息的基本工具，Markdown 支持无序列表和有序列表两种。
+
+**** 无序列表
+
+无序列表使用 =-= 、 =*= 或 =+= 作为标记，三种符号效果完全相同，选择一种保持一致即可。推荐使用 =-= ，因为它在纯文本中最易阅读。
+
+#+begin_src markdown
+- 第一项
+- 第二项
+- 第三项
+#+end_src
+
+实际效果：
+
+- 第一项
+- 第二项
+- 第三项
+
+列表项可以嵌套，通过缩进来实现。通常缩进两个或四个空格：
+
+#+begin_src markdown
+- 水果
+  - 苹果
+  - 香蕉
+    - 进口香蕉
+    - 本地香蕉
+  - 橙子
+- 蔬菜
+  - 西红柿
+  - 黄瓜
+#+end_src
+
+注意子列表的缩进必须与上级列表项的文字对齐，而不是与列表标记对齐。也就是说，如果你用 =-= 加一个空格作为列表标记（占两列），那么子列表应该缩进两列或四列。
+
+**** 有序列表
+
+有序列表使用数字加点号：
+
+#+begin_src markdown
+1. 打开编辑器
+2. 编写代码
+3. 保存文件
+4. 运行程序
+#+end_src
+
+一个有趣的细节：Markdown 不会根据你写的数字来决定序号，而是根据列表的顺序自动编号。也就是说，即使你全部写 =1.= ，渲染出来依然是 1、2、3、4：
+
+#+begin_src markdown
+1. 打开编辑器
+1. 编写代码
+1. 保存文件
+1. 运行程序
+#+end_src
+
+这个设计是有意为之的。Gruber 认为，当你在列表中间插入或删除一项时，不需要手动更新所有后续的编号，这降低了维护成本。不过，出于可读性考虑，大多数风格指南还是建议按实际顺序写编号。
+
+**** 任务列表
+
+任务列表是 GFM 的扩展语法，非常适合做待办事项追踪：
+
+#+begin_src markdown
+- [x] 完成项目需求分析
+- [x] 编写技术方案
+- [ ] 实现核心功能
+- [ ] 编写单元测试
+- [ ] 部署到生产环境
+#+end_src
+
+实际效果：
+
+- [x] 完成项目需求分析
+- [x] 编写技术方案
+- [ ] 实现核心功能
+- [ ] 编写单元测试
+- [ ] 部署到生产环境
+
+任务列表在 GitHub 的 Issue 和 Pull Request 中特别好用，你可以直接在界面上勾选复选框来更新状态，而不需要编辑源文件。
+
+*** 链接
+
+链接是 Markdown 中最重要的功能之一，它让文档不再是孤立的文本，而成为信息网络的节点。
+
+**** 行内链接
+
+最常用的链接格式：
+
+#+begin_src markdown
+[链接文字](URL)
+#+end_src
+
+#+begin_src markdown
+[访问 GitHub](https://github.com)
+[搜索用 Google](https://www.google.com)
+#+end_src
+
+链接文字就是用户看到并可点击的文本，URL 是点击后跳转的地址。
+
+**** 带标题的链接
+
+你还可以为链接添加一个标题（鼠标悬停时显示的提示文字）：
+
+#+begin_src markdown
+[访问 GitHub](https://github.com "全球最大的代码托管平台")
+#+end_src
+
+**** 引用式链接
+
+当同一个链接在文档中出现多次，或者 URL 很长影响阅读时，可以使用引用式链接。链接的定义放在文档任意位置（通常放在文档末尾），正文通过标识符引用：
+
+#+begin_src markdown
+我经常使用 [Google][google] 搜索资料，也经常在 [GitHub][github] 上浏览项目。
+[Google][google] 的搜索质量一直很好。
+
+[google]: https://www.google.com "搜索引擎"
+[github]: https://github.com "代码托管平台"
+#+end_src
+
+引用标识符不区分大小写， =google= 和 =Google= 指向同一个定义。如果链接文字和标识符相同，还可以进一步简写：
+
+#+begin_src markdown
+请访问 [Google][] 或 [GitHub][]。
+
+[google]: https://www.google.com
+[github]: https://github.com
+#+end_src
+
+**** 自动链接
+
+GFM 会自动识别 URL 并将其转换为可点击的链接，不需要任何标记：
+
+#+begin_src markdown
+访问 https://github.com 查看更多内容。
+#+end_src
+
+如果你想确保某个 URL 被识别为链接，可以用尖括号包裹：
+
+#+begin_src markdown
+<https://github.com>
+<user@example.com>
+#+end_src
+
+尖括号还能让邮箱地址自动变成邮件链接。
+
+*** 图片
+
+图片的语法和链接几乎一样，只是在前面多了一个感叹号 =!= ：
+
+#+begin_src markdown
+![替代文字](图片URL)
+![替代文字](图片URL "标题")
+#+end_src
+
+#+begin_src markdown
+![GitHub Logo](https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png)
+![风景照](./images/landscape.jpg "美丽的日落")
+#+end_src
+
+替代文字（alt text）在图片无法显示时出现，也对屏幕阅读器等无障碍工具非常重要，应该始终提供有意义的描述。
+
+原始 Markdown 不支持调整图片大小。如果需要控制图片尺寸，通常使用 HTML 的 =<img>= 标签：
+
+#+begin_src markdown
+<img src="./images/landscape.jpg" width="500" alt="风景照">
+#+end_src
+
+有些 Markdown 变体（如 Pandoc、Hugo）支持在 URL 后面加 ={}= 来指定属性：
+
+#+begin_src markdown
+![风景照](./images/landscape.jpg){width=500}
+#+end_src
+
+**** 引用式图片
+
+和链接一样，图片也可以使用引用式语法：
+
+#+begin_src markdown
+![GitHub Logo][logo]
+
+[logo]: https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png
+#+end_src
+
+*** 引用
+
+引用用大于号 =>= 表示，常用于引用他人的话、标注参考来源或突出显示重要信息：
+
+#+begin_src markdown
+> 学而不思则罔，思而不学则殆。
+>
+> —— 孔子
+#+end_src
+
+引用可以嵌套，使用多个大于号表示嵌套层级：
+
+#+begin_src markdown
+> 这是第一层引用
+>
+> > 这是第二层引用
+> >
+> > > 这是第三层引用
+#+end_src
+
+引用内部可以包含任何 Markdown 语法，包括标题、列表、代码块等：
+
+#+begin_src markdown
+> ## 引用中的标题
+>
+> 引用中也可以有列表：
+>
+> - 第一项
+> - 第二项
+>
+> 还可以包含 `代码` 和 **强调**。
+#+end_src
+
+*** 代码
+
+代码是技术文档中最常见的元素之一，Markdown 提供了行内代码和代码块两种方式。
+
+**** 行内代码
+
+行内代码用反引号包裹，适用于在句子中引用命令名、文件名、变量名等：
+
+#+begin_src markdown
+使用 `git status` 查看仓库状态。
+变量 `user_name` 存储用户名。
+修改 `config.toml` 文件来配置站点。
+#+end_src
+
+如果你的代码内容本身包含反引号，可以用双反引号包裹：
+
+#+begin_src markdown
+在终端输入 ``echo `date` `` 来显示当前日期。
+#+end_src
+
+**** 围栏代码块
+
+围栏代码块用三个反引号包围，这是 GFM 引入的语法，比原始 Markdown 的缩进式代码块更清晰、更常用。你可以在开头的反引号后面指定语言名称来启用语法高亮：
+
+#+begin_src markdown
+```python
+def fibonacci(n):
+    """生成斐波那契数列的前 n 个数"""
+    fib = [0, 1]
+    for i in range(2, n):
+        fib.append(fib[i-1] + fib[i-2])
+    return fib
+
+print(fibonacci(10))
+```
+#+end_src
+
+常用的语言标识包括： =python= 、 =javascript= 、 =bash= 、 =c= 、 =cpp= 、 =java= 、 =go= 、 =rust= 、 =json= 、 =yaml= 、 =toml= 、 =html= 、 =css= 、 =sql= 、 =diff= 等。大多数 Markdown 渲染器都支持几十甚至上百种语言的语法高亮。
+
+下面展示几个不同语言的代码块例子：
+
+Go 语言示例：
+
+#+begin_src markdown
+```go
+package main
+
+import "fmt"
+
+func main() {
+    nums := []int{2, 3, 5, 7, 11}
+    for i, n := range nums {
+        fmt.Printf("第 %d 个素数是 %d\n", i, n)
+    }
+}
+```
+#+end_src
+
+JSON 示例：
+
+#+begin_src markdown
+```json
+{
+    "name": "EndeavourOS",
+    "based_on": "Arch Linux",
+    "desktop": ["XFCE", "KDE", "GNOME"],
+    "package_manager": "pacman"
+}
+```
+#+end_src
+
+diff 示例（在代码审查中特别有用）：
+
+#+begin_src markdown
+```diff
+- 旧代码行（红色显示）
++ 新代码行（绿色显示）
+  未修改的行（正常显示）
+```
+#+end_src
+
+*** 分隔线
+
+分隔线用三个或更多的星号、连字符或下划线表示，效果完全相同：
+
+#+begin_src markdown
+---
+
+***
+
+___
+#+end_src
+
+分隔线会渲染为一条水平线，通常用于文章中不同主题之间的视觉分隔。注意，如果连字符出现在文字正下方，可能被解析为二级标题的另一种写法，所以建议在分隔线上下各留一个空行。
+
+** 进阶语法
+
+掌握了基础语法之后，下面这些进阶语法能让你的 Markdown 文档更加专业和实用。
+
+*** 表格
+
+表格是 GFM 扩展语法，虽然原始 Markdown 不支持，但现在几乎所有平台都支持。表格的写法如下：
+
+#+begin_src markdown
+| 姓名   | 年龄 | 职业       |
+|--------|------|------------|
+| 张三   | 28   | 工程师     |
+| 李四   | 35   | 设计师     |
+| 王五   | 42   | 产品经理   |
+#+end_src
+
+实际效果：
+
+| 姓名 | 年龄 | 职业     |
+|------+------+----------|
+| 张三 |   28 | 工程师   |
+| 李四 |   35 | 设计师   |
+| 王五 |   42 | 产品经理 |
+
+表格的竖线不要求对齐，上面的对齐只是为了源文件更易读。下面这样写效果完全一样：
+
+#+begin_src markdown
+|姓名|年龄|职业|
+|---|---|---|
+|张三|28|工程师|
+|李四|35|设计师|
+|王五|42|产品经理|
+#+end_src
+
+对齐方式通过第二行的冒号位置控制：
+
+#+begin_src markdown
+| 左对齐       | 居中对齐      | 右对齐      |
+|:-------------|:------------:|------------:|
+| 内容一       | 内容二       | 内容三       |
+| 较长的内容   | 短           | 中等内容     |
+#+end_src
+
+- =:---= 左对齐（默认）
+- =:---:= 居中对齐
+- =---:= 右对齐
+
+如果表格内容太长，Markdown 表格就不太适合了，可以考虑用列表或专门的工具来展示。
+
+*** 脚注
+
+脚注是 Pandoc 和 PHP Markdown Extra 等扩展支持的语法，原始 Markdown 和 GFM 不直接支持（但很多平台通过扩展实现了）：
+
+#+begin_src markdown
+Markdown 由 John Gruber 创建[^1]，Aaron Swartz 参与了设计[^2]。
+
+[^1]: Gruber 的博客地址是 https://daringfireball.net
+[^2]: Aaron Swartz 是互联网活动家，也是 RSS 1.0 和 Creative Commons 的贡献者
+#+end_src
+
+脚注的定义可以放在文档的任何位置，渲染时会自动收集到文档末尾，并在正文中生成上标链接。脚注编号通常是自动的，你也可以用自定义的标识符（如 =[^gruber]= 而不是 =[^1]= ），这在长文档中更容易维护。
+
+*** 数学公式
+
+数学公式不是标准 Markdown 的一部分，但很多平台（如 GitHub、GitLab、Typora、Obsidian、Jupyter Notebook）通过 MathJax 或 KaTeX 支持 LaTeX 数学语法。
+
+行内公式用单个 =$= 包裹：
+
+#+begin_src markdown
+质能方程 $E = mc^2$ 是物理学最著名的公式之一。
+圆的面积公式是 $A = \pi r^2$。
+#+end_src
+
+独立公式块用双 =$= 包裹：
+
+#+begin_src markdown
+$$
+\int_{-\infty}^{\infty} e^{-x^2} dx = \sqrt{\pi}
+$$
+#+end_src
+
+几个常用数学公式的例子：
+
+#+begin_src markdown
+欧拉公式：$e^{i\pi} + 1 = 0$
+
+矩阵：
+$$
+\begin{pmatrix}
+a & b \\
+c & d
+\end{pmatrix}
+$$
+
+求和公式：
+$$
+\sum_{i=1}^{n} i = \frac{n(n+1)}{2}
+$$
+#+end_src
+
+*** 定义列表
+
+定义列表是 PHP Markdown Extra 扩展的语法，在 Pandoc 中也支持：
+
+#+begin_src markdown
+Markdown
+:   一种轻量级标记语言
+
+CommonMark
+:   Markdown 的标准化规范
+
+GFM
+:   GitHub Flavored Markdown，GitHub 的 Markdown 扩展
+#+end_src
+
+*** 缩写
+
+Pandoc 和 PHP Markdown Extra 支持缩写定义，鼠标悬停时会显示完整含义：
+
+#+begin_src markdown
+HTML 是网页的基础技术。
+
+*[HTML]: HyperText Markup Language
+#+end_src
+
+*** 元数据块（YAML Front Matter）
+
+很多 Markdown 工具（Hugo、Jekyll、Pandoc 等）支持在文件开头用 YAML 格式定义元数据：
+
+#+begin_src markdown
+---
+title: "Markdown 通俗易懂指南"
+date: 2026-07-04
+author: "Donald Lo"
+tags: ["markdown", "教程"]
+categories: ["技术"]
+draft: false
+---
+#+end_src
+
+元数据块不会渲染为文档内容，而是被工具读取用于生成页面标题、日期、分类等信息。这已经成为静态网站生成器的标准做法。
+
+** 实用技巧与最佳实践
+
+*** 文档结构
+
+一篇好的 Markdown 文档应该有清晰的结构。推荐的文章结构如下：
+
+#+begin_src markdown
+# 文章标题
+
+简短的引言，说明文章的主题和目的。
+
+## 背景
+
+交代必要的背景知识。
+
+## 正文
+
+### 第一个主题
+
+内容...
+
+### 第二个主题
+
+内容...
+
+## 总结
+
+归纳要点，给出建议。
+
+## 参考
+
+- 参考资料1
+- 参考资料2
+#+end_src
+
+几个重要的结构原则：
+
+- 一篇文档只使用一个一级标题（文章标题）
+- 标题层级不要跳跃，不要从二级直接跳到四级
+- 每个标题下至少有一段内容，不要出现"空标题"
+- 段落尽量简短，每段表达一个完整的意思
+
+*** 编辑器选择
+
+不同的编辑器适合不同的使用场景：
+
+**** 轻量写作
+
+如果你只是偶尔写写 Markdown，或者需要一个随手打开就能写的工具：
+
+- *Typora* — 所见即所得，打字体验流畅，适合不熟悉语法的新手。付费软件但价格合理。
+- *Mark Text* — Typora 的开源替代品，功能相近，免费使用。
+
+**** 日常开发
+
+如果你是开发者，编辑器已经安装好了：
+
+- *VS Code* — 安装 Markdown All in One 插件后体验很好，支持实时预览、快捷键、目录生成。和开发工作在同一窗口完成，不需要切换应用。
+- *Emacs* — =markdown-mode= 提供完整的 Markdown 编辑支持。如果你已经是 Emacs 用户，不用额外安装任何东西。
+
+**** 知识管理
+
+如果你要建立个人知识库：
+
+- *Obsidian* — 基于本地 Markdown 文件的双链笔记应用，免费版功能已经足够。插件生态极其丰富，适合长期积累知识。
+- *Logseq* — 类似 Obsidian 的开源替代，以大纲为核心组织方式。
+
+**** 终端环境
+
+如果你在服务器上或偏好终端：
+
+- *glow* — 终端中的 Markdown 阅读器，可以渲染格式后直接在终端查看。
+- *bat* — =cat= 的增强替代，自动识别 Markdown 文件并渲染语法高亮。
+
+#+begin_src bash :exports code
+# 安装 glow
+sudo pacman -S glow
+
+# 用 glow 查看 Markdown 文件
+glow README.md
+
+# 安装 bat
+sudo pacman -S bat
+
+# 用 bat 查看 Markdown 文件（自动语法高亮）
+bat README.md
+#+end_src
+
+*** 写作风格
+
+Markdown 虽然语法简单，但良好的写作风格依然重要：
+
+1. *一致性* — 在整个文档中使用统一的风格。如果你用 =-= 表示无序列表，就不要中途换成 =*= ；如果你用 =**加粗**= ，就不要混用 =__加粗__= 。
+
+2. *简洁性* — 每个段落表达一个观点，每个列表项只说一件事。如果一个段落超过五句话，考虑是否应该拆分。
+
+3. *可读性* — Markdown 源文件本身应该是可读的。注意适当的空行、缩进和对齐。即使在纯文本编辑器中打开，也应该能看出文档的结构。
+
+4. *链接文字* — 链接文字应该有意义。避免写"点击这里"，而应该写"查看 API 文档"。有意义的链接文字让读者在扫描文档时就能判断链接的用途。
+
+5. *图片描述* — 始终为图片提供替代文字，这不仅是无障碍要求，也让文档在图片加载失败时依然可理解。
+
+*** 常见陷阱
+
+初学者容易遇到的几个问题：
+
+**** 标题后缺少空行
+
+#+begin_src markdown
+## 标题
+紧跟着的文字可能不会被正确解析。
+#+end_src
+
+正确写法是标题后空一行：
+
+#+begin_src markdown
+## 标题
+
+这样文字会被正确解析。
+#+end_src
+
+**** 列表缩进错误
+
+#+begin_src markdown
+- 项目一
+- 项目二
+ - 错误的缩进（只有一个空格）
+   - 正确的缩进（三个空格或更多）
+#+end_src
+
+**** 特殊字符未转义
+
+如果你想在文档中显示 Markdown 的语法符号本身，需要用反斜杠转义：
+
+#+begin_src markdown
+\*这不是斜体\*
+\# 这不是标题
+\[这不是链接\]
+#+end_src
+
+需要转义的字符有： =\=  、 =``=  、 =*=  、 =_=  、 ={}=  、 =[]=  、 =()=  、 =+=  、 =-=  、 =.=  、 =!=  、 =|=  。
+
+**** 围栏代码块未闭合
+
+如果代码块的反引号没有正确闭合，后面所有的内容都会被当作代码处理，导致文档显示异常。检查代码块的开头和结尾是否都有三个反引号。
+
+**** 表格中的竖线
+
+表格行末的竖线可以省略，但行首的竖线不能省略。如果表格渲染不正确，首先检查竖线的位置。
+
+*** 性能优化技巧
+
+如果你用 Markdown 写大型文档（比如书籍或长篇教程），以下技巧可以提升你的效率：
+
+**** 使用目录
+
+大部分 Markdown 工具支持自动生成目录。在 Pandoc 中：
+
+#+begin_src markdown
+% 标题toc
+#+end_src
+
+在 Hugo 中，主题通常会自动处理目录。你也可以手动插入目录占位符：
+
+#+begin_src markdown
+## 目录
+
+- [简介](#简介)
+- [基础语法](#基础语法)
+  - [标题](#标题)
+  - [强调](#强调)
+- [进阶语法](#进阶语法)
+#+end_src
+
+**** 模块化写作
+
+长文档可以拆分成多个文件，用工具合并。Pandoc 支持这样操作：
+
+#+begin_src bash :exports code
+pandoc intro.md basics.md advanced.md -o complete-guide.html
+#+end_src
+
+Hugo 通过 =weight= 参数控制章节顺序：
+
+#+begin_src markdown
+---
+title: "第一章"
+weight: 1
+---
+#+end_src
+
+**** 使用链接检查工具
+
+文档中的链接可能会随着时间失效。使用 =lychee= 等工具定期检查：
+
+#+begin_src bash :exports code
+# 安装 lychee
+sudo pacman -S lychee
+
+# 检查所有 Markdown 文件中的链接
+lychee **/*.md
+
+# 只检查外部链接
+lychee --scheme https **/*.md
+#+end_src
+
+** Markdown 工具链实战
+
+下面通过几个具体的实战场景，展示 Markdown 工具链的完整用法。
+
+*** 用 Pandoc 生成 PDF
+
+Pandoc 是最强大的文档转换工具，配合 LaTeX 引擎可以生成高质量的 PDF。
+
+#+begin_src bash :exports code
+# 安装 Pandoc 和 LaTeX 引擎
+sudo pacman -S pandoc texlive-bin
+
+# 基础转换：Markdown 转 PDF
+pandoc article.md -o article.pdf
+
+# 带目录的转换
+pandoc article.md --toc -o article.pdf
+
+# 自定义 PDF 样式
+pandoc article.md \
+  --pdf-engine=xelatex \
+  -V geometry:margin=1in \
+  -V fontsize=12pt \
+  -V mainfont="Noto Sans CJK SC" \
+  --toc \
+  -o article.pdf
+#+end_src
+
+对于中文文档，必须使用 =xelatex= 引擎并指定中文字体，否则中文无法正确显示。
+
+*** 用 mdbook 写技术文档
+
+=mdbook= 是 Rust 编写的文档工具，适合写技术文档和在线书籍：
+
+#+begin_src bash :exports code
+# 安装 mdbook
+sudo pacman -S mdbook
+
+# 创建新书籍
+mdbook init my-book
+
+# 目录结构
+# my-book/
+# ├── src/
+# │   ├── SUMMARY.md    ← 目录文件
+# │   ├── chapter-1.md
+# │   └── chapter-2.md
+# └── book.toml          ← 配置文件
+
+# 本地预览（自动刷新）
+cd my-book
+mdbook serve
+
+# 构建静态网站
+mdbook build
+#+end_src
+
+=SUMMARY.md= 定义书籍的目录结构：
+
+#+begin_src markdown
+# Summary
+
+[简介](./intro.md)
+
+- [第一章：入门](./chapter-1.md)
+  - [1.1 安装](./install.md)
+  - [1.2 配置](./config.md)
+- [第二章：进阶](./chapter-2.md)
+#+end_src
+
+*** 用 Hugo 搭建博客
+
+Hugo 是目前最快的静态网站生成器，用 Go 语言编写，构建速度极快：
+
+#+begin_src bash :exports code
+# 安装 Hugo
+sudo pacman -S hugo
+
+# 创建新站点
+hugo new site my-blog
+cd my-blog
+
+# 添加主题
+git init
+git submodule add https://github.com/CaiJimmy/hugo-theme-stack themes/hugo-theme-stack
+
+# 创建新文章
+hugo new posts/my-first-post/index.md
+
+# 本地预览
+hugo server -D
+
+# 构建静态文件
+hugo --minify
+#+end_src
+
+新文章的模板：
+
+#+begin_src markdown
+---
+title: "我的第一篇博客"
+date: 2026-07-04
+draft: false
+tags: ["博客", "Hugo"]
+categories: ["技术"]
+---
+
+在这里开始写文章内容...
+#+end_src
+
+*** 用 Git 管理 Markdown 文档
+
+Markdown 是纯文本格式，天然适合用 Git 进行版本管理。这是它相比 Word 等二进制格式的巨大优势——你可以清楚地看到每一处修改，追踪每一次变更。
+
+#+begin_src bash :exports code
+# 初始化文档仓库
+mkdir my-docs && cd my-docs
+git init
+
+# 创建 .gitignore
+cat > .gitignore << 'EOF'
+*.pdf
+*.html
+.DS_Store
+EOF
+
+# 创建文档
+cat > README.md << 'EOF'
+# 我的项目文档
+
+这是项目的主要文档。
+EOF
+
+# 提交
+git add .
+git commit -m "add: initial documentation"
+
+# 查看修改历史
+git log --oneline README.md
+
+# 查看某次修改的具体内容
+git diff HEAD~1 README.md
+#+end_src
+
+一个好的实践是在每次有意义的修改后提交，commit message 说明改了什么：
+
+#+begin_src bash :exports code
+git commit -m "update: 补充表格对齐方式说明"
+git commit -m "fix: 修正代码块语言标识错误"
+git commit -m "add: 新增数学公式章节"
+#+end_src
+
+** 常用快捷键参考
+
+如果你使用 VS Code 编辑 Markdown，以下快捷键能大幅提升效率：
+
+| 操作     | Windows/Linux | macOS       |
+|----------+---------------+-------------|
+| 加粗     | Ctrl+B        | Cmd+B       |
+| 斜体     | Ctrl+I        | Cmd+I       |
+| 插入链接 | Ctrl+K        | Cmd+K       |
+| 切换预览 | Ctrl+Shift+V  | Cmd+Shift+V |
+| 侧边预览 | Ctrl+K V      | Cmd+K V     |
+| 标题升级 | Ctrl+]        | Cmd+]       |
+| 标题降级 | Ctrl+[        | Cmd+[       |
+
+Emacs (markdown-mode) 快捷键：
+
+| 操作         | 快捷键    |
+|--------------+-----------|
+| 加粗         | C-c C-s s |
+| 斜体         | C-c C-s e |
+| 插入链接     | C-c C-a l |
+| 插入图片     | C-c C-i i |
+| 插入代码块   | C-c C-s C |
+| 插入标题     | C-c C-s t |
+| 预览         | C-c C-c p |
+| 提升标题层级 | C-c C-t u |
+| 降低标题层级 | C-c C-t d |
+
+** 语法速查表
+
+最后，把所有常用语法汇总在这里，方便随时查阅。
+
+#+begin_src markdown
+# 标题
+
+# 一级标题
+## 二级标题
+### 三级标题
+
+# 强调
+
+*斜体*
+**加粗**
+***加粗斜体***
+~~删除线~~
+
+# 列表
+
+- 无序列表项
+1. 有序列表项
+- [ ] 待办事项
+- [x] 已完成事项
+
+# 链接与图片
+
+[链接文字](URL)
+[链接文字](URL "标题")
+![替代文字](图片URL)
+
+# 引用
+
+> 引用文字
+> > 嵌套引用
+
+# 代码
+
+`行内代码`
+
+```语言
+代码块
+```
+
+# 表格
+
+| 列1 | 列2 | 列3 |
+|-----|-----|-----|
+| 内容 | 内容 | 内容 |
+
+# 分隔线
+
+---
+
+# 脚注
+
+正文中的引用[^1]
+
+[^1]: 脚注内容
+
+# 数学公式
+
+$行内公式$
+$$
+独立公式块
+$$
+#+end_src
+
+** 参考资源
+
+- [[https://daringfireball.net/projects/markdown/][Markdown: Syntax]] — John Gruber 的原始规范，了解 Markdown 的根基
+- [[https://commonmark.org/][CommonMark Spec]] — 最严格的 Markdown 标准规范
+- [[https://github.github.com/gfm/][GitHub Flavored Markdown Spec]] — GFM 官方规范
+- [[https://www.markdownguide.org/][Markdown Guide]] — 最友好的 Markdown 学习网站
+- [[https://pandoc.org/MANUAL.html][Pandoc Manual]] — Pandoc 完整手册，了解 Markdown 扩展语法
+- [[https://pkgs.rstudio.com/rmarkdown/][R Markdown]] — R 语言的 Markdown 扩展，数据科学领域常用
+- [[https://obsidian.md/][Obsidian]] — 基于 Markdown 的知识管理工具
+
+* Git / GitHub / GitHub Actions
+
+Git 是当今世界最流行的版本控制系统，GitHub 是基于 Git 的全球最大代码托管平台，而 GitHub Actions 是 GitHub 提供的自动化工作流服务。这三者构成了现代软件开发的基础设施——Git 负责追踪代码的每一次变更，GitHub 负责托管代码并促进协作，GitHub Actions 负责在代码推送时自动执行测试、构建、部署等任务。如果你是一名开发者，无论你使用什么语言、什么框架，这套工具链几乎是必须掌握的。即使你不是开发者，只要你有需要版本管理的文本文件（比如博客文章、配置文件、笔记），Git 同样能让你的工作更加安全和高效。
+
+** Git 的诞生与版本控制的历史
+
+*** 版本控制的史前时代
+
+在 Git 出现之前，程序员们就已经在苦苦寻找管理代码版本的方法了。最原始的做法是在文件名后面加日期或版本号： =report_v1.txt=  、 =report_v2.txt=  、 =report_final.txt=  、 =report_final_really.txt= ……这种做法不仅混乱，而且无法追踪具体改了什么、为什么改、什么时候改的。当项目规模变大、参与人数增多时，这种手工管理方式很快就崩溃了。
+
+1972 年，Marc Rochkind 在贝尔实验室开发了 SCCS（Source Code Control System），这是已知的最早的专业版本控制工具。SCCS 只能在同一时间由一个人编辑文件，这种模式后来被称为"锁模型"——你要编辑一个文件，先告诉系统"我要锁住这个文件"，编辑完了再解锁，其他人在此期间不能编辑。这种方式虽然避免了冲突，但严重阻碍了协作效率。
+
+1982 年，Walter Tichy 开发了 RCS（Revision Control System），仍然是锁模型，但性能更好。RCS 的重要性在于它引入了"只存储差异"的概念——不是每次都保存完整的文件副本，而是只保存这次修改和上次之间的差异（delta），这大大节省了存储空间。
+
+*** 集中式版本控制
+
+1990 年代，随着项目规模扩大和团队分布在不同地点，集中式版本控制（CVCS）出现了。代表工具包括 CVS（Concurrent Versions System，1986 年由 Dick Grune 开发）和 Subversion（也叫 SVN，2000 年由 CollabNet 公司发起，Karl Fogel 和 Jim Blandy 领导开发）。
+
+集中式版本控制的核心思想是：有一个中央服务器存储所有代码的历史版本，开发者从服务器获取最新代码，在本地修改后再提交回服务器。相比锁模型，CVCS 引入了"复制-修改-合并"的工作方式——多人可以同时编辑同一文件，最后再合并各自的修改，这极大地提升了协作效率。
+
+但集中式版本控制有一个致命的弱点：单点故障。如果中央服务器宕机，所有人都无法提交代码；如果中央服务器的数据损坏且没有备份，所有历史记录就永远丢失了。此外，大多数 CVCS 操作都需要网络连接，在断网的情况下几乎无法工作。
+
+2000 年代初期，另一个重要的集中式版本控制工具是 Perforce（后来更名为 Helix Core），它在游戏开发和大型企业中广泛使用，因为它在处理大型二进制文件（如图像、视频、3D 模型）方面比 CVS 和 SVN 更出色。不过 Perforce 是商业软件，价格昂贵，不适合开源社区。
+
+*** 分布式版本控制的崛起
+
+2000 年代中期，开源社区对更好的版本控制工具的需求越来越迫切。Linux 内核开发是一个极端案例——全球数千名开发者协作开发一个超过千万行代码的项目，现有的工具都无法满足需求。Linus Torvalds 当时使用的是 BitKeeper，一个商业的分布式版本控制工具。
+
+BitKeeper 由 Larry McVoy 开发，它的分布式架构让每个开发者都拥有完整的代码仓库副本，包括所有历史记录，这样即使没有网络连接也能正常工作。BitKeeper 对开源项目免费提供，但它是专有软件。2005 年，BitKeeper 的公司收回了免费使用的权利（原因与 Samba 项目的 Andrew Tridgell 试图对 BitKeeper 协议进行逆向工程有关），Linux 内核开发社区一夜之间失去了版本控制工具。
+
+Linus Torvalds 决定自己写一个。他对版本控制工具有几个明确的要求：
+
+1. *速度* — 应用 Linux 内核的规模，操作必须非常快
+2. *简单设计* — 对冲突的处理要简单可靠
+3. *完全分布式* — 每个人都有完整的仓库
+4. *支持大量并行分支* — Linux 内核开发经常同时进行数百个分支
+5. *能高效处理大型项目* — 不因仓库变大而变慢
+
+*** Git 的诞生
+
+2005 年 4 月 7 日，Linus Torvalds 开始编写 Git。令人难以置信的是，仅仅两天后，Git 就已经可以自托管了（即用 Git 管理 Git 自身的源代码）。两周后，Linux 内核的代码就开始用 Git 管理了。这种开发速度在整个软件史上都是罕见的。
+
+Git 的核心设计思想与之前的版本控制工具有本质区别。CVCS 把差异（delta）作为基本存储单位，而 Git 把快照（snapshot）作为基本存储单位。每次你提交（commit），Git 不会只存储修改了什么，而是对整个项目拍一张"快照"——记录所有文件的当前状态。如果没有变化的文件，Git 只存一个指针指向上一次的版本，而不是再存一份。这种设计让很多操作变得极快，因为不需要逐个计算差异。
+
+Git 的另一个关键创新是内容寻址存储。Git 不是按文件名来识别文件，而是按文件内容计算一个 SHA-1 哈希值，用哈希值作为唯一标识。这意味着：如果两个文件内容完全相同，无论它们叫什么名字、在什么目录，Git 只存储一份。这也意味着你无法篡改文件内容而不被 Git 发现——因为哈希值会变，而提交记录中保存了旧的哈希值。
+
+Git 的名字也很有意思。Linus Torvalds 本人解释说："I'm an egotistical bastard, and I name all my projects after myself. First 'Linux', now 'git'."（"我是个自大的混蛋，我所有的项目都以自己命名。先是 Linux，现在是 git。"）在英式俚语中， =git= 的意思是"令人讨厌的人"。不过，后来 Linux 社区也给了 Git 一个递归缩写： =Git is not UNIX= 或 =Global Information Tracker= 。
+
+*** Git 的发展与 GitHub 的诞生
+
+Git 诞生之初虽然功能强大，但命令行界面非常粗糙，普通人很难上手。2005 年 7 月，Junio C Hamano 接管了 Git 的维护工作，他在此后的近二十年里一直是 Git 项目的核心维护者，对 Git 的易用性和稳定性做出了巨大贡献。
+
+2008 年，Tom Preston-Werner、Chris Wanstrath、PJ Hyett 和 Scott Chacon 创立了 GitHub。GitHub 的核心贡献不是 Git 本身——Git 是开源的，任何人都能搭建 Git 服务器——而是围绕 Git 构建了一套极其好用的协作平台：Pull Request、Issue Tracker、代码审查、Wiki、Pages 等功能，让基于 Git 的协作变得前所未有的方便。GitHub 很快就吸引了大量开源项目迁移过来，到 2018 年被微软以 75 亿美元收购时，已经有超过 2800 万用户和 5700 万仓库。
+
+GitHub 的 Pull Request（简称 PR）机制深刻改变了开源协作的方式。在 GitHub 之前，给一个开源项目贡献代码的典型流程是：下载源代码、修改、生成 diff 补丁文件、发邮件到项目的邮件列表、等待维护者审查和合并。整个过程可能需要数周甚至数月。PR 把这个流程简化为：Fork 仓库（一键）、修改代码、发起 PR（一键）、在线讨论和审查、合并（维护者一键）。从数周到数分钟，效率提升了几个数量级。
+
+*** GitHub Actions 的诞生
+
+2018 年 10 月，GitHub 在 GitHub Universe 大会上发布了 GitHub Actions 的测试版，2019 年 11 月正式上线。GitHub Actions 的出现让持续集成/持续部署（CI/CD）的门槛大幅降低——你不需要自己搭建 Jenkins 服务器，不需要配置 Travis CI 或 CircleCI，只需要在仓库的 =.github/workflows/= 目录下放一个 YAML 文件，GitHub 就会自动帮你执行。
+
+GitHub Actions 的设计哲学是"一切皆 Action"——每个操作步骤都是一个可复用的 Action，社区可以开发和分享 Action，其他人直接引用即可。这形成了一个丰富的 Action 生态，覆盖了从代码检查、测试运行、Docker 构建、云部署到通知发送的各种场景。
+
+2019 年，GitHub 还推出了 GitHub Packages，支持在 GitHub 内部托管 Docker 镜像、npm 包、Maven 包等，进一步完善了从代码到部署的完整工具链。
+
+*** 当前生态概览
+
+2026 年的今天，Git/GitHub 生态已经非常成熟：
+
+| 工具/平台       | 类型       | 特点                                |
+|-----------------+------------+-------------------------------------|
+| Git             | 版本控制   | 分布式，快速，行业标准              |
+| GitHub          | 代码托管   | 最大社区，Actions，Copilot，Pages   |
+| GitLab          | 代码托管   | 自托管选项，内置 CI/CD，DevOps 全套 |
+| Bitbucket       | 代码托管   | Atlassian 生态，Jira 集成           |
+| Gitea/Forgejo   | 自托管平台 | 轻量，Go 编写，适合小团队自建       |
+| Git LFS         | 大文件存储 | 管理大型二进制文件的 Git 扩展       |
+| GitHub CLI (gh) | 命令行工具 | 在终端操作 PR、Issue、Actions       |
+| Git GUI 客户端  | 图形界面   | GitKraken、Sourcetree、VS Code 内置 |
+| GitHub Actions  | CI/CD      | 免费额度，生态丰富，配置简单        |
+| GitHub Copilot  | AI 辅助    | 基于上下文的代码补全和建议          |
+| GitHub Pages    | 静态托管   | 免费托管静态网站，支持自定义域名    |
+
+** 在 EndeavourOS 上安装 Git
+
+EndeavourOS 基于 Arch Linux，安装软件非常简单。Git 可能在系统安装时就已经自带了，先用以下命令检查：
+
+#+begin_src bash :exports code
+git --version
+#+end_src
+
+如果已经安装，会输出类似 =git version 2.47.0= 的信息。如果没有安装，用 pacman 安装：
+
+#+begin_src bash :exports code
+sudo pacman -S git
+#+end_src
+
+*** 基础配置
+
+Git 安装后的第一件事是设置你的用户名和邮箱，因为 Git 的每次提交都会记录这些信息：
+
+#+begin_src bash :exports code
+git config --global user.name "你的名字"
+git config --global user.email "你的邮箱@example.com"
+#+end_src
+
+这里的名字和邮箱会出现在你的每一次提交记录中。如果你打算使用 GitHub，建议名字和邮箱与 GitHub 账号一致。
+
+其他推荐的全局配置：
+
+#+begin_src bash :exports code
+# 设置默认分支名为 main（而不是 master）
+git config --global init.defaultBranch main
+
+# 设置默认编辑器为 vim（提交信息编辑器）
+git config --global core.editor vim
+
+# 如果喜欢用 nano
+git config --global core.editor nano
+
+# 如果喜欢用 VS Code
+git config --global core.editor "code --wait"
+
+# 彩色输出
+git config --global color.ui auto
+
+# 设置换行符处理（Linux 推荐）
+git config --global core.autocrlf input
+
+# 查看所有配置
+git config --list
+
+# 查看某个配置项
+git config user.name
+#+end_src
+
+Git 的配置有三个层级，优先级从高到低：
+
+1. *本地配置* （ =--local= ）— 只对当前仓库生效，存储在 =.git/config=
+2. *全局配置* （ =--global= ）— 对当前用户的所有仓库生效，存储在 =~/.gitconfig=
+3. *系统配置* （ =--system= ）— 对所有用户生效，存储在 =/etc/gitconfig=
+
+大多数情况下用 =--global= 就够了。如果你在某些项目中需要用不同的名字或邮箱，可以在该项目目录下用 =--local= 覆盖。
+
+*** 配置 SSH 密钥
+
+与 GitHub 通信最安全、最方便的方式是 SSH。SSH 密钥是一对文件：私钥（不能泄露）和公钥（放到 GitHub 上）。当你推送代码时，Git 用私钥对数据签名，GitHub 用公钥验证，不需要输入密码。
+
+#+begin_src bash :exports code
+# 生成新的 SSH 密钥（推荐 ed25519 算法）
+ssh-keygen -t ed25519 -C "你的邮箱@example.com"
+
+# 系统会提示你选择保存位置，直接回车用默认位置即可
+# 然后提示设置密码短语（passphrase），可以留空，也可以设置一个
+
+# 启动 SSH Agent
+eval "$(ssh-agent -s)"
+
+# 将密钥添加到 Agent
+ssh-add ~/.ssh/id_ed25519
+
+# 查看公钥内容（需要复制到 GitHub）
+cat ~/.ssh/id_ed25519.pub
+#+end_src
+
+现在把公钥添加到 GitHub：登录 GitHub → 点击头像 → Settings → SSH and GPG keys → New SSH key → 粘贴公钥内容 → 保存。
+
+测试 SSH 连接：
+
+#+begin_src bash :exports code
+ssh -T git@github.com
+#+end_src
+
+如果一切正常，你会看到类似这样的消息： ="Hi username! You've successfully authenticated, but GitHub does not provide shell access."=
+
+*** 安装 GitHub CLI
+
+GitHub CLI（ =gh= ）是一个命令行工具，让你不用打开浏览器就能操作 GitHub 的很多功能：创建仓库、发起 Pull Request、查看 Issue、触发 Actions 等等。
+
+#+begin_src bash :exports code
+# 安装 GitHub CLI
+sudo pacman -S github-cli
+
+# 验证安装
+gh --version
+
+# 登录 GitHub
+gh auth login
+#+end_src
+
+=gh auth login= 会引导你选择认证方式。推荐选择 SSH + 浏览器认证，这样最安全也最方便。登录成功后，你就可以在终端直接使用 =gh= 命令了。
+
+几个常用的 =gh= 命令：
+
+#+begin_src bash :exports code
+# 查看当前登录状态
+gh auth status
+
+# 在浏览器中打开当前仓库的 GitHub 页面
+gh browse
+
+# 创建新仓库（当前目录下）
+gh repo create my-project --public --source=. --remote=origin
+
+# 查看 Issue 列表
+gh issue list
+
+# 创建新 Issue
+gh issue create --title "Bug: 应用崩溃" --body "描述问题..."
+
+# 查看 Pull Request 列表
+gh pr list
+
+# 创建 Pull Request
+gh pr create --title "feat: 添加登录功能" --body "实现了用户登录..."
+
+# 查看 Actions 运行状态
+gh run list
+
+# 查看某次运行详情
+gh run view <run-id>
+#+end_src
+
+** Git 核心概念详解
+
+在开始实际操作之前，理解 Git 的核心概念至关重要。很多人学 Git 只是背命令，一旦遇到问题就手足无措，根本原因是对概念理解不够。
+
+*** 仓库（Repository）
+
+仓库是 Git 管理的基本单位，就是一个项目的所有文件加上 Git 的版本历史记录。仓库分为两种：
+
+- *本地仓库* — 存储在你电脑上的仓库，包含完整的历史记录
+- *远程仓库* — 存储在 GitHub 等服务器上的仓库，用于多人协作和备份
+
+一个 Git 仓库的核心内容都在 =.git/= 目录下，这个目录存储了所有的版本历史、配置信息、分支指针等。如果你删除了 =.git/= 目录，这个目录就变回了普通的文件夹，所有版本历史都会丢失。
+
+仓库里的文件有三种状态：
+
+1. *已提交（committed）* — 文件已经安全地保存在本地数据库中
+2. *已修改（modified）* — 文件被修改了，但还没有提交
+3. *已暂存（staged）* — 文件的修改被标记为"下次提交时包含"
+
+这三种状态对应 Git 的三个工作区域：
+
+- *工作目录（Working Directory）* — 你实际编辑文件的地方
+- *暂存区（Staging Area / Index）* — 介于工作目录和仓库之间的中间层
+- *仓库（Repository）* — Git 存储所有提交历史的地方
+
+文件在这三个区域之间流动的典型过程是：在工作目录修改文件 → 用 =git add= 将修改放入暂存区 → 用 =git commit= 将暂存区的内容提交到仓库。理解这个"三区域"模型是掌握 Git 的关键。
+
+*** 提交（Commit）
+
+提交是 Git 的核心操作，也是版本控制的基本单位。每次提交就像给项目拍了一张快照，记录了"这个时刻所有文件的状态"。每个提交包含以下信息：
+
+- 一个唯一的 SHA-1 哈希值（如 =a3f4b2c= ），作为提交的"身份证号"
+- 提交者的名字和邮箱
+- 提交的日期和时间
+- 提交信息（commit message）— 描述这次提交做了什么
+- 指向上一次提交的指针（parent）
+- 所有文件的快照（实际实现中，未修改的文件只是指向之前版本的指针）
+
+提交的哈希值不仅是一个标识符，还是完整性的保证。因为哈希值是根据提交的所有内容（包括文件快照、作者信息、时间、提交信息、父提交）计算出来的，任何一点改动都会导致哈希值完全不同。这意味着你无法偷偷修改一个提交的内容而不被发现。
+
+*** 分支（Branch）
+
+分支是 Git 最强大也最独特的功能之一。在 Git 中，分支本质上只是一个指向某个提交的可移动指针。创建一个新分支，实际上只是创建了一个新的指针，指向当前的提交，其他什么都没有变——没有复制文件，没有创建目录，几乎不占磁盘空间。这种设计让 Git 的分支操作极其快速和轻量，创建和切换分支只需要不到一秒。
+
+当你在一个分支上做新的提交时，这个分支的指针就自动向前移动到新的提交。而其他分支的指针不受影响，仍然指向它们原来的提交。这就形成了分支的"分叉"——两条线从同一个起点出发，各自向前发展。
+
+一个特殊的指针叫 =HEAD= ，它指向当前所在的分支。当你切换分支时， =HEAD= 就指向新的分支。 =HEAD= 就像一个书签，标记你"现在在哪里"。
+
+Git 中有一个默认分支，传统上叫 =master= ，现在越来越多的项目改用 =main= （我们前面已经通过配置设置了 =init.defaultBranch main= ）。无论叫什么名字，它和别的分支没有本质区别，只是约定俗成的"主分支"。
+
+*** 远程仓库（Remote）
+
+远程仓库是本地仓库在网络上的镜像。最常见的远程仓库就是 GitHub 上的仓库。你可以有多个远程仓库，但通常只有一个，习惯上命名为 =origin= 。
+
+远程仓库与本地仓库之间的关系通过"远程追踪分支"维护。比如，你本地的 =main= 分支可以追踪 =origin/main= （也就是 GitHub 上的 main 分支）。当你执行 =git fetch= 时，Git 从远程仓库获取最新的提交，更新 =origin/main= 指针，但不会修改你本地的 =main= 分支。只有当你执行 =git merge= 或 =git pull= 时，才会把远程的修改合并到你本地的分支。
+
+*** 合并（Merge）与变基（Rebase）
+
+当两个分支各自有了新的提交，需要合二为一时，有两种主要方式：合并和变基。
+
+*合并（merge）* 会创建一个新的提交（merge commit），它有两个父提交——分别来自两个分支。合并的好处是它忠实地记录了历史：你可以看到两个分支是何时何地合并的。缺点是历史记录可能变得比较复杂，特别是频繁合并时。
+
+*变基（rebase）* 的思路不同：它把你当前分支的提交"重新播放"到目标分支的顶端，就好像你的修改是在目标分支的最新提交之后做的一样。变基的好处是历史记录是线性的，非常干净。缺点是它改写了提交历史——提交的哈希值会变，如果已经推送到远程，可能会造成问题。
+
+一个重要的黄金法则： *不要对已经推送到远程的提交执行变基* 。因为变基会改写历史，如果你的协作者已经基于你的旧提交做了工作，你变基后再推送，他们的工作就乱了。变基只应该用在你本地的、还没推送的提交上。
+
+*** 标签（Tag）
+
+标签是给某个提交起的一个有意义的名字，通常用于标记发布版本。标签和分支的区别是：分支指针会随着新提交向前移动，而标签指针永远指向固定的提交，不会移动。
+
+标签有两种：
+
+- *轻量标签（lightweight tag）* — 只是一个指针，不存储额外信息
+- *附注标签（annotated tag）* — 包含标签者信息、日期、标签消息，存储在 Git 数据库中
+
+推荐使用附注标签，因为它包含更多的信息：
+
+#+begin_src bash :exports code
+# 创建附注标签
+git tag -a v1.0.0 -m "第一个正式版本"
+
+# 创建轻量标签
+git tag v1.0.0
+
+# 查看所有标签
+git tag
+
+# 查看标签详情
+git show v1.0.0
+
+# 将标签推送到远程
+git push origin v1.0.0
+
+# 推送所有标签
+git push origin --tags
+
+# 删除本地标签
+git tag -d v1.0.0
+
+# 删除远程标签
+git push origin --delete v1.0.0
+#+end_src
+
+** Git 日常操作
+
+掌握了概念之后，让我们进入实际操作。以下按照真实的工作流程来组织，从创建仓库到提交代码、从分支管理到远程协作，每个操作都有详细说明和实例。
+
+*** 创建仓库
+
+创建仓库有两种方式：从零开始，或者克隆已有的远程仓库。
+
+**** 从零开始
+
+#+begin_src bash :exports code
+# 创建项目目录
+mkdir my-project
+cd my-project
+
+# 初始化 Git 仓库
+git init
+
+# 此时 Git 创建了 .git/ 目录，仓库就建好了
+# 但此时还没有任何提交，仓库是空的
+
+# 创建第一个文件
+echo "# My Project" > README.md
+
+# 将文件添加到暂存区
+git add README.md
+
+# 提交
+git commit -m "add: initial commit"
+#+end_src
+
+=git init= 之后，Git 只是在当前目录下创建了一个 =.git/= 目录，其他什么都没变。你的文件不会被自动追踪——必须显式地告诉 Git 你想追踪哪些文件。这是 Git 的一个核心设计：它不会擅自干涉你的文件，一切都由你主动控制。
+
+**** 克隆已有仓库
+
+#+begin_src bash :exports code
+# 用 SSH 克隆
+git clone git@github.com:username/repo.git
+
+# 用 HTTPS 克隆
+git clone https://github.com/username/repo.git
+
+# 克隆到指定目录
+git clone git@github.com:username/repo.git my-folder
+
+# 克隆指定分支
+git clone -b main git@github.com:username/repo.git
+#+end_src
+
+克隆操作会做以下几件事：下载远程仓库的所有文件和历史记录、创建远程仓库的引用（ =origin= ）、检出默认分支、为每个远程分支创建本地追踪分支。克隆完成后你就拥有了一个完整的本地仓库，包含所有的历史记录，可以离线工作。
+
+SSH 和 HTTPS 的区别：SSH 使用密钥认证，配置好之后不需要输入密码，更方便也更安全；HTTPS 使用用户名和密码（或 Personal Access Token），每次推送可能需要输入凭据，但在某些网络环境下更稳定。
+
+*** 查看状态与差异
+
+这三个命令是你最常用来"了解当前状况"的工具：
+
+#+begin_src bash :exports code
+# 查看工作目录和暂存区的状态
+git status
+
+# 查看工作目录和暂存区之间的差异（还没暂存的修改）
+git diff
+
+# 查看暂存区和上次提交之间的差异（已暂存但还没提交的修改）
+git diff --staged
+
+# 查看某次提交的修改内容
+git show abc1234
+
+# 查看某次提交中某个文件的修改
+git show abc1234 -- path/to/file
+
+# 查看两个提交之间的差异
+git diff abc1234..def5678
+
+# 只查看哪些文件被修改了（不显示具体内容）
+git diff --name-only
+#+end_src
+
+=git status= 是你用得最多的命令，它告诉你：当前在哪个分支、有没有未提交的修改、暂存区里有什么、有没有未追踪的文件。养成频繁执行 =git status= 的习惯，这是避免出错的最好方法。
+
+*** 添加与提交
+
+#+begin_src bash :exports code
+# 添加单个文件到暂存区
+git add README.md
+
+# 添加多个文件
+git add file1.txt file2.txt
+
+# 添加某个目录下的所有修改
+git add src/
+
+# 添加所有修改（不包括未追踪的文件删除）
+git add .
+
+# 添加所有修改（包括删除的文件）
+git add -A
+
+# 交互式添加（可以选择部分修改而不是整个文件）
+git add -p
+
+# 提交暂存区的内容
+git commit -m "feat: 添加用户登录功能"
+
+# 用编辑器写提交信息（适合较长的说明）
+git commit
+
+# 跳过暂存区，直接提交所有已追踪文件的修改
+git commit -a -m "fix: 修正拼写错误"
+
+# 修改上一次提交（如果还没推送）
+git commit --amend -m "feat: 添加用户登录功能和表单验证"
+#+end_src
+
+=git add -p= 是一个非常实用的命令，它让你逐块（hunk）审查修改，决定每一块是否要暂存。这在你想把一次修改拆分成多个提交时特别有用——比如你同时修了一个 bug 和加了一个新功能，可以用 =git add -p= 分别暂存，然后分别提交。
+
+提交信息（commit message）的写法是一个经常被忽视但非常重要的话题。好的提交信息能让 =git log= 成为有价值的文档。推荐使用 Conventional Commits 格式：
+
+#+begin_src text
+<类型>: <简要描述>
+
+<详细说明（可选）>
+#+end_src
+
+常用类型：
+
+| 类型     | 说明                           | 示例                           |
+|----------+--------------------------------+--------------------------------|
+| feat     | 新功能                         | feat: 添加用户注册功能         |
+| fix      | 修复 bug                       | fix: 修正登录失败的空指针异常  |
+| docs     | 文档变更                       | docs: 更新 API 文档            |
+| style    | 格式调整（不影响功能）         | style: 统一缩进为 4 空格       |
+| refactor | 重构（不是新功能也不是修 bug） | refactor: 提取公共方法到工具类 |
+| test     | 测试相关                       | test: 添加用户模块单元测试     |
+| chore    | 构建/工具/依赖变更             | chore: 升级 pytest 到 8.0      |
+| perf     | 性能优化                       | perf: 优化列表查询的 SQL 语句  |
+
+*** 查看历史
+
+#+begin_src bash :exports code
+# 查看提交历史
+git log
+
+# 简洁的一行格式
+git log --oneline
+
+# 图形化显示分支合并历史
+git log --oneline --graph
+
+# 显示每次提交修改了哪些文件
+git log --name-status
+
+# 只看最近 5 次提交
+git log -5
+
+# 查看某个文件的修改历史
+git log -- path/to/file
+
+# 搜索提交信息
+git log --grep="关键词"
+
+# 查看某个作者的提交
+git log --author="名字"
+
+# 查看某段时间内的提交
+git log --since="2026-01-01" --until="2026-06-30"
+
+# 精美的自定义格式
+git log --oneline --graph --all --decorate
+#+end_src
+
+=git log --oneline --graph --all --decorate= 是一个非常好用的组合，它能以简洁的图形方式展示所有分支的完整历史。你可以在 =~/.gitconfig= 中为它设置别名：
+
+#+begin_src bash :exports code
+git config --global alias.lg "log --oneline --graph --all --decorate"
+#+end_src
+
+之后只需要输入 =git lg= 就能看到美观的历史图了。
+
+几个更多实用的别名：
+
+#+begin_src bash :exports code
+git config --global alias.st "status -sb"
+git config --global alias.co checkout
+git config --global alias.br branch
+git config --global alias.cm "commit -m"
+git config --global alias.last "log -1 HEAD --stat"
+git config --global alias.unstage "reset HEAD --"
+#+end_src
+
+*** 分支操作
+
+#+begin_src bash :exports code
+# 查看所有本地分支
+git branch
+
+# 查看所有分支（包括远程）
+git branch -a
+
+# 创建新分支
+git branch feature-login
+
+# 切换到新分支
+git checkout feature-login
+
+# 创建并切换（更常用）
+git checkout -b feature-login
+
+# 或者用更新的 switch 命令
+git switch -c feature-login
+
+# 切换回 main 分支
+git checkout main
+git switch main
+
+# 合并 feature-login 分支到当前分支
+git merge feature-login
+
+# 删除已合并的分支
+git branch -d feature-login
+
+# 强制删除未合并的分支
+git branch -D feature-login
+
+# 重命名分支
+git branch -m old-name new-name
+
+# 查看分支的最后一次提交
+git branch -v
+#+end_src
+
+=git switch= 是 Git 2.23（2019 年 8 月）引入的新命令，用来替代 =git checkout= 的分支切换功能。=git checkout= 承担了太多职责（切换分支、恢复文件、创建分支）， =switch= 让命令的语义更清晰。目前 =checkout= 仍然可用，但推荐使用 =switch= 。
+
+分支命名也是一门学问，好的分支名能让人一眼看出这个分支的用途：
+
+#+begin_src text
+feature/用户登录
+bugfix/修复空指针异常
+hotfix/生产环境内存泄漏
+release/v2.0.0
+docs/更新API文档
+experiment/新算法尝试
+#+end_src
+
+**** 合并冲突
+
+当两个分支修改了同一个文件的同一个位置时，Git 无法自动合并，就会产生冲突。冲突不是错误，而是 Git 在告诉你："这两个修改都有道理，但我不知道该选哪个，请你来决定。"
+
+冲突的文件中会出现这样的标记：
+
+#+begin_src text
+<<<<<<< HEAD
+当前分支的内容
+=======
+另一个分支的内容
+>>>>>>> feature-login
+#+end_src
+
+解决冲突的步骤：
+
+#+begin_src bash :exports code
+# 1. 打开冲突文件，找到 <<<<<<< 标记
+# 2. 手动编辑，选择保留哪一部分（或合并两部分）
+# 3. 删除所有 <<<<<<< ======= >>>>>>> 标记
+# 4. 保存文件
+# 5. 将解决冲突后的文件添加到暂存区
+git add 冲突文件
+
+# 6. 完成合并提交
+git commit
+
+# 如果想放弃合并，回到合并前的状态
+git merge --abort
+#+end_src
+
+一个实用的技巧：使用 =git mergetool= 调用可视化合并工具来解决冲突：
+
+#+begin_src bash :exports code
+# 配置合并工具（推荐 meld 或 vimdiff）
+git config --global merge.tool meld
+
+# 安装 meld
+sudo pacman -S meld
+
+# 使用合并工具解决冲突
+git mergetool
+#+end_src
+
+*** 撤销操作
+
+撤销操作是 Git 中最容易让人紧张的部分，因为"撤销"在不同的情况下有不同的命令，用错命令可能导致数据丢失。下面按场景逐一说明。
+
+#+begin_src bash :exports code
+# 场景1：修改了文件但还没暂存，想放弃修改
+git checkout -- file.txt        # 旧语法
+git restore file.txt            # 新语法（Git 2.23+）
+
+# 放弃所有未暂存的修改（危险！）
+git restore .
+
+# 场景2：已经暂存了文件，想取消暂存
+git reset HEAD file.txt         # 旧语法
+git restore --staged file.txt   # 新语法（Git 2.23+）
+
+# 场景3：已经提交了，想撤销这次提交（保留修改）
+git reset --soft HEAD~1
+
+# 场景4：已经提交了，想撤销这次提交（丢弃修改，危险！）
+git reset --hard HEAD~1
+
+# 场景5：已经提交了，想修改提交信息
+git commit --amend -m "新的提交信息"
+
+# 场景6：已经提交了，想追加修改到上一次提交
+git add 遗漏的文件
+git commit --amend --no-edit
+
+# 场景7：已经推送到远程了，想撤销（最危险）
+# 不要用 reset！用 revert 创建一个反向提交
+git revert abc1234
+#+end_src
+
+=reset= 和 =revert= 的区别非常重要：
+
+- =reset= 是"时光倒流"——它把分支指针移回旧的位置，就像那次提交从来没发生过。已经推送到远程的提交绝对不要用 =reset= 。
+- =revert= 是"创建新提交来撤销旧提交"——历史记录中既有原来的提交，也有撤销它的提交，这是安全的做法。
+
+=--soft= 和 =--hard= 的区别：
+
+- =--soft= — 撤销提交，但保留修改在暂存区（你可以重新编辑后提交）
+- =--hard= — 撤销提交，并丢弃所有修改（数据会丢失，慎用！）
+
+*** 远程操作
+
+#+begin_src bash :exports code
+# 查看远程仓库
+git remote -v
+
+# 添加远程仓库
+git remote add origin git@github.com:username/repo.git
+
+# 修改远程仓库 URL
+git remote set-url origin git@github.com:username/new-repo.git
+
+# 从远程获取最新内容（不合并）
+git fetch origin
+
+# 从远程获取并合并到当前分支
+git pull origin main
+
+# 推送本地提交到远程
+git push origin main
+
+# 首次推送并设置上游追踪
+git push -u origin main
+
+# 后续推送只需
+git push
+
+# 删除远程分支
+git push origin --delete feature-login
+
+# 查看远程分支详情
+git remote show origin
+#+end_src
+
+=git fetch= 和 =git pull= 的区别： =fetch= 只下载远程的最新数据，不修改你的工作目录和本地分支； =pull= 是 =fetch + merge= 的快捷方式，会自动合并远程修改到你的当前分支。在不确定远程有什么变化时，先 =fetch= 看看再用 =merge= 合并，比直接 =pull= 更安全。
+
+*** 暂存工作（Stash）
+
+你正在一个分支上工作，突然需要切换到另一个分支去修一个紧急 bug。但你当前的工作还没完成，不想提交一个半成品。这时候 =stash= 就派上用场了——它把你的未提交修改"暂存"起来，让你的工作目录回到干净状态，之后你再"弹出"这些修改继续工作。
+
+#+begin_src bash :exports code
+# 暂存当前修改
+git stash
+
+# 暂存时添加说明（推荐）
+git stash push -m "登录功能开发到一半"
+
+# 查看所有暂存
+git stash list
+
+# 恢复最近一次暂存（并从暂存列表中删除）
+git stash pop
+
+# 恢复指定暂存
+git stash pop stash@{1}
+
+# 恢复暂存但保留在暂存列表中
+git stash apply
+
+# 删除暂存
+git stash drop stash@{0}
+
+# 删除所有暂存
+git stash clear
+
+# 查看暂存的内容
+git stash show -p stash@{0}
+#+end_src
+
+*** 搜索与定位
+
+#+begin_src bash :exports code
+# 在代码中搜索字符串
+git grep "function_name"
+
+# 在某个提交中搜索
+git grep "function_name" abc1234
+
+# 查看某行代码是谁写的（blame）
+git blame file.txt
+
+# 只看某几行
+git blame -L 10,20 file.txt
+
+# 查找引入某个 bug 的提交（二分查找）
+git bisect start
+git bisect bad              # 当前版本有 bug
+git bisect good v1.0.0      # v1.0.0 没有 bug
+# Git 会自动检出中间的版本，你测试后标记
+git bisect good             # 或 git bisect bad
+# 重复直到找到引入 bug 的提交
+git bisect reset            # 结束二分查找
+#+end_src
+
+=git bisect= 是一个极其强大的调试工具。假设你的程序昨天还正常，今天突然出了 bug，你可以在"正常"和"有 bug"的提交之间做二分查找，Git 每次检出中间的提交让你测试，通常只需要几次就能精确定位到引入 bug 的那一次提交。
+
+*** .gitignore 文件
+
+=.gitignore= 文件告诉 Git 哪些文件不需要追踪。每个项目都应该有这个文件，它避免了将编译产物、临时文件、敏感信息等不恰当的内容提交到仓库。
+
+#+begin_src text
+# 编译产物
+*.o
+*.so
+*.exe
+*.class
+build/
+dist/
+target/
+
+# 依赖目录
+node_modules/
+vendor/
+.venv/
+
+# IDE 配置
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 敏感信息
+.env
+config/secrets.yml
+*.key
+*.pem
+
+# 日志文件
+*.log
+logs/
+#+end_src
+
+GitHub 维护了一个 =.gitignore= 模板集合，覆盖了几乎所有编程语言和框架，推荐作为参考：[[https://github.com/github/gitignore][github/gitignore]]
+
+** Git 工作流
+
+工作流是团队如何使用 Git 协作的一套约定。不同的团队规模和项目性质适合不同的工作流，没有放之四海而皆准的标准。
+
+*** 集中式工作流
+
+最简单的工作流，适合小团队或个人项目。所有人都在 =main= 分支上直接提交和推送，不用分支。
+
+#+begin_src text
+开发者A: main ← commit → push → pull
+开发者B: main ← commit → push → pull
+#+end_src
+
+优点是简单直接，缺点是一旦出现冲突就手忙脚乱，不适合并行开发多个功能。
+
+*** GitHub Flow
+
+这是 GitHub 推荐的工作流，适合大多数 Web 应用开发，是目前最流行的工作流：
+
+1. =main= 分支始终是可部署的状态
+2. 开发新功能时，从 =main= 创建新分支（如 =feature/login= ）
+3. 在新分支上开发，定期推送到远程
+4. 开发完成后，在 GitHub 上发起 Pull Request
+5. 团队成员审查代码，提出修改意见
+6. 审查通过后，合并到 =main=
+7. 合并后立即部署到生产环境
+
+#+begin_src bash :exports code
+# 完整的 GitHub Flow 流程
+git checkout main
+git pull origin main
+git checkout -b feature/user-auth
+
+# ... 开发、提交 ...
+git add .
+git commit -m "feat: 实现用户认证中间件"
+git push -u origin feature/user-auth
+
+# 在 GitHub 上创建 Pull Request
+gh pr create --title "feat: 用户认证功能" --body "实现了 JWT 认证中间件..."
+
+# 审查通过后合并（在 GitHub 上操作，或用 gh 命令）
+gh pr merge feature/user-auth --merge
+
+# 删除本地和远程的 feature 分支
+git checkout main
+git pull origin main
+git branch -d feature/user-auth
+git push origin --delete feature/user-auth
+#+end_src
+
+*** Git Flow
+
+Vincent Driessen 在 2010 年提出的工作流，适合有明确发布周期的项目（如桌面软件、移动应用）。它使用多个长期分支：
+
+- =main= — 生产环境代码，每次合并都对应一个新版本
+- =develop= — 开发分支，集成所有已完成的功能
+- =feature/*= — 功能分支，从 develop 创建，完成后合并回 develop
+- =release/*= — 发布分支，从 develop 创建，用于版本准备
+- =hotfix/*= — 紧急修复分支，从 main 创建，修复后合并回 main 和 develop
+
+Git Flow 虽然结构严谨，但对于持续部署的 Web 项目来说过于复杂。大多数团队使用简化的 GitHub Flow 就够了。
+
+*** Forking 工作流
+
+这是开源项目最常用的工作流。贡献者没有主仓库的写权限，需要先 Fork（在自己的 GitHub 账号下创建一份副本），然后在自己 Fork 的仓库上开发，最后向主仓库发起 Pull Request。
+
+#+begin_src bash :exports code
+# 1. 在 GitHub 上 Fork 目标仓库
+
+# 2. 克隆你 Fork 的仓库
+git clone git@github.com:your-username/project.git
+cd project
+
+# 3. 添加上游仓库（原项目）
+git remote add upstream git@github.com:original-owner/project.git
+
+# 4. 创建功能分支
+git checkout -b feature/new-feature
+
+# 5. 开发和提交
+git add .
+git commit -m "feat: 新功能实现"
+
+# 6. 推送到你的 Fork
+git push -u origin feature/new-feature
+
+# 7. 在 GitHub 上向原项目发起 Pull Request
+gh pr create --repo original-owner/project \
+  --title "feat: 新功能实现" \
+  --body "详细描述..."
+
+# 8. 同步上游更新（在等待审查期间原项目可能已有更新）
+git checkout main
+git fetch upstream
+git merge upstream/main
+git push origin main
+
+# 9. 如果你的 PR 分支需要同步上游变更
+git checkout feature/new-feature
+git merge upstream/main
+# 解决冲突（如果有）
+git push origin feature/new-feature
+#+end_src
+
+** GitHub 核心功能
+
+*** 创建仓库
+
+#+begin_src bash :exports code
+# 用 gh 命令创建仓库
+gh repo create my-project --public --clone
+
+# 创建私有仓库
+gh repo create my-project --private --clone
+
+# 在已有项目目录中创建
+cd my-project
+gh repo create --public --source=. --remote=origin
+
+# 也可以在 GitHub 网页上创建
+# https://github.com/new
+#+end_src
+
+创建仓库时的重要选项：
+
+- *Public / Private* — 公开仓库所有人可见，私有仓库只有协作者可见
+- *README* — 是否自动创建 README.md
+- *.gitignore* — 选择模板，自动生成 .gitignore 文件
+- *License* — 选择开源许可证
+
+*** Pull Request 工作流详解
+
+Pull Request（PR）是 GitHub 上最重要的协作机制。一个 PR 本质上是这样的请求："我从你的仓库的某个点分叉出去，做了一些修改，请把我的修改合并回去。"
+
+一个完整的 PR 流程：
+
+#+begin_src bash :exports code
+# 1. 确保你的 main 是最新的
+git checkout main
+git pull origin main
+
+# 2. 创建功能分支
+git checkout -b feature/add-search
+
+# 3. 开发功能，多次提交
+git add search.py
+git commit -m "feat: 实现搜索功能核心逻辑"
+
+git add search_test.py
+git commit -m "test: 添加搜索功能单元测试"
+
+git add templates/search.html
+git commit -m "feat: 添加搜索页面模板"
+
+# 4. 推送到远程
+git push -u origin feature/add-search
+
+# 5. 创建 Pull Request
+gh pr create \
+  --title "feat: 添加全文搜索功能" \
+  --body "## 功能描述
+实现了基于 Elasticsearch 的全文搜索功能。
+
+## 修改内容
+- 新增搜索 API 端点
+- 新增搜索页面 UI
+- 新增搜索功能单元测试
+
+## 测试
+- [x] 单元测试全部通过
+- [x] 手动测试搜索功能正常
+- [ ] 性能测试（待完成）"
+
+# 6. 在 PR 页面上讨论和修改
+# 审查者可能要求修改，你在本地修改后推送，PR 自动更新
+git add search.py
+git commit -m "refactor: 优化搜索查询性能"
+git push
+
+# 7. 合并 PR（通过 GitHub 网页或命令行）
+gh pr merge --squash  # 将所有提交压缩为一个
+# 或
+gh pr merge --merge   # 保留所有提交
+#+end_src
+
+PR 的几种合并方式：
+
+| 方式   | 说明                               | 适用场景               |
+|--------+------------------------------------+------------------------|
+| Merge  | 创建一个合并提交，保留所有历史     | 需要完整历史记录       |
+| Squash | 将所有提交压缩为一个，然后合并     | 功能分支提交太多太碎时 |
+| Rebase | 将提交逐个变基到目标分支，线性历史 | 需要干净的线性历史     |
+
+Squash merge 是最常用的方式，因为它保持主分支的历史整洁——每个功能只占一个提交，而不是十几个琐碎的中间提交。
+
+*** Issue 管理
+
+Issue 是 GitHub 上的任务追踪系统，用于报告 bug、提出功能需求、讨论方案等。
+
+#+begin_src bash :exports code
+# 创建 Issue
+gh issue create --title "Bug: 搜索结果排序不正确" --body "## 问题描述
+搜索结果没有按相关性排序，而是按创建时间排序。
+
+## 复现步骤
+1. 打开搜索页面
+2. 输入关键词
+3. 查看结果列表
+
+## 期望行为
+结果应按相关性从高到低排序。"
+
+# 查看 Issue 列表
+gh issue list
+
+# 查看某个 Issue
+gh issue view 42
+
+# 在浏览器中打开 Issue
+gh issue view 42 --web
+
+# 关闭 Issue
+gh issue close 42
+
+# 给 Issue 添加标签
+gh issue edit 42 --add-label "bug,priority:high"
+
+# 将 Issue 分配给自己
+gh issue edit 42 --add-assignee @me
+#+end_src
+
+Issue 和 PR 的常用标签：
+
+| 标签             | 含义         |
+|------------------+--------------|
+| bug              | Bug 报告     |
+| feature          | 新功能请求   |
+| enhancement      | 功能增强     |
+| documentation    | 文档相关     |
+| good first issue | 适合新贡献者 |
+| help wanted      | 需要帮助     |
+| priority:high    | 高优先级     |
+| wontfix          | 不会修复     |
+
+在提交信息中引用 Issue 可以建立关联，比如写 =fix: 修正搜索排序 (#42)= ，合并后会自动关闭 42 号 Issue。
+
+*** GitHub Pages
+
+GitHub Pages 是 GitHub 提供的免费静态网站托管服务，可以直接从仓库发布网站。这对个人博客、项目文档、作品集等场景非常实用。
+
+#+begin_src bash :exports code
+# 为用户/组织创建 GitHub Pages 站点
+# 仓库名必须是 username.github.io
+gh repo create username.github.io --public --clone
+cd username.github.io
+
+# 创建首页
+echo "# Hello World" > index.html
+git add .
+git commit -m "add: initial page"
+git push -u origin main
+
+# 站点会在 https://username.github.io 上线
+#+end_src
+
+项目站点的设置：
+
+#+begin_src bash :exports code
+# 在项目仓库中启用 GitHub Pages
+# 方法1：通过 gh 命令
+gh api repos/{owner}/{repo}/pages -X POST -f source.branch=main -f source.path=/docs
+
+# 方法2：在仓库 Settings → Pages 中手动设置
+# 选择分支和目录，保存即可
+#+end_src
+
+*** GitHub Copilot
+
+GitHub Copilot 是基于 AI 的代码辅助工具，可以根据上下文自动补全代码、生成函数实现、编写测试等。在 EndeavourOS 上可以通过 VS Code 或 Neovim 使用。
+
+#+begin_src bash :exports code
+# 安装 VS Code（如果还没装）
+sudo pacman -S code
+
+# 在 VS Code 中安装 GitHub Copilot 扩展
+code --install-extension GitHub.copilot
+
+# 对于 Neovim 用户
+# 使用 copilot.vim 插件
+git clone https://github.com/github/copilot.vim \
+  ~/.config/nvim/pack/github/start/copilot.vim
+
+# 在 Neovim 中启用
+#:Copilot setup
+#+end_src
+
+** GitHub Actions 详解
+
+GitHub Actions 是 GitHub 内置的 CI/CD 平台，让你在仓库中自动化执行各种任务：测试代码、构建产物、部署应用、发送通知等等。它的最大优势是与 GitHub 深度集成——不需要第三方服务，配置文件就放在仓库里，触发条件直接绑定 GitHub 事件。
+
+*** 核心概念
+
+**** 工作流（Workflow）
+
+工作流是一个可自动执行的流程，定义在 =.github/workflows/= 目录下的 YAML 文件中。一个仓库可以有多个工作流，每个工作流对应一种自动化场景。比如一个工作流负责测试，另一个负责部署。
+
+**** 事件（Event）
+
+事件是触发工作流运行的条件。几乎所有 GitHub 活动都可以作为事件：
+
+| 事件                | 触发时机                |
+|---------------------+-------------------------|
+| push                | 推送代码到仓库          |
+| pull_request        | 创建或更新 Pull Request |
+| issues              | Issue 被创建或修改      |
+| issue_comment       | Issue 或 PR 中有新评论  |
+| release             | 创建 Release            |
+| schedule            | 定时触发（cron 表达式） |
+| workflow_dispatch   | 手动触发                |
+| repository_dispatch | 通过 API 触发           |
+| page_build          | GitHub Pages 构建完成   |
+
+**** 作业（Job）
+
+一个工作流由一个或多个作业组成。作业是可以并行执行的独立任务单元。每个作业在独立的虚拟机（runner）上运行。作业之间可以设置依赖关系——默认并行，用 =needs= 指定依赖后则串行执行。
+
+**** 步骤（Step）
+
+每个作业由一系列步骤组成。步骤是作业中最小的执行单元，可以是：
+
+- 运行一个 shell 命令（如 =npm test= ）
+- 调用一个 Action（如 =actions/checkout@v4= ）
+
+步骤按顺序执行，如果某个步骤失败，后续步骤默认不会执行。
+
+**** Action
+
+Action 是 GitHub Actions 中的可复用代码单元，类似于函数。你可以使用社区发布的 Action，也可以自己编写。Action 封装了常用的操作，让你不需要从零写脚本。比如 =actions/checkout@v4= 这个 Action 封装了"检出仓库代码"的操作，你不需要自己写 =git clone= 命令。
+
+**** Runner
+
+Runner 是执行工作流的服务器。GitHub 提供了免费的 Runner（GitHub-hosted runners），你也可以自己搭建（Self-hosted runners）。GitHub 提供的 Runner 有以下规格：
+
+| 操作系统     | 标签           | 规格                 |
+|--------------+----------------+----------------------|
+| Ubuntu Linux | ubuntu-latest  | 4 核 CPU, 16GB 内存, |
+|              | ubuntu-24.04   | 32GB SSD, 免费使用   |
+| Windows      | windows-latest | 4 核 CPU, 16GB 内存, |
+|              | windows-2022   | 32GB SSD, 免费使用   |
+| macOS        | macos-latest   | 3 核 CPU, 14GB 内存, |
+|              | macos-14       | 免费使用（额度较少） |
+
+对于公开仓库，Actions 使用量没有限制；对于私有仓库，每月有 2000 分钟的免费额度（Linux Runner），超出后按 $0.008/分钟 计费。
+
+*** 编写第一个工作流
+
+创建文件 =.github/workflows/ci.yml= ：
+
+#+begin_src yaml :exports code
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run tests
+        run: pytest
+
+      - name: Lint check
+        run: ruff check .
+#+end_src
+
+这个工作流做的事情很简单：每次有人向 =main= 分支推送代码或创建 PR 时，自动在 Ubuntu 上运行测试和代码检查。
+
+逐行解释：
+
+- =name: CI= — 工作流的名称，会显示在 GitHub Actions 页面上
+- =on:= — 定义触发条件
+- =push: branches: [main]= — 推送到 main 分支时触发
+- =pull_request: branches: [main]= — PR 目标为 main 时触发
+- =jobs:= — 定义作业
+- =test:= — 作业名称
+- =runs-on: ubuntu-latest= — 在最新的 Ubuntu 上运行
+- =steps:= — 定义步骤
+- =uses: actions/checkout@v4= — 使用 checkout Action 检出代码
+- =uses: actions/setup-python@v5= — 安装 Python
+- =run:= — 执行 shell 命令
+
+*** 常用工作流实例
+
+**** Node.js 项目的 CI
+
+#+begin_src yaml :exports code
+name: Node.js CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18, 20, 22]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Test
+        run: npm test
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v4
+        if: matrix.node-version == 22
+#+end_src
+
+=matrix= 策略是这个工作流的亮点——它会在三个 Node.js 版本上并行测试，确保代码的兼容性。
+
+**** 静态网站自动部署（Hugo + GitHub Pages）
+
+这是一个非常实用的场景——每次你推送博客文章到仓库，GitHub Actions 自动构建并部署到 GitHub Pages：
+
+#+begin_src yaml :exports code
+name: Deploy Hugo Site
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: '0.139.0'
+          extended: true
+
+      - name: Build
+        run: hugo --minify
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./public
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+#+end_src
+
+这个工作流有两个作业： =build= 负责构建 Hugo 站点， =deploy= 负责部署到 GitHub Pages。 =deploy= 用 =needs: build= 依赖于 =build= 作业，确保构建成功后才部署。
+
+**** Docker 镜像构建与推送
+
+#+begin_src yaml :exports code
+name: Docker Build and Push
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=semver,pattern={{version}}
+            type=sha
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+#+end_src
+
+这个工作流在推送 =main= 分支或打 tag 时自动构建 Docker 镜像并推送到 GitHub Container Registry（ghcr.io）。
+
+**** 定时任务
+
+#+begin_src yaml :exports code
+name: Daily Report
+
+on:
+  schedule:
+    - cron: '0 8 * * *'  # 每天 UTC 8:00（北京时间 16:00）
+  workflow_dispatch:
+
+jobs:
+  generate-report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run report script
+        run: python generate_report.py
+
+      - name: Commit report
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add reports/
+          git diff --staged --quiet || git commit -m "update: daily report"
+          git push
+#+end_src
+
+=schedule= 的 cron 表达式语法与 Linux 的 crontab 相同： =分 时 日 月 星期=  。注意 GitHub Actions 的 cron 精度是分钟级的，实际触发时间可能有几分钟的延迟。
+
+**** 自动发布 Release
+
+#+begin_src yaml :exports code
+name: Create Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          PREVIOUS_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+          if [ -z "$PREVIOUS_TAG" ]; then
+            CHANGELOG=$(git log --pretty=format:"- %s (%h)" HEAD)
+          else
+            CHANGELOG=$(git log --pretty=format:"- %s (%h)" ${PREVIOUS_TAG}..HEAD)
+          fi
+          echo "changelog<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGELOG" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          body: |
+            ## 变更内容
+            ${{ steps.changelog.outputs.changelog }}
+          draft: false
+          prerelease: false
+#+end_src
+
+当你推送一个 =v*= 格式的 tag（如 =git tag v1.2.0 && git push origin v1.2.0= ）时，这个工作流会自动生成 changelog 并创建 GitHub Release。
+
+*** Secret 管理
+
+工作流中经常需要使用敏感信息（API 密钥、部署凭据等），这些信息不能明文写在 YAML 文件中。GitHub 提供了 Secret 机制来安全存储这些信息。
+
+#+begin_src bash :exports code
+# 通过 gh 命令设置 Secret
+gh secret set DEPLOY_KEY < ~/.ssh/deploy_key
+gh secret set API_KEY -b "your-api-key-value"
+
+# 设置环境级别的 Secret
+gh secret set STAGING_DB_URL -b "postgresql://..." --env staging
+
+# 列出所有 Secret（只显示名称，不显示值）
+gh secret list
+
+# 删除 Secret
+gh secret delete API_KEY
+#+end_src
+
+也可以在 GitHub 网页上设置：仓库 → Settings → Secrets and variables → Actions → New repository secret。
+
+在 YAML 中使用 Secret：
+
+#+begin_src yaml :exports code
+- name: Deploy to server
+  env:
+    DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+    API_KEY: ${{ secrets.API_KEY }}
+  run: |
+    echo "$DEPLOY_KEY" > ~/.ssh/deploy_key
+    chmod 600 ~/.ssh/deploy_key
+    ssh -i ~/.ssh/deploy_key user@server "cd /app && git pull && make deploy"
+#+end_src
+
+重要注意事项：
+
+- Secret 的值在日志中会被自动替换为 =***= ，避免泄露
+- Secret 只能在工作流运行时访问，不能通过 API 读取值
+- Fork 的仓库默认无法访问父仓库的 Secret
+- =GITHUB_TOKEN= 是一个自动生成的临时令牌，每次工作流运行时自动创建，运行结束后失效
+
+*** 环境变量与上下文
+
+GitHub Actions 提供了丰富的上下文信息，你可以在工作流中引用：
+
+#+begin_src yaml :exports code
+jobs:
+  example:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print context info
+        run: |
+          echo "Repository: ${{ github.repository }}"
+          echo "Branch: ${{ github.ref_name }}"
+          echo "Commit SHA: ${{ github.sha }}"
+          echo "Actor: ${{ github.actor }}"
+          echo "Event: ${{ github.event_name }}"
+          echo "Run ID: ${{ github.run_id }}"
+          echo "Run Number: ${{ github.run_number }}"
+          echo "Workspace: ${{ github.workspace }}"
+#+end_src
+
+常用上下文：
+
+| 上下文  | 说明                 | 示例                           |
+|---------+----------------------+--------------------------------|
+| =github=  | 工作流触发相关的信息 | =github.repository= , =github.sha= |
+| =env=     | 自定义环境变量       | =env.NODE_VERSION=               |
+| =secrets= | 仓库加密密钥         | =secrets.DEPLOY_KEY=             |
+| =steps=   | 步骤的输出           | =steps.meta.outputs.tags=        |
+| =matrix=  | 矩阵策略的当前值     | =matrix.node-version=            |
+| =vars=    | 仓库变量（非加密）   | =vars.DEPLOY_ENV=                |
+
+*** 缓存与制品
+
+缓存可以显著加快工作流的执行速度——不需要每次都重新下载依赖。
+
+#+begin_src yaml :exports code
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache pip packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: pip-${{ runner.os }}-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            pip-${{ runner.os }}-
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Build artifact
+        run: python setup.py build
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-output
+          path: dist/
+          retention-days: 5
+#+end_src
+
+=actions/cache= 用 =key= 查找缓存——如果找到匹配的缓存，直接恢复；如果没有，运行结束后会自动保存新的缓存。 =hashFiles= 函数根据文件内容生成哈希值，只有文件内容变化时才会更新缓存。
+
+制品（Artifact）是工作流运行产生的文件，可以下载保存或在后续作业中使用。=retention-days= 设置保存天数，默认 90 天。
+
+*** 自托管 Runner
+
+对于需要特殊硬件（如 GPU）或需要访问内网资源的场景，可以使用自托管 Runner：
+
+#+begin_src bash :exports code
+# 在 EndeavourOS 上安装自托管 Runner
+# 1. 在 GitHub 仓库 Settings → Actions → Runners → New self-hosted runner
+# 2. 按照指引下载并配置
+
+mkdir actions-runner && cd actions-runner
+curl -o actions-runner-linux-x64-2.321.0.tar.gz -L \
+  https://github.com/actions/runner/releases/download/v2.321.0/actions-runner-linux-x64-2.321.0.tar.gz
+tar xzf actions-runner-linux-x64-2.321.0.tar.gz
+
+# 配置（会提示输入仓库 URL 和 token）
+./config.sh
+
+# 作为 systemd 服务运行（推荐）
+sudo ./svc.sh install
+sudo ./svc.sh start
+
+# 查看状态
+sudo ./svc.sh status
+
+# 停止和卸载
+sudo ./svc.sh stop
+sudo ./svc.sh uninstall
+#+end_src
+
+自托管 Runner 的安全注意事项：不要在公共仓库上使用自托管 Runner，因为任何人都可以提交恶意代码在你的机器上执行。自托管 Runner 只适合私有仓库或你完全信任的贡献者。
+
+** Git 高级技巧
+
+*** 交互式变基
+
+交互式变基是 Git 中最强大的历史修改工具，它让你对一系列提交进行精细控制：修改提交信息、合并多个提交、重新排序提交、删除某个提交等。
+
+#+begin_src bash :exports code
+# 修改最近 3 次提交
+git rebase -i HEAD~3
+
+# 这会打开编辑器，显示类似以下内容：
+# pick abc1234 feat: 实现搜索功能
+# pick def5678 fix: 修正搜索结果排序
+# pick ghi9012 docs: 更新搜索功能文档
+
+# 你可以修改每个提交前的命令：
+# pick   — 保留这个提交
+# reword — 保留提交，但修改提交信息
+# edit   — 保留提交，但暂停让你修改提交内容
+# squash — 将这个提交合并到前一个提交
+# fixup  — 同 squash，但丢弃这个提交的信息
+# drop   — 删除这个提交
+#+end_src
+
+常见的使用场景：
+
+#+begin_src bash :exports code
+# 场景1：修改最近一次提交信息
+git rebase -i HEAD~1
+# 将 pick 改为 reword，保存退出，编辑新的提交信息
+
+# 场景2：将多个小提交合并为一个
+git rebase -i HEAD~5
+# 将后面的 pick 改为 squash 或 fixup
+
+# 场景3：删除某个提交
+git rebase -i HEAD~10
+# 将要删除的提交改为 drop（或直接删除那一行）
+#+end_src
+
+*** Cherry-pick
+
+=cherry-pick= 让你从其他分支"摘取"某个提交，应用到当前分支。它不像合并那样把整个分支的修改都拿过来，而是只取你指定的那一个或几个提交。
+
+#+begin_src bash :exports code
+# 摘取单个提交
+git cherry-pick abc1234
+
+# 摘取多个提交
+git cherry-pick abc1234 def5678
+
+# 摘取一个范围的提交（不包含 start）
+git cherry-pick start..end
+
+# 只摘取但不自动提交（让你审查后再提交）
+git cherry-pick -n abc1234
+#+end_src
+
+典型场景：你在 =develop= 分支修了一个 bug，需要把这个修复合并到 =main= 分支，但不想合并 =develop= 上的其他提交。这时候用 =cherry-pick= 只摘取修复的那一个提交。
+
+*** 子模块（Submodule）
+
+子模块允许你在一个 Git 仓库中引用另一个 Git 仓库，常用场景包括：引用公共库、主题、配置文件等。
+
+#+begin_src bash :exports code
+# 添加子模块
+git submodule add https://github.com/theme/repo.git themes/theme-name
+
+# 克隆包含子模块的仓库
+git clone --recurse-submodules https://github.com/your/repo.git
+
+# 如果已经克隆了仓库但忘了 --recurse-submodules
+git submodule update --init --recursive
+
+# 更新子模块到最新提交
+git submodule update --remote themes/theme-name
+
+# 提交子模块的更新
+git add themes/theme-name
+git commit -m "update: 升级主题到最新版本"
+#+end_src
+
+子模块的工作方式比较特殊：父仓库不存储子模块的文件内容，只存储子模块指向的提交哈希。这意味着你必须在子模块目录内操作子模块的 Git 命令，回到父目录后再提交子模块指针的变化。这种双目录的操作方式容易让人困惑，如果不需要跨仓库共享代码，尽量避免使用子模块。
+
+*** 大文件处理（Git LFS）
+
+Git 本身不适合管理大型二进制文件（图片、视频、模型文件等），因为每次修改都会增加仓库体积，即使删除了文件，历史记录中仍然存在。Git LFS（Large File Storage）解决了这个问题：它只在仓库中存储一个轻量级的指针文件，真正的文件内容存放在 LFS 服务器上。
+
+#+begin_src bash :exports code
+# 安装 Git LFS
+sudo pacman -S git-lfs
+
+# 初始化 Git LFS（只需执行一次）
+git lfs install
+
+# 追踪大文件类型
+git lfs track "*.psd"
+git lfs track "*.mp4"
+git lfs track "*.zip"
+
+# 查看当前追踪规则
+git lfs track
+
+# 正常提交（LFS 文件会自动处理）
+git add file.psd
+git commit -m "add: design file"
+
+# 查看 LFS 文件列表
+git lfs ls-files
+#+end_src
+
+=git lfs track= 命令会在 =.gitattributes= 文件中添加追踪规则。这个文件也需要提交到仓库中，这样其他人克隆仓库时才能知道哪些文件应该用 LFS 处理。
+
+*** Git 钩子（Hook）
+
+Git 钩子是在特定事件发生时自动执行的脚本，让你在提交、推送等操作前后插入自定义逻辑。
+
+#+begin_src bash :exports code
+# 钩子存储在 .git/hooks/ 目录下
+# Git 自带了一些示例钩子（以 .sample 结尾）
+
+# 常用的客户端钩子：
+# pre-commit     — 提交前执行，可以运行代码检查
+# prepare-commit-msg — 编辑提交信息前执行
+# commit-msg     — 提交信息编辑完成后执行，可以检查格式
+# pre-push       — 推送前执行
+
+# 服务端钩子：
+# pre-receive    — 接收推送前执行
+# post-receive   — 接收推送后执行
+#+end_src
+
+一个实用的 =pre-commit= 钩子示例：
+
+#+begin_src bash :exports code
+# .git/hooks/pre-commit
+#!/bin/bash
+
+# 检查是否有调试语句
+if git diff --cached | grep -q "console.log\|print\|debugger"; then
+    echo "错误：发现调试语句，请移除后再提交"
+    exit 1
+fi
+
+# 检查 Python 代码风格
+if git diff --cached --name-only | grep -q "\.py$"; then
+    ruff check $(git diff --cached --name-only -- '*.py')
+    if [ $? -ne 0 ]; then
+        echo "错误：代码风格检查未通过"
+        exit 1
+    fi
+fi
+
+exit 0
+#+end_src
+
+#+begin_src bash :exports code
+# 设置钩子为可执行
+chmod +x .git/hooks/pre-commit
+#+end_src
+
+更好的做法是使用 =pre-commit= 框架来管理钩子，它在 =.pre-commit-config.yaml= 中声明式定义，不需要手动维护脚本：
+
+#+begin_src bash :exports code
+# 安装 pre-commit
+sudo pacman -S python-pre-commit
+
+# 在仓库中初始化
+pre-commit init-templatedir -t pre-commit -t prepare-commit-msg
+
+# 或者在项目根目录创建配置
+cat > .pre-commit-config.yaml << 'EOF'
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.8.0
+    hooks:
+      - id: ruff
+        args: [--fix]
+      - id: ruff-format
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+EOF
+
+# 安装钩子
+pre-commit install
+
+# 手动运行所有钩子
+pre-commit run --all-files
+#+end_src
+
+*** 二分查找定位 Bug（git bisect）
+
+#+begin_src bash :exports code
+# 开始二分查找
+git bisect start
+
+# 标记当前版本为"有 bug"
+git bisect bad
+
+# 标记某个已知正常的版本
+git bisect good v1.0.0
+
+# Git 自动检出中间的版本，你测试后标记
+# 如果正常：
+git bisect good
+
+# 如果有 bug：
+git bisect bad
+
+# 重复直到 Git 找到引入 bug 的提交
+# Git 会显示：xxx is the first bad commit
+
+# 结束查找，回到原来的分支
+git bisect reset
+
+# 自动化二分查找（如果可以用脚本判断是否有 bug）
+git bisect start HEAD v1.0.0
+git bisect run python test_script.py
+#+end_src
+
+** 完整实战：从零到自动化部署
+
+最后，通过一个完整的实战项目，把前面学到的所有知识串联起来。我们将创建一个 Python 项目，配置 GitHub Actions 自动测试和部署。
+
+*** 初始化项目
+
+#+begin_src bash :exports code
+# 创建项目
+mkdir my-flask-app && cd my-flask-app
+
+# 初始化 Git 仓库
+git init -b main
+
+# 创建项目结构
+mkdir -p src tests .github/workflows
+
+# 创建 Python 应用
+cat > src/app.py << 'EOF'
+from flask import Flask, jsonify
+
+app = Flask(__name__)
+
+@app.route("/")
+def hello():
+    return jsonify({"message": "Hello, World!"})
+
+@app.route("/health")
+def health():
+    return jsonify({"status": "ok"})
+
+if __name__ == "__main__":
+    app.run(debug=True)
+EOF
+
+# 创建测试
+cat > tests/test_app.py << 'EOF'
+import pytest
+from src.app import app
+
+@pytest.fixture
+def client():
+    app.config["TESTING"] = True
+    with app.test_client() as client:
+        yield client
+
+def test_hello(client):
+    response = client.get("/")
+    assert response.status_code == 200
+    assert response.json["message"] == "Hello, World!"
+
+def test_health(client):
+    response = client.get("/health")
+    assert response.status_code == 200
+    assert response.json["status"] == "ok"
+EOF
+
+# 创建依赖文件
+cat > requirements.txt << 'EOF'
+flask==3.1.0
+gunicorn==23.0.0
+EOF
+
+cat > requirements-dev.txt << 'EOF'
+-r requirements.txt
+pytest==8.3.0
+ruff==0.8.0
+EOF
+
+# 创建 Dockerfile
+cat > Dockerfile << 'EOF'
+FROM python:3.12-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY src/ src/
+
+EXPOSE 8000
+
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "src.app:app"]
+EOF
+
+# 创建 .gitignore
+cat > .gitignore << 'EOF'
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+dist/
+.env
+.venv/
+EOF
+#+end_src
+
+*** 配置 GitHub Actions
+
+#+begin_src bash :exports code
+cat > .github/workflows/ci.yml << 'EOF'
+name: CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dev dependencies
+        run: pip install -r requirements-dev.txt
+
+      - name: Lint
+        run: ruff check .
+
+      - name: Format check
+        run: ruff format --check .
+
+  test:
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dev dependencies
+        run: pip install -r requirements-dev.txt
+
+      - name: Run tests
+        run: pytest -v
+
+  docker:
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository }}:latest
+            ghcr.io/${{ github.repository }}:${{ github.sha }}
+EOF
+#+end_src
+
+*** 推送到 GitHub 并观察
+
+#+begin_src bash :exports code
+# 提交所有文件
+git add .
+git commit -m "add: 初始化 Flask 项目及 CI/CD 配置"
+
+# 在 GitHub 上创建仓库并推送
+gh repo create my-flask-app --private --source=. --remote=origin --push
+
+# 查看 Actions 运行状态
+gh run list
+
+# 实时查看某个运行
+gh run watch
+
+# 在浏览器中查看
+gh run view --web
+#+end_src
+
+推送后，GitHub Actions 会自动触发。你可以在仓库的 Actions 标签页看到工作流的运行过程：先执行 lint 检查，通过后运行测试，测试通过后构建并推送 Docker 镜像。每个步骤的日志都可以点击查看，如果某步失败了，日志会显示具体的错误信息。
+
+** 常用命令速查表
+
+*** Git 命令
+
+| 命令                        | 说明                 |
+|-----------------------------+----------------------|
+| =git init=                    | 初始化仓库           |
+| =git clone <url>=             | 克隆远程仓库         |
+| =git status=                  | 查看当前状态         |
+| =git add <file>=              | 添加文件到暂存区     |
+| =git commit -m "msg"=         | 提交                 |
+| =git diff=                    | 查看未暂存的修改     |
+| =git diff --staged=           | 查看已暂存的修改     |
+| =git log --oneline=           | 查看简洁历史         |
+| =git branch=                  | 列出分支             |
+| =git branch <name>=           | 创建分支             |
+| =git switch <name>=           | 切换分支             |
+| =git switch -c <name>=        | 创建并切换分支       |
+| =git merge <branch>=          | 合并分支             |
+| =git rebase <branch>=         | 变基                 |
+| =git stash=                   | 暂存工作             |
+| =git stash pop=               | 恢复暂存             |
+| =git remote -v=               | 查看远程仓库         |
+| =git fetch=                   | 获取远程更新         |
+| =git pull=                    | 拉取并合并           |
+| =git push=                    | 推送到远程           |
+| =git tag -a v1.0 -m "msg"=    | 创建附注标签         |
+| =git restore <file>=          | 撤销未暂存的修改     |
+| =git restore --staged <file>= | 取消暂存             |
+| =git reset --soft HEAD~1=     | 撤销提交（保留修改） |
+| =git reset --hard HEAD~1=     | 撤销提交（丢弃修改） |
+| =git revert <commit>=         | 创建反向提交         |
+| =git cherry-pick <commit>=    | 摘取提交             |
+| =git bisect=                  | 二分查找             |
+| =git blame <file>=            | 查看每行代码作者     |
+
+*** GitHub CLI 命令
+
+| 命令            | 说明              |
+|-----------------+-------------------|
+| =gh auth login=   | 登录 GitHub       |
+| =gh repo create=  | 创建仓库          |
+| =gh repo clone=   | 克隆仓库          |
+| =gh issue create= | 创建 Issue        |
+| =gh issue list=   | 列出 Issue        |
+| =gh pr create=    | 创建 Pull Request |
+| =gh pr list=      | 列出 PR           |
+| =gh pr merge=     | 合并 PR           |
+| =gh run list=     | 列出 Actions 运行 |
+| =gh run watch=    | 实时观看运行      |
+| =gh secret set=   | 设置 Secret       |
+| =gh browse=       | 在浏览器中打开    |
+
+** 参考资源
+
+- [[https://git-scm.com/book/en/v2][Pro Git]] — 官方的 Git 书籍，免费在线阅读，最权威的 Git 参考资料
+- [[https://git-scm.com/docs][Git 官方文档]] — 所有 Git 命令的详细手册
+- [[https://docs.github.com/][GitHub 文档]] — GitHub 所有功能的官方文档
+- [[https://docs.github.com/en/actions][GitHub Actions 文档]] — Actions 的完整指南和 API 参考
+- [[https://training.github.com/][GitHub Skills]] — GitHub 官方的交互式学习课程
+- [[https://learngitbranching.js.org/][Learn Git Branching]] — 可视化的 Git 分支学习工具，强烈推荐
+- [[https://ohshitgit.com/][Oh Shit, Git!?!]] — 常见 Git 意外情况的急救指南
+- [[https://cli.github.com/][GitHub CLI]] — =gh= 命令行工具的官方文档
+- [[https://github.com/features/actions/marketplace][Actions Marketplace]] — 查找和分享 GitHub Actions
+- [[https://www.conventionalcommits.org/][Conventional Commits]] — 提交信息规范
+* ffmpeg
+
+ffmpeg 是当今最强大、最灵活的多媒体处理工具——它是一个命令行程序，能够对音频和视频进行几乎任何你能想到的操作：格式转换、编解码、剪辑、拼接、滤镜处理、字幕嵌入、流媒体推送、屏幕录制，甚至从零生成测试信号。在 Linux 多媒体工作流中，ffmpeg 是无可替代的基础设施，几乎所有主流的开源视频编辑器（Kdenlive、Shotcut、Olive）、音频处理工具（Audacity 的 FFmpeg 库）、流媒体平台（OBS Studio 的录制引擎）和媒体播放器（VLC、mpv）都直接或间接地依赖 ffmpeg 的库。掌握 ffmpeg，意味着你拥有了对多媒体文件的完全控制权。
+
+** 历史背景
+
+ffmpeg 项目由法国程序员 Fabrice Bellard 于 2000 年 12 月发起。Bellard 是计算机科学领域的一位传奇人物——他还创造了 QEMU 模拟器、TinyCC 编译器、FFmpeg 的姊妹项目 QEMU，以及用 JavaScript 在浏览器中模拟 Linux 内核的 jslinux。FFmpeg 这个名字中的 "FF" 原意是 "Fast Forward"（快进），反映了项目最初的目标：提供快速的视频处理能力。
+
+2004 年，由于社区对项目管理方式的分歧，一部分开发者从 ffmpeg 分叉出了 libav 项目。这次分裂导致了一段混乱时期：Debian/Ubuntu 等发行版曾一度默认使用 libav 而非 ffmpeg，而 ffmpeg 则继续独立发展。2015 年，Debian 宣布回归 ffmpeg，libav 项目的影响力逐渐衰退。这段历史也解释了为什么在某些旧教程中你会看到 =avconv= 命令——那是 libav 提供的 ffmpeg 替代品，如今已基本不再使用。
+
+ffmpeg 的架构围绕几个核心库构建：
+
+| 库名          | 功能                                 |
+|---------------+--------------------------------------|
+| =libavcodec=    | 编解码器库，支持数百种音视频编解码器 |
+| =libavformat=   | 容器格式库，处理各种封装格式的读写   |
+| =libavfilter=   | 滤镜库，提供丰富的音视频滤镜链       |
+| =libavutil=     | 工具库，提供通用的数据结构和算法     |
+| =libswscale=    | 图像缩放和像素格式转换库             |
+| =libswresample= | 音频重采样、格式转换和声道布局转换   |
+| =libavdevice=   | 设备捕获和回放库                     |
+
+这种模块化的架构使得 ffmpeg 既可以作为一个统一的命令行工具使用，也可以被其他程序通过 API 调用其各个库的功能。
+
+** 安装
+
+*** 在 EndeavourOS/Arch Linux 上安装
+
+Arch Linux 官方仓库提供了 ffmpeg 的完整版本：
+
+#+begin_src bash :exports code
+sudo pacman -S ffmpeg
+#+end_src
+
+官方仓库的 ffmpeg 编译时启用了大部分常用功能。如果你需要某些非自由编解码器（如 HEVC 的某些硬件加速实现、某些专有格式的解码器等），可以安装 =ffmpeg-full= 或 =ffmpeg-full-git= ：
+
+#+begin_src bash :exports code
+yay -S ffmpeg-full
+#+end_src
+
+=ffmpeg-full= 包含了官方仓库版本因许可证限制而未启用的编解码器和功能，包括对 AAC 的 Fraunhofer FDK 编码器、某些 HEVC 相关功能等的支持。
+
+安装后验证：
+
+#+begin_src bash :exports code
+ffmpeg -version
+#+end_src
+
+输出会显示 ffmpeg 的版本号、编译选项和启用的库列表。注意观察 =--enable-= 开头的选项，它们告诉你当前 ffmpeg 版本支持哪些功能。
+
+*** 查看已启用的编解码器和格式
+
+#+begin_src bash :exports code
+# 列出所有可用的编码器
+ffmpeg -encoders
+
+# 列出所有可用的解码器
+ffmpeg -decoders
+
+# 列出所有支持的封装格式
+ffmpeg -formats
+
+# 列出所有可用的滤镜
+ffmpeg -filters
+
+# 查看特定编码器的详细信息
+ffmpeg -h encoder=libx264
+ffmpeg -h encoder=libx265
+ffmpeg -h encoder=aac
+#+end_src
+
+这些信息在排查兼容性问题时非常有用。例如，如果你不确定 ffmpeg 是否支持某个特定的编码器，可以先用 =ffmpeg -encoders | grep 编码器名= 检查。
+
+** 核心概念
+
+在深入学习 ffmpeg 的具体用法之前，理解几个核心概念至关重要。这些概念是 ffmpeg 所有操作的基石，掌握它们能让你在面对各种需求时举一反三，而不是死记硬背命令。
+
+*** 容器格式与编解码器
+
+这是理解多媒体文件最基础的一对概念，也是最容易混淆的一对：
+
+- =容器格式（Container Format）= ：也称为"封装格式"，它定义了如何将视频流、音频流、字幕流、元数据等打包到一个文件中。容器决定了文件的扩展名和整体结构。常见的容器格式有 MP4、MKV、AVI、WebM、FLV、MOV、OGG 等。容器本身 *不负责* 压缩或编码音视频数据——它只是一个"箱子"，里面装着已经编码好的各种流
+- =编解码器（Codec）= ：编码器（Encoder）将原始的音视频数据压缩为编码格式，解码器（Decoder）将编码数据解压还原为可播放的原始数据。编解码器决定了音视频数据的具体压缩算法和质量。常见的视频编解码器有 H.264/AVC、H.265/HEVC、VP9、AV1 等；常见的音频编解码器有 AAC、MP3、Opus、FLAC 等
+
+一个关键的理解是：同一个容器可以装载不同编解码器编码的流。例如，MP4 容器中通常装载 H.264 视频和 AAC 音频，但也可以装载 HEVC 视频和 MP3 音频。反过来，同一个编解码器编码的流也可以装入不同的容器——H.264 视频既可以放入 MP4，也可以放入 MKV 或 AVI。
+
+| 容器格式 | 常见扩展名 | 典型视频编解码器 | 典型音频编解码器 | 特点                        |
+|----------+------------+------------------+------------------+-----------------------------|
+| MP4      | =.mp4= =.m4a=  | H.264, HEVC      | AAC, MP3         | 兼容性最好，流媒体首选      |
+| MKV      | =.mkv=       | 几乎所有         | 几乎所有         | 开源格式，支持多音轨/多字幕 |
+| WebM     | =.webm=      | VP8, VP9, AV1    | Opus, Vorbis     | 专为 Web 设计，Google 推广  |
+| AVI      | =.avi=       | MPEG-4, H.264    | MP3, PCM         | 微软旧格式，功能有限        |
+| MOV      | =.mov=       | H.264, ProRes    | AAC, PCM         | Apple 格式，视频编辑常用    |
+| FLV      | =.flv=       | H.264, VP6       | AAC, MP3         | Adobe Flash 视频，已过时    |
+| OGG      | =.ogg= =.ogv=  | Theora           | Vorbis, Opus     | 开源格式                    |
+| TS       | =.ts=        | H.264, HEVC      | AAC, MP3         | 传输流，用于流媒体和广播    |
+
+*** 流（Stream）
+
+一个多媒体文件可以包含多个流，每个流是一种独立的数据通道：
+
+- =视频流（Video Stream）= ：包含画面数据，一个文件通常只有一个视频流，但某些容器（如 MKV）支持多角度视频
+- =音频流（Audio Stream）= ：包含声音数据，一个文件可以包含多个音频流——例如一部电影可能同时包含普通话配音、英语原声和导演评论音轨
+- =字幕流（Subtitle Stream）= ：包含字幕数据，可以是内嵌的文本字幕（SRT/ASS）或图形字幕（PGS/VOBSUB）
+- =数据流（Data Stream）= ：包含附加信息，如章节标记、定时元数据等
+
+ffmpeg 中用流映射（Stream Mapping）来指定对哪些流进行操作。默认情况下，ffmpeg 会自动选择合适的流，但你可以用 =-map= 参数精确控制。
+
+*** 比特率与质量控制
+
+比特率（Bitrate）决定了音视频数据的大小和质量，单位为比特每秒（bps）。常见单位：
+
+| 单位 |      值 | 说明            |
+|------+---------+-----------------|
+| =bps=  |       1 | 每秒 1 比特     |
+| =kbps= |    1000 | 每秒 1000 比特  |
+| =Mbps= | 1000000 | 每秒 100 万比特 |
+
+视频编码有两种主要的码率控制模式：
+
+- =CBR（Constant Bitrate，固定码率）= ：编码器始终以固定速率输出数据，文件大小可预测，但质量可能波动——复杂场景质量下降，简单场景浪费码率。适用于流媒体直播等对带宽有严格限制的场景
+- =VBR（Variable Bitrate，可变码率）= ：编码器根据内容复杂度动态调整码率——复杂场景分配更多比特，简单场景分配更少。相同平均码率下，VBR 的质量通常优于 CBR。大多数场景推荐使用 VBR
+
+H.264/H.265 编码器还支持一种更精细的 VBR 模式：
+
+- =CRF（Constant Rate Factor，恒定质量因子）= ：这是 x264/x265 编码器最推荐的质量控制方式。CRF 值越低，质量越高，文件越大；CRF 值越高，质量越低，文件越小。编码器会在整个视频中努力保持视觉质量的一致性，自动为每帧分配合适的比特数
+
+| 编解码器 | CRF 范围 | 默认值 | 推荐值 | 说明                            |
+|----------+----------+--------+--------+---------------------------------|
+| H.264    |     0-51 |     23 |  18-28 | 18 视觉无损，23 默认，28 可接受 |
+| H.265    |     0-51 |     28 |  22-32 | 比 H.264 同质量低约 30-50% 码率 |
+| VP9      |     0-63 |     31 |  20-35 | WebM 的默认编解码器             |
+| AV1      |     0-63 |     35 |  22-40 | 最新一代，编码慢但压缩率高      |
+
+#+begin_quote
+经验法则：H.264 的 CRF 18 被认为是"视觉无损"——即肉眼几乎无法区分与原始素材的差异。CRF 23 是默认值，适合日常使用。CRF 28 适合对文件大小敏感但对画质要求不高的场景。如果你不确定用什么值，从 CRF 23 开始，根据结果调整。
+#+end_quote
+
+*** 帧率（Frame Rate）
+
+帧率表示每秒显示的画面数，单位为 fps（frames per second）。常见帧率：
+
+| 帧率    | 用途                       |
+|---------+----------------------------|
+| 24 fps  | 电影标准                   |
+| 25 fps  | PAL 制式电视（欧洲/中国）  |
+| 30 fps  | NTSC 制式电视（美国/日本） |
+| 50 fps  | PAL 制式高帧率             |
+| 60 fps  | 高帧率视频、游戏录制       |
+| 120 fps | 慢动作素材基础帧率         |
+
+ffmpeg 使用 =-r= 选项设置输出帧率。注意：改变帧率涉及帧的丢弃或复制，可能影响视频的流畅度和运动表现。
+
+*** 分辨率与像素格式
+
+分辨率表示画面的像素尺寸，如 1920x1080（Full HD）、3840x2160（4K UHD）。ffmpeg 使用 =-s= 选项或 =-vf scale= 滤镜来设置输出分辨率。
+
+像素格式（Pixel Format）描述了每个像素的存储方式，影响颜色深度和色度采样：
+
+- =yuv420p= ：最常用的像素格式，4:2:0 色度子采样，与大多数设备和播放器兼容
+- =yuv422p= ：4:2:2 色度子采样，色度信息是 4:2:0 的两倍，专业视频编辑常用
+- =yuv444p= ：4:4:4 色度子采样，无色度损失，最高质量但文件最大
+- =rgb24= ：RGB 格式，每通道 8 位，无损但文件大
+
+#+begin_quote
+4:2:0 色度子采样的原理：人眼对亮度（Y）的敏感度远高于色度（U/V），因此在 YUV 色彩空间中，可以在保持亮度分辨率不变的前提下，降低色度的分辨率。4:2:0 表示每 4 个亮度像素共享一组色度值，这在不影响视觉观感的前提下将数据量减少了 50%。这也是为什么 H.264/HEVC 的默认像素格式就是 yuv420p。
+#+end_quote
+
+** 基本用法
+
+ffmpeg 命令的基本结构遵循一个固定模式：
+
+#+begin_src text
+ffmpeg [全局选项] [输入文件选项] -i 输入文件 [输出文件选项] 输出文件
+#+end_src
+
+关键原则：
+
+- 选项的位置很重要：=选项在它所作用的参数之前=。 =-i= 之前的选项作用于输入， =-i= 之后的选项作用于输出
+- 未指定选项时，ffmpeg 会自动推断：根据输出文件的扩展名选择容器格式，根据输入流选择编解码器，保持输入的质量参数
+- ffmpeg 默认会询问是否覆盖已存在的输出文件，使用 =-y= 选项可以自动覆盖
+
+*** 最简单的转换：格式转换
+
+将视频从一种格式转换为另一种格式，最简单的方式就是改变输出文件的扩展名——ffmpeg 会自动推断容器格式和编解码器：
+
+#+begin_src bash :exports code
+# MKV 转 MP4（自动重新编码）
+ffmpeg -i input.mkv output.mp4
+#+end_src
+
+这种写法 ffmpeg 会使用默认编码器重新编码视频和音频。对于 MP4 输出，默认使用 H.264 视频编码器和 AAC 音频编码器。
+
+*** 无损复制流（不重新编码）
+
+如果你只需要改变容器格式，而音视频流本身不需要改变，可以使用 =-c copy= （或 =-codec copy= ）直接复制流数据，不做任何重新编码。这速度快、无质量损失：
+
+#+begin_src bash :exports code
+# MKV 转 MP4，不重新编码（仅改变容器）
+ffmpeg -i input.mkv -c copy output.mp4
+#+end_src
+
+#+begin_quote
+注意：并非所有编解码器都兼容所有容器格式。例如，MKV 中的 OGG 音频不能直接复制到 MP4 中——MP4 不支持 OGG 音频。遇到这种情况，ffmpeg 会报错，你需要对该流单独指定编码器。
+#+end_quote
+
+也可以分别指定视频和音频的编解码器：
+
+#+begin_src bash :exports code
+# 视频直接复制，音频重新编码为 AAC
+ffmpeg -i input.mkv -c:v copy -c:a aac output.mp4
+#+end_src
+
+=-c:v= 控制视频编解码器， =-c:a= 控制音频编解码器。这是 ffmpeg 中最常用的参数之一。
+
+*** 查看文件信息
+
+#+begin_src bash :exports code
+# 查看文件的详细信息（流、编解码器、比特率等）
+ffmpeg -i input.mp4
+
+# 更详细的信息，包括帧级别的分析
+ffprobe -v quiet -print_format json -show_format -show_streams input.mp4
+#+end_src
+
+=ffprobe= 是 ffmpeg 套件中的另一个工具，专门用于分析多媒体文件的元数据。它比 =ffmpeg -i= 提供更结构化的输出，可以输出 JSON、XML 等格式，方便脚本解析。
+
+** 常用视频操作
+
+*** 转码：控制质量和大小
+
+**** 使用 CRF 模式（推荐）
+
+CRF 模式是日常转码的最佳选择——你只需指定一个质量级别，编码器自动决定每帧需要多少比特：
+
+#+begin_src bash :exports code
+# H.264 CRF 23（默认质量）
+ffmpeg -i input.mp4 -c:v libx264 -crf 23 -c:a aac output.mp4
+
+# H.264 CRF 18（高质量，文件较大）
+ffmpeg -i input.mp4 -c:v libx264 -crf 18 -c:a aac output.mp4
+
+# H.265 CRF 28（同质量下文件比 H.264 小约 30-50%）
+ffmpeg -i input.mp4 -c:v libx265 -crf 28 -c:a aac output.mp4
+#+end_src
+
+**** 使用指定码率
+
+当你需要精确控制文件大小时（例如上传到有大小限制的平台），可以指定目标码率：
+
+#+begin_src bash :exports code
+# 指定视频码率为 2 Mbps，音频码率为 128 kbps
+ffmpeg -i input.mp4 -c:v libx264 -b:v 2M -c:a aac -b:a 128k output.mp4
+
+# 两遍编码（Two-pass encoding）：更精确的码率控制
+# 第一遍：分析视频内容，生成统计信息
+ffmpeg -i input.mp4 -c:v libx264 -b:v 2M -pass 1 -an -f null /dev/null
+# 第二遍：基于统计信息进行编码
+ffmpeg -i input.mp4 -c:v libx264 -b:v 2M -pass 2 -c:a aac -b:a 128k output.mp4
+#+end_src
+
+两遍编码的原理是：第一遍编码器快速扫描整个视频，统计每段的复杂度，建立码率分配模型；第二遍根据模型精确分配比特。这种方式能在指定码率下获得最佳质量，适合对文件大小有严格要求的场景（如 DVD 刻录、视频上传）。
+
+**** 使用编码预设
+
+x264/x265 编码器提供了预设（Preset），控制编码速度与压缩效率的权衡：
+
+#+begin_src bash :exports code
+# 使用 slower 预设——编码更慢，但同 CRF 值下文件更小
+ffmpeg -i input.mp4 -c:v libx264 -crf 23 -preset slower output.mp4
+
+# 使用 fast 预设——编码更快，但同 CRF 值下文件更大
+ffmpeg -i input.mp4 -c:v libx264 -crf 23 -preset fast output.mp4
+#+end_src
+
+预设从慢到快排列：
+
+| 预设      | 编码速度 | 压缩效率 | 适用场景               |
+|-----------+----------+----------+------------------------|
+| =veryslow=  | 极慢     | 最高     | 归档存储，不急于完成   |
+| =slower=    | 很慢     | 很高     | 离线转码，追求极致压缩 |
+| =slow=      | 慢       | 高       | 离线转码               |
+| =medium=    | 中等     | 中等     | 默认预设，日常使用     |
+| =fast=      | 快       | 较低     | 实时转码或快速处理     |
+| =faster=    | 很快     | 低       | 实时流媒体             |
+| =veryfast=  | 极快     | 很低     | 直播推流               |
+| =ultrafast= | 最快     | 最低     | 低性能设备上的实时编码 |
+
+#+begin_quote
+重要提示：预设 *不影响画质* ，只影响压缩效率。同一 CRF 值下， =slower= 预设和 =ultrafast= 预设的视觉质量几乎相同，但 =slower= 预设生成的文件明显更小。如果你有足够的时间，建议使用 =slow= 或 =slower= 预设。
+#+end_quote
+
+*** 调整分辨率
+
+#+begin_src bash :exports code
+# 缩放到 1280x720
+ffmpeg -i input.mp4 -vf scale=1280:720 -c:v libx264 -crf 23 output.mp4
+
+# 缩放到 720p，保持宽高比（只指定一个维度，另一个用 -1 自动计算）
+ffmpeg -i input.mp4 -vf scale=-1:720 -c:v libx264 -crf 23 output.mp4
+
+# 缩放到原来的二分之一
+ffmpeg -i input.mp4 -vf scale=iw/2:ih/2 -c:v libx264 -crf 23 output.mp4
+
+# 4K 降至 1080p
+ffmpeg -i input_4k.mp4 -vf scale=1920:1080 -c:v libx264 -crf 23 output_1080p.mp4
+#+end_src
+
+=-vf scale= 中的 =iw= 和 =ih= 分别代表输入宽度和高度，可以在表达式中进行数学运算。
+
+#+begin_quote
+注意：当使用 =-1= 自动计算维度时，某些编解码器要求宽度和高度必须是偶数。如果自动计算结果为奇数，会报错。解决方案是使用 =-2= 代替 =-1= ，它会自动向下取偶数。
+#+end_quote
+
+*** 调整帧率
+
+#+begin_src bash :exports code
+# 将帧率降至 24 fps
+ffmpeg -i input.mp4 -r 24 -c:v libx264 -crf 23 output.mp4
+
+# 将帧率提升至 60 fps（通过复制帧实现，不会增加真实信息）
+ffmpeg -i input.mp4 -r 60 -c:v libx264 -crf 23 output.mp4
+#+end_src
+
+降低帧率会丢弃帧，视频会变得更卡顿。提升帧率只是复制现有帧，不会创造新的中间帧（如需帧插值，需要使用专门的插帧滤镜如 =minterpolate= ）。
+
+*** 剪辑：截取视频片段
+
+=-ss= 选项指定起始时间， =-to= 选项指定结束时间， =-t= 选项指定持续时间。这三种选项组合使用可以实现精确剪辑：
+
+#+begin_src bash :exports code
+# 从第 30 秒开始，截取到第 1 分 30 秒
+ffmpeg -i input.mp4 -ss 00:00:30 -to 00:01:30 -c copy output.mp4
+
+# 从第 1 分钟开始，截取 30 秒
+ffmpeg -i input.mp4 -ss 00:01:00 -t 00:00:30 -c copy output.mp4
+
+# 使用简洁的时间格式
+ffmpeg -i input.mp4 -ss 30 -to 90 -c copy output.mp4
+ffmpeg -i input.mp4 -ss 1:00 -t 30 -c copy output.mp4
+#+end_src
+
+=-c copy= 表示不重新编码，直接复制流——剪辑速度极快，且无质量损失。但这种方式有一个限制：由于视频的关键帧（I-frame）机制，剪切点可能不精确——ffmpeg 会在最近的关键帧处开始复制。如果你需要精确到帧的剪辑，必须重新编码：
+
+#+begin_src bash :exports code
+# 精确剪辑（重新编码，慢但精确）
+ffmpeg -i input.mp4 -ss 00:00:30 -to 00:01:30 -c:v libx264 -crf 23 -c:a aac output.mp4
+#+end_src
+
+还有一种更高效的方式：将 =-ss= 放在 =-i= 之前，ffmpeg 会先快速跳转到指定位置再开始解码，比放在 =-i= 之后快得多：
+
+#+begin_src bash :exports code
+# -ss 放在 -i 之前：快速跳转（seek 模式），但起始点可能不精确
+ffmpeg -ss 00:00:30 -i input.mp4 -to 00:01:00 -c copy output.mp4
+
+# -ss 放在 -i 之后：精确跳转，但需要从头解码到指定位置
+ffmpeg -i input.mp4 -ss 00:00:30 -to 00:01:00 -c copy output.mp4
+#+end_src
+
+对于长视频的剪辑，推荐使用"先快跳再精修"的组合方式： =-ss= 放在 =-i= 之前快速定位，然后微调几秒内的精确位置。
+
+*** 合并视频
+
+**** 方法一：使用 concat 协议（相同编码格式）
+
+如果所有视频片段的编码参数完全相同（分辨率、帧率、编解码器一致），可以使用 concat 协议直接拼接，速度极快且无损：
+
+#+begin_src bash :exports code
+ffmpeg -i "concat:part1.mp4|part2.mp4|part3.mp4" -c copy output.mp4
+#+end_src
+
+**** 方法二：使用 concat 滤镜（不同编码格式）
+
+如果视频片段的编码参数不同，需要先解码再重新编码。concat 滤镜会在内存中完成拼接：
+
+#+begin_src bash :exports code
+ffmpeg -i part1.mp4 -i part2.mp4 -i part3.mp4 \
+  -filter_complex "[0:v][0:a][1:v][1:a][2:v][2:a]concat=n=3:v=1:a=1[outv][outa]" \
+  -map "[outv]" -map "[outa]" \
+  -c:v libx264 -crf 23 -c:a aac output.mp4
+#+end_src
+
+这个命令的解析： =-filter_complex= 中 =[0:v]= 表示第一个输入的视频流， =[0:a]= 表示第一个输入的音频流，=n=3= 表示有 3 个片段要拼接， =v=1:a=1= 表示每个片段各有一个视频流和一个音频流。
+
+**** 方法三：使用 concat 解复用器（推荐，灵活且快速）
+
+这是最推荐的合并方式——先创建一个文本文件列出所有要合并的片段，然后用 concat 解复用器读取：
+
+#+begin_src bash :exports code
+# 创建文件列表
+cat > filelist.txt << 'EOF'
+file 'part1.mp4'
+file 'part2.mp4'
+file 'part3.mp4'
+EOF
+
+# 使用 concat 解复用器合并
+ffmpeg -f concat -safe 0 -i filelist.txt -c copy output.mp4
+#+end_src
+
+=-safe 0= 允许使用相对路径。如果片段的编码参数不同，去掉 =-c copy= 让 ffmpeg 重新编码。这种方式的优势是：可以处理大量片段，文件列表可以随时修改，而且如果片段编码相同，合并速度极快。
+
+*** 提取音频
+
+#+begin_src bash :exports code
+# 从视频中提取音频，保存为 MP3
+ffmpeg -i input.mp4 -vn -c:a libmp3lame -b:a 192k output.mp3
+
+# 从视频中提取音频，保存为 AAC
+ffmpeg -i input.mp4 -vn -c:a aac -b:a 128k output.m4a
+
+# 从视频中提取音频，保存为 FLAC（无损）
+ffmpeg -i input.mp4 -vn -c:a flac output.flac
+
+# 从视频中提取音频，不重新编码（如果原音频已经是 MP3/AAC 等）
+ffmpeg -i input.mp4 -vn -c:a copy output.aac
+#+end_src
+
+=-vn= 表示"no video"——丢弃视频流，只保留音频。类似地， =-an= 表示"no audio"， =-sn= 表示"no subtitle"。
+
+*** 替换音频
+
+#+begin_src bash :exports code
+# 用新的音频文件替换视频中的音频
+ffmpeg -i input.mp4 -i new_audio.mp3 -c:v copy -c:a aac -map 0:v -map 1:a output.mp4
+#+end_src
+
+=-map 0:v= 表示取第一个输入（ =0= ）的视频流， =-map 1:a= 表示取第二个输入（ =1= ）的音频流。 =-map= 是 ffmpeg 中最强大的流选择工具，它让你精确控制哪些流进入输出文件。
+
+*** 添加音频到无声视频
+
+#+begin_src bash :exports code
+# 将背景音乐添加到无声视频
+ffmpeg -i video_no_audio.mp4 -i bgm.mp3 -c:v copy -c:a aac -shortest output.mp4
+#+end_src
+
+=-shortest= 选项让输出文件的长度与最短的输入一致——如果视频比音乐长，音乐结束后视频自动截断；反之亦然。
+
+*** 变速播放
+
+#+begin_src bash :exports code
+# 2 倍速播放（视频和音频都加速）
+ffmpeg -i input.mp4 -filter_complex "[0:v]setpts=0.5*PTS[v];[0:a]atempo=2.0[a]" \
+  -map "[v]" -map "[a]" -c:v libx264 -crf 23 -c:a aac output.mp4
+
+# 0.5 倍速播放（慢放）
+ffmpeg -i input.mp4 -filter_complex "[0:v]setpts=2.0*PTS[v];[0:a]atempo=0.5[a]" \
+  -map "[v]" -map "[a]" -c:v libx264 -crf 23 -c:a aac output.mp4
+
+# 仅视频变速，音频不变
+ffmpeg -i input.mp4 -vf setpts=0.5*PTS -c:v libx264 -crf 23 -c:a copy output.mp4
+#+end_src
+
+=setpts= 滤镜控制视频速度——值小于 1 加速，大于 1 减速。 =atempo= 滤镜控制音频速度，范围限制在 0.5 到 2.0 之间。如果需要更大范围的变速，可以链式使用多个 =atempo= 滤镜： =atempo=2.0,atempo=2.0= 实现四倍速。
+
+*** 视频旋转
+
+#+begin_src bash :exports code
+# 顺时针旋转 90 度
+ffmpeg -i input.mp4 -vf transpose=1 -c:v libx264 -crf 23 -c:a copy output.mp4
+
+# 逆时针旋转 90 度
+ffmpeg -i input.mp4 -vf transpose=2 -c:v libx264 -crf 23 -c:a copy output.mp4
+
+# 旋转 180 度
+ffmpeg -i input.mp4 -vf hflip,vflip -c:v libx264 -crf 23 -c:a copy output.mp4
+
+# 仅修改元数据中的旋转标志（不实际旋转画面，某些播放器支持）
+ffmpeg -i input.mp4 -c copy -metadata:s:v rotate=90 output.mp4
+#+end_src
+
+=transpose= 的参数： =0= 逆时针旋转 90 度并垂直翻转， =1= 顺时针旋转 90 度， =2= 逆时针旋转 90 度， =3= 顺时针旋转 90 度并垂直翻转。
+
+*** 截取视频帧为图片
+
+#+begin_src bash :exports code
+# 每秒截取 1 帧，保存为 PNG
+ffmpeg -i input.mp4 -vf fps=1 frame_%04d.png
+
+# 每秒截取 5 帧
+ffmpeg -i input.mp4 -vf fps=5 frame_%04d.png
+
+# 仅截取第 5 秒的一帧
+ffmpeg -i input.mp4 -ss 00:00:05 -vframes 1 screenshot.png
+
+# 截取第 10 到 15 秒之间，每 0.5 秒一帧
+ffmpeg -i input.mp4 -ss 10 -to 15 -vf fps=2 frame_%04d.png
+#+end_src
+
+=%04d= 是 C 语言风格的格式说明符，表示用 4 位数字编号（0001、0002、...）。ffmpeg 的图片输出支持 PNG、JPG、BMP 等常见图片格式。
+
+*** 图片序列生成视频
+
+#+begin_src bash :exports code
+# 将图片序列合成为 24fps 的视频
+ffmpeg -framerate 24 -i frame_%04d.png -c:v libx264 -crf 23 -pix_fmt yuv420p output.mp4
+
+# 幻灯片效果：每张图片显示 3 秒
+ffmpeg -framerate 1/3 -i photo_%04d.jpg -c:v libx264 -crf 23 -pix_fmt yuv420p \
+  -r 24 slideshow.mp4
+#+end_src
+
+=-framerate 1/3= 表示每秒读入 1/3 张图片，即每张图片 3 秒。 =-r 24= 将输出帧率设为 24fps，ffmpeg 会自动复制帧来填充。
+
+#+begin_quote
+注意：PNG 图片序列生成的视频默认像素格式是 =rgb24= ，而大多数播放器需要 =yuv420p= 才能正常播放。因此必须显式指定 =-pix_fmt yuv420p= 。
+#+end_quote
+
+** 音频操作
+
+*** 音频转码
+
+#+begin_src bash :exports code
+# WAV 转 MP3（192 kbps）
+ffmpeg -i input.wav -c:a libmp3lame -b:a 192k output.mp3
+
+# WAV 转 AAC（128 kbps）
+ffmpeg -i input.wav -c:a aac -b:a 128k output.m4a
+
+# WAV 转 FLAC（无损压缩，文件比 WAV 小约 30-60%）
+ffmpeg -i input.wav -c:a flac output.flac
+
+# WAV 转 Opus（现代高效编码器，同质量下码率远低于 MP3/AAC）
+ffmpeg -i input.wav -c:a libopus -b:a 64k output.opus
+
+# MP3 转 AAC
+ffmpeg -i input.mp3 -c:a aac -b:a 128k output.m4a
+#+end_src
+
+#+begin_quote
+音频格式选择建议： =FLAC= 适合音乐收藏和归档（无损）； =Opus= 适合语音通话和网络传输（极低码率下质量出色）； =AAC= 适合视频音轨和 Apple 生态（兼容性好）； =MP3= 适合需要最大兼容性的场景（所有设备都支持）。
+#+end_quote
+
+*** 音频音量调整
+
+#+begin_src bash :exports code
+# 音量增大一倍
+ffmpeg -i input.mp3 -af volume=2.0 output.mp3
+
+# 音量减半
+ffmpeg -i input.mp3 -af volume=0.5 output.mp3
+
+# 音量增大 10 dB
+ffmpeg -i input.mp3 -af volume=10dB output.mp3
+
+# 使用音频标准化滤镜（让整体音量达到目标响度）
+ffmpeg -i input.mp3 -af loudnorm=I=-16:TP=-1.5:LRA=11 output.mp3
+#+end_src
+
+=loudnorm= 滤镜使用 EBU R128 标准进行响度标准化，比简单的音量调整更专业。 =I=-16= 设置目标响度为 -16 LUFS（广播标准）， ~TP=-1.5~ 设置真峰值上限， =LRA=11= 设置响度范围。
+
+*** 音频剪切与合并
+
+#+begin_src bash :exports code
+# 截取音频片段
+ffmpeg -i input.mp3 -ss 00:01:30 -to 00:03:00 -c copy output.mp3
+
+# 合并多个音频文件（使用 concat 解复用器）
+cat > audio_list.txt << 'EOF'
+file 'track1.mp3'
+file 'track2.mp3'
+file 'track3.mp3'
+EOF
+
+ffmpeg -f concat -safe 0 -i audio_list.txt -c copy merged.mp3
+#+end_src
+
+*** 提取音频中的某一声道
+
+#+begin_src bash :exports code
+# 仅提取左声道
+ffmpeg -i input.mp4 -af "pan=mono|c0=FL" -c:a aac output.m4a
+
+# 仅提取右声道
+ffmpeg -i input.mp4 -af "pan=mono|c0=FR" -c:a aac output.m4a
+
+# 将立体声降混为单声道
+ffmpeg -i input.mp4 -ac 1 -c:a aac output.m4a
+#+end_src
+
+*** 音频淡入淡出
+
+#+begin_src bash :exports code
+# 开头 3 秒淡入，结尾 5 秒淡出
+ffmpeg -i input.mp3 -af "afade=t=in:ss=0:d=3,afade=t=out:st=30:d=5" output.mp3
+#+end_src
+
+=afade= 滤镜的参数： =t=in= 或 =t=out= 表示淡入还是淡出， =ss= 表示起始时间， =d= 表示持续时间， =st= 表示淡出开始时间。
+
+** 字幕操作
+
+*** 嵌入字幕（硬字幕/烧录）
+
+硬字幕将字幕直接渲染到视频画面上，成为视频的一部分，所有播放器都能显示，但无法关闭或切换语言：
+
+#+begin_src bash :exports code
+# 将 SRT 字幕烧录到视频上
+ffmpeg -i input.mp4 -vf subtitles=subtitle.srt -c:v libx264 -crf 23 -c:a copy output.mp4
+
+# 如果字幕文件是 ASS/SSA 格式（支持样式和特效）
+ffmpeg -i input.mp4 -vf subtitles=subtitle.ass -c:v libx264 -crf 23 -c:a copy output.mp4
+
+# 指定字幕编码（中文 SRT 文件常见问题）
+ffmpeg -i input.mp4 -vf "subtitles=subtitle.srt:force_style='FontName=Noto Sans CJK SC'" \
+  -c:v libx264 -crf 23 -c:a copy output.mp4
+#+end_src
+
+*** 嵌入字幕（软字幕/封装）
+
+软字幕将字幕文件封装到容器中，不修改视频画面，播放时可以选择显示或隐藏：
+
+#+begin_src bash :exports code
+# 将 SRT 字幕封装到 MP4 中（作为软字幕）
+ffmpeg -i input.mp4 -i subtitle.srt -c copy -c:s mov_text output.mp4
+
+# 将 ASS 字幕封装到 MKV 中（MKV 原生支持 ASS）
+ffmpeg -i input.mkv -i subtitle.ass -c copy output.mkv
+
+# 封装多个字幕轨道
+ffmpeg -i input.mp4 -i zh.srt -i en.srt \
+  -c copy -c:s mov_text \
+  -metadata:s:s:0 language=chi -metadata:s:s:0 title="中文" \
+  -metadata:s:s:1 language=eng -metadata:s:s:1 title="English" \
+  output.mp4
+#+end_src
+
+=-metadata:s:s:0= 设置第一个字幕流的元数据（语言和标题）， =-metadata:s:s:1= 设置第二个。播放器会根据这些信息显示字幕选择菜单。
+
+*** 提取字幕
+
+#+begin_src bash :exports code
+# 从 MKV 中提取字幕（自动识别格式）
+ffmpeg -i input.mkv -map 0:s:0 subtitle.srt
+
+# 查看文件中有哪些字幕流
+ffprobe -v error -show_entries stream=index,codec_name,codec_type:stream_tags=language \
+  -of csv input.mkv
+#+end_src
+
+** 滤镜与滤镜图
+
+ffmpeg 的滤镜系统是其最强大的功能之一。滤镜可以对音视频流进行各种变换处理——从简单的裁剪、缩放到复杂的色彩校正、特效叠加。多个滤镜可以串联成滤镜链（Filterchain），多个滤镜链可以并联成滤镜图（Filtergraph）。
+
+*** 基本滤镜语法
+
+**** 视频滤镜
+
+视频滤镜使用 =-vf= （或 =-filter:v= ）选项指定：
+
+#+begin_src bash :exports code
+# 单个滤镜
+ffmpeg -i input.mp4 -vf scale=1280:720 output.mp4
+
+# 多个滤镜串联（用逗号分隔）
+ffmpeg -i input.mp4 -vf "scale=1280:720,fps=24" output.mp4
+
+# 多个滤镜串联，带参数
+ffmpeg -i input.mp4 -vf "scale=1280:720,format=yuv420p,fps=24" output.mp4
+#+end_src
+
+滤镜的串联顺序很重要——数据从左到右依次经过每个滤镜处理。先缩放再降帧率，和先降帧率再缩放，结果可能不同。
+
+**** 音频滤镜
+
+音频滤镜使用 =-af= （或 =-filter:a= ）选项指定：
+
+#+begin_src bash :exports code
+# 单个音频滤镜
+ffmpeg -i input.mp3 -af volume=2.0 output.mp3
+
+# 多个音频滤镜串联
+ffmpeg -i input.mp3 -af "volume=1.5,afade=t=in:d=2" output.mp3
+#+end_src
+
+*** 复杂滤镜图（Filtergraph）
+
+当需要处理多个输入、多个输出或进行分路/合路操作时，使用 =-filter_complex= 选项。这是 ffmpeg 最强大也最复杂的特性：
+
+#+begin_src bash :exports code
+# 画中画效果：将小视频叠加到大视频右上角
+ffmpeg -i main.mp4 -i overlay.mp4 -filter_complex \
+  "[0:v][1:v]overlay=W-w-10:10[outv]" \
+  -map "[outv]" -map 0:a -c:v libx264 -crf 23 -c:a copy output.mp4
+#+end_src
+
+滤镜图语法解析：
+
+- =[0:v]= 和 =[1:v]= ：输入标签， =0= 表示第一个输入， =1= 表示第二个输入， =v= 表示视频流
+- =overlay=W-w-10:10= ：overlay 滤镜， =W-w-10= 是 x 坐标（大视频宽度减去小视频宽度再减 10 像素）， =10= 是 y 坐标
+- =[outv]= ：输出标签，用于后续 =-map= 引用
+
+*** 常用视频滤镜
+
+**** 裁剪
+
+#+begin_src bash :exports code
+# 裁剪出 640x360 的区域，从左上角 (100,50) 开始
+ffmpeg -i input.mp4 -vf "crop=640:360:100:50" output.mp4
+
+# 自动检测并裁剪黑边
+ffmpeg -i input.mp4 -vf "cropdetect" -f null - 2>&1 | grep crop
+# 然后使用检测到的参数
+ffmpeg -i input.mp4 -vf "crop=1920:800:0:140" output.mp4
+#+end_src
+
+=cropdetect= 滤镜不会实际裁剪视频，它只是分析视频并在输出中报告建议的裁剪参数。你可以先运行 =cropdetect= 获取参数，再用 =crop= 滤镜实际裁剪。
+
+**** 添加黑边（Pad）
+
+#+begin_src bash :exports code
+# 在视频上下添加黑边，使 16:9 视频变为 4:3（上下各加 60 像素黑边）
+ffmpeg -i input.mp4 -vf "pad=1920:1080:0:60:black" output.mp4
+#+end_src
+
+**** 水印
+
+#+begin_src bash :exports code
+# 在视频左上角添加半透明水印
+ffmpeg -i input.mp4 -i watermark.png -filter_complex \
+  "[0:v][1:v]overlay=10:10:format=auto:alpha=0.5[outv]" \
+  -map "[outv]" -map 0:a -c:v libx264 -crf 23 -c:a copy output.mp4
+#+end_src
+
+**** 模糊
+
+#+begin_src bash :exports code
+# 对整个视频应用高斯模糊
+ffmpeg -i input.mp4 -vf "gblur=sigma=5" output.mp4
+
+# 对视频的某个区域模糊（如模糊人脸或车牌）
+ffmpeg -i input.mp4 -filter_complex \
+  "[0:v]crop=200:200:300:200,boxblur=10[bg];[0:v][bg]overlay=300:200" \
+  output.mp4
+#+end_src
+
+**** 色彩调整
+
+#+begin_src bash :exports code
+# 调整亮度、对比度、饱和度
+ffmpeg -i input.mp4 -vf "eq=brightness=0.1:contrast=1.5:saturation=1.2" output.mp4
+
+# 黑白效果
+ffmpeg -i input.mp4 -vf "hue=s=0" output.mp4
+
+# 反转颜色
+ffmpeg -i input.mp4 -vf "negate" output.mp4
+
+# 色温调整（偏暖色调）
+ffmpeg -i input.mp4 -vf "colortemperature=temperature=3500" output.mp4
+#+end_src
+
+**** 去隔行
+
+#+begin_src bash :exports code
+# 使用 yadif 滤镜去隔行（将隔行扫描视频转为逐行扫描）
+ffmpeg -i input_interlaced.mp4 -vf "yadif" -c:v libx264 -crf 23 output.mp4
+
+# 使用 bwdif 滤镜（效果通常比 yadif 更好）
+ffmpeg -i input_interlaced.mp4 -vf "bwdif" -c:v libx264 -crf 23 output.mp4
+#+end_src
+
+隔行扫描是早期电视广播使用的技术，它将一帧画面分成两场——奇数行和偶数行交替显示。这在 CRT 显示器上效果不错，但在现代 LCD/OLED 屏幕上会产生明显的"梳齿"效应。去隔行滤镜将两场合并为一帧完整画面。
+
+**** 文字叠加
+
+#+begin_src bash :exports code
+# 在视频上添加时间戳
+ffmpeg -i input.mp4 -vf "drawtext=fontfile=/usr/share/fonts/TTF/DejaVuSans.ttf:\
+text='%{localtime\:%Y-%m-%d %H\\\\\:%M\\\\\:%S}':fontcolor=white:fontsize=24:\
+x=10:y=10:box=1:boxcolor=black@0.5" output.mp4
+
+# 在视频中心添加标题文字
+ffmpeg -i input.mp4 -vf "drawtext=fontfile=/usr/share/fonts/truetype/noto/NotoSansCJK-Regular.ttc:\
+text='示例视频':fontcolor=white:fontsize=48:x=(w-text_w)/2:y=(h-text_h)/2:\
+box=1:boxcolor=black@0.5:boxborderw=10" output.mp4
+#+end_src
+
+=drawtext= 滤镜功能强大但语法复杂。 =fontfile= 指定字体文件路径（中文字幕需要使用支持中文的字体）， =text= 中可以使用 =%{localtime}= 等时间变量，=box= 添加文字背景框。
+
+** 流映射（Stream Mapping）
+
+=-map= 选项是 ffmpeg 精确控制输入输出流映射的核心工具。理解 =-map= ，你就能驾驭任何复杂的多流处理场景。
+
+*** 基本流选择
+
+#+begin_src bash :exports code
+# 只保留视频流（去掉所有音频和字幕）
+ffmpeg -i input.mkv -map 0:v -c:v copy output.mp4
+
+# 只保留第一个音频流
+ffmpeg -i input.mkv -map 0:a:0 -c:a copy output.mp3
+
+# 保留视频和第一个音频流
+ffmpeg -i input.mkv -map 0:v -map 0:a:0 -c copy output.mp4
+#+end_src
+
+=-map 0:v= 表示第一个输入的所有视频流， =-map 0:a:0= 表示第一个输入的第一个音频流（索引从 0 开始）。
+
+*** 多音轨处理
+
+#+begin_src bash :exports code
+# 保留所有音频轨道并设置语言标签
+ffmpeg -i input.mkv \
+  -map 0:v -map 0:a:0 -map 0:a:1 \
+  -c copy \
+  -metadata:s:a:0 language=chi -metadata:s:a:0 title="普通话" \
+  -metadata:s:a:1 language=eng -metadata:s:a:1 title="英语" \
+  output.mkv
+
+# 只保留中文音轨
+ffmpeg -i input.mkv -map 0:v -map 0:a:m:language:chi -c copy output.mp4
+#+end_src
+
+*** 多输入组合
+
+#+begin_src bash :exports code
+# 从两个不同的视频文件中各取一个流组合成新视频
+ffmpeg -i video_with_bad_audio.mp4 -i video_with_good_audio.mp4 \
+  -map 0:v -map 1:a -c copy output.mp4
+#+end_src
+
+** 硬件加速
+
+在 Linux 上，ffmpeg 可以利用 GPU 进行视频编解码加速，显著提升处理速度。EndeavourOS 作为 Arch Linux 的衍生版，对硬件加速的支持非常完善。
+
+*** VA-API（Intel/AMD GPU）
+
+VA-API（Video Acceleration API）是 Linux 上 Intel 和 AMD GPU 的硬件加速接口。
+
+**** 检查 VA-API 支持
+
+#+begin_src bash :exports code
+# 安装 VA-API 工具
+sudo pacman -S libva-utils
+
+# 检查 VA-API 是否可用
+vainfo
+
+# 对于 Intel GPU
+sudo pacman -S intel-media-driver    # 较新的 Intel GPU（Broadwell+）
+sudo pacman -S libva-intel-driver    # 较旧的 Intel GPU（Haswell 及更早）
+
+# 对于 AMD GPU
+sudo pacman -S mesa                  # 包含 AMD 的 VA-API 驱动
+#+end_src
+
+**** 使用 VA-API 硬件编码
+
+#+begin_src bash :exports code
+# 使用 VA-API 进行 H.264 硬件编码
+ffmpeg -i input.mp4 -vaapi_device /dev/dri/renderD128 \
+  -vf 'format=nv12,hwupload' -c:v h264_vaapi -b:v 5M output.mp4
+
+# 使用 VA-API 进行 HEVC 硬件编码
+ffmpeg -i input.mp4 -vaapi_device /dev/dri/renderD128 \
+  -vf 'format=nv12,hwupload' -c:v hevc_vaapi -b:v 5M output.mp4
+#+end_src
+
+**** 使用 VA-API 硬件解码
+
+#+begin_src bash :exports code
+# 使用 VA-API 硬件解码 + 软件编码（降低 CPU 负载）
+ffmpeg -hwaccel vaapi -hwaccel_device /dev/dri/renderD128 \
+  -hwaccel_output_format vaapi -i input.mp4 \
+  -c:v libx264 -crf 23 -c:a aac output.mp4
+
+# 使用 VA-API 硬件解码 + VA-API 硬件编码（全程 GPU 处理）
+ffmpeg -hwaccel vaapi -hwaccel_device /dev/dri/renderD128 \
+  -hwaccel_output_format vaapi -i input.mp4 \
+  -vf 'format=nv12,hwupload' -c:v h264_vaapi -b:v 5M output.mp4
+#+end_src
+
+*** NVENC/NVDEC（NVIDIA GPU）
+
+如果你使用 NVIDIA 显卡，可以通过 NVENC 进行硬件编码，通过 NVDEC 进行硬件解码。
+
+**** 检查 NVENC 支持
+
+#+begin_src bash :exports code
+# 安装 NVIDIA 驱动和 CUDA 工具
+sudo pacman -S nvidia-dkms nvidia-utils cuda
+
+# 检查 ffmpeg 是否支持 NVENC
+ffmpeg -encoders | grep nvenc
+#+end_src
+
+**** 使用 NVENC 编码
+
+#+begin_src bash :exports code
+# H.264 NVENC 编码
+ffmpeg -i input.mp4 -c:v h264_nvenc -preset p4 -cq 23 -c:a aac output.mp4
+
+# HEVC NVENC 编码
+ffmpeg -i input.mp4 -c:v hevc_nvenc -preset p4 -cq 28 -c:a aac output.mp4
+
+# 使用 NVENC 预设说明
+# p1-p7 对应不同质量和速度的平衡
+# p1: 最快（最低质量）
+# p4: 平衡（推荐）
+# p7: 最慢（最高质量）
+#+end_src
+
+NVENC 的 =-cq= 参数类似 CRF，控制恒定质量。 =-preset p4= 是速度和质量的平衡点。
+
+**** 使用 NVDEC 解码
+
+#+begin_src bash :exports code
+# 使用 NVIDIA 硬件解码 + 软件编码
+ffmpeg -hwaccel cuda -i input.mp4 -c:v libx264 -crf 23 -c:a aac output.mp4
+
+# 使用 NVIDIA 硬件解码 + NVENC 硬件编码
+ffmpeg -hwaccel cuda -i input.mp4 -c:v h264_nvenc -preset p4 -cq 23 output.mp4
+#+end_src
+
+*** 硬件加速对照表
+
+| API    | 适用 GPU  | 编码器        | 解码方式       | 驱动/依赖                 |
+|--------+-----------+---------------+----------------+---------------------------|
+| VA-API | Intel/AMD | =h264_vaapi= 等 | =-hwaccel vaapi= | =intel-media-driver= / =mesa= |
+| NVENC  | NVIDIA    | =h264_nvenc= 等 | =-hwaccel cuda=  | =nvidia-utils= / =cuda=       |
+| QSV    | Intel     | =h264_qsv= 等   | =-hwaccel qsv=   | =intel-media-sdk= / =onevpl=  |
+
+#+begin_quote
+硬件编码的注意事项：硬件编码器在相同码率下的质量通常略低于软件编码器（如 libx264），但编码速度快数倍。对于需要最高质量的归档场景，仍然推荐使用软件编码器。对于实时转码、直播推流等场景，硬件编码器是最佳选择。
+#+end_quote
+
+** 屏幕录制
+
+ffmpeg 可以直接在 Linux 上录制屏幕，配合 PulseAudio 或 PipeWire 捕获系统音频和麦克风输入。
+
+*** 录制屏幕（X11）
+
+#+begin_src bash :exports code
+# 录制整个屏幕（无音频）
+ffmpeg -f x11grab -framerate 30 -video_size 1920x1080 -i :0.0 \
+  -c:v libx264 -crf 23 -preset fast output.mp4
+
+# 录制屏幕 + 系统音频（PulseAudio）
+ffmpeg -f x11grab -framerate 30 -video_size 1920x1080 -i :0.0 \
+  -f pulse -i default \
+  -c:v libx264 -crf 23 -preset fast -c:a aac output.mp4
+
+# 录制屏幕 + 麦克风 + 系统音频
+ffmpeg -f x11grab -framerate 30 -video_size 1920x1080 -i :0.0 \
+  -f pulse -i alsa_input.pci-0000_00_1f.3.analog-stereo \
+  -f pulse -i alsa_output.pci-0000_00_1f.3.analog-stereo.monitor \
+  -c:v libx264 -crf 23 -preset fast \
+  -c:a aac -map 0:v -map 1:a -map 2:a output.mp4
+#+end_src
+
+=-i :0.0= 表示显示器 =:0= 的屏幕 =0= 。如果你有多个显示器，可以用 =:0.1= 录制第二个显示器。
+
+*** 录制指定区域
+
+#+begin_src bash :exports code
+# 录制屏幕上从 (200,100) 开始的 800x600 区域
+ffmpeg -f x11grab -framerate 30 -video_size 800x600 -i :0.0+200,100 \
+  -c:v libx264 -crf 23 -preset fast output.mp4
+#+end_src
+
+*** 使用 PipeWire（Wayland 兼容）
+
+如果你的 EndeavourOS 使用 Wayland 会话，x11grab 可能不可用。推荐使用 PipeWire 的屏幕捕获功能：
+
+#+begin_src bash :exports code
+# 安装 PipeWire 屏幕捕获工具
+sudo pacman -S pipewire pipewire-session-manager xdg-desktop-portal
+
+# 使用 wf-recorder（Wayland 下更简单的屏幕录制工具）
+sudo pacman -S wf-recorder
+wf-recorder -f output.mp4
+wf-recorder -g "$(slurp)" -f output.mp4   # 选择区域录制
+#+end_src
+
+** 流媒体
+
+*** 推流到 RTMP 服务器
+
+#+begin_src bash :exports code
+# 将本地视频推流到 RTMP 服务器
+ffmpeg -re -i input.mp4 -c:v libx264 -preset veryfast -b:v 2500k \
+  -c:a aac -b:a 128k -f flv rtmp://live.example.com/live/stream_key
+
+# 将屏幕录制实时推流
+ffmpeg -f x11grab -framerate 30 -video_size 1920x1080 -i :0.0 \
+  -f pulse -i default \
+  -c:v libx264 -preset veryfast -b:v 2500k -c:a aac -b:a 128k \
+  -f flv rtmp://live.example.com/live/stream_key
+#+end_src
+
+=-re= 选项让 ffmpeg 按照实际帧率读取输入（而非尽可能快地处理），这对于推流至关重要——没有它，ffmpeg 会以最快速度将所有帧推送到服务器，导致缓冲区溢出。
+
+*** 从网络流拉取
+
+#+begin_src bash :exports code
+# 从 RTSP 摄像头拉流并保存
+ffmpeg -i rtsp://192.168.1.100:554/stream -c copy recording.mp4
+
+# 从 HLS 流拉取
+ffmpeg -i https://example.com/live/stream.m3u8 -c copy recording.ts
+
+# 从网络流拉取并转码为低分辨率
+ffmpeg -i rtsp://192.168.1.100:554/stream \
+  -vf scale=640:360 -c:v libx264 -b:v 1000k -c:a aac -b:a 64k \
+  low_res_recording.mp4
+#+end_src
+
+** 实用脚本与批量处理
+
+*** 批量转换格式
+
+#+begin_src bash :exports code
+#!/bin/bash
+# 将当前目录下所有 MKV 文件转为 MP4
+for f in *.mkv; do
+  ffmpeg -i "$f" -c copy "${f%.mkv}.mp4"
+done
+#+end_src
+
+*** 批量压缩视频
+
+#+begin_src bash :exports code
+#!/bin/bash
+# 批量压缩视频到 CRF 28，节省存储空间
+for f in *.mp4; do
+  ffmpeg -i "$f" -c:v libx264 -crf 28 -preset medium -c:a aac -b:a 128k \
+    "compressed_${f}"
+done
+#+end_src
+
+*** 批量提取音频
+
+#+begin_src bash :exports code
+#!/bin/bash
+# 从所有视频文件中提取音频为 MP3
+for f in *.mp4; do
+  ffmpeg -i "$f" -vn -c:a libmp3lame -b:a 192k "${f%.mp4}.mp3"
+done
+#+end_src
+
+*** 批量添加水印
+
+#+begin_src bash :exports code
+#!/bin/bash
+# 为所有视频添加水印
+WATERMARK="watermark.png"
+for f in *.mp4; do
+  ffmpeg -i "$f" -i "$WATERMARK" -filter_complex \
+    "[0:v][1:v]overlay=W-w-10:10[outv]" \
+    -map "[outv]" -map 0:a -c:v libx264 -crf 23 -c:a copy "watermarked_${f}"
+done
+#+end_src
+
+*** 视频转 GIF
+
+#+begin_src bash :exports code
+# 将视频片段转为 GIF（简单方式）
+ffmpeg -i input.mp4 -vf "fps=10,scale=480:-1:flags=lanczos" output.gif
+
+# 生成高质量 GIF（使用两步法：先生成调色板，再使用调色板编码）
+# 第一步：生成最优调色板
+ffmpeg -i input.mp4 -vf "fps=15,scale=480:-1:flags=lanczos,palettegen" palette.png
+
+# 第二步：使用调色板生成 GIF
+ffmpeg -i input.mp4 -i palette.png -filter_complex \
+  "[0:v]fps=15,scale=480:-1:flags=lanczos[x];[x][1:v]paletteuse" output.gif
+#+end_src
+
+两步法的原理：GIF 格式最多支持 256 色，调色板决定了哪 256 种颜色被使用。默认情况下 ffmpeg 自动选择调色板，可能无法准确表达视频中的颜色。先使用 =palettegen= 分析整个视频片段，统计最常用的 256 种颜色，再用 =paletteuse= 将这些颜色应用到每一帧，可以显著提升 GIF 的视觉效果。
+
+*** 视频转 WebM（用于网页嵌入）
+
+#+begin_src bash :exports code
+# 转 VP9 + Opus 的 WebM 格式（适合网页视频）
+ffmpeg -i input.mp4 -c:v libvpx-vp9 -crf 30 -b:v 0 \
+  -c:a libopus -b:a 64k output.webm
+
+# VP9 两遍编码（获得更好的质量-大小比）
+ffmpeg -i input.mp4 -c:v libvpx-vp9 -crf 30 -b:v 0 -pass 1 -an -f null /dev/null
+ffmpeg -i input.mp4 -c:v libvpx-vp9 -crf 30 -b:v 0 -pass 2 \
+  -c:a libopus -b:a 64k output.webm
+#+end_src
+
+VP9 的 =-b:v 0= 配合 =-crf= 实现约束质量模式。VP9 的两遍编码比 H.264 的效果更明显，强烈推荐。
+
+** 常见问题与解决方案
+
+*** "Duration: N/A, bitrate: N/A"
+
+输入文件可能损坏或使用了 ffmpeg 不支持的格式。尝试：
+
+#+begin_src bash :exports code
+# 尝试忽略错误继续处理
+ffmpeg -err_detect ignore_err -i input.mp4 -c copy output.mp4
+#+end_src
+
+*** 编码后视频在某些播放器上无法播放
+
+最常见的原因是像素格式不兼容。大多数硬件播放器和移动设备只支持 =yuv420p= 像素格式：
+
+#+begin_src bash :exports code
+# 强制输出使用 yuv420p 像素格式
+ffmpeg -i input.mp4 -c:v libx264 -crf 23 -pix_fmt yuv420p -c:a aac output.mp4
+#+end_src
+
+*** MP4 文件无法在浏览器中流式播放
+
+MP4 文件的元数据（moov atom）默认写在文件末尾，浏览器需要下载整个文件才能开始播放。使用 =-movflags +faststart= 将元数据移到文件开头：
+
+#+begin_src bash :exports code
+ffmpeg -i input.mp4 -c:v libx264 -crf 23 -c:a aac -movflags +faststart output.mp4
+#+end_src
+
+这个选项对于任何需要在网页上播放的 MP4 文件都必不可少。
+
+*** 转码速度太慢
+
+#+begin_src bash :exports code
+# 使用更快的预设
+ffmpeg -i input.mp4 -c:v libx264 -crf 23 -preset fast output.mp4
+
+# 使用硬件加速编码
+ffmpeg -i input.mp4 -c:v h264_vaapi -b:v 5M output.mp4
+
+# 使用多线程（默认已启用，可以显式指定）
+ffmpeg -i input.mp4 -c:v libx264 -crf 23 -threads 8 output.mp4
+#+end_src
+
+*** 音视频不同步
+
+#+begin_src bash :exports code
+# 尝试使用不同的同步方法
+ffmpeg -i input.mp4 -c:v libx264 -crf 23 -c:a aac -async 1 output.mp4
+
+# 如果是容器层面的问题，可以尝试不重新编码
+ffmpeg -i input.mp4 -c copy -map 0:v -map 0:a output.mp4
+#+end_src
+
+*** 处理 10-bit 色深视频
+
+#+begin_src bash :exports code
+# 保持 10-bit 色深编码
+ffmpeg -i input_10bit.mp4 -c:v libx264 -crf 23 -profile high10 output.mp4
+
+# 将 10-bit 降为 8-bit（兼容性更好）
+ffmpeg -i input_10bit.mp4 -c:v libx264 -crf 23 -pix_fmt yuv420p output.mp4
+#+end_src
+
+** 命令行选项速查
+
+*** 通用选项
+
+| 选项          | 说明                                         |
+|---------------+----------------------------------------------|
+| =-y=            | 覆盖输出文件而不询问                         |
+| =-n=            | 输出文件已存在时直接退出                     |
+| =-v LEVEL=      | 日志级别（quiet/error/warning/info/verbose） |
+| =-hide_banner=  | 隐藏启动时的版本和配置信息                   |
+| =-stats=        | 编码时显示统计信息                           |
+| =-progress url= | 将进度信息发送到指定 URL 或文件              |
+
+*** 输入输出选项
+
+| 选项          | 说明                                     |
+|---------------+------------------------------------------|
+| =-i FILE=       | 指定输入文件                             |
+| =-f FORMAT=     | 强制指定输入/输出格式                    |
+| =-t DURATION=   | 限制输入/输出的持续时间                  |
+| =-ss POSITION=  | 跳转到指定位置（放在 -i 前后效果不同）   |
+| =-to POSITION=  | 指定结束位置                             |
+| =-c CODEC=      | 指定编解码器（=-c:v= 视频，=-c:a= 音频） |
+| =-c copy=       | 直接复制流，不重新编码                   |
+| =-map MAP=      | 指定流映射                               |
+| =-map_metadata= | 指定元数据映射                           |
+
+*** 视频选项
+
+| 选项                 | 说明                              |
+|----------------------+-----------------------------------|
+| =-b:v RATE=            | 视频码率（如 =2M= 、 =5000k= ）       |
+| =-crf VALUE=           | CRF 质量值（H.264/H.265/VP9/AV1） |
+| =-preset PRESET=       | 编码预设（ultrafast~veryslow）    |
+| =-r FPS=               | 输出帧率                          |
+| =-s SIZE=              | 输出分辨率（如 =1920x1080= ）       |
+| =-vf FILTER=           | 视频滤镜链                        |
+| =-pix_fmt FORMAT=      | 像素格式（如 =yuv420p= ）           |
+| =-aspect RATIO=        | 设置宽高比（如 =16:9= 、 =4:3= ）     |
+| =-pass N=              | 两遍编码的遍次（1 或 2）          |
+| =-movflags +faststart= | MP4 元数据前置（网页播放必需）    |
+
+*** 音频选项
+
+| 选项         | 说明                             |
+|--------------+----------------------------------|
+| =-b:a RATE=    | 音频码率（如 =128k= 、 =192k= ）     |
+| =-ar RATE=     | 音频采样率（如 =44100= 、 =48000= ） |
+| =-ac CHANNELS= | 音频声道数（1=单声道，2=立体声） |
+| =-af FILTER=   | 音频滤镜链                       |
+| =-vn=          | 禁用视频                         |
+| =-an=          | 禁用音频                         |
+| =-sn=          | 禁用字幕                         |
+
+*** 字幕选项
+
+| 选项               | 说明                                |
+|--------------------+-------------------------------------|
+| =-c:s CODEC=         | 字幕编解码器（如 =mov_text= 、 =srt= ） |
+| =-vf subtitles=FILE= | 烧录字幕到视频                      |
+
+*** 硬件加速选项
+
+| 选项                   | 说明                           |
+|------------------------+--------------------------------|
+| =-hwaccel METHOD=        | 硬件加速方法（vaapi/cuda/qsv） |
+| =-hwaccel_device DEVICE= | 硬件加速设备                   |
+| =-vaapi_device DEVICE=   | VA-API 设备路径                |
+
+** 参考资源
+
+- [[https://ffmpeg.org/][FFmpeg 官网]] — FFmpeg 项目主页和文档
+- [[https://ffmpeg.org/ffmpeg.html][FFmpeg 命令行手册]] — 最完整的命令行参考
+- [[https://ffmpeg.org/ffmpeg-all.html][FFmpeg 完整手册]] — 包含所有滤镜和编解码器的详细文档
+- [[https://ffmpeg.org/ffprobe.html][FFprobe 手册]] — ffprobe 工具的完整文档
+- [[https://trac.ffmpeg.org/wiki][FFmpeg Wiki]] — 社区维护的教程和常见问题
+- [[https://trac.ffmpeg.org/wiki/Encode/H.264][H.264 编码指南]] — x264 编码器的最佳实践
+- [[https://trac.ffmpeg.org/wiki/Encode/H.265][H.265 编码指南]] — x265 编码器的最佳实践
+- [[https://trac.ffmpeg.org/wiki/Hardware/VAAPI][VA-API 硬件加速]] — Linux VA-API 配置指南
+- [[https://trac.ffmpeg.org/wiki/Hardware/NVENC][NVENC 硬件加速]] — NVIDIA 硬件编码配置指南
+- [[https://slhck.info/video-encoding/][Video Encoding Guide]] — 视频编码理论与实践的深度指南
+
+* MPV 播放器完整指南
+
+** mpv 是什么
+
+mpv 是一款免费、开源、跨平台的媒体播放器，诞生于 2013 年，由 mplayer2 分支而来，而 mplayer2 又源自传奇的 MPlayer 项目。可以说 mpv 继承了 MPlayer 家族二十余年积累的播放引擎核心，同时彻底抛弃了历史包袱，以现代架构重新出发。在 Linux 视频播放器的生态中，mpv 占据着举足轻重的地位——它不仅是许多用户心目中最好的命令行视频播放器，更是一众图形化前端（如 Celluloid、GNOME MPV、IINA 等）的底层引擎。VLC 使用自研的播放框架，而 mpv 则依赖 FFmpeg 作为解码后端，配合 libass 渲染字幕、libplacebo 处理色彩管理，形成了精简而强大的播放链路。
+
+mpv 的设计哲学可以概括为"极简至上，配置为王"——它没有菜单栏，没有按钮面板，打开后只有一个视频窗口，所有交互都通过键盘快捷键完成。看起来似乎过于简陋，但恰恰是这种"赤裸"的设计赋予了 mpv 无与伦比的轻量和高效：启动几乎瞬间，资源占用极低，播放 4K 视频时内存占用可能只有同类播放器的几分之一。而 mpv 真正的强大之处在于其高度可定制的配置系统和丰富的脚本插件生态——通过一个纯文本配置文件和几行脚本，你可以把 mpv 调教成几乎任何你想要的模样。在 Arch Linux / EndeavourOS 的社区中，mpv 拥有极高的口碑和普及度，是许多资深用户的首选播放器。
+
+*** mpv 的核心优势
+
+- =极低资源占用= — 启动快、内存占用少，在老旧硬件上也能流畅播放高清视频
+- =强大的解码能力= — 基于 FFmpeg 后端，支持几乎所有常见的音视频格式，包括 H.264/AVC、H.265/HEVC、AV1、VP9 等现代编码
+- =高品质视频输出= — 使用 GPU 视频后端（OpenGL / Vulkan）进行硬件加速渲染，配合 libplacebo 实现高质量色彩转换和 HDR tone mapping
+- =精确的字幕渲染= — 通过 libass 渲染 ASS/SRT 等字幕格式，对 ASS 特效字幕的支持远优于 VLC
+- =高度可配置= — 所有行为都可以通过配置文件 =mpv.conf= 精细调整，无需依赖图形界面
+- =脚本系统= — 内置 Lua 脚本引擎，JavaScript（QuickJS）脚本支持，社区贡献了海量功能插件
+- =纯键盘操作= — 全功能键盘控制，无需鼠标，非常适合键盘流用户
+- =命令行友好= — 支持从终端启动、管道输入、播放列表等，完美融入 Unix 工作流
+
+*** mpv 适合谁
+
+mpv 最适合以下用户：
+
+- *追求极简和效率的 Linux 用户* — 不需要花哨的界面，只想快速看片
+- *对画质有要求的用户* — mpv 的视频渲染管线在开源播放器中处于顶尖水平
+- *喜欢键盘操作的用户* — 全键盘控制，不需要动鼠标
+- *喜欢折腾和定制的用户* — 配置文件 + 脚本，可以无限扩展功能
+- *经常在终端工作的用户* — 命令行启动，无缝融入终端工作流
+
+如果你更喜欢有菜单、有按钮的传统界面，可以考虑使用基于 mpv 的图形前端：
+
+| 前端      | 平台          | 说明                        |
+|-----------+---------------+-----------------------------|
+| Celluloid | Linux         | GNOME 风格的 mpv 前端       |
+| SMPlayer  | Linux/Windows | 功能丰富的 mpv/mplayer 前端 |
+| IINA      | macOS         | 优雅的 macOS 原生 mpv 前端  |
+| mpv.net   | Windows       | Windows 上的 mpv 图形前端   |
+
+** 安装 mpv
+
+*** 在 EndeavourOS / Arch Linux 上安装
+
+EndeavourOS 基于 Arch Linux，mpv 在官方仓库中即可安装：
+
+#+begin_src bash
+sudo pacman -S mpv
+#+end_src
+
+这条命令会安装 mpv 及其核心依赖（FFmpeg、libass、libplacebo、Lua 等）。安装完成后即可在终端直接使用：
+
+#+begin_src bash
+mpv --version
+#+end_src
+
+输出类似：
+
+#+begin_example
+mpv 0.38.0 Copyright © 2000-2024 mpv/MPlayer/mplayer2 projects
+ built on Jan  1 2026 00:00:00
+FFmpeg version: n7.1
+libass version: 0.17.4
+libplacebo version: v7.351.0
+#+end_src
+
+*** 可选依赖
+
+mpv 有一些可选依赖，可以增强特定功能。这些包不安装也不影响 mpv 的基本使用，但安装后能获得更好的体验：
+
+#+begin_src bash
+sudo pacman -S yt-dlp           # 在线视频播放支持（YouTube、Bilibili 等）
+sudo pacman -S youtube-dl       # 同上，但 yt-dlp 更活跃，推荐 yt-dlp
+sudo pacman -S libva-utils      # VA-API 硬件解码工具
+sudo pacman -S vdpauinfo        # VDPAU 硬件解码工具
+sudo pacman -S vapoursynth      # 高级视频滤镜框架（供 VapourSynth 滤镜脚本使用）
+#+end_src
+
+其中最值得安装的是 =yt-dlp= 。有了它，你可以直接用 mpv 播放网络视频，只需提供 URL：
+
+#+begin_src bash
+mpv https://www.youtube.com/watch?v=dQw4w9WgXcQ
+mpv https://www.bilibili.com/video/BV1xx411c7mD
+#+end_src
+
+mpv 会调用 =yt-dlp= 解析视频地址，自动选择最高画质的视频流进行播放。这比在浏览器中观看更加流畅，也完全不受浏览器限制（没有广告、不占用浏览器内存）。
+
+如果你使用 AUR 助手 =yay= ，还可以安装一些社区维护的增强包：
+
+#+begin_src bash
+yay -S mpv-build          # 从源码编译 mpv（可自定义编译选项）
+yay -S mpv-full-git       # 包含所有可选功能的 mpv git 版本
+#+end_src
+
+普通用户直接用 =sudo pacman -S mpv= 即可，无需从 AUR 安装。
+
+** 基本使用
+
+*** 播放文件
+
+mpv 最基本的用法就是在终端中指定要播放的文件：
+
+#+begin_src bash
+mpv video.mp4                # 播放本地视频
+mpv music.flac               # 播放本地音频
+mpv https://example.com/v.mp4  # 播放网络视频
+mpv /path/to/folder/         # 播放目录中的所有媒体文件
+mpv *.mkv                    # 使用通配符播放多个文件
+mpv a.mp4 b.mp4 c.mp4        # 按顺序播放多个文件
+#+end_src
+
+mpv 会自动识别文件格式，无需手动指定解码器。它支持的格式几乎涵盖了所有你能遇到的媒体文件——从常见的 MP4、MKV、AVI、WebM 到无损音频 FLAC、APE、WAV，甚至不常见的 NUT、OGM 等格式都不在话下。如果你遇到 mpv 无法播放的文件，那大概率是文件本身损坏了。
+
+*** 播放网络视频
+
+当安装了 =yt-dlp= 后，mpv 就变成了一款强大的网络视频播放器：
+
+#+begin_src bash
+mpv https://www.youtube.com/watch?v=VIDEO_ID       # YouTube
+mpv https://www.bilibili.com/video/BV1xx411c7mD    # B站
+mpv https://v.qq.com/x/page/VIDEO_ID.html          # 腾讯视频
+mpv "https://www.youtube.com/playlist?list=PL_ID"  # 播放列表
+#+end_src
+
+你可以通过 =--ytdl-format= 选项指定想要的视频格式（画质）：
+
+#+begin_src bash
+mpv --ytdl-format="bestvideo[height<=1080]+bestaudio/best" URL  # 最高 1080p
+mpv --ytdl-format="bestvideo[height<=720]+bestaudio/best" URL   # 最高 720p
+mpv --ytdl-format="best" URL                                    # 最佳质量
+mpv --ytdl-format="worst" URL                                   # 最低质量（省流量）
+#+end_src
+
+如果经常在配置文件中设置默认画质，可以在 =mpv.conf= 中写入：
+
+#+begin_src text
+ytdl-format=bestvideo[height<=1080]+bestaudio/best
+#+end_src
+
+*** 常用命令行选项
+
+mpv 的命令行选项非常丰富，以下列出最常用的：
+
+| 选项                    | 说明                                |
+|-------------------------+-------------------------------------|
+| =--no-video=              | 仅播放音频（把 mpv 当音乐播放器用） |
+| =--no-audio=              | 仅播放视频（静音）                  |
+| =--start=00:01:30=        | 从指定时间开始播放                  |
+| =--length=00:05:00=       | 仅播放指定时长                      |
+| =--fullscreen= 或 =--fs=    | 全屏播放                            |
+| =--loop=                  | 循环播放（ =--loop=N= 循环 N 次）     |
+| =--shuffle=               | 随机播放列表顺序                    |
+| =--volume=50=             | 设置初始音量（0-100）               |
+| =--speed=1.5=             | 以 1.5 倍速播放                     |
+| =--sub-file=subtitle.srt= | 指定外部字幕文件                    |
+| =--alang=zh,eng=          | 优先选择中文音轨，其次英文          |
+| =--slang=zh,eng=          | 优先选择中文字幕，其次英文          |
+| =--profile=gpu-hq=        | 使用高质量渲染配置                  |
+| =--vo=gpu=                | 指定视频输出驱动（gpu 是默认值）    |
+| =--ao=pipewire=           | 指定音频输出驱动                    |
+| =--hwdec=auto=            | 自动选择硬件解码                    |
+| =--script=script.lua=     | 加载额外的 Lua 脚本                 |
+| =--input-conf=input.conf= | 指定自定义快捷键配置文件            |
+
+几个实用的组合示例：
+
+#+begin_src bash
+mpv --no-video music.flac           # 纯音频播放
+mpv --fs --loop video.mp4           # 全屏循环播放
+mpv --speed=2 lecture.mp4           # 2倍速看讲座
+mpv --start=10:00 video.mp4        # 从第10分钟开始看
+mpv --shuffle ~/Music/*.flac       # 随机播放音乐目录
+mpv --sub-file=zh.srt --alang=eng movie.mkv  # 英文音轨+中文字幕
+#+end_src
+
+** 键盘快捷键
+
+mpv 的所有操作都可以通过键盘完成，这是它区别于其他播放器的一大特色。以下是最常用的快捷键，分为几个逻辑类别：
+
+*** 播放控制
+
+| 快捷键      | 功能                     |
+|-------------+--------------------------|
+| 空格 / =p=    | 暂停/播放切换            |
+| =<=           | 0.5x 倍速                |
+| =>=           | 2x 倍速                  |
+| =BS= （退格） | 恢复正常速度             |
+| =Shift+<=     | 降低播放速度（每次-0.1） |
+| =Shift+>=     | 提高播放速度（每次+0.1） |
+| ={=           | 降低播放速度 0.5x        |
+| =}=           | 提高播放速度 2x          |
+| =q=           | 退出 mpv                 |
+| =Q=           | 退出并保存播放位置       |
+| =Enter=       | 播放列表中的下一个文件   |
+| =Shift+DEL=   | 从播放列表删除当前文件   |
+
+*** 跳转控制
+
+| 快捷键       | 功能           |
+|--------------+----------------|
+| =←= （左箭头） | 后退 5 秒      |
+| =→= （右箭头） | 前进 5 秒      |
+| =Shift+←=      | 后退 1 秒      |
+| =Shift+→=      | 前进 1 秒      |
+| =↓= （下箭头） | 后退 1 分钟    |
+| =↑= （上箭头） | 前进 1 分钟    |
+| =Shift+↓=      | 后退 5 分钟    |
+| =Shift+↑=      | 前进 5 分钟    |
+| =PgUp=         | 前进 10 分钟   |
+| =PgDn=         | 后退 10 分钟   |
+| =Home=         | 跳转到视频开头 |
+| =End=          | 跳转到视频结尾 |
+
+*** 音量控制
+
+| 快捷键 | 功能     |
+|--------+----------|
+| =0= / =)=  | 降低音量 |
+| =9= / =(=  | 提高音量 |
+| =m=      | 静音切换 |
+
+*** 字幕控制
+
+| 快捷键 | 功能                  |
+|--------+-----------------------|
+| =v=      | 切换字幕显示/隐藏     |
+| =j=      | 切换字幕轨道          |
+| =J=      | 循环切换字幕轨道      |
+| =z=      | 字幕延后 0.1 秒       |
+| =Z=      | 字幕提前 0.1 秒       |
+| =x=      | 字幕延后 1 秒         |
+| =X=      | 字幕提前 1 秒         |
+| =u=      | 切换 ASS 字幕覆盖模式 |
+
+*** 音视频轨道
+
+| 快捷键 | 功能         |
+|--------+--------------|
+| =#=      | 切换音频轨道 |
+| =_=      | 切换视频轨道 |
+
+*** 画面调整
+
+| 快捷键 | 功能                        |
+|--------+-----------------------------|
+| =w= / =W=  | 降低/提高画面亮度 (panning) |
+| =e= / =E=  | 降低/提高画面对比度         |
+| =r= / =R=  | 降低/提高画面色饱和度       |
+| =t=      | 切换置顶模式                |
+| =s=      | 截图                        |
+| =S=      | 截图（包含字幕）            |
+| =Alt+1=  | 设置窗口为原始大小          |
+| =Alt+2=  | 设置窗口为 2 倍大小         |
+| =f=      | 切换全屏                    |
+| =Ctrl+h= | 切换硬件解码                |
+
+这些快捷键都是 mpv 的默认绑定。如果你觉得某些按键不够顺手，完全可以自定义，下文配置章节会详细介绍。
+
+** 配置文件
+
+mpv 的配置系统是它最强大的特色之一。几乎所有行为都可以通过配置文件来控制，而不需要依赖任何图形界面。mpv 的配置文件遵循 XDG Base Directory 规范，主配置文件位于 =~/.config/mpv/mpv.conf= 。
+
+*** 配置文件位置
+
+| 文件         | 路径                       | 说明                |
+|--------------+----------------------------+---------------------|
+| 主配置文件   | =~/.config/mpv/mpv.conf=     | 全局播放行为配置    |
+| 输入配置文件 | =~/.config/mpv/input.conf=   | 自定义快捷键绑定    |
+| 脚本目录     | =~/.config/mpv/scripts/=     | Lua/JS 脚本放置目录 |
+| 脚本配置目录 | =~/.config/mpv/script-opts/= | 脚本的配置文件      |
+| 字体目录     | =~/.config/mpv/fonts/=       | 字幕字体文件        |
+
+mpv 会自动加载 =scripts/= 目录下的所有 =.lua= 和 =.js= 文件，无需在配置中逐个声明。
+
+*** 创建基础配置
+
+首先创建 mpv 配置目录：
+
+#+begin_src bash
+mkdir -p ~/.config/mpv/scripts
+mkdir -p ~/.config/mpv/script-opts
+mkdir -p ~/.config/mpv/fonts
+#+end_src
+
+然后创建主配置文件。下面是一份适合日常使用的推荐配置，每个选项都有详细注释：
+
+#+begin_src conf
+# ===== 通用设置 =====
+
+# 保持播放窗口打开（播放结束后不关闭窗口）
+keep-open=yes
+
+# 记住每个文件的播放位置，下次打开自动续播
+save-position-on-quit=yes
+
+# 默认音量（0-100，仅影响首次打开）
+volume=80
+
+# 最大音量（防止误调到极大值损坏听力/设备）
+volume-max=150
+
+# 记住每个文件的音量设置
+volume-default=80
+
+# 播放列表默认不循环
+loop-playlist=no
+
+# 单个文件播放完不循环
+loop-file=no
+
+# ===== 视频设置 =====
+
+# 视频输出驱动，gpu 是默认值，使用 GPU 渲染
+vo=gpu
+
+# GPU 渲染后端（vulkan 通常性能更好，opengl 兼容性更广）
+gpu-api=vulkan
+
+# 硬件解码——auto 让 mpv 自动选择最佳硬件解码方式
+# 如果播放遇到问题，可以改为 no 使用软件解码
+hwdec=auto
+
+# 视频缩放算法——高质量模式
+# lanczos 是通用性最好的高质量缩放算法
+profile=gpu-hq
+scale=spline36
+dscale=mitchell
+cscale=spline36
+tscale=mitchell
+
+# 色彩管理——自动检测并应用色彩配置文件
+icc-profile-auto=yes
+target-colorspace-hint=yes
+
+# HDR 转 SDR 的 tone mapping 算法
+# hable 是视觉质量最好的算法，但计算量稍大
+tone-mapping=hable
+tone-mapping-mode=auto
+
+# ===== 音频设置 =====
+
+# 音频输出驱动——pipewire 是 Wayland 下推荐的选择
+# 如果使用 PulseAudio，改为 ao=pulse
+ao=pipewire
+
+# 音频归一化——自动调整不同文件的音量差异
+# 避免一个文件声音极小、另一个文件声音极响的问题
+af=lavfi=[loudnorm]
+
+# 音频通道数（自动检测）
+audio-channels=auto
+
+# ===== 字幕设置 =====
+
+# 优先选择中文字幕，其次英文
+slang=zh,chi,zho,eng,en
+
+# 优先选择中文音轨，其次英文
+alang=zh,chi,zho,eng,en
+
+# 自动加载同目录下的外挂字幕（与视频同名的 .srt/.ass 等文件）
+sub-auto=fuzzy
+
+# 字幕编码回退列表（解决乱码问题）
+sub-codepage=cp936
+
+# 非 ASS 字幕的字体设置
+sub-font="Noto Sans CJK SC"
+sub-font-size=42
+sub-border-size=2
+sub-shadow-offset=1
+sub-color="#FFFFFFFF"
+sub-border-color="#FF000000"
+sub-shadow-color="#FF000000"
+
+# ASS 字幕覆盖模式
+# no 表示使用字幕本身样式（推荐）
+# yes 表示用 mpv 设置覆盖字幕样式（当字幕样式不好看时可用）
+sub-ass-override=no
+
+# ===== 界面设置 =====
+
+# 显示进度条（默认仅在全屏时显示）
+# 移动鼠标到屏幕底部即可显示
+osd-bar=yes
+
+# OSD 字体
+osd-font="Noto Sans CJK SC"
+
+# 使用播放时长而非百分比显示进度
+osd-fractions=yes
+
+# 截图格式和保存路径
+screenshot-format=png
+screenshot-png-compression=5
+screenshot-directory=~~desktop/
+screenshot-template="%F_%P_%n"
+
+# ===== 在线视频设置 =====
+
+# yt-dlp 画质选择——最高 1080p
+ytdl-format=bestvideo[height<=1080]+bestaudio/best
+
+# 网络缓冲（秒），网络不稳定时可以增大
+cache=yes
+demuxer-max-bytes=150MiB
+demuxer-max-back-bytes=75MiB
+#+end_src
+
+这份配置覆盖了日常使用中最常见的设置项。每个选项都可以根据个人偏好进行调整。下面逐项解释一些容易困惑的选项：
+
+**** 关于 hwdec（硬件解码）
+
+硬件解码利用 GPU 专用硬件来解码视频，大幅降低 CPU 占用。=hwdec= 有几个常用值：
+
+| 值        | 说明                                           |
+|-----------+------------------------------------------------|
+| =no=        | 纯软件解码，兼容性最好但 CPU 占用高            |
+| =auto=      | 自动选择，mpv 尝试硬件解码，失败则回退软件解码 |
+| =auto-copy= | 自动选择，但将解码后的数据复制回系统内存       |
+| =vaapi=     | 使用 VA-API（Intel / AMD GPU）                 |
+| =nvdec=     | 使用 NVDEC（NVIDIA GPU）                       |
+| =vdpau=     | 使用 VDPAU（旧 NVIDIA GPU）                    |
+
+一般设置 =hwdec=auto= 即可，mpv 会自动检测你的 GPU 并选择合适的硬件解码方式。如果你使用 Intel 或 AMD 集成显卡，mpv 会使用 VA-API；如果是 NVIDIA 显卡，会使用 NVDEC。
+
+检查硬件解码是否工作：
+
+#+begin_src bash
+mpv --hwdec=auto --msg-level=vo=v video.mp4
+# 观察输出中是否包含 "Using hardware decoding" 字样
+#+end_src
+
+或者更直观的方式——播放一个高清视频时用 =htop= 观察 CPU 占用：如果 CPU 占用很低（比如只有几个百分点），说明硬件解码正在工作；如果 CPU 占用很高（30% 以上），说明在用软件解码。
+
+**** 关于 scale 系列参数
+
+这组参数控制视频缩放时的插值算法，直接影响画面的清晰度和锐度。简单解释：
+
+- =scale= — 放大视频时使用的算法（视频分辨率低于窗口分辨率时）
+- =dscale= — 缩小视频时使用的算法
+- =cscale= — 色度上采样算法（4:2:0 → 4:4:4）
+- =tscale= — 时间域插值算法（用于帧插值时）
+
+推荐的组合：
+
+| 需求         | scale       | dscale   | cscale      | 说明                    |
+|--------------+-------------+----------+-------------+-------------------------|
+| 日常观看     | spline36    | mitchell | spline36    | 质量与性能的良好平衡    |
+| 追求极致画质 | ewa_lanczos | mitchell | ewa_lanczos | 最锐利，但 GPU 负荷稍高 |
+| 低性能设备   | bilinear    | bilinear | bilinear    | 最快，但画质一般        |
+
+**** 关于 tone-mapping
+
+当播放 HDR 视频但显示器不支持 HDR 时，mpv 需要将 HDR 色彩映射到 SDR 范围，这就是 tone mapping。不同的算法在色彩还原和视觉观感上有差异：
+
+| 算法     | 特点                                       |
+|----------+--------------------------------------------|
+| =hable=    | 视觉效果最好，暗部细节保留好，推荐日常使用 |
+| =mobius=   | 对比度保留好，适合有大量明亮场景的内容     |
+| =reinhard= | 简单快速，但可能丢失部分细节               |
+| =bt.2390=  | ITU-R 标准算法，技术正确但观感因人而异     |
+
+*** 输入配置文件（自定义快捷键）
+
+mpv 的快捷键通过 =~/.config/mpv/input.conf= 文件配置。这个文件允许你重新绑定默认快捷键，或者添加新的快捷键绑定。
+
+文件格式很简单：每行一个绑定，格式为 =快捷键 命令= 。命令前可以加 =#= 注释。
+
+以下是一份增强型的输入配置，在默认快捷键基础上增加了一些实用的绑定：
+
+#+begin_src conf
+# ===== 播放控制 =====
+Space           cycle pause
+p               cycle pause
+
+# 倍速播放
+Shift+Left      add speed -0.1
+Shift+Right     add speed +0.1
+BS              set speed 1.0
+
+# ===== 跳转 =====
+Right           seek 5
+Left            seek -5
+Shift+Right     seek 1
+Shift+Left      seek -1
+Up              seek 60
+Down            seek -60
+Shift+Up        seek 300
+Shift+Down      seek -300
+
+# ===== 音量 =====
+WHEEL_UP        add volume 2
+WHEEL_DOWN      add volume -2
+0               add volume -2
+9               add volume +2
+
+# ===== 字幕 =====
+v               cycle sub-visibility
+j               cycle sub
+z               add sub-delay -0.1
+Z               add sub-delay +0.1
+x               add sub-delay -1
+X               add sub-delay +1
+
+# ===== 画面 =====
+f               cycle fullscreen
+s               screenshot
+S               screenshot subtitles
+t               cycle ontop
+
+# ===== 音轨 / 视轨 =====
+#               cycle audio
+_               cycle video
+
+# ===== 窗口大小 =====
+Alt+1           set window-scale 0.5
+Alt+2           set window-scale 1.0
+Alt+3           set window-scale 1.5
+Alt+4           set window-scale 2.0
+
+# ===== 实用功能 =====
+Ctrl+s          script-message screenshot-directory-command
+Ctrl+q          quit-watch-later
+
+# 播放 YouTube 画质选择菜单（需要脚本支持）
+Ctrl+f          script-message quality-menu-formats
+
+# 显示文件信息
+i               script-binding stats/display-stats-toggle
+
+# 旋转视频画面
+Ctrl+Left       add video-rotate -90
+Ctrl+Right      add video-rotate 90
+#+end_src
+
+*** 条件配置（profile）
+
+mpv 支持"条件配置"（profile），可以根据不同场景自动切换配置。比如，你可能想在播放动画时使用不同的缩放算法，或者在低分辨率视频时自动开启插帧。
+
+在 =mpv.conf= 中添加：
+
+#+begin_src conf
+# 定义一个高质量动画观看配置
+[anime]
+profile-desc="高质量动画观看"
+scale=ewa_lanczossharp
+cscale=ewa_lanczossharp
+dscale=mitchell
+tscale=mitchell
+interpolation=yes
+video-sync=display-resample
+
+# 定义一个低画质视频增强配置
+[low-res-enhance]
+profile-desc="低分辨率视频增强"
+scale=ewa_lanczossharp
+sharpen=5
+
+# 定义一个音频播放配置
+[audio-only]
+profile-desc="纯音频播放"
+no-video
+audio-display=no
+
+# 定义一个网络视频配置
+[network]
+profile-desc="网络视频播放"
+cache=yes
+demuxer-max-bytes=300MiB
+demuxer-max-back-bytes=150MiB
+force-seekable=yes
+#+end_src
+
+使用条件配置的方式有两种：
+
+1. 命令行指定：
+   #+begin_src bash
+   mpv --profile=anime video.mkv
+   mpv --profile=audio-only music.flac
+   #+end_src
+
+2. 自动条件匹配（在 =mpv.conf= 中设置）：
+   #+begin_src conf
+   # 当播放网络视频时自动使用 network 配置
+   [protocol.http]
+   profile=network
+
+   [protocol.https]
+   profile=network
+
+   # 当播放特定扩展名的文件时使用特定配置
+   [extension.flac]
+   profile=audio-only
+
+   [extension.mp3]
+   profile=audio-only
+   #+end_src
+
+** 硬件加速配置
+
+在 EndeavourOS 上正确配置硬件加速可以显著降低视频播放时的 CPU 占用，让高清视频播放更加流畅省电。
+
+*** 检查硬件解码支持
+
+首先确认你的系统支持哪种硬件解码 API：
+
+#+begin_src bash
+# 检查 VA-API 支持（Intel / AMD）
+vainfo
+
+# 检查 NVDEC 支持（NVIDIA）
+nvidia-smi
+#+end_src
+
+=vainfo= 的输出类似：
+
+#+begin_example
+vainfo: VA-API version: 1.21 (libva 2.21.0)
+vainfo: Driver version: Mesa Intel(R) UHD Graphics 630 (CFL GT2)
+VAProfileH264Main               : VAEntrypointVLD
+VAProfileH264High               : VAEntrypointVLD
+VAProfileHEVCMain               : VAEntrypointVLD
+VAProfileHEVCMain10             : VAEntrypointVLD
+VAProfileAV1Profile0            : VAEntrypointVLD
+#+end_src
+
+输出中列出了你的 GPU 支持硬件解码的编码格式。如果 =vainfo= 命令不存在，安装 =libva-utils= ：
+
+#+begin_src bash
+sudo pacman -S libva-utils
+#+end_src
+
+*** Intel / AMD 集成显卡
+
+对于使用 Intel 或 AMD 集成显卡的系统，推荐使用 VA-API：
+
+#+begin_src text
+# mpv.conf 中添加
+hwdec=vaapi
+vo=gpu
+gpu-api=opengl
+#+end_src
+
+需要安装 VA-API 驱动：
+
+#+begin_src bash
+# Intel GPU
+sudo pacman -S intel-media-driver libva-utils
+
+# AMD GPU
+sudo pacman -S libva mesa libva-utils
+#+end_src
+
+*** NVIDIA 显卡
+
+对于 NVIDIA 显卡，推荐使用 NVDEC：
+
+#+begin_src text
+# mpv.conf 中添加
+hwdec=nvdec
+vo=gpu
+gpu-api=vulkan
+#+end_src
+
+需要安装 NVIDIA 驱动：
+
+#+begin_src bash
+sudo pacman -S nvidia nvidia-utils
+#+end_src
+
+*** 通用推荐设置
+
+如果你不确定自己的 GPU 类型，或者希望 mpv 自动选择最佳的硬件解码方式，直接使用：
+
+#+begin_src text
+hwdec=auto
+#+end_src
+
+mpv 会自动检测并选择最适合的硬件解码方案。大多数情况下这个设置就能正常工作。
+
+** 字幕配置详解
+
+字幕显示质量是衡量一个视频播放器好坏的重要标准。mpv 使用 libass 渲染字幕，对 ASS/SSA 特效字幕的支持在开源播放器中是最好的，远优于 VLC 的字幕渲染效果。
+
+*** 字幕字体
+
+为了让中文字幕正确显示，需要安装中文字体：
+
+#+begin_src bash
+sudo pacman -S noto-fonts-cjk
+#+end_src
+
+安装后，在 =mpv.conf= 中指定字幕字体：
+
+#+begin_src text
+sub-font="Noto Sans CJK SC"
+#+end_src
+
+如果你有其他偏好的字体（如思源黑体、文泉驿等），也可以使用，只要系统已安装即可。查看已安装的字体：
+
+#+begin_src bash
+fc-list :lang=zh family | sort
+#+end_src
+
+*** 自动加载外挂字幕
+
+mpv 支持自动加载与视频文件同目录、同文件名的外挂字幕文件。例如，视频文件为 =movie.mkv= ，mpv 会自动查找并加载以下字幕文件：
+
+- =movie.srt= — 同名 SRT 字幕
+- =movie.chi.srt= — 带语言标记的 SRT 字幕
+- =movie.zh.ass= — 带语言标记的 ASS 字幕
+- =movie.en.srt= — 英文字幕
+
+=sub-auto= 选项控制自动加载的行为：
+
+| 值    | 说明                                   |
+|-------+----------------------------------------|
+| =no=    | 不自动加载外挂字幕                     |
+| =exact= | 仅加载精确匹配文件名的字幕             |
+| =fuzzy= | 模糊匹配，包括带语言标记的字幕（推荐） |
+| =all=   | 加载所有找到的字幕文件                 |
+
+*** 字幕编码问题
+
+如果字幕出现乱码，通常是编码问题。GBK/GB2312 编码的中文字幕在 UTF-8 环境下会显示乱码。设置：
+
+#+begin_src text
+sub-codepage=cp936
+#+end_src
+
+=cp936= 是 GBK 的代码页编号，mpv 在检测到字幕不是 UTF-8 编码时会尝试用 cp936 解码。
+
+*** 双字幕显示
+
+mpv 支持同时显示两种语言的字幕（比如中英双语字幕），但这需要借助脚本实现，下文会介绍 =dualsubs= 脚本。
+
+** 插件/脚本系统
+
+mpv 的脚本系统是它最强大的扩展机制。通过 Lua 脚本，你可以为 mpv 添加几乎任何功能——从简单的快捷键增强到复杂的自动化工作流。mpv 启动时会自动加载 =~/.config/mpv/scripts/= 目录下的所有 =.lua= 文件，每个文件就是一个独立的脚本插件。
+
+*** 安装脚本的方法
+
+mpv 的脚本安装非常简单——只需要将 =.lua= 文件放入 =~/.config/mpv/scripts/= 目录即可。如果脚本有配置文件，则放入 =~/.config/mpv/script-opts/= 目录。
+
+#+begin_src bash
+# 通用安装流程
+mkdir -p ~/.config/mpv/scripts
+mkdir -p ~/.config/mpv/script-opts
+
+# 下载脚本（以某个脚本为例）
+wget -O ~/.config/mpv/scripts/example.lua https://raw.githubusercontent.com/.../example.lua
+
+# 如果脚本有配置文件
+wget -O ~/.config/mpv/script-opts/example.conf https://raw.githubusercontent.com/.../example.conf
+#+end_src
+
+也可以用 =git clone= 的方式安装脚本仓库：
+
+#+begin_src bash
+cd ~/.config/mpv/scripts
+git clone https://github.com/.../mpv-script-name
+#+end_src
+
+卸载脚本也很简单——只需删除对应的 =.lua= 文件或目录，然后重启 mpv 即可。
+
+*** 推荐脚本
+
+下面详细介绍一些最实用、最广受好评的 mpv 脚本。每个脚本都附有安装方法和配置说明。
+
+**** thumbfast —— 视频缩略图预览
+
+=thumbfast= 是目前 mpv 生态中最流行的缩略图预览脚本。当你在进度条上悬停鼠标时，它会在进度条上方显示当前时间点的视频缩略图，就像 YouTube 的进度条预览一样。这个功能对于长视频（电影、讲座）来说极为实用——你可以快速定位到想看的片段，而不需要反复暂停和跳转。
+
+安装：
+
+#+begin_src bash
+# 下载脚本和配置文件
+wget -O ~/.config/mpv/scripts/thumbfast.lua \
+  https://raw.githubusercontent.com/po5/thumbfast/master/thumbfast.lua
+
+wget -O ~/.config/mpv/script-opts/thumbfast.conf \
+  https://raw.githubusercontent.com/po5/thumbfast/master/thumbfast.conf
+#+end_src
+
+默认配置已经足够好用，不需要额外修改。如果你使用 Wayland，可能需要调整配置中的缩略图生成方式。
+
+**** mpv-stats —— 播放信息面板
+
+=mpv-stats= 是一个显示详细播放统计信息的脚本，按 =i= 键即可在视频上方叠加显示当前的技术信息：视频编码、分辨率、帧率、解码方式（硬件/软件）、音轨信息、CPU/GPU 占用率、丢帧数等。对于调试播放问题、检查硬件解码是否工作、了解视频的技术参数非常有用。
+
+安装：
+
+#+begin_src bash
+wget -O ~/.config/mpv/scripts/stats.lua \
+  https://raw.githubusercontent.com/Argon-/mpv-stats/master/stats.lua
+
+wget -O ~/.config/mpv/script-opts/stats.conf \
+  https://raw.githubusercontent.com/Argon-/mpv-stats/master/stats.conf
+#+end_src
+
+快捷键：
+
+| 快捷键                | 功能                      |
+|-----------------------+---------------------------|
+| =i= / =I=                 | 显示/切换统计信息页面     |
+| =1= （在 stats 页面中） | 显示页面 1：通用信息      |
+| =2= （在 stats 页面中） | 显示页面 2：音视频参数    |
+| =3= （在 stats 页面中） | 显示页面 3：缓存/性能信息 |
+
+**** mpv-playlistmanager —— 播放列表管理
+
+=mpv-playlistmanager= 提供了一个美观的播放列表管理界面，支持搜索、排序、删除、移动条目等操作。mpv 原生的播放列表功能比较简陋，这个脚本弥补了这一不足。
+
+安装：
+
+#+begin_src bash
+wget -O ~/.config/mpv/scripts/playlistmanager.lua \
+  https://raw.githubusercontent.com/jonniek/mpv-playlistmanager/master/playlistmanager.lua
+
+wget -O ~/.config/mpv/script-opts/playlistmanager.conf \
+  https://raw.githubusercontent.com/jonniek/mpv-playlistmanager/master/playlistmanager.conf
+#+end_src
+
+快捷键（可在配置文件中修改）：
+
+| 快捷键 | 功能              |
+|--------+-------------------|
+| =Ctrl+p= | 打开/关闭播放列表 |
+| =Enter=  | 播放选中的条目    |
+| =DEL=    | 删除选中的条目    |
+| =/=      | 搜索              |
+
+**** autoload —— 自动加载目录中的文件
+
+=autoload= 脚本会在你打开一个文件时，自动将该文件所在目录中的所有媒体文件添加到播放列表。这样你就不需要每次都用通配符或手动指定多个文件了——只需打开目录中的任意一个文件，其余文件就会自动加入列表。
+
+安装：
+
+#+begin_src bash
+wget -O ~/.config/mpv/scripts/autoload.lua \
+  https://raw.githubusercontent.com/mpv-player/mpv/master/TOOLS/lua/autoload.lua
+#+end_src
+
+这个脚本直接来自 mpv 官方仓库的 TOOLS 目录，简单可靠。默认配置会加载同目录下的所有视频和音频文件。
+
+可选配置文件 =~/.config/mpv/script-opts/autoload.conf= ：
+
+#+begin_src text
+# 支持的文件扩展名
+extensions=mkv,mp4,avi,webm,flv,mov,mp4,flac,mp3,ogg,wav,aac,m4a
+
+# 忽略的文件
+ignore_patterns=^%.
+
+# 是否加载子目录中的文件
+recursive=no
+#+end_src
+
+**** webui —— 浏览器远程控制
+
+=mpv-webui= 脚本在你的浏览器中提供一个远程控制界面，可以用手机或其他设备的浏览器来控制 mpv——暂停、播放、跳转、调音量、切换文件等。这对于把电脑接到电视上看片、或者躺在床上用手机控制的场景非常方便。
+
+安装：
+
+#+begin_src bash
+git clone https://github.com/naruto522ru/mpv-webui ~/.config/mpv/scripts/mpv-webui
+#+end_src
+
+安装后，mpv 启动时会自动运行一个本地 Web 服务器（默认端口 8080）。在同一局域网的手机浏览器中访问 =http://电脑IP:8080= 即可打开控制界面。
+
+**** pause-minimize —— 最小化时自动暂停
+
+这个脚本非常简单但非常实用：当你最小化 mpv 窗口时，视频自动暂停；恢复窗口时，自动继续播放。这在多任务工作场景下特别好用——你不会因为忘了暂停而错过剧情。
+
+安装：
+
+#+begin_src bash
+wget -O ~/.config/mpv/scripts/pause-minimize.lua \
+  https://raw.githubusercontent.com/mpv-player/mpv/master/TOOLS/lua/pause-minimize.lua
+#+end_src
+
+同样来自 mpv 官方 TOOLS 目录，无需任何配置即可使用。
+
+**** sponsorblock —— 自动跳过视频广告/片头
+
+=SponsorBlock= 是一个源自浏览器的项目，通过社区众包的方式标注视频中的广告片段、片头片尾、非音乐部分等。mpv 版本的脚本会在播放 YouTube 视频时自动跳过这些片段。
+
+安装：
+
+#+begin_src bash
+wget -O ~/.config/mpv/scripts/sponsorblock.lua \
+  https://raw.githubusercontent.com/po5/mpv_sponsorblock/master/sponsorblock.lua
+
+wget -O ~/.config/mpv/script-opts/sponsorblock.conf \
+  https://raw.githubusercontent.com/po5/mpv_sponsorblock/master/sponsorblock.conf
+#+end_src
+
+可选配置 =~/.config/mpv/script-opts/sponsorblock.conf= ：
+
+#+begin_src text
+# 跳过的片段类型
+# sponsor: 广告/赞助商片段
+# intro: 片头
+# outro: 片尾
+# interaction: 互动提示（如"请点赞订阅"）
+# selfpromo: 自我推广
+# music_offtopic: 音乐视频中的非音乐部分
+skip_categories=sponsor,intro,selfpromo
+
+# 是否显示跳过提示（而不是直接静默跳过）
+skip_notice=yes
+#+end_src
+
+**** memo —— 播放记录管理
+
+=memo= 脚本提供了比 mpv 内置的 =save-position-on-quit= 更强大的播放记录管理功能。它会记录你观看过的每个文件的进度、播放时间、播放次数等信息，并提供一个可浏览的历史记录界面。
+
+安装：
+
+#+begin_src bash
+wget -O ~/.config/mpv/scripts/memo.lua \
+  https://raw.githubusercontent.com/pvxy/mpv-memo/master/memo.lua
+#+end_src
+
+快捷键（默认）：
+
+| 快捷键 | 功能             |
+|--------+------------------|
+| =Ctrl+m= | 打开播放记录界面 |
+
+**** cycle-commands —— 快捷键循环执行多个命令
+
+=cycle-commands= 脚本允许你将多个命令绑定到一个快捷键上，每次按下该键就循环执行下一个命令。比如按一次切换到 720p，再按一次切换到 1080p，再按一次切换到 4K——这就是循环命令的典型用法。
+
+安装：
+
+#+begin_src bash
+wget -O ~/.config/mpv/scripts/cycle-commands.lua \
+  https://raw.githubusercontent.com/CogentRedTester/mpv-scripts/master/cycle-commands.lua
+#+end_src
+
+在 =input.conf= 中添加绑定：
+
+#+begin_src text
+# 按 Ctrl+v 循环切换视频画质
+Ctrl+v script-message cycle-commands "set ytdl-format bestvideo[height<=480]+bestaudio" "set ytdl-format bestvideo[height<=720]+bestaudio" "set ytdl-format bestvideo[height<=1080]+bestaudio" "set ytdl-format bestvideo+bestaudio"
+#+end_src
+
+**** quality-menu —— 在线视频画质选择菜单
+
+=quality-menu= 脚本为 mpv 添加了一个类似 YouTube 的画质选择菜单，允许你在播放在线视频时快速切换不同的分辨率和编码格式。配合 yt-dlp 使用，是看网络视频的必备脚本。
+
+安装：
+
+#+begin_src bash
+wget -O ~/.config/mpv/scripts/quality-menu.lua \
+  https://raw.githubusercontent.com/CogentRedTester/mpv-quality-menu/master/quality-menu.lua
+
+wget -O ~/.config/mpv/script-opts/quality-menu.conf \
+  https://raw.githubusercontent.com/CogentRedTester/mpv-quality-menu/master/quality-menu.conf
+#+end_src
+
+快捷键：
+
+| 快捷键 | 功能             |
+|--------+------------------|
+| =Ctrl+f= | 打开画质选择菜单 |
+| =Ctrl+g= | 打开格式选择菜单 |
+
+**** trim —— 视频片段截取
+
+=trim= 脚本让你可以在观看视频时快速截取片段，而无需打开视频编辑软件。标记起点和终点后，脚本会调用 FFmpeg 将该片段导出为独立的视频文件。对于制作 GIF 素材、截取精彩片段、剪辑教学视频等场景非常方便。
+
+安装：
+
+#+begin_src bash
+wget -O ~/.config/mpv/scripts/trim.lua \
+  https://raw.githubusercontent.com/mpv-player/mpv/master/TOOLS/lua/trim.lua
+#+end_src
+
+使用方法：
+
+1. 播放视频时按 =Alt+c= 设置截取起点
+2. 播放到目标位置后按 =Alt+c= 设置截取终点
+3. 按 =Alt+c= 第三次确认截取，脚本自动调用 FFmpeg 导出片段
+
+输出文件默认保存在视频同目录下，文件名包含时间信息。
+
+**** sub-select —— 智能字幕选择
+
+=sub-select= 脚本可以根据视频文件名中的语言标记自动选择最合适的字幕轨道。对于包含多条字幕轨道的 MKV 文件，这个脚本能帮你自动选到想要的语言，不需要手动切换。
+
+安装：
+
+#+begin_src bash
+wget -O ~/.config/mpv/scripts/sub-select.lua \
+  https://raw.githubusercontent.com/CogentRedTester/mpv-scripts/master/sub-select.lua
+
+wget -O ~/.config/mpv/script-opts/sub-select.conf \
+  https://raw.githubusercontent.com/CogentRedTester/mpv-scripts/master/sub-select.conf
+#+end_src
+
+*** 脚本一览表
+
+| 脚本                | 功能                  | 推荐度  | 依赖   |
+|---------------------+-----------------------+---------+--------|
+| thumbfast           | 进度条缩略图预览      | ★★★★★ | FFmpeg |
+| mpv-stats           | 播放信息面板          | ★★★★★ | 无     |
+| autoload            | 自动加载目录文件      | ★★★★★ | 无     |
+| quality-menu        | 在线视频画质选择      | ★★★★☆ | yt-dlp |
+| mpv-playlistmanager | 播放列表管理          | ★★★★☆ | 无     |
+| sponsorblock        | 跳过 YouTube 广告片段 | ★★★★☆ | yt-dlp |
+| memo                | 播放记录管理          | ★★★☆☆ | 无     |
+| pause-minimize      | 最小化自动暂停        | ★★★☆☆ | 无     |
+| webui               | 浏览器远程控制        | ★★★☆☆ | 无     |
+| cycle-commands      | 快捷键循环命令        | ★★★☆☆ | 无     |
+| trim                | 视频片段截取          | ★★★☆☆ | FFmpeg |
+| sub-select          | 智能字幕选择          | ★★★☆☆ | 无     |
+
+*** 一键安装所有推荐脚本
+
+为了方便，这里提供一个一键安装所有推荐脚本的命令：
+
+#+begin_src bash
+#!/bin/bash
+# mpv 推荐脚本一键安装
+
+MPV_DIR="$HOME/.config/mpv"
+SCRIPTS_DIR="$MPV_DIR/scripts"
+OPTS_DIR="$MPV_DIR/script-opts"
+
+mkdir -p "$SCRIPTS_DIR" "$OPTS_DIR"
+
+# thumbfast
+wget -O "$SCRIPTS_DIR/thumbfast.lua" \
+  https://raw.githubusercontent.com/po5/thumbfast/master/thumbfast.lua
+wget -O "$OPTS_DIR/thumbfast.conf" \
+  https://raw.githubusercontent.com/po5/thumbfast/master/thumbfast.conf
+
+# mpv-stats
+wget -O "$SCRIPTS_DIR/stats.lua" \
+  https://raw.githubusercontent.com/Argon-/mpv-stats/master/stats.lua
+wget -O "$OPTS_DIR/stats.conf" \
+  https://raw.githubusercontent.com/Argon-/mpv-stats/master/stats.conf
+
+# autoload
+wget -O "$SCRIPTS_DIR/autoload.lua" \
+  https://raw.githubusercontent.com/mpv-player/mpv/master/TOOLS/lua/autoload.lua
+
+# quality-menu
+wget -O "$SCRIPTS_DIR/quality-menu.lua" \
+  https://raw.githubusercontent.com/CogentRedTester/mpv-quality-menu/master/quality-menu.lua
+wget -O "$OPTS_DIR/quality-menu.conf" \
+  https://raw.githubusercontent.com/CogentRedTester/mpv-quality-menu/master/quality-menu.conf
+
+# playlistmanager
+wget -O "$SCRIPTS_DIR/playlistmanager.lua" \
+  https://raw.githubusercontent.com/jonniek/mpv-playlistmanager/master/playlistmanager.lua
+wget -O "$OPTS_DIR/playlistmanager.conf" \
+  https://raw.githubusercontent.com/jonniek/mpv-playlistmanager/master/playlistmanager.conf
+
+# sponsorblock
+wget -O "$SCRIPTS_DIR/sponsorblock.lua" \
+  https://raw.githubusercontent.com/po5/mpv_sponsorblock/master/sponsorblock.lua
+wget -O "$OPTS_DIR/sponsorblock.conf" \
+  https://raw.githubusercontent.com/po5/mpv_sponsorblock/master/sponsorblock.conf
+
+# memo
+wget -O "$SCRIPTS_DIR/memo.lua" \
+  https://raw.githubusercontent.com/pvxy/mpv-memo/master/memo.lua
+
+# pause-minimize
+wget -O "$SCRIPTS_DIR/pause-minimize.lua" \
+  https://raw.githubusercontent.com/mpv-player/mpv/master/TOOLS/lua/pause-minimize.lua
+
+# trim
+wget -O "$SCRIPTS_DIR/trim.lua" \
+  https://raw.githubusercontent.com/mpv-player/mpv/master/TOOLS/lua/trim.lua
+
+# sub-select
+wget -O "$SCRIPTS_DIR/sub-select.lua" \
+  https://raw.githubusercontent.com/CogentRedTester/mpv-scripts/master/sub-select.lua
+wget -O "$OPTS_DIR/sub-select.conf" \
+  https://raw.githubusercontent.com/CogentRedTester/mpv-scripts/master/sub-select.conf
+
+echo "所有推荐脚本安装完成！"
+echo "脚本目录：$SCRIPTS_DIR"
+echo "配置目录：$OPTS_DIR"
+echo "重启 mpv 后生效。"
+#+end_src
+
+将上述脚本保存为 =install-mpv-scripts.sh= ，然后执行：
+
+#+begin_src bash
+chmod +x install-mpv-scripts.sh
+./install-mpv-scripts.sh
+#+end_src
+
+** 使用 stow 管理 mpv 配置
+
+结合前文介绍的 =stow= 工具，你可以将 mpv 的配置文件纳入版本控制，方便在多台机器间同步。
+
+*** 目录结构
+
+#+begin_src text
+~/dotfiles/
+└── mpv/
+    └── .config/
+        └── mpv/
+            ├── mpv.conf
+            ├── input.conf
+            ├── scripts/
+            │   ├── autoload.lua
+            │   ├── stats.lua
+            │   ├── thumbfast.lua
+            │   ├── playlistmanager.lua
+            │   └── ...
+            ├── script-opts/
+            │   ├── stats.conf
+            │   ├── thumbfast.conf
+            │   └── ...
+            └── fonts/
+#+end_src
+
+*** 操作步骤
+
+#+begin_src bash
+# 1. 将现有 mpv 配置移入 dotfiles 仓库
+mkdir -p ~/dotfiles/mpv/.config
+mv ~/.config/mpv ~/dotfiles/mpv/.config/
+
+# 2. 初始化 git 仓库（如果还没有的话）
+cd ~/dotfiles
+git init
+git add mpv/
+git commit -m "add: mpv configuration and scripts"
+
+# 3. 使用 stow 创建符号链接
+stow mpv
+
+# 4. 验证链接
+ls -la ~/.config/mpv
+# mpv -> ~/dotfiles/mpv/.config/mpv
+#+end_src
+
+这样，你的 mpv 配置就完全由 =stow= 管理了。在任何新机器上，只需克隆 dotfiles 仓库并执行 =stow mpv= 即可恢复完整配置。
+
+** 常见问题与解决方案
+
+*** 播放视频时画面撕裂
+
+画面撕裂通常是因为视频帧率和显示器刷新率不匹配，且没有开启垂直同步。解决方法：
+
+#+begin_src text
+# mpv.conf 中添加
+video-sync=display-resample
+interpolation=yes
+tscale=mitchell
+#+end_src
+
+=video-sync=display-resample= 让 mpv 通过微调音频采样率来使视频帧与显示器同步； =interpolation=yes= 开启帧插值来填补帧率差异。这个组合可以消除画面撕裂，同时保持音画同步。
+
+如果仍然撕裂，可能是显卡驱动的问题。Intel/AMD 用户检查是否启用了 TearFree：
+
+#+begin_src bash
+# /etc/X11/xorg.conf.d/20-intel.conf
+Section "Device"
+    Identifier "Intel Graphics"
+    Driver "intel"
+    Option "TearFree" "true"
+EndSection
+#+end_src
+
+*** 字幕乱码
+
+中文字幕乱码通常有两个原因：
+
+1. *字幕文件编码不是 UTF-8* — 在配置中添加 =sub-codepage=cp936=
+2. *缺少中文字体* — 安装 =noto-fonts-cjk= 并在配置中指定 ~sub-font="Noto Sans CJK SC"~
+
+如果特定字幕文件仍然乱码，可以手动指定编码：
+
+#+begin_src bash
+mpv --sub-codepage=gbk video.mkv
+mpv --sub-codepage=utf8 video.mkv
+#+end_src
+
+*** 播放网络视频卡顿
+
+网络视频播放卡顿通常是因为缓冲不够。增大缓冲区：
+
+#+begin_src text
+# mpv.conf 中添加
+cache=yes
+demuxer-max-bytes=300MiB
+demuxer-max-back-bytes=150MiB
+demuxer-seekable=yes
+#+end_src
+
+如果网络本身不稳定，可以降低画质：
+
+#+begin_src bash
+mpv --ytdl-format="bestvideo[height<=720]+bestaudio/best" URL
+#+end_src
+
+或者使用 =quality-menu= 脚本在播放时动态切换画质。
+
+*** 无法播放某些格式
+
+mpv 基于 FFmpeg，理论上支持 FFmpeg 支持的所有格式。如果遇到无法播放的文件，先确认：
+
+1. 文件是否损坏（用 =ffprobe= 检查）
+2. mpv 和 FFmpeg 是否是最新版本（ =sudo pacman -Syu= 更新系统）
+3. 是否缺少硬件解码支持（尝试 =--hwdec=no= 使用软件解码）
+
+*** 高 CPU 占用
+
+如果播放视频时 CPU 占用很高，说明可能没有使用硬件解码：
+
+1. 检查 =hwdec= 设置是否为 =auto=
+2. 按 =i= 键打开 stats 面板，查看 "VO" 一行是否显示硬件解码
+3. 安装对应的硬件解码驱动（VA-API 或 NVDEC）
+4. 临时解决：降低视频渲染质量，注释掉 =profile=gpu-hq= 和 =scale=ewa_lanczos= 等高质量选项
+
+*** Wayland 下的问题
+
+在 Wayland 会话下，mpv 可能遇到以下问题：
+
+1. *窗口大小异常* — 添加 =--force-window=immediate= 选项
+2. *截图不工作* — 确保使用了 =--gpu-api=vulkan= 或 =--gpu-api=opengl=
+3. *拖放文件不工作* — 这是 Wayland 的安全限制，改用命令行指定文件路径
+
+推荐的 Wayland 配置：
+
+#+begin_src text
+# mpv.conf 中添加
+vo=gpu
+gpu-api=vulkan
+wayland-ext-unrestricted-cursor=yes
+#+end_src
+
+** 参考资源
+
+- [[https://mpv.io/][mpv 官网]] — mpv 项目主页
+- [[https://mpv.io/manual/][mpv 手册]] — 最完整的 mpv 参考文档
+- [[https://github.com/mpv-player/mpv][mpv GitHub]] — 源码仓库和 Issue 跟踪
+- [[https://github.com/mpv-player/mpv/wiki/User-Scripts][mpv 脚本仓库]] — 社区贡献的脚本合集
+- [[https://github.com/mpv-player/mpv/wiki][mpv Wiki]] — 社区维护的教程和配置指南
+- [[https://wiki.archlinux.org/title/Mpv][Mpv - ArchWiki]] — Arch Linux 上的 mpv 配置指南
+- [[https://github.com/Argon-/mpv-config][Argon-/mpv-config]] — 高质量 mpv 配置参考
+- [[https://iamscum.net/videoplayback/][mpv 配置指南]] — 详细的画质优化指南
+
+* Aria2c — 多协议多线程下载利器
+
+** aria2c 的历史背景
+
+在网络下载工具的发展历程中，从早期的单线程下载到如今的多线程、多协议并行下载，技术的演进始终围绕着"更快、更稳、更灵活"这三个核心诉求。aria2c 正是在这一演进过程中诞生的杰出工具。
+
+2005 年前后，Linux 上的下载工具还比较原始。=wget= 是最经典的命令行下载工具，它稳定可靠，但只支持单线程下载，遇到大文件或者网络不稳定的情况时，速度往往不尽如人意。 =curl= 则更偏向于数据传输和 API 调试，虽然功能强大，但在大文件下载和多线程方面同样力不从心。图形界面的下载工具如 =DownThemAll!= （Firefox 插件）和 =KGet= 虽然体验更好，但依赖桌面环境，不适合服务器和无头（headless）机器使用。
+
+与此同时，宽带网络的普及让用户对下载速度的要求越来越高。一个 1GB 的文件，单线程以 1MB/s 的速度下载需要约 17 分钟；如果使用 5 个线程同时下载不同的数据段，理论上只需要 3 分多钟。多线程下载的优势在大文件场景下尤为明显——而 HTTP/FTP 协议本身是支持分段请求的（通过 =Range= 头），只是大多数下载工具没有利用这一特性。
+
+日本的开发者 Tatsuhiro Tsujikawa 在 2006 年开始了 aria2 的开发。他的初衷很简单：创造一个支持多协议（HTTP、FTP、BitTorrent、Metalink）、多线程、多镜像的命令行下载工具。aria2 这个名字中的"aria"意为"咏叹调"，寓意这个工具如同歌剧中优美的咏叹调一样，高效而优雅地完成下载任务。aria2c 中的 =c= 则表示这是 aria2 的命令行（Command-line）前端——aria2 还提供了 RPC 接口，可以供图形界面客户端调用。
+
+2007 年，aria2 首次公开发布。它很快在开源社区获得了关注，因为它填补了一个重要的空白：在命令行环境下，还没有一个工具能同时支持 HTTP/FTP 多线程下载和 BitTorrent 下载。以前用户需要分别使用 =wget= （HTTP/FTP）和 =rtorrent= / =transmission-cli= （BT），现在一个 aria2c 就全部搞定了。
+
+2008 年，Metalink 格式加入支持。Metalink 是一种描述下载资源的开放标准，一个 Metalink 文件可以包含多个镜像地址、校验和、数字签名等信息，aria2 可以自动从多个镜像同时下载同一文件的不同部分，大幅提升下载速度和可靠性。后来 Metalink 格式演进为 Metalink/HTTP（通过 HTTP 头传递镜像信息）和 IRC（增量资源证书），aria2 也持续跟进支持。
+
+2010 年代，随着云计算和自动化运维的兴起，aria2 的 RPC 接口开始被广泛利用。Web 前端项目如 =webui-aria2= 和 =AriaNg= 相继出现，用户可以通过浏览器远程控制 aria2 的下载任务——在 VPS 上运行 aria2c 作为下载服务，然后从任何设备的浏览器中添加和管理下载任务，这成为了许多技术爱好者的标配操作。
+
+2014 年，Tatsuhiro Tsujikawa 将 aria2 的代码仓库从 Google Code 迁移到了 GitHub，社区的参与更加活跃。此后 aria2 的更新频率放缓，但这是因为它已经足够成熟和稳定，核心功能已经完善。截至 2026 年，aria2 的最新版本是 1.37.0，虽然发布节奏不快，但每次更新都包含了重要的 bug 修复和兼容性改进。
+
+aria2 在 Arch Linux / EndeavourOS 社区中尤其受欢迎，原因是：Arch 用户偏好轻量、高效、可定制的命令行工具，aria2 完美契合这一理念；Arch 的 =pacman= 包管理器甚至可以使用 aria2 作为下载后端来加速软件包的下载；AUR 中的许多软件包也推荐使用 aria2 来下载大文件源码。
+
+** aria2c 的核心优势
+
+aria2c 之所以能在众多下载工具中脱颖而出，根本原因在于它同时具备以下几个核心优势：
+
+*** 多协议支持
+
+这是 aria2c 最大的卖点。一个工具同时支持以下协议：
+
+- =HTTP/HTTPS= — 最常见的网页下载协议
+- =FTP= — 传统的文件传输协议
+- =BitTorrent= — P2P 文件分享协议（包括 Magnet 磁力链接）
+- =Metalink= — 多镜像描述格式
+
+这意味着你不需要在 =wget= 、 =curl= 、 =transmission-cli= 之间来回切换——无论下载源是什么类型，aria2c 都能处理。更强大的是，aria2c 可以在 *同一次下载中混合使用不同协议* 。比如下载一个文件，同时从 HTTP 镜像和 FTP 镜像拉取不同分段，这在全球开源软件镜像站遍布的今天非常实用。
+
+*** 多线程与多连接
+
+aria2c 可以对同一个文件建立多个连接，每个连接下载文件的不同部分，最后拼接成完整文件。这利用了 HTTP 协议的 =Range= 头和 FTP 的 =REST= 命令，分段并行下载。对于单线程限速的服务器（如很多国内网盘限制单连接速度），开多个连接可以突破单连接的速度上限。
+
+默认情况下 aria2c 使用 5 个连接（由 =-x= 参数控制），最多可设置到 16 个。每个连接还可以进一步拆分为多个分段（由 =-s= 参数控制），最多 16 个分段。因此理论上一个文件最多可以同时使用 16 x 16 = 256 个线程下载，但实际上这取决于服务器是否支持分段下载以及你的网络带宽。
+
+*** 多镜像并行下载
+
+aria2c 可以同时从 *多个不同的服务器* 下载同一个文件的不同部分。只要这些服务器上的文件完全相同（通过文件大小或校验和确认），aria2c 就会把它们当作同一个文件的多个来源，将下载任务分配到各个服务器上。
+
+这在下载开源软件时特别有用——全球有大量的镜像站（如 TUNA、中科大、阿里云等），单个镜像站的速度可能一般，但如果同时从五六个镜像站下载，速度可以叠加。Metalink 格式就是为此设计的：一个 Metalink 文件列出了所有可用的镜像地址和校验信息，aria2c 会自动利用所有镜像。
+
+*** 断点续传
+
+下载中断是每个用户都遇到过的问题——网络不稳定、服务器超时、意外断电……如果下载了 99% 却不得不从头再来，那种挫败感不言而喻。aria2c 的断点续传功能让这种情况成为历史。
+
+aria2c 在下载过程中会自动保存控制文件（后缀为 =.aria2= ），记录了每个分段的下载进度。如果下载中断，再次运行相同的 aria2c 命令，它会自动读取控制文件，从上次中断的位置继续下载，而不是从头开始。这个功能对 BitTorrent 下载同样有效——aria2c 会保存已下载的 piece 信息，续传时只需下载剩余的部分。
+
+*** 轻量与低资源占用
+
+aria2c 是纯命令行工具，没有图形界面的开销。它的内存占用通常只有几 MB，CPU 占用在下载过程中几乎可以忽略。这使得它非常适合在资源有限的环境中使用——VPS、树莓派、NAS 等设备上运行 aria2c 作为常驻下载服务，几乎不会影响其他任务的运行。
+
+相比之下，图形化的下载工具（如 =qBittorrent=、=Deluge=）通常需要几十到上百 MB 的内存，在低配置设备上可能捉襟见肘。
+
+*** RPC 远程控制
+
+aria2c 内置了 JSON-RPC 和 XML-RPC 接口，允许外部程序通过网络控制 aria2c 的所有操作：添加/删除下载任务、查询下载进度、暂停/恢复任务、修改下载参数等。这为构建下载管理系统提供了基础——你可以在远程服务器上运行 aria2c，然后从本地电脑或手机通过 Web 界面管理下载任务。
+
+** 在 EndeavourOS 上安装 aria2c
+
+*** 通过 pacman 安装
+
+aria2c 包含在 =aria2= 软件包中，EndeavourOS / Arch Linux 的官方仓库直接提供：
+
+#+begin_src bash
+sudo pacman -S aria2
+#+end_src
+
+安装后验证：
+
+#+begin_src bash
+aria2c --version
+#+end_src
+
+输出中会显示版本号、编译特性等信息，确认支持的特性列表中包含 HTTPS、BitTorrent、Metalink、RPC 等。
+
+*** 编译安装（可选）
+
+如果需要最新版或自定义编译选项，可以从 AUR 安装：
+
+#+begin_src bash
+yay -S aria2-git
+#+end_src
+
+或从源码编译：
+
+#+begin_src bash
+git clone https://github.com/aria2/aria2.git
+cd aria2
+autoreconf -i
+./configure --prefix=/usr --with-ca-bundle=/etc/ssl/certs/ca-certificates.crt
+make
+sudo make install
+#+end_src
+
+编译时可以启用的特性包括：
+
+| 配置选项              | 说明                              |
+|-----------------------+-----------------------------------|
+| =--with-ca-bundle=PATH= | 指定 CA 证书路径（HTTPS 所需）    |
+| =--enable-libaria2=     | 编译 C++ 共享库（供其他程序调用） |
+| =--without-gnutls=      | 禁用 GnuTLS（改用 OpenSSL）       |
+| =--without-libgmp=      | 禁用 GnuMP（Metalink 校验所需）   |
+| =--without-sqlite3=     | 禁用 SQLite3（BT 种子缓存所需）   |
+
+Arch 官方包已经启用了所有推荐特性，一般无需自行编译。
+
+** 基本使用
+
+*** 下载单个文件
+
+最简单的用法——直接给出 URL：
+
+#+begin_src bash
+aria2c https://example.com/file.zip
+#+end_src
+
+aria2c 会自动从 URL 推断文件名，将文件保存到当前目录。下载过程中会显示进度条、速度、剩余时间等信息。
+
+*** 指定保存文件名
+
+使用 =-o= 选项指定下载后的文件名：
+
+#+begin_src bash
+aria2c -o myfile.zip https://example.com/very-long-name-version-2.3.1.zip
+#+end_src
+
+*** 指定保存目录
+
+使用 =-d= 选项指定下载目录：
+
+#+begin_src bash
+aria2c -d ~/Downloads https://example.com/file.zip
+#+end_src
+
+*** 断点续传
+
+如果下载中断，只需再次运行相同的命令，aria2c 会自动检测未完成的下载文件和对应的 =.aria2= 控制文件，从中断处继续下载：
+
+#+begin_src bash
+# 首次下载，网络中断
+aria2c https://example.com/large-file.iso
+
+# 重新执行相同命令，自动续传
+aria2c https://example.com/large-file.iso
+# 输出中会显示 "Resuming download" 信息
+#+end_src
+
+如果续传时服务器不支持断点续传（不响应 =Range= 头），aria2c 会自动从头开始下载，并删除之前的部分文件。
+
+*** 下载多个文件
+
+aria2c 可以同时下载多个文件，只需在命令行中列出所有 URL：
+
+#+begin_src bash
+aria2c https://example.com/file1.zip https://example.com/file2.zip
+#+end_src
+
+也可以从文件中读取 URL 列表：
+
+#+begin_src bash
+# 创建 URL 列表文件
+cat > /tmp/urls.txt << 'EOF'
+https://example.com/file1.zip
+https://example.com/file2.zip
+https://example.com/file3.zip
+EOF
+
+# 从文件读取 URL 并下载
+aria2c -i /tmp/urls.txt
+#+end_src
+
+=-i= 选项从文本文件中逐行读取 URL。空行和以 =#= 开头的行会被忽略，因此可以添加注释：
+
+#+begin_src text
+# 这是注释
+https://example.com/file1.zip
+
+# 另一个文件
+https://example.com/file2.zip
+#+end_src
+
+*** 控制并发下载数
+
+aria2c 区分两个层级的并发：
+
+1. /同时下载的文件数/ — 由 =-j= （ =--max-concurrent-downloads= ）控制，默认 5
+2. /单个文件的连接数/ — 由 =-x= （ =--max-connection-per-server= ）控制，默认 5
+
+#+begin_src bash
+# 同时下载 3 个文件，每个文件最多 8 个连接
+aria2c -j 3 -x 8 https://example.com/file1.zip https://example.com/file2.zip https://example.com/file3.zip
+
+# 同时下载 1 个文件，使用 16 个连接（最大化单个文件的下载速度）
+aria2c -j 1 -x 16 https://example.com/large-file.iso
+#+end_src
+
+每个连接还可以进一步拆分为分段（ =-s= 选项），默认与 =-x= 相同。通常 =-s= 和 =-x= 设置为相同值即可：
+
+#+begin_src bash
+# 单文件 16 连接，每连接 1 分段（最常见设置）
+aria2c -x 16 -s 16 https://example.com/large-file.iso
+#+end_src
+
+** HTTP/HTTPS 下载详解
+
+HTTP/HTTPS 是日常最常遇到的下载协议。aria2c 在这方面提供了丰富的选项，涵盖认证、代理、自定义请求头、校验等场景。
+
+*** 基本下载
+
+#+begin_src bash
+# 最基本的 HTTPS 下载
+aria2c https://releases.example.com/software-2.0.tar.gz
+
+# 指定保存目录和文件名
+aria2c -d ~/Downloads -o software.tar.gz https://releases.example.com/software-2.0.tar.gz
+#+end_src
+
+*** 需要认证的下载
+
+很多网站（如私有网盘、企业内网文件服务器）需要用户名和密码认证：
+
+#+begin_src bash
+# HTTP Basic 认证
+aria2c --http-user=myuser --http-passwd=mypass https://private.example.com/file.zip
+
+# FTP 认证
+aria2c --ftp-user=myuser --ftp-passwd=mypass ftp://ftp.example.com/file.zip
+#+end_src
+
+对于更复杂的认证（如 OAuth、Cookie），可以使用自定义请求头：
+
+#+begin_src bash
+# 使用 Cookie 认证
+aria2c --header="Cookie: session_id=abc123" https://members.example.com/premium-file.zip
+
+# 使用 Bearer Token 认证
+aria2c --header="Authorization: Bearer token123" https://api.example.com/download/file.zip
+#+end_src
+
+*** 使用代理下载
+
+在国内网络环境下，代理是绕过网络限制的常用手段。aria2c 支持通过环境变量或命令行选项设置代理：
+
+#+begin_src bash
+# 通过命令行选项设置 HTTP 代理
+aria2c --all-proxy="http://127.0.0.1:7890" https://example.com/file.zip
+
+# 分别设置 HTTP 和 HTTPS 代理
+aria2c --http-proxy="http://127.0.0.1:7890" --https-proxy="http://127.0.0.1:7890" https://example.com/file.zip
+
+# 通过环境变量设置（与 curl、wget 等工具共享）
+export http_proxy="http://127.0.0.1:7890"
+export https_proxy="http://127.0.0.1:7890"
+aria2c https://example.com/file.zip
+#+end_src
+
+如果代理需要认证：
+
+#+begin_src bash
+aria2c --all-proxy="http://user:pass@127.0.0.1:7890" https://example.com/file.zip
+#+end_src
+
+*** 自定义请求头
+
+某些网站通过 =User-Agent= 、 =Referer= 等请求头来识别和限制客户端。aria2c 允许自定义任意请求头：
+
+#+begin_src bash
+# 伪装 User-Agent（有些网站限制非浏览器的下载请求）
+aria2c --user-agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36" https://example.com/file.zip
+
+# 添加 Referer（有些网站检查来源防止盗链）
+aria2c --referer="https://example.com/download-page" https://example.com/file.zip
+
+# 组合使用多个自定义头
+aria2c \
+  --header="User-Agent: Mozilla/5.0" \
+  --header="Referer: https://example.com/download" \
+  --header="Accept: application/octet-stream" \
+  https://example.com/file.zip
+#+end_src
+
+*** 文件校验
+
+下载完成后验证文件的完整性是非常重要的步骤，特别是对于大文件和关键文件（如系统镜像）。aria2c 支持在下载完成后自动校验文件的哈希值：
+
+#+begin_src bash
+# 使用 SHA-256 校验（推荐，最安全）
+aria2c --checksum=sha-256=abc123def456... https://example.com/file.zip
+
+# 使用 MD5 校验（虽然不太安全，但很多网站只提供 MD5）
+aria2c --checksum=md5=abc123def456 https://example.com/file.zip
+
+# 使用 SHA-1 校验
+aria2c --checksum=sha-1=abc123def456 https://example.com/file.zip
+#+end_src
+
+如果校验失败，aria2c 会自动重新下载。这对于下载 ISO 镜像等关键文件非常有用——你不用担心下载到的文件是损坏的。
+
+*** 多镜像并行下载
+
+这是 aria2c 最能体现其优势的功能。当同一个文件在多个镜像站上都有副本时，aria2c 可以同时从所有镜像站下载文件的不同部分，速度可以成倍提升：
+
+#+begin_src bash
+# 同时从三个国内镜像站下载 Ubuntu ISO
+aria2c \
+  https://mirrors.tuna.tsinghua.edu.cn/ubuntu-releases/22.04/ubuntu-22.04-desktop-amd64.iso \
+  https://mirrors.ustc.edu.cn/ubuntu-releases/22.04/ubuntu-22.04-desktop-amd64.iso \
+  https://mirrors.aliyun.com/ubuntu-releases/22.04/ubuntu-22.04-desktop-amd64.iso
+#+end_src
+
+aria2c 会自动检测这些 URL 指向的是否是同一个文件（通过文件大小和 =Content-Disposition= 头判断），如果确认是同一个文件，就会将下载任务分配到各个镜像站。
+
+更可靠的方式是使用 Metalink 文件。Metalink 文件包含了所有镜像地址和校验信息，无需手动确认文件是否一致：
+
+#+begin_src bash
+# 使用 Metalink 文件下载
+aria2c https://example.com/file.metalink
+
+# 使用 Metalink4 格式
+aria2c --metalink-version=4 https://example.com/file.meta4
+#+end_src
+
+*** 限制下载速度
+
+在共享网络环境中，下载占满带宽会影响其他用户的正常使用。aria2c 可以限制下载速度：
+
+#+begin_src bash
+# 限制最大下载速度为 1MB/s
+aria2c --max-download-limit=1M https://example.com/large-file.iso
+
+# 限制为 500KB/s
+aria2c --max-download-limit=500K https://example.com/large-file.iso
+
+# 不限制速度（默认行为）
+aria2c --max-download-limit=0 https://example.com/large-file.iso
+#+end_src
+
+速度单位支持： =K= 或 =k= （KB/s）、 =M= 或 =m= （MB/s）、 =G= 或 =g= （GB/s）。
+
+** BitTorrent 下载详解
+
+aria2c 内置了完整的 BitTorrent 客户端功能，可以下载 =.torrent= 种子文件和磁力链接，无需安装额外的 BT 客户端。
+
+*** 下载种子文件
+
+#+begin_src bash
+# 从本地种子文件下载
+aria2c ~/Downloads/ubuntu-22.04-desktop-amd64.iso.torrent
+
+# 从网络上的种子文件下载（aria2c 会先下载种子文件，再开始 BT 下载）
+aria2c https://releases.ubuntu.com/22.04/ubuntu-22.04-desktop-amd64.iso.torrent
+#+end_src
+
+*** 下载磁力链接
+
+磁力链接（Magnet URI）是 BitTorrent 的另一种资源定位方式，它不依赖 =.torrent= 文件，而是通过文件内容的哈希值来标识资源。磁力链接的格式通常为 =magnet:?xt=urn:btih:HASH&dn=NAME&tr=TRACKER_URL...= ：
+
+#+begin_src bash
+# 下载磁力链接（注意用引号包裹，防止特殊字符被 Shell 解析）
+aria2c "magnet:?xt=urn:btih:abc123def456&dn=ubuntu-22.04&tr=udp://tracker.example.com:1337"
+#+end_src
+
+磁力链接下载的第一步是获取种子元数据（通过 DHT 或 Tracker），这个过程可能需要几秒到几分钟。如果 DHT 网络中找不到元数据，aria2c 会一直等待，可以通过 =--bt-stop-timeout= 设置超时时间。
+
+*** 选择性下载
+
+BT 种子中可能包含多个文件，但有时你只需要其中的一部分。aria2c 支持选择性下载，让你只下载种子中的特定文件：
+
+#+begin_src bash
+# 只下载种子中索引为 1 和 3 的文件
+aria2c --select-file=1,3 ~/Downloads/multi-file.torrent
+
+# 只下载种子中索引为 1 到 5 的文件
+aria2c --select-file=1-5 ~/Downloads/multi-file.torrent
+
+# 查看种子中包含的文件列表（不开始下载）
+aria2c -S ~/Downloads/multi-file.torrent
+#+end_src
+
+=-S= 选项会列出种子中的所有文件及其索引号，你可以根据索引号选择要下载的文件。这在下载包含大量文件的种子时非常实用——比如一个电视剧合集，你只想看其中某几集。
+
+*** BT 下载优化
+
+BitTorrent 下载的性能很大程度上取决于 Tracker 和 DHT 的配置。aria2c 提供了多种优化选项：
+
+#+begin_src bash
+# 添加额外的 Tracker 服务器（提高连接率）
+aria2c --bt-tracker="udp://tracker.opentrackr.org:1337,udp://open.stealth.si:80,udp://tracker.torrent.eu.org:451" \
+  "magnet:?xt=urn:btih:abc123"
+
+# 启用 DHT（分布式哈希表，不依赖 Tracker 也能发现节点）
+# aria2c 默认启用 DHT，但如果之前禁用了，可以这样重新启用
+aria2c --enable-dht=true "magnet:?xt=urn:btih:abc123"
+
+# 设置 DHT 监听端口（默认 6881-6999）
+aria2c --dht-listen-port=6881-6999 "magnet:?xt=urn:btih:abc123"
+
+# 禁用 DHT（某些私有 Tracker 要求禁用 DHT）
+aria2c --enable-dht=false --bt-tracker="..." "magnet:?xt=urn:btih:abc123"
+#+end_src
+
+Tracker 服务器的质量直接影响 BT 下载的速度。建议使用公开的 Tracker 列表来补充种子自带的 Tracker：
+
+#+begin_src bash
+# 从 ngosang/trackerslist 获取最新 Tracker 列表
+TRACKER_LIST=$(curl -s https://raw.githubusercontent.com/ngosang/trackerslist/master/trackers_best.txt | tr '\n' ',')
+aria2c --bt-tracker="$TRACKER_LIST" "magnet:?xt=urn:btih:abc123"
+#+end_src
+
+*** 做种与分享
+
+BT 下载完成后，aria2c 默认会继续做种（上传数据给其他下载者），分享比例为 1.0（即上传量等于下载量）。你可以调整做种行为：
+
+#+begin_src bash
+# 下载完成后不做种（分享比为 0）
+aria2c --seed-ratio=0.0 "magnet:?xt=urn:btih:abc123"
+
+# 做种到分享比为 2.0（上传量为下载量的两倍）
+aria2c --seed-ratio=2.0 "magnet:?xt=urn:btih:abc123"
+
+# 做种时间不超过 60 分钟
+aria2c --seed-time=60 "magnet:?xt=urn:btih:abc123"
+
+# 同时做种和下载时，限制上传速度为 100KB/s
+aria2c --max-upload-limit=100K "magnet:?xt=urn:btih:abc123"
+#+end_src
+
+*** BT 加密
+
+某些 ISP 会通过深度包检测（DPI）来识别和限制 BT 流量。启用 BT 协议加密可以规避这种限制：
+
+#+begin_src bash
+# 要求加密连接（只与支持加密的节点连接）
+aria2c --bt-require-crypto=true "magnet:?xt=urn:btih:abc123"
+
+# 启用加密但允许未加密连接（默认行为）
+aria2c --bt-require-crypto=false "magnet:?xt=urn:btih:abc123"
+#+end_src
+
+** 配置文件详解
+
+虽然 aria2c 的命令行选项非常丰富，但每次下载都输入一长串参数显然不现实。aria2c 支持配置文件，让你把常用的参数预设好，每次运行时自动加载。
+
+*** 配置文件位置
+
+aria2c 按以下顺序查找配置文件，后找到的会覆盖先找到的：
+
+1. =/etc/aria2/aria2.conf= — 系统级配置（所有用户共享）
+2. =$XDG_CONFIG_HOME/aria2/aria2.conf= 或 =~/.config/aria2/aria2.conf= — 用户级配置（只对当前用户生效）
+3. 命令行中 =--conf-path= 指定的配置文件
+
+大多数情况下，只需要编辑用户级配置文件即可。
+
+*** 创建配置目录和文件
+
+#+begin_src bash
+# 创建配置目录
+mkdir -p ~/.config/aria2
+
+# 创建配置文件
+touch ~/.config/aria2/aria2.conf
+
+# 创建下载目录
+mkdir -p ~/Downloads/aria2
+#+end_src
+
+*** 推荐配置
+
+以下是一份适合日常使用的配置文件，包含了最常见的优化设置，每项都有详细注释：
+
+#+begin_src conf
+# ============================================================
+# aria2c 用户配置文件
+# 路径: ~/.config/aria2/aria2.conf
+# ============================================================
+
+# ---------- 下载基本设置 ----------
+
+# 下载文件保存目录
+dir=/home/你的用户名/Downloads/aria2
+
+# 从文件读取 URL 列表时的默认输入文件
+# input-file=/path/to/urls.txt
+
+# 日志文件路径（记录下载过程中的详细日志，排错时有用）
+# log=/home/你的用户名/.config/aria2/aria2.log
+
+# 日志级别：debug、info、notice、warn、error
+# log-level=warn
+
+# ---------- 并发与线程设置 ----------
+
+# 同一服务器最大连接数（默认 5，建议 16 以获得更快的速度）
+max-connection-per-server=16
+
+# 单文件最小分片大小（当文件较小时，aria2c 会自动减少分片数）
+# 如果分片大小小于此值，aria2c 不会进一步增加分片
+min-split-size=1M
+
+# 单文件最大分片数（默认 5，建议与 max-connection-per-server 相同）
+split=16
+
+# 同时下载的最大任务数（默认 5）
+max-concurrent-downloads=5
+
+# ---------- 断点续传设置 ----------
+
+# 启用断点续传（默认 true）
+continue=true
+
+# ---------- 速度控制 ----------
+
+# 最大下载速度（0 表示不限制）
+# 在共享网络中建议设置为你的带宽的 70-80%
+# max-download-limit=10M
+
+# 最大上传速度（BT 做种时使用，0 表示不限制）
+max-upload-limit=1M
+
+# ---------- HTTP/HTTPS 设置 ----------
+
+# 启用 HTTP 保持连接（减少 TCP 握手次数，提升性能）
+enable-http-keep-alive=true
+
+# 启用 HTTP 流水线请求（在一个连接上连续发送多个请求，进一步提升性能）
+enable-http-pipelining=true
+
+# 自定义 User-Agent（某些网站会限制默认的 aria2 User-Agent）
+user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
+
+# ---------- 代理设置 ----------
+
+# 全局代理（取消注释并填入你的代理地址）
+# all-proxy=http://127.0.0.1:7890
+
+# 代理认证
+# all-proxy-user=user
+# all-proxy-passwd=password
+
+# 不使用代理的域名列表
+# no-proxy=localhost,127.0.0.1,192.168.*
+
+# ---------- BitTorrent 设置 ----------
+
+# BT 监听端口（用于接收其他 BT 节点的连接）
+listen-port=6881-6999
+
+# DHT 监听端口
+dht-listen-port=6881-6999
+
+# 启用 DHT（分布式哈希表，帮助发现更多节点）
+enable-dht=true
+
+# 启用 DHT IPv6
+enable-dht6=true
+
+# BT 做种分享比（0.0 表示下载完成即停止做种）
+seed-ratio=1.0
+
+# BT 做种时间（分钟，0 表示不限制）
+# seed-time=60
+
+# BT Tracker 列表（多个 Tracker 用逗号分隔）
+# 建议定期更新，从 https://github.com/ngosang/trackerslist 获取
+bt-tracker=udp://tracker.opentrackr.org:1337,udp://open.stealth.si:80,udp://tracker.torrent.eu.org:451,udp://tracker.bittor.pw:1337/announce,udp://public.popcorn-tracker.org:6969/announce
+
+# 启用 BT 本地节点发现（在局域网中寻找 BT 节点）
+enable-lpd=true
+
+# BT 加密
+bt-require-crypto=false
+
+# 强制加密（如果网络环境限制 BT，可以设为 true）
+# bt-require-crypto=true
+
+# ---------- RPC 远程控制设置 ----------
+
+# 启用 RPC（远程过程调用，允许 Web 界面控制 aria2c）
+enable-rpc=true
+
+# RPC 监听端口
+rpc-listen-port=6800
+
+# RPC 监听地址（0.0.0.0 表示允许所有地址连接）
+# 如果只允许本地连接，设为 127.0.0.1
+rpc-listen-all=true
+
+# RPC 密钥（强烈建议设置，防止未授权访问）
+rpc-secret=你的自定义密钥
+
+# ---------- 高级设置 ----------
+
+# 文件预分配方式
+# none: 不预分配（最快，但可能导致文件碎片化）
+# prealloc: 预分配空间（较慢，但减少碎片）
+# trunc: 使用 ftruncate（速度和碎片化居中）
+# 对于现代文件系统（ext4、btrfs），建议使用 trunc 或 none
+file-allocation=trunc
+
+# 会话文件（保存当前下载任务的状态，重启后可以恢复）
+# 配合 RPC 使用时非常有用
+# session=/home/你的用户名/.config/aria2/aria2.session
+
+# 退出时保存会话
+# save-session=/home/你的用户名/.config/aria2/aria2.session
+
+# 自动保存会话间隔（秒）
+# auto-save-interval=60
+
+# 下载完成时执行命令（可以用来触发通知脚本）
+# on-download-complete=/path/to/notify-script.sh
+
+# 下载错误时执行命令
+# on-download-error=/path/to/error-script.sh
+#+end_src
+
+*** 使用自定义配置文件
+
+如果你有多个配置文件（比如一个用于日常下载，一个用于 VPS 上的常驻服务），可以用 =--conf-path= 指定：
+
+#+begin_src bash
+# 使用指定配置文件
+aria2c --conf-path=/path/to/custom-aria2.conf https://example.com/file.zip
+
+# 完全忽略配置文件（使用默认值）
+aria2c --no-conf https://example.com/file.zip
+#+end_src
+
+配置文件中的选项与命令行选项完全对应，配置文件中一行一个选项，等号两边不要有空格。以 =#= 开头的行是注释。
+
+** RPC 远程控制
+
+RPC（远程过程调用）是 aria2c 最强大也最常被忽视的功能之一。通过 RPC，你可以将 aria2c 作为一个后台下载服务运行，然后从浏览器、手机 App 或脚本中远程控制它。
+
+*** 启动 RPC 服务
+
+将 aria2c 作为 RPC 后台服务启动：
+
+#+begin_src bash
+# 基本启动（前台运行，适合调试）
+aria2c --enable-rpc --rpc-listen-all --rpc-secret=mytoken123
+
+# 后台运行（推荐）
+aria2c --enable-rpc --rpc-listen-all --rpc-secret=mytoken123 -D
+
+# 使用配置文件启动（配置文件中已包含 RPC 设置）
+aria2c -D
+#+end_src
+
+参数说明：
+
+- =--enable-rpc= — 启用 RPC 功能
+- =--rpc-listen-all= — 允许所有 IP 地址连接（否则只允许 localhost）
+- =--rpc-secret=mytoken123= — 设置 RPC 密钥（类似密码，客户端连接时必须提供）
+- =-D= — 后台运行（daemon 模式）
+
+如果 aria2c 配置了会话文件，重启后会自动恢复上次未完成的下载任务：
+
+#+begin_src bash
+# 创建空的会话文件（首次使用时需要）
+touch ~/.config/aria2/aria2.session
+
+# 带会话恢复的后台启动
+aria2c -D --session=/home/你的用户名/.config/aria2/aria2.session
+#+end_src
+
+*** 使用 Web 界面控制
+
+aria2c 的 RPC 服务本身不提供 Web 界面，但社区开发了多个优秀的 Web 前端：
+
+**** AriaNg（推荐）
+
+AriaNg 是目前最流行的 aria2c Web 前端，界面美观，功能完整，支持多语言：
+
+#+begin_src bash
+# 方式一：直接使用在线版（不需要安装）
+# 在浏览器中打开 https://ariang.mayswind.net/latest/
+# 在设置中填入 aria2c 的 RPC 地址和密钥即可连接
+
+# 方式二：本地安装
+yay -S ariang
+# 安装后用浏览器打开 AriaNg 的 HTML 文件
+#+end_src
+
+连接配置：
+
+1. 打开 AriaNg 界面
+2. 进入"新建"连接
+3. 填入信息：
+   - 别名：随意（如"我的 VPS"）
+   - RPC 地址：aria2c 运行的服务器 IP（如 =192.168.1.100=）
+   - RPC 端口：6800（默认）
+   - RPC 密钥：你在启动时设置的 =--rpc-secret= 值
+4. 点击确定，连接成功后会显示 aria2c 的版本和状态
+
+**** webui-aria2
+
+另一个流行的 Web 前端，界面较简洁：
+
+#+begin_src bash
+# 克隆到本地
+git clone https://github.com/ziahamza/webui-aria2.git
+cd webui-aria2
+# 直接用浏览器打开 index.html
+#+end_src
+
+*** 使用命令行控制 RPC
+
+虽然 Web 界面方便，但有时候用命令行操作 RPC 更高效。aria2c 的 RPC 使用 JSON-RPC 协议，可以直接用 =curl= 调用：
+
+#+begin_src bash
+# 获取 aria2c 版本信息（验证 RPC 连接是否正常）
+curl -s -d '{"jsonrpc":"2.0","method":"aria2.getVersion","id":"1","params":["token:mytoken123"]}' http://localhost:6800/jsonrpc
+
+# 添加下载任务
+curl -s -d '{"jsonrpc":"2.0","method":"aria2.addUri","id":"1","params":["token:mytoken123",["https://example.com/file.zip"]]}' http://localhost:6800/jsonrpc
+
+# 查看所有活跃的下载任务
+curl -s -d '{"jsonrpc":"2.0","method":"aria2.tellActive","id":"1","params":["token:mytoken123"]}' http://localhost:6800/jsonrpc
+
+# 暂停某个下载任务（需要提供 GID，从 tellActive 返回结果中获取）
+curl -s -d '{"jsonrpc":"2.0","method":"aria2.pause","id":"1","params":["token:mytoken123","2089b05ecca3d829"]}' http://localhost:6800/jsonrpc
+
+# 恢复暂停的下载
+curl -s -d '{"jsonrpc":"2.0","method":"aria2.unpause","id":"1","params":["token:mytoken123","2089b05ecca3d829"]}' http://localhost:6800/jsonrpc
+
+# 删除下载任务
+curl -s -d '{"jsonrpc":"2.0","method":"aria2.remove","id":"1","params":["token:mytoken123","2089b05ecca3d829"]}' http://localhost:6800/jsonrpc
+
+# 获取全局下载统计信息
+curl -s -d '{"jsonrpc":"2.0","method":"aria2.getGlobalStat","id":"1","params":["token:mytoken123"]}' http://localhost:6800/jsonrpc
+#+end_src
+
+*** 设置 Systemd 服务
+
+为了让 aria2c 在系统启动时自动运行，可以创建一个 systemd 服务单元：
+
+#+begin_src bash
+# 创建 systemd 服务文件
+cat > ~/.config/systemd/user/aria2c.service << 'EOF'
+[Unit]
+Description=aria2c Download Manager
+After=network.target
+
+[Service]
+Type=forking
+ExecStart=/usr/bin/aria2c --conf-path=/home/%u/.config/aria2/aria2.conf -D
+ExecReload=/usr/bin/kill -s HUP $MAINPID
+ExecStop=/usr/bin/kill -s STOP $MAINPID
+RestartSec=5
+Restart=on-failure
+
+[Install]
+WantedBy=default.target
+EOF
+
+# 重新加载 systemd 配置
+systemctl --user daemon-reload
+
+# 启动 aria2c 服务
+systemctl --user start aria2c
+
+# 设置开机自启
+systemctl --user enable aria2c
+
+# 查看服务状态
+systemctl --user status aria2c
+
+# 停止服务
+systemctl --user stop aria2c
+
+# 查看服务日志
+journalctl --user -u aria2c -f
+#+end_src
+
+使用 systemd 用户服务的好处是：aria2c 会在用户登录时自动启动，不需要手动执行命令；如果 aria2c 意外崩溃，systemd 会自动重启它；日志由 systemd 统一管理，方便查看和排查问题。
+
+** 实用实例合集
+
+下面通过一系列实际场景，展示 aria2c 在日常使用中的各种技巧和组合用法。
+
+*** 实例一：下载 EndeavourOS ISO 镜像
+
+EndeavourOS 的 ISO 镜像文件较大（约 2-3GB），使用 aria2c 多线程下载可以显著加快速度：
+
+#+begin_src bash
+# 从官方源下载，16 线程
+aria2c -x 16 -s 16 -d ~/Downloads \
+  --checksum=sha256=官方公布的SHA256值 \
+  https://mirror.alpix.xyz/endeavouros/iso/EndeavourOS_Artemis_nova_22_6.iso
+
+# 同时从多个镜像站下载（速度更快）
+aria2c -x 16 -d ~/Downloads \
+  https://mirror.alpix.xyz/endeavouros/iso/EndeavourOS_Artemis_nova_22_6.iso \
+  https://ftp.halifax.rwth-aachen.de/endeavouros/iso/EndeavourOS_Artemis_nova_22_6.iso \
+  https://mirrors.xtom.de/endeavouros/iso/EndeavourOS_Artemis_nova_22_6.iso
+#+end_src
+
+*** 实例二：批量下载网站图片
+
+假设你有一个包含多个图片 URL 的文本文件，想批量下载：
+
+#+begin_src bash
+# 创建图片 URL 列表
+cat > /tmp/images.txt << 'EOF'
+https://example.com/gallery/img001.jpg
+https://example.com/gallery/img002.jpg
+https://example.com/gallery/img003.jpg
+https://example.com/gallery/img004.jpg
+https://example.com/gallery/img005.jpg
+EOF
+
+# 批量下载，3 个并发任务，自动重试
+aria2c -i /tmp/images.txt -d ~/Downloads/images -j 3 --max-tries=5 --retry-wait=10
+#+end_src
+
+=--max-tries=5= 设置最多重试 5 次， =--retry-wait=10= 设置每次重试间隔 10 秒。这对网络不稳定的情况很有帮助。
+
+*** 实例三：下载 GitHub Release 文件
+
+GitHub Release 页面经常提供大文件下载，但单线程速度可能较慢：
+
+#+begin_src bash
+# 下载 GitHub Release 中的文件
+aria2c -x 16 -s 16 -d ~/Downloads \
+  -o app-2.0.0-linux-x86_64.AppImage \
+  https://github.com/user/app/releases/download/v2.0.0/app-2.0.0-linux-x86_64.AppImage
+
+# 使用代理下载（GitHub 在某些地区访问不稳定）
+aria2c -x 16 --all-proxy="http://127.0.0.1:7890" \
+  https://github.com/user/app/releases/download/v2.0.0/app-2.0.0-linux-x86_64.AppImage
+#+end_src
+
+*** 实例四：下载需要登录的文件
+
+某些网站需要先登录获取 Cookie，然后才能下载文件。可以先用浏览器登录，然后复制 Cookie：
+
+#+begin_src bash
+# 方式一：使用 Cookie 字符串
+# 先在浏览器中登录，然后从开发者工具中复制 Cookie
+aria2c --header="Cookie: PHPSESSID=abc123; user_token=xyz789" \
+  https://members.example.com/download/premium-file.zip
+
+# 方式二：使用 Cookie 文件（从浏览器导出 Netscape 格式的 Cookie 文件）
+# 可以使用浏览器插件如 "Get cookies.txt LOCALLY" 导出
+aria2c --load-cookies=/tmp/cookies.txt \
+  https://members.example.com/download/premium-file.zip
+#+end_src
+
+*** 实例五：定时批量下载
+
+结合 cron 定时任务，可以实现定时自动下载：
+
+#+begin_src bash
+# 创建下载脚本
+cat > ~/scripts/auto-download.sh << 'SCRIPT'
+#!/bin/bash
+# 每天自动下载某个数据源的最新文件
+
+DATE=$(date +%Y-%m-%d)
+DOWNLOAD_DIR=~/Downloads/daily-data
+
+mkdir -p "$DOWNLOAD_DIR"
+
+aria2c -x 8 -d "$DOWNLOAD_DIR" \
+  -o "data-$DATE.csv" \
+  "https://data.example.com/daily/latest.csv"
+
+echo "Download completed at $(date)" >> "$DOWNLOAD_DIR/download.log"
+SCRIPT
+
+chmod +x ~/scripts/auto-download.sh
+
+# 添加 cron 定时任务（每天早上 6 点执行）
+(crontab -l 2>/dev/null; echo "0 6 * * * ~/scripts/auto-download.sh") | crontab -
+#+end_src
+
+*** 实例六：局域网内分享文件
+
+aria2c 可以在局域网内作为简易的文件分发工具。先在一台机器上用 Python 启动 HTTP 服务器，然后用 aria2c 从其他机器下载：
+
+#+begin_src bash
+# 机器 A（文件所在机器）：启动 HTTP 文件服务器
+cd /path/to/shared/files
+python3 -m http.server 8080
+
+# 机器 B（下载端）：从机器 A 多线程下载
+aria2c -x 4 http://192.168.1.100:8080/large-file.zip
+#+end_src
+
+*** 实例七：下载整个系列文件
+
+当需要下载按序号排列的系列文件时（如课程视频、漫画章节等），可以结合 Shell 生成 URL 列表：
+
+#+begin_src bash
+# 生成编号 01-20 的 URL 列表并下载
+seq -w 1 20 | while read n; do
+  echo "https://example.com/course/lecture-${n}.mp4"
+done > /tmp/lectures.txt
+
+aria2c -i /tmp/lectures.txt -j 2 -x 8 -d ~/Downloads/course
+#+end_src
+
+=seq -w 1 20= 生成 01 到 20 的零填充编号， =while read= 构造完整的 URL， =-j 2= 限制同时下载 2 个文件（避免对服务器造成过大压力）。
+
+** 让 pacman 使用 aria2c 加速
+
+EndeavourOS / Arch Linux 的 =pacman= 包管理器默认使用 =curl= 或 =wget= 下载软件包，单线程下载在某些镜像站上可能较慢。通过配置，可以让 pacman 使用 aria2c 作为下载后端，实现多线程并行下载，大幅提升软件包的下载速度。
+
+*** 方法一：使用 pacman 的 XferCommand
+
+pacman 支持通过 =XferCommand= 配置自定义下载命令：
+
+#+begin_src bash
+# 编辑 pacman 配置
+sudo nano /etc/pacman.conf
+#+end_src
+
+在 =[options]= 段中添加或修改以下行：
+
+#+begin_src conf
+# 使用 aria2c 作为下载后端
+XferCommand = /usr/bin/aria2c --no-conf --allow-overwrite=true --continue=true --file-allocation=none --log-level=error --max-connection-per-server=5 --min-split-size=5M --split=5 --summary-interval=0 --dir=%o --out=%f %u
+#+end_src
+
+参数说明：
+
+- =--no-conf= — 不加载用户配置文件（避免与 pacman 的参数冲突）
+- =--allow-overwrite=true= — 允许覆盖已存在的文件
+- =--continue=true= — 启用断点续传
+- =--file-allocation=none= — 不预分配空间（pacman 下载的文件通常较小，预分配反而拖慢速度）
+- =--max-connection-per-server=5= — 每个服务器 5 个连接
+- =--split=5= — 每个文件分 5 片下载
+- =--dir=%o= — 下载目录（%o 是 pacman 的占位符，表示目标目录）
+- =--out=%f= — 输出文件名（%f 是 pacman 的占位符，表示目标文件名）
+- =%u= — 下载 URL（pacman 的占位符）
+
+修改后保存，下次运行 =sudo pacman -Syu= 时就会使用 aria2c 下载软件包。
+
+*** 方法二：使用 powerpill
+
+=powerpill= 是一个专门为 pacman 设计的 aria2c 包装器，它比手动配置 =XferCommand= 更智能——powerpill 会同时从多个镜像站下载同一个软件包的不同部分：
+
+#+begin_src bash
+# 安装 powerpill
+yay -S powerpill
+
+# 使用 powerpill 代替 pacman -S
+sudo powerpill -S 软件包名
+
+# 使用 powerpill 进行系统更新
+sudo powerpill -Syu
+#+end_src
+
+powerpill 的工作原理：它读取 pacman 的镜像列表配置（ =/etc/pacman.d/mirrorlist= ），当需要下载一个软件包时，同时向多个镜像站发起请求，利用 aria2c 的多镜像并行下载能力加速。这对于大型软件包（如 =linux= 内核、 =firefox= 等）的加速效果非常明显。
+
+powerpill 的配置文件在 =/etc/powerpill.json= ，可以调整并发数、镜像数等参数：
+
+#+begin_src json
+{
+  "aria2": {
+    "args": [
+      "--max-connection-per-server=5",
+      "--split=5",
+      "--min-split-size=5M"
+    ]
+  },
+  "pacman": {
+    "config": "/etc/pacman.conf"
+  }
+}
+#+end_src
+
+** 常见问题与故障排除
+
+*** 下载速度慢
+
+下载速度不如预期，可能有以下原因：
+
+1. *服务器不支持多线程* — 有些服务器不支持 =Range= 请求头，aria2c 只能单线程下载。可以通过查看输出中的连接数来判断：如果只显示 1 个连接，说明服务器不支持分段下载。
+
+2. *连接数设置过低* — 默认的 5 个连接可能不够，尝试增加到 16：
+   #+begin_src bash
+   aria2c -x 16 -s 16 https://example.com/file.zip
+   #+end_src
+
+3. *网络带宽被其他程序占用* — 使用 =nload= 或 =iftop= 检查网络带宽使用情况。
+
+4. *DNS 解析慢* — 可以尝试手动指定 DNS：
+   #+begin_src bash
+   aria2c --async-dns-server=8.8.8.8,8.8.4.4 https://example.com/file.zip
+   #+end_src
+
+5. *服务器限速* — 单个 IP 被限速时，可以尝试通过代理切换 IP。
+
+*** 证书验证失败
+
+在访问某些 HTTPS 网站时可能会遇到证书验证失败的错误：
+
+#+begin_src text
+ERROR: Certificate verification failed
+#+end_src
+
+解决方法：
+
+#+begin_src bash
+# 方法一：指定 CA 证书文件路径
+aria2c --ca-certificate=/etc/ssl/certs/ca-certificates.crt https://example.com/file.zip
+
+# 方法二：临时禁用证书验证（仅用于测试，不推荐日常使用）
+aria2c --check-certificate=false https://example.com/file.zip
+#+end_src
+
+在 Arch Linux / EndeavourOS 上，CA 证书通常位于 =/etc/ssl/certs/ca-certificates.crt= ，这是由 =ca-certificates= 包维护的。如果证书文件不存在或过期，重新安装：
+
+#+begin_src bash
+sudo pacman -S ca-certificates
+sudo update-ca-trust
+#+end_src
+
+*** 磁力链接无法获取元数据
+
+磁力链接下载卡在"获取元数据"阶段，无法开始实际下载。这通常是因为 DHT 网络中找不到该资源的节点。
+
+解决方法：
+
+#+begin_src bash
+# 1. 添加更多 Tracker
+aria2c --bt-tracker="udp://tracker.opentrackr.org:1337,udp://open.stealth.si:80,udp://tracker.torrent.eu.org:451" \
+  "magnet:?xt=urn:btih:abc123"
+
+# 2. 设置元数据获取超时时间（默认无限制）
+aria2c --bt-metadata-timeout=300 "magnet:?xt=urn:btih:abc123"
+
+# 3. 增加 DHT 路由表条目
+aria2c --dht-entry-point=router.bittorrent.com:6881 "magnet:?xt=urn:btih:abc123"
+#+end_src
+
+如果磁力链接始终无法获取元数据，可能是该资源已经无人做种（"死种"），这种情况下任何 BT 客户端都无法下载。
+
+*** 下载文件不完整或损坏
+
+下载完成的文件无法打开或校验和不匹配：
+
+#+begin_src bash
+# 1. 使用哈希校验确认文件完整性
+aria2c --checksum=sha-256=预期的哈希值 https://example.com/file.zip
+
+# 2. 如果没有哈希值，可以尝试重新下载（加 --allow-overwrite=true 覆盖旧文件）
+aria2c --allow-overwrite=true https://example.com/file.zip
+
+# 3. 检查磁盘空间是否充足
+df -h
+#+end_src
+
+aria2c 在下载过程中会将数据写入临时文件（与目标文件同名，但扩展名前加点号，如 =.file.zip.aria2= ），下载完成后才会重命名为最终文件名。如果磁盘空间不足，临时文件可能写入不完整。
+
+*** RPC 连接失败
+
+Web 界面无法连接到 aria2c 的 RPC 服务：
+
+#+begin_src bash
+# 1. 确认 aria2c 正在运行
+ps aux | grep aria2c
+
+# 2. 确认 RPC 端口正在监听
+ss -tlnp | grep 6800
+
+# 3. 确认防火墙允许 6800 端口
+sudo firewall-cmd --list-ports
+# 如果 6800 未列出，添加：
+sudo firewall-cmd --add-port=6800/tcp --permanent
+sudo firewall-cmd --reload
+
+# 4. 测试 RPC 是否响应
+curl -s -d '{"jsonrpc":"2.0","method":"aria2.getVersion","id":"1","params":["token:你的密钥"]}' http://localhost:6800/jsonrpc
+#+end_src
+
+如果 aria2c 使用 =--rpc-listen-all=true= 但仍然无法从远程连接，检查是否被 systemd 的 =--user= 模式限制了网络访问。对于需要远程访问的场景，建议使用系统级 systemd 服务：
+
+#+begin_src bash
+# 创建系统级服务
+sudo tee /etc/systemd/system/aria2c.service << 'EOF'
+[Unit]
+Description=aria2c Download Service
+After=network.target
+
+[Service]
+User=你的用户名
+ExecStart=/usr/bin/aria2c --conf-path=/home/你的用户名/.config/aria2/aria2.conf
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo systemctl daemon-reload
+sudo systemctl enable --now aria2c
+#+end_src
+
+*** 内存占用过高
+
+虽然 aria2c 通常很轻量，但在同时下载大量 BT 任务时，内存占用可能会上升。这是因为每个 BT 任务都需要维护连接状态和 piece 缓存。
+
+#+begin_src bash
+# 限制 BT 任务的 piece 缓存大小
+aria2c --disk-cache=16M "magnet:?xt=urn:btih:abc123"
+
+# 减少同时进行的 BT 任务数
+aria2c -j 3 "magnet:?xt=urn:btih:abc123"
+#+end_src
+
+** 常用参数速查表
+
+| 参数                       | 说明                    | 默认值      |   |
+|----------------------------+-------------------------+-------------+---|
+| =-d DIR=                     | 下载保存目录            | 当前目录    |   |
+| =-o FILE=                    | 保存文件名              | 从 URL 推断 |   |
+| =-x N=                       | 单服务器最大连接数      | 5           |   |
+| =-s N=                       | 单文件最大分片数        | 5           |   |
+| =-j N=                       | 同时下载的最大任务数    | 5           |   |
+| =-i FILE=                    | 从文件读取 URL 列表     | -           |   |
+| =-k SIZE=                    | 单文件最小分片大小      | 20M         |   |
+| =--max-download-limit=SPEED= | 最大下载速度            | 0（不限）   |   |
+| =--max-upload-limit=SPEED=   | 最大上传速度            | 0（不限）   |   |
+| =--all-proxy=URL=            | 全局代理地址            | -           |   |
+| =--http-user=USER=           | HTTP 认证用户名         | -           |   |
+| =--http-passwd=PASS=         | HTTP 认证密码           | -           |   |
+| =--header=HEADER=            | 自定义 HTTP 请求头      | -           |   |
+| =--user-agent=UA=            | 自定义 User-Agent       | -           |   |
+| =--referer=URL=              | 自定义 Referer          | -           |   |
+| =--checksum=HASH=            | 下载后校验哈希值        | -           |   |
+| =--select-file=INDEX=        | BT 选择性下载           | -           |   |
+| =--bt-tracker=LIST=          | BT Tracker 列表         | -           |   |
+| =--seed-ratio=RATIO=         | BT 做种分享比           | 1.0         |   |
+| =--seed-time=MINUTES=        | BT 做种时间             | -           |   |
+| =--enable-rpc=BOOL=          | 启用 RPC                | false       |   |
+| =--rpc-listen-port=PORT=     | RPC 监听端口            | 6800        |   |
+| =--rpc-secret=TOKEN=         | RPC 密钥                | -           |   |
+| =--conf-path=PATH=           | 配置文件路径            | -           |   |
+| =--no-conf=                  | 不加载配置文件          | -           |   |
+| =--continue=BOOL=            | 断点续传                | true        |   |
+| =--file-allocation=METHOD=   | 文件预分配方式          | prealloc    |   |
+| =--max-tries=N=              | 最大重试次数            | 5           |   |
+| =--retry-wait=SEC=           | 重试等待时间            | 0           |   |
+| =--timeout=SEC=              | 超时时间                | 60          |   |
+| =--check-certificate=BOOL=   | HTTPS 证书验证          | true        |   |
+| =-D=                         | 后台运行（daemon 模式） | -           |   |
+| =-S=                         | 列出 BT 种子中的文件    | -           |   |
+
+** 参考资源
+
+- [[https://aria2.github.io/manual/en/html/][aria2 官方文档]] — 最权威的参数说明和使用指南
+- [[https://github.com/aria2/aria2][aria2 GitHub 仓库]] — 源代码和 Issue 追踪
+- [[https://wiki.archlinux.org/title/Aria2][Aria2 - ArchWiki]] — Arch Linux 社区维护的配置指南
+- [[https://ariang.mayswind.net/][AriaNg]] — 最流行的 aria2c Web 前端
+- [[https://github.com/ziahamza/webui-aria2][webui-aria2]] — 另一个 Web 前端
+- [[https://github.com/ngosang/trackerslist][ngosang/trackerslist]] — 持续更新的 BT Tracker 列表
+- [[https://github.com/powerpill/powerpill][powerpill]] — pacman 的 aria2c 加速包装器
