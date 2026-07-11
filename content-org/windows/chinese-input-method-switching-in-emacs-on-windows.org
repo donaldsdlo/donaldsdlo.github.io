@@ -133,3 +133,14 @@ _NAME is the input method name (unused)."
 [[file:../../static/content-org/windows/chinese-input-method-switching-in-emacs-on-windows.org/2026-07-11_09-44-58_screenshot.png]]
 
 使用的 emacs 版本为 scoop 中的 emacs-k（如果版本不匹配，可能会碰到动态库加载的问题）。
+
+错误信息如下：
+#+begin_src bash
+apply: Module could not be opened: "d:/home/.emacs.d/bin/liberime-core.dll", "                  "
+#+end_src
+
+#+DOWNLOADED: screenshot @ 2026-07-11 11:17:23
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
+#+ATTR_LATEX: :width 0.8\textwidth
+[[file:../../static/content-org/windows/chinese-input-method-switching-in-emacs-on-windows.org/2026-07-11_11-17-23_screenshot.png]]

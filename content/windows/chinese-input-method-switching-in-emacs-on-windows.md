@@ -2,7 +2,7 @@
 title: "Windows 系统 Emacs 中的中文输入法切换"
 author: ["Donald Lo"]
 date: 2026-07-11
-lastmod: 2026-07-11T10:13:00+08:00
+lastmod: 2026-07-11T11:17:00+08:00
 tags: ["windows", "Emacs", "输入法"]
 draft: false
 ---
@@ -117,3 +117,11 @@ _NAME is the input method name (unused)."
 {{< figure src="/content-org/windows/chinese-input-method-switching-in-emacs-on-windows.org/2026-07-11_09-44-58_screenshot.png" width="90%" >}}
 
 使用的 emacs 版本为 scoop 中的 emacs-k（如果版本不匹配，可能会碰到动态库加载的问题）。
+
+错误信息如下：
+
+```bash
+apply: Module could not be opened: "d:/home/.emacs.d/bin/liberime-core.dll", "                  "
+```
+
+{{< figure src="/content-org/windows/chinese-input-method-switching-in-emacs-on-windows.org/2026-07-11_11-17-23_screenshot.png" width="90%" >}}
