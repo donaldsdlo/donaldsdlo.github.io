@@ -2707,13 +2707,22 @@ RIME 在不同平台有不同的名字：
 在 EndeavourOS 上安装 Fcitx5 非常简单，一条命令搞定：
 
 #+begin_src bash
-sudo pacman -S fcitx5-im fcitx5-chinese-addons fcitx5-rime
+sudo pacman -S fcitx5 fcitx5-gtk fcitx5-qt fcitx5-configtool fcitx5-rime librime
 #+end_src
 
 各软件包的作用说明：
-- =fcitx5-im= — Fcitx5 的核心组件包组，包含 =fcitx5= （主程序）、 =fcitx5-gtk= （GTK 应用支持）、 =fcitx5-qt= （Qt 应用支持）和 =fcitx5-configtool= （图形化配置工具）
-- =fcitx5-chinese-addons= — 中文输入法插件，包含拼音、双拼、五笔拼音、自然码、仓颉、冰蟾全息、二笔等多种输入方式
-- =fcitx5-rime= — RIME 输入法引擎的 Fcitx5 集成
+- fcitx5: 输入法基础框架主程序
+- fcitx5-gtk: GTK 程序的支持， 必须安装， 修复打字太快漏字的问题
+- fcitx5-qt: QT5 程序的支持， 必须安装， 修复打字太快漏字的问题
+- fcitx5-configtool: 图形化配置工具
+- fcitx5-rime: RIME 输入法
+- fcitx5-im: 输入法设置工具
+- librime: rime 相关库， 下面的 emacs-rime 会用到
+
+备注：
+
+- 需要安装 fcitx5-gtk 和 fcitx5-qt 不然打字太快会发生漏字的现象， 就是拼音没有变成汉字而是直接插入输入框中。
+- 附加组件: 粘贴板和快速输入模块的快捷键去掉， 避免和 Emacs 按键冲突
 
 如果你需要额外的词库，还可以安装：
 
@@ -2945,15 +2954,15 @@ AUR 包会自动将方案文件安装到系统目录，但可能不如 GitHub �
 
 让我们用几个实际的例子来感受双拼的输入方式：
 
-| 全拼      | 双拼    | 汉字   | 说明                             |
-|-----------+---------+--------+----------------------------------|
-| shuang    | ul      | 双     | sh→u, uang→l                    |
-| zhuang    | vd      | 装     | zh→v, uang→d                    |
+| 全拼      | 双拼    | 汉字   | 说明                            |
+|-----------+---------+--------+---------------------------------|
+| shuang    | ul      | 双     | sh→u, uang→l                   |
+| zhuang    | vd      | 装     | zh→v, uang→d                   |
 | shu ru fa | uuru fa | 输入法 | sh→u, u→u; r→r, u→u; f→f, a→a |
-| zhong guo | vsgs    | 中国   | zh→v, ong→s; g→g, uo→s         |
-| xue xi    | xtxi    | 学习   | x→x, ue→t; x→x, i→i            |
+| zhong guo | vsgs    | 中国   | zh→v, ong→s; g→g, uo→s        |
+| xue xi    | xtxi    | 学习   | x→x, ue→t; x→x, i→i           |
 | zhe yu er | veyuer  | 这鱼儿 | zh→v, e→e; y→y, u→u; e→e, r→r |
-| ang yang  | ahyh    | 昂扬   | 零声母 ah→昂, y→y, ang→h→扬    |
+| ang yang  | ahyh    | 昂扬   | 零声母 ah→昂, y→y, ang→h→扬   |
 
 通过这些例子可以感受到，双拼的打字节奏感很强——每个字都是固定两次击键，不会出现全拼时一个字三四个键、另一个字六七个键的参差不齐。习惯之后，打字就像弹琴一样有韵律感。
 
@@ -3143,7 +3152,7 @@ AUR 包会自动将方案文件安装到系统目录，但可能不如 GitHub �
 | 引导前缀 | 反查方式       | 说明             |
 |----------+----------------+------------------|
 | 通配符   | 自然码双拼反查 | 用双拼反查辅助码 |
-| `​        | 虎码反查       | 用虎码查字       |
+| `​       | 虎码反查       | 用虎码查字       |
 | ocj      | 仓颉反查       | 用仓颉码查字     |
 | obh      | 笔画反查       | 用笔画查字       |
 | olf      | 两分反查       | 用两分法查字     |
@@ -12732,9 +12741,9 @@ foo.o: foo.c
 | =target: deps=               | 定义目标和依赖                    |
 | =\tcommand=                  | Tab 开头的命令行                  |
 | =VAR = value=                | 递归展开变量（使用时展开）        |
-| =VAR := value=               | 简单展开变量（定义时展开）        |
-| =VAR ?= value=               | 条件赋值（仅当 VAR 未定义时赋值） |
-| =VAR += value=               | 追加值                            |
+| ~VAR := value~               | 简单展开变量（定义时展开）        |
+| ~VAR ?= value~               | 条件赋值（仅当 VAR 未定义时赋值） |
+| ~VAR += value~               | 追加值                            |
 | =$(VAR)= 或 =${VAR}=           | 引用变量                          |
 | =$@=                         | 目标名                            |
 | =$<=                         | 第一个依赖                        |
@@ -25230,8 +25239,8 @@ wget -O ~/.config/mpv/script-opts/sub-select.conf \
 
 *** 脚本一览表
 
-| 脚本                | 功能                  | 推荐度  | 依赖   |
-|---------------------+-----------------------+---------+--------|
+| 脚本                | 功能                  | 推荐度 | 依赖   |
+|---------------------+-----------------------+--------+--------|
 | thumbfast           | 进度条缩略图预览      | ★★★★★ | FFmpeg |
 | mpv-stats           | 播放信息面板          | ★★★★★ | 无     |
 | autoload            | 自动加载目录文件      | ★★★★★ | 无     |

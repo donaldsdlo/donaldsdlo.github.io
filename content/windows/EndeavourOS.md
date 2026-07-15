@@ -2,7 +2,7 @@
 title: "EndeavourOS"
 author: ["Donald Lo"]
 date: 2026-05-13
-lastmod: 2026-07-06T11:01:00+08:00
+lastmod: 2026-07-14T23:40:00+08:00
 tags: ["EndeavourOS", "Arch", "Linux"]
 draft: false
 ---
@@ -1285,7 +1285,7 @@ draft: false
             - [整数运算](#整数运算)
         - [条件判断](#条件判断)
             - [test / [ ]](#test)
-            - [ ](#680--org2c80400)
+            - [ ](#687--orgf9ada0a)
             - [if / elif / else / fi](#if-elif-else-fi)
         - [循环](#循环)
             - [for...in](#for-dot-dot-dot-in)
@@ -4578,14 +4578,23 @@ RIME 在不同平台有不同的名字：
 在 EndeavourOS 上安装 Fcitx5 非常简单，一条命令搞定：
 
 ```bash
-sudo pacman -S fcitx5-im fcitx5-chinese-addons fcitx5-rime
+sudo pacman -S fcitx5 fcitx5-gtk fcitx5-qt fcitx5-configtool fcitx5-rime librime
 ```
 
 各软件包的作用说明：
 
--   `fcitx5-im` — Fcitx5 的核心组件包组，包含 `fcitx5` （主程序）、 `fcitx5-gtk` （GTK 应用支持）、 `fcitx5-qt` （Qt 应用支持）和 `fcitx5-configtool` （图形化配置工具）
--   `fcitx5-chinese-addons` — 中文输入法插件，包含拼音、双拼、五笔拼音、自然码、仓颉、冰蟾全息、二笔等多种输入方式
--   `fcitx5-rime` — RIME 输入法引擎的 Fcitx5 集成
+-   fcitx5: 输入法基础框架主程序
+-   fcitx5-gtk: GTK 程序的支持， 必须安装， 修复打字太快漏字的问题
+-   fcitx5-qt: QT5 程序的支持， 必须安装， 修复打字太快漏字的问题
+-   fcitx5-configtool: 图形化配置工具
+-   fcitx5-rime: RIME 输入法
+-   fcitx5-im: 输入法设置工具
+-   librime: rime 相关库， 下面的 emacs-rime 会用到
+
+备注：
+
+-   需要安装 fcitx5-gtk 和 fcitx5-qt 不然打字太快会发生漏字的现象， 就是拼音没有变成汉字而是直接插入输入框中。
+-   附加组件: 粘贴板和快速输入模块的快捷键去掉， 避免和 Emacs 按键冲突
 
 如果你需要额外的词库，还可以安装：
 
@@ -15133,9 +15142,9 @@ foo.o: foo.c
 | `target: deps`               | 定义目标和依赖      |
 | `\tcommand`                  | Tab 开头的命令行    |
 | `VAR = value`                | 递归展开变量（使用时展开） |
-| `VAR :` value=               | 简单展开变量（定义时展开） |
-| `VAR ?` value=               | 条件赋值（仅当 VAR 未定义时赋值） |
-| `VAR +` value=               | 追加值              |
+| <kbd>VAR := value</kbd>      | 简单展开变量（定义时展开） |
+| <kbd>VAR ?= value</kbd>      | 条件赋值（仅当 VAR 未定义时赋值） |
+| <kbd>VAR += value</kbd>      | 追加值              |
 | `$(VAR)` 或 `${VAR}`         | 引用变量            |
 | `$@`                         | 目标名              |
 | `$<`                         | 第一个依赖          |
@@ -22304,7 +22313,7 @@ let c=a+b
 -   变量加引号防止空值报错
 
 
-#####  {#680--org2c80400}
+#####  {#687--orgf9ada0a}
 
 `[[ ]]` 是 Bash 增强版，支持模式匹配和逻辑运算：
 
