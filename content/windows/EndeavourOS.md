@@ -2,7 +2,7 @@
 title: "EndeavourOS"
 author: ["Donald Lo"]
 date: 2026-05-13
-lastmod: 2026-07-14T23:40:00+08:00
+lastmod: 2026-07-15T21:39:00+08:00
 tags: ["EndeavourOS", "Arch", "Linux"]
 draft: false
 ---
@@ -36,6 +36,11 @@ draft: false
         - [使用前注意事项](#使用前注意事项)
         - [完整流程示例](#完整流程示例)
         - [配合版本控制](#配合版本控制)
+        - [.gitignore 配置：默认忽略 + 白名单放行](#dot-gitignore-配置-默认忽略-plus-白名单放行)
+            - [核心思路](#核心思路)
+            - [多级目录的问题](#多级目录的问题)
+            - [简化写法](#简化写法)
+            - [验证](#验证)
         - [常见问题](#常见问题)
     - [常用软件安装](#常用软件安装)
 - [环境变量](#环境变量)
@@ -93,6 +98,7 @@ draft: false
         - [环境变量调试技巧](#环境变量调试技巧)
 - [符号链接](#符号链接)
     - [inode 与文件系统基础](#inode-与文件系统基础)
+        - [目录的硬链接](#目录的硬链接)
     - [硬链接](#硬链接)
         - [定义与机制](#定义与机制)
         - [硬链接的特性](#硬链接的特性)
@@ -113,11 +119,12 @@ draft: false
     - [查找和检查链接](#查找和检查链接)
     - [链接的所有权与权限](#链接的所有权与权限)
         - [符号链接的权限](#符号链接的权限)
-        - [符号链接的属主](#符号链接的属主)
+        - [链接的属主](#链接的属主)
     - [链接与磁盘空间](#链接与磁盘空间)
     - [特殊情况与陷阱](#特殊情况与陷阱)
         - [链接到链接](#链接到链接)
         - [循环链接](#循环链接)
+        - [硬链接指向软链接](#硬链接指向软链接)
         - [cp 与链接的交互](#cp-与链接的交互)
         - [mv 与链接的交互](#mv-与链接的交互)
         - [目录符号链接的陷阱](#目录符号链接的陷阱)
@@ -127,68 +134,39 @@ draft: false
         - [Python / Java 版本切换](#python-java-版本切换)
         - [系统服务与套接字](#系统服务与套接字)
         - [跨文件系统链接实例](#跨文件系统链接实例)
-    - [Windows 快捷方式 vs Linux 符号链接](#windows-快捷方式-vs-linux-符号链接)
+        - [XDG 目录与符号链接](#xdg-目录与符号链接)
+        - [包管理器中的符号链接](#包管理器中的符号链接)
     - [常见问题与注意事项](#常见问题与注意事项)
         - [创建符号链接时参数顺序](#创建符号链接时参数顺序)
         - [符号链接的相对路径解析](#符号链接的相对路径解析)
         - [符号链接导致 `cd` 迷路](#符号链接导致-cd-迷路)
         - [硬链接与备份](#硬链接与备份)
-    - [inode 与文件系统的底层机制](#inode-与文件系统的底层机制)
-        - [什么是 inode](#什么是-inode)
-        - [目录的硬链接](#目录的硬链接)
-    - [硬链接](#硬链接)
-        - [概念](#概念)
-        - [硬链接的特性](#硬链接的特性)
-        - [创建硬链接](#创建硬链接)
-    - [软链接（符号链接）](#软链接-符号链接)
-        - [概念](#概念)
-        - [软链接的特性](#软链接的特性)
-        - [绝对路径与相对路径软链接](#绝对路径与相对路径软链接)
-    - [硬链接与软链接的全面对比](#硬链接与软链接的全面对比)
-    - [ln 命令完整语法与选项](#ln-命令完整语法与选项)
-        - [基本语法](#基本语法)
-        - [常用选项](#常用选项)
-        - [使用示例](#使用示例)
-    - [创建和删除链接](#创建和删除链接)
-        - [创建软链接到目录](#创建软链接到目录)
-        - [删除软链接](#删除软链接)
-        - [批量创建软链接](#批量创建软链接)
-    - [查找和检查符号链接](#查找和检查符号链接)
-        - [查看链接指向](#查看链接指向)
-        - [查找系统中的符号链接](#查找系统中的符号链接)
-        - [检查链接是否有效](#检查链接是否有效)
-    - [悬空链接](#悬空链接)
-        - [常见产生原因](#常见产生原因)
-        - [查找和处理悬空链接](#查找和处理悬空链接)
-    - [所有权与权限](#所有权与权限)
-        - [软链接的权限](#软链接的权限)
-        - [软链接的所有权](#软链接的所有权)
-        - [硬链接的权限和所有权](#硬链接的权限和所有权)
-    - [磁盘空间分析](#磁盘空间分析)
-    - [特殊情况与进阶话题](#特殊情况与进阶话题)
-        - [软链接指向软链接](#软链接指向软链接)
-        - [循环链接](#循环链接)
-        - [硬链接指向软链接](#硬链接指向软链接)
-        - [软链接与 mv/cp 的交互](#软链接与-mv-cp-的交互)
-    - [在 EndeavourOS / Arch Linux 中的实际应用](#在-endeavouros-arch-linux-中的实际应用)
-        - [GNU Stow 管理符号链接](#gnu-stow-管理符号链接)
-        - [XDG 目录规范与符号链接](#xdg-目录规范与符号链接)
-        - [库文件与 soname 链接](#库文件与-soname-链接)
-        - [Python / Java 版本管理](#python-java-版本管理)
-        - [软件版本切换](#软件版本切换)
-        - [包管理器中的符号链接](#包管理器中的符号链接)
-    - [常见陷阱与注意事项](#常见陷阱与注意事项)
-        - [1. 删除指向目录的软链接时误加斜杠](#1-dot-删除指向目录的软链接时误加斜杠)
-        - [2. 覆盖已存在的软链接](#2-dot-覆盖已存在的软链接)
-        - [3. 相对路径软链接的路径解析](#3-dot-相对路径软链接的路径解析)
-        - [4. 硬链接不能跨分区](#4-dot-硬链接不能跨分区)
-        - [5. 备份工具对链接的处理](#5-dot-备份工具对链接的处理)
-        - [6. 硬链接与时间戳](#6-dot-硬链接与时间戳)
+        - [硬链接与时间戳](#硬链接与时间戳)
     - [Windows 快捷方式 vs Linux 符号链接](#windows-快捷方式-vs-linux-符号链接)
     - [系统管理中的实用技巧](#系统管理中的实用技巧)
         - [快速切换配置文件](#快速切换配置文件)
-        - [修复悬空链接](#修复悬空链接)
         - [安全地替换指向目录的软链接](#安全地替换指向目录的软链接)
+    - [电脑中只有一个 64G 的 SSD ，一个 4T 的机械硬盘挂在 /data 上](#电脑中只有一个-64g-的-ssd-一个-4t-的机械硬盘挂在-data-上)
+        - [基本思路](#基本思路)
+        - [在 /data 上创建统一目录结构](#在-data-上创建统一目录结构)
+        - [texlive-full](#texlive-full)
+        - [rust](#rust)
+        - [octave](#octave)
+        - [nodejs](#nodejs)
+        - [uv](#uv)
+        - [docker](#docker)
+        - [virtualbox](#virtualbox)
+        - [vagrant](#vagrant)
+        - [podman](#podman)
+        - [qemu](#qemu)
+        - [appimage](#appimage)
+        - [snap](#snap)
+        - [opencode](#opencode)
+        - [claude](#claude)
+        - [ollama](#ollama)
+        - [hermes](#hermes)
+        - [批量迁移脚本](#批量迁移脚本)
+        - [还原软链接](#还原软链接)
 - [Fcitx5 Rime 自然码辅码输入法](#fcitx5-rime-自然码辅码输入法)
     - [为什么选择 fcitx5-rime + 自然码](#为什么选择-fcitx5-rime-plus-自然码)
         - [输入法框架的选择：Fcitx5 vs IBus](#输入法框架的选择-fcitx5-vs-ibus)
@@ -1285,7 +1263,7 @@ draft: false
             - [整数运算](#整数运算)
         - [条件判断](#条件判断)
             - [test / [ ]](#test)
-            - [ ](#687--orgf9ada0a)
+            - [ ](#696--org8d37cbe)
             - [if / elif / else / fi](#if-elif-else-fi)
         - [循环](#循环)
             - [for...in](#for-dot-dot-dot-in)
@@ -2063,6 +2041,91 @@ git push -u origin master
 ```
 
 使用私有仓库可以保护包含敏感信息（如 `.gitconfig` 中的用户名/邮箱）的文件。
+
+
+#### .gitignore 配置：默认忽略 + 白名单放行 {#dot-gitignore-配置-默认忽略-plus-白名单放行}
+
+dotfiles 仓库中，各软件包目录下经常会混入系统自动生成的文件（如 `.nvim/`. 下的 `.netrwhist` 、 `~/.config/` 下各种缓存和会话文件）。如果不加过滤，这些文件会污染仓库。解决办法是用 `.gitignore` 的"默认忽略 + 白名单放行"模式。
+
+
+##### 核心思路 {#核心思路}
+
+```gitignore
+# 1. 忽略一切
+*
+
+# 2. 但不忽略 .gitignore 本身
+!.gitignore
+
+# 3. 放行需要的文件/目录（用 ! 否定忽略）
+!bash/
+!bash/.bashrc
+!git/
+!git/.gitconfig
+```
+
+
+##### 多级目录的问题 {#多级目录的问题}
+
+假设目录结构：
+
+```text
+a/
+  b/
+    c/
+      t1/
+        t1.txt
+      t2/
+        t2.txt
+```
+
+只想跟踪 `a/b/c/t2/t2.txt` ， `.gitignore` 应写为：
+
+```gitignore
+# 忽略一切
+*
+
+# 不忽略 .gitignore 本身
+!.gitignore
+
+# 关键：必须逐级放行父目录，否则 Git 不会进入被忽略的目录
+!a/
+!a/b/
+!a/b/c/
+!a/b/c/t2/
+
+# 最后放行目标文件
+!a/b/c/t2/t2.txt
+```
+
+`原因` ：Git 看到父目录被忽略后，根本不会进入该目录查找文件。所以必须用 `!` 逐级把每一层父目录也放行，Git 才会往深处遍历。
+
+
+##### 简化写法 {#简化写法}
+
+如果 `a/b/c/t2/` 目录下所有内容都需跟踪，可以简写为：
+
+```gitignore
+*
+!.gitignore
+!a/
+!a/b/
+!a/b/c/
+!a/b/c/t2/
+```
+
+这样 `t2/` 下的所有文件都会被跟踪。
+
+
+##### 验证 {#验证}
+
+```bash
+# 查看哪些文件被 Git 跟踪
+git ls-files
+
+# 查看某个文件为何被忽略/放行
+git check-ignore -v a/b/c/t2/t2.txt
+```
 
 
 #### 常见问题 {#常见问题}
@@ -3019,10 +3082,10 @@ diff /tmp/env_before.txt /tmp/env_after.txt
 
 在 Linux 的文件系统（如 ext4、xfs、btrfs）中，文件由两个部分组成：
 
--   **inode** （索引节点）— 文件的元数据结构，存储了文件的属性信息：数据块位置、文件大小、权限、属主、时间戳、链接计数等。每个 inode 有一个唯一的编号（inode number），在同一个文件系统内唯一标识一个文件
+-   **inode** （索引节点）— 文件的元数据结构，存储了文件的属性信息：文件大小、所有者（uid/gid）、权限位（rwx）、时间戳（atime/mtime/ctime）、数据块指针、链接计数（link count）等。每个 inode 有一个唯一的编号（inode number），在同一个文件系统内唯一标识一个文件
 -   **数据块** （data block）— 实际存储文件内容的磁盘区域
 
-**文件名不在 inode 中** 。文件名存储在 **目录文件** 中。目录本质上也是一个文件，它的内容是一张表，每行记录了"文件名 → inode 编号"的映射关系。当你在终端输入 `cat /home/user/file.txt` 时，操作系统做的是：
+**文件名不在 inode 中** 。文件名存储在 **目录项** （directory entry，简称 dentry）中。目录本质上也是一个文件，它的内容是一张表，将文件名映射到 inode 号。当你在终端输入 `cat /home/user/file.txt` 时，操作系统做的是：
 
 ```text
 /          → inode 2 (根目录)
@@ -3045,6 +3108,40 @@ stat file.txt
 
 ls -i file.txt        # 仅查看 inode 编号
 # 300 file.txt
+```
+
+输出示例：
+
+```text
+  File: /etc/hostname
+  Size: 13              Blocks: 8          IO Block: 4096   regular file
+Device: 8,2       Inode: 131075      Links: 1
+Access: (0644/-rw-r--r--)  Uid: (    0/    root)   Gid: (    0/    root)
+Access: 2025-01-15 10:23:44.000000000 +0800
+Modify: 2025-01-10 08:00:00.000000000 +0800
+Change: 2025-01-10 08:00:00.000000000 +0800
+```
+
+
+#### 目录的硬链接 {#目录的硬链接}
+
+每个目录在被创建时，自动生成两个硬链接：
+
+-   `.` — 指向目录自身的 inode
+-   `..` — 指向父目录的 inode
+
+这就是为什么用 `ls -la` 查看目录时， `.` 和 `..` 总是出现在最前面。对于一个空目录，链接计数为 2：一个是目录项中的文件名，另一个是目录内部的 `.` 。每添加一个子目录，父目录的链接计数 +1（因为子目录的 `..` 指向父目录）。
+
+```bash
+mkdir /tmp/testdir
+ls -ld /tmp/testdir
+# drwxr-xr-x 2 user user 4096 Jan 15 10:00 /tmp/testdir
+# 链接数为 2
+
+mkdir /tmp/testdir/subdir
+ls -ld /tmp/testdir
+# drwxr-xr-x 3 user user 4096 Jan 15 10:00 /tmp/testdir
+# 链接数变为 3（+1 来自 subdir/..）
 ```
 
 
@@ -3087,6 +3184,7 @@ ls -li file.txt hardlink.txt
 -   **权限同步** — 修改任何一个名字的权限/属主，其他名字同步变化（因为权限存储在 inode 上，不是目录条目中）
 -   **无主次之分** — 无法区分哪个是"原始文件"，哪个是"链接"，它们完全对等
 -   **不占用额外空间** — 硬链接只增加一个目录条目，不复制数据，几乎不占磁盘空间
+-   **ctime 会更新** — 创建硬链接会更新 inode 的 ctime（状态变更时间），但不会更新 mtime（修改时间），因为文件内容没有被修改
 
 
 #### 硬链接的限制 {#硬链接的限制}
@@ -3146,11 +3244,12 @@ readlink symlink.txt
 -   **可链接目录** — 操作系统知道这是一个链接，遍历目录树时可以选择不跟随，不会形成环
 -   **可以链接不存在的目标** — 创建符号链接时，目标文件不需要存在。这在构建环境、预声明路径等场景中有用
 -   **有主次之分** — 可以明确区分"链接"和"目标"，链接依赖目标而存在
+-   **文件类型标识** — `ls -l` 输出中第一个字符为 `l`
 
 
 #### 绝对路径 vs 相对路径 {#绝对路径-vs-相对路径}
 
-符号链接存储的路径可以是绝对路径或相对路径：
+符号链接存储的路径可以是绝对路径或相对路径。注意：路径的解析基于链接文件自身的位置，而不是创建链接时的当前工作目录。
 
 ```bash
 # 绝对路径链接——目标移动后链接失效，但链接本身移动不受影响
@@ -3160,12 +3259,14 @@ ln -s /home/user/file.txt abs_link
 ln -s file.txt rel_link
 ```
 
-**实践建议** ：如果链接和目标可能一起移动（如在同一个项目目录中），用相对路径更健壮。如果目标位置固定（如系统路径），用绝对路径更可靠。
+**实践建议** ：如果链接和目标可能一起移动（如在同一个项目目录中），用相对路径更健壮。如果目标位置固定（如系统路径），用绝对路径更可靠。如果嫌计算相对路径容易出错，用 `ln -sr` 让系统自动计算。
 
 
 #### 悬空链接（Dangling Symlink） {#悬空链接-dangling-symlink}
 
-当符号链接指向的目标文件被删除、移动或重命名后，链接就成为悬空链接（也称断链接）。此时访问链接会报 `No such file or directory` 错误：
+当符号链接指向的目标文件被删除、移动或重命名后，链接就成为悬空链接（也称断链接）。此时访问链接会报 `No such file or directory` 错误。
+
+常见产生原因：目标文件被删除/移动/重命名、软链接使用绝对路径但目标所在分区未挂载、创建时目标就不存在。
 
 ```bash
 ln -s target.txt link.txt
@@ -3175,31 +3276,40 @@ cat link.txt
 
 # 查找当前目录下的所有悬空链接
 find . -xtype l
-
-# 查找并列出悬空链接指向的目标
 find . -type l ! -exec test -e {} \; -print
 
-# 删除所有悬空链接（确认后再执行）
+# 查找并删除悬空链接（确认后再执行）
 find . -xtype l -delete
+
+# 使用 symlinks 工具（需安装）
+sudo pacman -S symlinks
+symlinks -r /usr    # 递归检查所有符号链接
+symlinks -d /usr    # 删除悬空链接（谨慎使用）
+symlinks -c /home/user   # 将绝对路径链接转为相对路径
 ```
+
+注意： `/` 下某些悬空链接可能是正常的（如 `/proc` 、 `/sys` 等虚拟文件系统，或某些包管理器预留的链接），不要盲目删除系统目录下的悬空链接。
 
 
 ### 硬链接 vs 符号链接对比 {#硬链接-vs-符号链接对比}
 
-| 特性     | 硬链接           | 符号链接               |
-|--------|---------------|--------------------|
+| 特性     | 硬链接              | 符号链接                     |
+|--------|------------------|--------------------------|
 | 本质     | 同一 inode 的多个目录条目 | 独立文件，存储目标路径字符串 |
-| inode    | 与目标相同       | 与目标不同             |
-| 跨文件系统 | 不可以           | 可以                   |
-| 链接目录 | 不可以（POSIX 禁止） | 可以                   |
+| inode    | 与目标相同          | 与目标不同                   |
+| 跨文件系统 | 不可以              | 可以                         |
+| 链接目录 | 不可以（POSIX 禁止） | 可以                         |
 | 目标删除后 | 数据仍可访问（链接计数未归零） | 链接失效（dangling symlink） |
-| 目标移动后 | 不影响（直接引用 inode） | 链接失效（路径不再有效） |
-| 链接移动后 | 不影响           | 绝对路径不受影响，相对路径可能失效 |
-| 磁盘空间 | 几乎不占额外空间 | 占少量空间（存储路径字符串） |
-| 权限     | 与目标同步（同一 inode） | 显示 777，实际由目标权限决定 |
-| 创建时目标须存在 | 是               | 否                     |
-| 主次关系 | 无（完全对等）   | 有（链接依赖目标）     |
-| 链接计数影响 | 创建增加，删除减少 | 不影响目标的链接计数   |
+| 目标移动后 | 不影响（直接引用 inode） | 链接失效（路径不再有效）     |
+| 链接移动后 | 不影响              | 绝对路径不受影响，相对路径可能失效 |
+| 磁盘空间 | 几乎不占额外空间（仅目录项） | 占少量空间（存储路径字符串） |
+| 权限显示 | 与目标同步（同一 inode） | 显示 lrwxrwxrwx（777），实际由目标权限决定 |
+| 创建时目标须存在 | 是                  | 否                           |
+| 主次关系 | 无（完全对等）      | 有（链接依赖目标）           |
+| 链接计数影响 | 创建增加，删除减少  | 不影响目标的链接计数         |
+| ctime 影响 | 更新源文件 inode 的 ctime | 不影响目标文件的元数据       |
+| 备份工具行为 | 通常独立备份        | 通常跟随链接备份目标文件     |
+| 文件类型标识 | 普通文件（ `-` ）   | 链接文件（ `l` ）            |
 
 
 ### ln 命令详解 {#ln-命令详解}
@@ -3217,81 +3327,66 @@ ln [OPTION]... TARGET... DIRECTORY    # 在 DIRECTORY 中为每个 TARGET 创建
 
 #### 常用选项 {#常用选项}
 
-| 选项        | 含义                          |
-|-----------|-----------------------------|
-| `-s`        | 创建符号链接（最常用选项）    |
-| `-f`        | 强制创建，如果目标链接已存在则删除后重建 |
-| `-i`        | 交互模式，删除已有链接前询问确认 |
+| 选项        | 含义                                       |
+|-----------|------------------------------------------|
+| `-s`        | 创建符号链接（最常用选项）                 |
+| `-f`        | 强制创建，如果目标链接已存在则删除后重建   |
+| `-i`        | 交互模式，删除已有链接前询问确认           |
 | `-n`        | 把指向目录的已有链接当作普通文件处理（不解引用） |
-| `-v`        | 显示创建过程                  |
+| `-v`        | 显示创建过程                               |
 | `-b`        | 对已存在的链接做备份（加 `~` 后缀）后创建新链接 |
-| `-S SUFFIX` | 指定备份后缀（替代默认的 `~` ） |
-| `-t DIR`    | 指定创建链接的目录            |
+| `-S SUFFIX` | 指定备份后缀（替代默认的 `~` ）            |
+| `-t DIR`    | 指定创建链接的目录                         |
 | `-T`        | 把 LINK_NAME 当作普通文件（防止误当目录处理） |
 | `-d` / `-F` | 允许 root 创建目录硬链接（需文件系统支持，极不推荐） |
 | `-r`        | 创建相对路径的符号链接（自动计算相对路径，非常实用） |
+| `-P`        | 创建硬链接时，如果源文件是软链接，硬链接指向软链接的最终目标（物理解引用，默认行为） |
+| `-L`        | 创建硬链接时，如果源文件是软链接，硬链接指向软链接本身而非其目标（逻辑行为） |
 
 
 #### 创建符号链接 {#创建符号链接}
 
 ```bash
-# 基本用法：创建符号链接
+# 基本用法
 ln -s /path/to/target link_name
 
-# 为文件创建符号链接
+# 为文件/目录创建符号链接
 ln -s /home/user/documents/report.pdf ~/Desktop/report_link
-
-# 为目录创建符号链接
 ln -s /mnt/external_drive/photos ~/Pictures/external_photos
 
 # 在指定目录中为多个目标创建链接
 ln -s /usr/bin/python3 /usr/bin/pip3 /home/user/local_bin/
-
-# 使用 -t 指定目标目录
 ln -s -t /home/user/local_bin/ /usr/bin/python3 /usr/bin/pip3
 
-# 创建相对路径的符号链接（-r 自动计算相对路径）
+# 创建相对路径的符号链接（-r 自动计算）
 ln -sr ../config/app.conf ./app.conf
-# 链接内容将是 "../config/app.conf" 而非绝对路径
 
-# 强制覆盖已有链接
-ln -sf /new/target link_name
+# 强制/交互式/备份覆盖
+ln -sf /new/target link_name        # 强制覆盖
+ln -si /new/target link_name        # 交互式确认
+ln -sb /new/target link_name        # 备份为 link_name~
 
-# 交互式覆盖（已有链接时询问）
-ln -si /new/target link_name
-
-# 创建前备份已有链接
-ln -sb /new/target link_name    # 备份为 link_name~
+# 防止将已存在的软链接当作目录
+ln -sfn /opt/app-v2 /opt/app       # 替换链接本身，而非在目标目录内创建
 ```
 
 
 #### 创建硬链接 {#创建硬链接}
 
 ```bash
-# 为文件创建硬链接
-ln file.txt hardlink.txt
-
-# 创建多个硬链接
-ln file.txt link1.txt link2.txt
-
-# 在指定目录中创建硬链接
-ln file.txt /backup/
-
-# 强制覆盖已有硬链接
-ln -f file.txt hardlink.txt
+ln file.txt hardlink.txt            # 基本硬链接
+ln file.txt /backup/               # 在目标目录中创建同名硬链接
+ln -v file.txt hardlink.txt        # 显示创建过程
 ```
 
 
 #### 删除链接 {#删除链接}
 
-删除链接使用 `rm` 或 `unlink` 命令，与删除普通文件相同：
+删除链接使用 `rm` 或 `unlink` 命令：
 
 ```bash
 rm link_name               # 删除链接（符号链接或硬链接均可）
-unlink link_name           # 删除单个链接（只能删一个文件）
-
-# 注意：删除符号链接不会删除目标文件
-rm symlink.txt             # 仅删除链接文件，target.txt 不受影响
+unlink link_name           # 删除单个链接（更安全，不支持 -r）
 
 # 危险！删除指向目录的符号链接时，不要加斜杠
 rm -rf symlink_dir/        # 错误！会删除目标目录的内容
@@ -3304,32 +3399,36 @@ rm -rf symlink_dir         # 正确，只删除链接本身
 ```bash
 # 查看符号链接指向
 ls -la link_name           # 显示链接 → 目标
-readlink link_name         # 仅输出链接指向的路径
-readlink -f link_name      # 输出规范化的绝对路径（解析所有中间链接）
+readlink link_name         # 仅输出链接指向的路径（一层）
+readlink -f link_name      # 递归解析，输出规范化的绝对路径
+readlink -e link_name      # 类似 -f，但最终目标不存在时返回空
+readlink -m link_name      # 类似 -f，但不检查目标是否存在
 
-# 查找当前目录下所有符号链接
-find . -type l
+# namei 递归显示路径中每一层的解析结果
+namei /usr/bin/python
+# f: /usr/bin/python
+#  d /
+#  d usr
+#  d bin
+#  l python -> python3
+#  l python3 -> python3.12
+#  - python3.12
 
-# 查找符号链接并显示指向
-find . -type l -exec ls -la {} \;
-
-# 查找所有指向特定目标的符号链接
-find / -type l -lname '*target*'
+# 查找符号链接
+find . -type l                                  # 当前目录下所有符号链接
+find /usr/bin -type l -printf '%p -> %l\n'      # 显示指向
+find / -type l -lname '*target*'                # 指向特定目标
 
 # 查找悬空（断）链接
 find . -xtype l
 find . -type l ! -exec test -e {} \; -print
 
-# 检查文件的链接计数
-stat file.txt              # 查看 Links 字段
-
-# 查看文件的 inode 编号
+# 检查文件的链接计数和 inode 编号
+stat file.txt
 ls -i file.txt
-stat -c '%i' file.txt
 
 # 检查两个文件是否为同一 inode（硬链接）
-ls -li file1 file2         # inode 编号相同即为硬链接
-stat -c '%i' file1 file2
+ls -li file1 file2
 
 # file 命令识别链接类型
 file symlink.txt
@@ -3344,28 +3443,48 @@ file hardlink.txt
 
 #### 符号链接的权限 {#符号链接的权限}
 
-符号链接的权限永远显示为 `lrwxrwxrwx` ，但这没有实际意义。访问符号链接时，内核使用 **目标文件** 的权限进行检查。你不能用 `chmod` 修改符号链接的权限—— `chmod` 会跟随链接修改目标文件的权限。
+符号链接的权限永远显示为 `lrwxrwxrwx` ，但这没有实际意义。访问符号链接时，内核使用 **目标文件** 的权限进行检查。 `chmod` 会跟随链接修改目标文件的权限。
+
+```bash
+# 创建一个只读文件的软链接
+echo "secret" > /tmp/readonly.txt
+chmod 444 /tmp/readonly.txt
+ln -s /tmp/readonly.txt /tmp/link_to_readonly.txt
+
+# 尝试通过链接写入 — 权限由目标文件决定
+echo "test" >> /tmp/link_to_readonly.txt
+# bash: /tmp/link_to_readonly.txt: Permission denied
+```
 
 如果要真正修改符号链接自身的权限（几乎无必要），需要使用 `chmod -h` （部分系统支持）。
 
 
-#### 符号链接的属主 {#符号链接的属主}
+#### 链接的属主 {#链接的属主}
 
-符号链接的属主通常与创建者相同。修改符号链接的属主（而非目标的属主），需使用 `chown -h` ：
+修改符号链接本身的属主（而非目标的属主），需使用 `chown -h` ：
 
 ```bash
-# 修改目标文件的属主（跟随链接）
-chown user:group symlink.txt
+chown user:group symlink.txt       # 修改目标文件的属主（跟随链接）
+chown -h user:group symlink.txt    # 修改符号链接本身的属主（不跟随）
+```
 
-# 修改符号链接本身的属主（不跟随）
-chown -h user:group symlink.txt
+硬链接与源文件共享 inode，因此权限、所有者、时间戳完全一致。修改任何一个硬链接的权限或所有者，所有硬链接都会同步变化。
+
+```bash
+echo "test" > /tmp/fileA.txt
+ln /tmp/fileA.txt /tmp/fileB.txt
+chmod 755 /tmp/fileA.txt
+ls -l /tmp/fileA.txt /tmp/fileB.txt
+# -rwxr-xr-x 2 user user 5 Jan 15 10:00 /tmp/fileA.txt
+# -rwxr-xr-x 2 user user 5 Jan 15 10:00 /tmp/fileB.txt
+# 两者权限同时改变
 ```
 
 
 ### 链接与磁盘空间 {#链接与磁盘空间}
 
 -   **硬链接** — 几乎不占额外空间。只增加一个目录条目（文件名 + inode 编号），不复制数据。 `du` 和 `df` 统计时，同一 inode 的多个硬链接只计一次数据量
--   **符号链接** — 占少量空间，取决于存储的路径字符串长度。如 `ln -s /usr/bin/python3 py` ，链接文件 `py` 占用约 16 字节（路径字符串长度）
+-   **符号链接** — 占少量空间，取决于存储的路径字符串长度。在 ext4 等文件系统中，短路径的软链接（通常不超过 60 字节）可以存储在 inode 内部（inline data），不占用额外数据块；较长的路径则需要分配独立的数据块
 
 <!--listend-->
 
@@ -3374,13 +3493,16 @@ chown -h user:group symlink.txt
 stat symlink.txt | grep Size
 # Size: 8        # 路径字符串长度
 
-# 硬链接不额外占用数据空间
-du -sh file.txt hardlink.txt
-# 4.0K    file.txt
-# 4.0K    hardlink.txt    # 注意：du 默认只计一次
-du -sh --count-links file.txt hardlink.txt
-# 4.0K    file.txt
-# 4.0K    hardlink.txt    # --count-links 让每个硬链接都计入
+stat /usr/bin/python
+# Size: 9   Blocks: 0   IO Block: 4096   symbolic link
+# 注意 Blocks: 0 — 路径较短时存储在 inode 内部
+
+# 对比：复制文件 vs 硬链接
+dd if=/dev/zero of=/tmp/bigfile bs=1M count=100  # 100MB
+ln /tmp/bigfile /tmp/bigfile_hardlink             # 硬链接，几乎零额外空间
+cp /tmp/bigfile /tmp/bigfile_copy                 # 复制，再占 100MB
+
+df -h /tmp  # 查看磁盘使用变化
 ```
 
 
@@ -3389,7 +3511,7 @@ du -sh --count-links file.txt hardlink.txt
 
 #### 链接到链接 {#链接到链接}
 
-符号链接可以指向另一个符号链接，内核会递归解析，最多递归层数由内核参数 `/proc/sys/fs/linmax/recursion` 限制（通常为 8 层）。超过限制会报 `Too many levels of symbolic links` 错误：
+符号链接可以指向另一个符号链接，内核会递归解析。超过限制（通常为 40 层）会报 `Too many levels of symbolic links` 错误：
 
 ```bash
 ln -s file.txt link1
@@ -3400,7 +3522,7 @@ cat link2               # 正常工作，内核自动解析
 
 #### 循环链接 {#循环链接}
 
-符号链接可以指向自己或形成环：
+符号链接可以指向自己或形成环，访问时会报错，但 `find` 等工具会检测并跳过，不会死循环：
 
 ```bash
 ln -s loop loop         # 创建指向自身的链接
@@ -3408,44 +3530,43 @@ cat loop
 # cat: loop: Too many levels of symbolic links
 ```
 
-循环链接在访问时会报错，但 `find` 等工具会检测并跳过，不会死循环。
+
+#### 硬链接指向软链接 {#硬链接指向软链接}
+
+当对软链接创建硬链接时，默认行为（ `ln -P` ）是硬链接指向软链接的最终目标（物理解引用），而不是软链接本身。使用 `ln -L` 可以让硬链接指向软链接本身：
+
+```bash
+ln -s /tmp/real.txt /tmp/soft.txt
+ln /tmp/soft.txt /tmp/hard_to_soft.txt
+# hard_to_soft.txt 是 /tmp/real.txt 的硬链接，不是 soft.txt 的
+
+ln -L /tmp/soft.txt /tmp/hard_to_link.txt
+# hard_to_link.txt 与 soft.txt 共享 inode（链接的是软链接文件本身）
+```
 
 
 #### cp 与链接的交互 {#cp-与链接的交互}
 
 ```bash
-# 默认情况下，cp 跟随符号链接，复制目标文件的内容
-cp symlink.txt copy.txt         # copy.txt 是普通文件，不含链接
-
-# -d 选项：保留链接（不跟随）
-cp -d symlink.txt copy.txt      # copy.txt 也是符号链接，指向相同目标
-
-# -a 选项：归档模式，等同于 -dR --preserve=all，保留所有链接
-cp -a symlink.txt copy.txt
-
-# -L 选项：始终跟随链接，复制目标内容
-cp -L symlink.txt copy.txt
-
-# -P 选项：始终不跟随链接，保留链接本身
-cp -P symlink.txt copy.txt
+cp symlink.txt copy.txt         # 默认跟随链接，复制目标内容
+cp -d symlink.txt copy.txt      # -d：保留链接（不跟随）
+cp -a symlink.txt copy.txt      # -a：归档模式（-dR --preserve=all），保留所有链接
+cp -L symlink.txt copy.txt      # -L：始终跟随链接
+cp -P symlink.txt copy.txt      # -P：始终不跟随，保留链接本身
 ```
 
 
 #### mv 与链接的交互 {#mv-与链接的交互}
 
-`mv` 对符号链接的操作是 **移动链接文件本身** ，不影响目标。对硬链接的 `mv` 只是在目录间移动目录条目（重命名），不影响 inode 和数据。
+`mv` 对符号链接的操作是 **移动链接文件本身** ，不影响目标。对硬链接的 `mv` 只是在目录间移动目录条目（重命名），不影响 inode 和数据。注意：mv 链接时，如果使用相对路径，移动后路径可能失效。
 
 
 #### 目录符号链接的陷阱 {#目录符号链接的陷阱}
 
 ```bash
-# 创建指向目录的符号链接
 ln -s /data/projects ~/projects
-
-# 进入链接目录
 cd ~/projects           # 实际进入 /data/projects
 
-# pwd 显示的是什么？
 pwd                     # 可能显示 /home/user/projects（逻辑路径）
 pwd -P                  # 显示 /data/projects（物理路径）
 
@@ -3499,6 +3620,7 @@ ls -la /usr/lib/lib*.so* | head -20
 
 # 查看 pacman 管理的链接文件
 pacman -Ql glibc | grep '\.so'
+pacman -Ql openssl | grep '\.so'
 ```
 
 
@@ -3510,16 +3632,12 @@ Arch Linux 使用符号链接管理系统默认的 Python 和 Java 版本：
 # Python 版本管理
 ls -la /usr/bin/python
 # python → python3
-
 ls -la /usr/bin/python3
 # python3 → python3.12
 
-# 查看所有 Python 版本
-ls /usr/bin/python3.*
-
 # Java 版本管理（archlinux-java）
-archlinux-java status    # 查看已安装的 Java 环境和当前默认
-archlinux-java set java-17-openjdk  # 切换默认版本
+archlinux-java status
+archlinux-java set java-17-openjdk
 
 # archlinux-java 的原理：修改 /usr/lib/jvm/default → 目标版本的符号链接
 ls -la /usr/lib/jvm/default
@@ -3539,10 +3657,6 @@ systemctl enable docker
 
 # 查看已启用的服务（就是查看符号链接）
 ls -la /etc/systemd/system/multi-user.target.wants/
-
-# 运行时套接字也通过符号链接访问
-ls -la /run/user/$UID/
-# pipewire-0 → /run/user/1000/pipewire-0
 ```
 
 
@@ -3550,29 +3664,40 @@ ls -la /run/user/$UID/
 
 ```bash
 # /home 在 ext4 分区，/data 在 xfs 分区
-# 硬链接跨文件系统——失败
 ln /data/large_file ~/hardlink
-# ln: failed to create hard link '~/hardlink' => '/data/large_file': Invalid cross-device link
+# ln: failed to create hard link: Invalid cross-device link
 
-# 符号链接跨文件系统——成功
-ln -s /data/large_file ~/symlink
-ls -la ~/symlink
-# symlink -> /data/large_file
+ln -s /data/large_file ~/symlink    # 符号链接跨文件系统——成功
 ```
 
 
-### Windows 快捷方式 vs Linux 符号链接 {#windows-快捷方式-vs-linux-符号链接}
+#### XDG 目录与符号链接 {#xdg-目录与符号链接}
 
-| 特性        | Windows 快捷方式（ `.lnk` ） | Linux 符号链接     |
-|-----------|------------------------|----------------|
-| 实现层级    | Shell 层约定（Explorer 解析） | 内核层实现（VFS 解析） |
-| `open()` 行为 | 打开 `.lnk` 文件本身，不跟随 | `open()` 自动跟随到目标文件 |
-| 透明性      | 应用程序需要显式解析   | 内核透明解析，应用程序无感知 |
-| 命令行支持  | 不可用于 `cd` 、 `cat` 等命令 | 完全透明，可 `cd` 进入链接目录 |
-| 文件大小    | 通常数百字节（含图标、工作目录等元信息） | 仅路径字符串长度   |
-| 硬链接      | NTFS 支持但极少使用    | Unix 文件系统基础设计，广泛使用 |
+符号链接可以灵活地重定向 XDG 目录：
 
-Windows 也有内核级的符号链接（NTFS reparse point），通过 `mklink` 命令创建，但日常用户很少使用，大部分场景仍依赖 `.lnk` 快捷方式。
+```bash
+ln -s /data/user/Downloads ~/Downloads
+ln -s /data/user/Documents ~/Documents
+
+# 或通过环境变量设置（推荐方式）
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_CACHE_HOME="$HOME/.cache"
+```
+
+
+#### 包管理器中的符号链接 {#包管理器中的符号链接}
+
+```bash
+# 查看某个包安装的符号链接
+pacman -Ql openssl | grep '\.so'
+
+# 检查系统中的悬空链接（可能是不完整的卸载残留）
+find /usr -type l ! -exec test -e {} \; -print 2>/dev/null
+
+# 更新后出现 "cannot open shared object file" 错误
+# 通常是因为旧 soname 链接被删除，重启相关服务或重新登录即可
+```
 
 
 ### 常见问题与注意事项 {#常见问题与注意事项}
@@ -3580,14 +3705,11 @@ Windows 也有内核级的符号链接（NTFS reparse point），通过 `mklink`
 
 #### 创建符号链接时参数顺序 {#创建符号链接时参数顺序}
 
-`ln -s` 的参数顺序是 `目标在前，链接名在后` ，这与 `cp` 和 `mv` 的习惯一致（源在前，目标在后），但经常被记反：
+`ln -s` 的参数顺序是 `目标在前，链接名在后` ，经常被记反：
 
 ```bash
-# 正确：target 在前，link_name 在后
-ln -s /existing/target /new/link_name
-
-# 错误：会导致 /existing/target 成为链接文件，指向不存在的 /new/link_name
-ln -s /new/link_name /existing/target
+ln -s /existing/target /new/link_name    # 正确
+ln -s /new/link_name /existing/target    # 错误！
 ```
 
 记忆方法： `ln -s TARGET LINK_NAME` ，"从 TARGET 到 LINK_NAME"。
@@ -3600,17 +3722,10 @@ ln -s /new/link_name /existing/target
 ```bash
 # 当前在 /home/user/
 ln -s ../config/app.conf /home/user/links/app_link
-
-# app_link 存储的是 "../config/app.conf"
 # 解析时：/home/user/links/ + ../config/app.conf = /home/user/config/app.conf
-# 而不是 /home/user/ + ../config/app.conf = /home/config/app.conf
-```
 
-如果嫌计算相对路径容易出错，用 `ln -sr` 让系统自动计算：
-
-```bash
+# 用 ln -sr 自动计算正确的相对路径
 ln -sr /home/user/config/app.conf /home/user/links/app_link
-# 系统自动计算并存储正确的相对路径 "../config/app.conf"
 ```
 
 
@@ -3621,846 +3736,60 @@ ln -s /data/projects ~/projects
 cd ~/projects
 cd ../../           # 你可能以为回到了 /，实际在 /data 的上级
 
-pwd                  # 显示 /home/user/projects/../.. (逻辑路径)
-pwd -P               # 显示 / (物理路径)
+pwd                  # 逻辑路径
+pwd -P               # 物理路径
 ```
 
-`CDPATH` 和 Shell 的 `cd` 使用逻辑路径（跟随符号链接）。 `cd -P` 强制使用物理路径。 `set -o physical` 让 `cd` 始终使用物理路径。
+`CDPATH` 和 Shell 的 `cd` 使用逻辑路径。 `cd -P` 强制使用物理路径。 `set -o physical` 让 `cd` 始终使用物理路径。
 
 
 #### 硬链接与备份 {#硬链接与备份}
 
-硬链接是 `rsync --link-dest` 增量备份的基础（参见 rsync 章节）。核心思想：未变化的文件在新备份中创建硬链接指向旧备份，不占额外空间；变化的文件正常复制。这样每次备份看起来都是全量，但磁盘只存增量。
+硬链接是 `rsync --link-dest` 增量备份的基础（参见 rsync 章节）。核心思想：未变化的文件在新备份中创建硬链接指向旧备份，不占额外空间；变化的文件正常复制。
 
-
-### inode 与文件系统的底层机制 {#inode-与文件系统的底层机制}
-
-
-#### 什么是 inode {#什么是-inode}
-
-在 Linux 文件系统（如 ext4、btrfs、xfs）中，文件的数据和元数据是分开存储的。 `inode` （index node）是文件系统中最核心的数据结构，每个 inode 存储了文件的元信息：
-
--   `文件大小`
--   `所有者（uid）和所属组（gid）`
--   `权限位（rwx）`
--   `时间戳` — atime（访问时间）、mtime（修改时间）、ctime（状态变更时间）
--   `数据块指针` — 指向磁盘上实际存储文件内容的块
--   `链接计数（link count）` — 指向该 inode 的硬链接数量
-
-值得注意的是，inode 中 _不存储_ 文件名。文件名存储在目录项（directory entry，简称 dentry）中。目录本身也是一种文件，其内容是一张表，将文件名映射到 inode 号。
-
-可以用 `stat` 命令查看文件的 inode 信息：
+备份工具对链接的处理：
 
 ```bash
-stat /etc/hostname
-```
-
-输出示例：
-
-```text
-  File: /etc/hostname
-  Size: 13              Blocks: 8          IO Block: 4096   regular file
-Device: 8,2       Inode: 131075      Links: 1
-Access: (0644/-rw-r--r--)  Uid: (    0/    root)   Gid: (    0/    root)
-Access: 2025-01-15 10:23:44.000000000 +0800
-Modify: 2025-01-10 08:00:00.000000000 +0800
-Change: 2025-01-10 08:00:00.000000000 +0800
-```
-
-其中 `Inode: 131075` 是该文件的 inode 号， `Links: 1` 表示只有一个硬链接指向此 inode。
-
-也可以用 `ls -i` 直接查看 inode 号：
-
-```bash
-ls -i /etc/hostname
-```
-
-```text
-131075 /etc/hostname
-```
-
-
-#### 目录的硬链接 {#目录的硬链接}
-
-每个目录在被创建时，自动生成两个硬链接：
-
--   `.` — 指向目录自身的 inode
--   `..` — 指向父目录的 inode
-
-这就是为什么用 `ls -la` 查看目录时， `.` 和 `..` 总是出现在最前面。对于一个空目录，链接计数为 2：一个是目录项中的文件名，另一个是目录内部的 `.` 。每添加一个子目录，父目录的链接计数 +1（因为子目录的 `..` 指向父目录）。
-
-```bash
-mkdir /tmp/testdir
-ls -ld /tmp/testdir
-# drwxr-xr-x 2 user user 4096 Jan 15 10:00 /tmp/testdir
-# 链接数为 2
-
-mkdir /tmp/testdir/subdir
-ls -ld /tmp/testdir
-# drwxr-xr-x 3 user user 4096 Jan 15 10:00 /tmp/testdir
-# 链接数变为 3（+1 来自 subdir/..）
-```
-
-
-### 硬链接 {#硬链接}
-
-
-#### 概念 {#概念}
-
-硬链接是目录项中的一个额外条目，将一个文件名映射到已存在的 inode。多个硬链接指向同一个 inode，它们在文件系统中是完全平等的——没有"原始文件"和"链接"之分，每个硬链接都是同一个文件的不同名字。
-
-```bash
-echo "hello" > /tmp/original.txt
-ln /tmp/original.txt /tmp/hardlink.txt
-ls -li /tmp/original.txt /tmp/hardlink.txt
-```
-
-```text
-131075 -rw-r--r-- 2 user user 6 Jan 15 10:00 /tmp/hardlink.txt
-131075 -rw-r--r-- 2 user user 6 Jan 15 10:00 /tmp/original.txt
-```
-
-注意两者 inode 号相同（131075），链接数都为 2。
-
-
-#### 硬链接的特性 {#硬链接的特性}
-
--   `共享 inode` — 所有硬链接共享相同的 inode 号，因此共享相同的文件数据、权限、所有者、时间戳
--   `完全等价` — 删除任何一个硬链接，其他硬链接仍然有效，文件数据不会丢失。只有当链接计数降为 0 且没有进程打开该文件时，文件数据才会被真正删除
--   `同步更新` — 修改任何一个硬链接的内容，所有硬链接都能看到变化（因为它们指向同一份数据）
--   `不能跨文件系统` — inode 号只在同一个文件系统内唯一，因此硬链接不能跨越不同的挂载点或分区
--   `不能链接目录` — 出于防止目录环和维护文件系统树结构的考虑，普通用户无法对目录创建硬链接。超级用户可以使用 `ln -d` 或 `ln -F` 强制创建，但这极其危险，可能导致文件系统不一致
--   `零额外磁盘占用` — 硬链接只增加一个目录项（文件名 + inode 号），不复制文件数据，几乎不占额外磁盘空间
--   `ctime 会更新` — 创建硬链接会更新 inode 的 ctime（状态变更时间），但不会更新 mtime（修改时间），因为文件内容没有被修改
-
-
-#### 创建硬链接 {#创建硬链接}
-
-```bash
-# 基本语法
-ln 源文件 链接名
-
-# 示例
-ln /var/log/syslog /root/syslog_backup
-
-# 在目标目录中创建同名硬链接
-ln /var/log/syslog /root/   # 创建 /root/syslog
-
-# 使用 -v 查看创建过程
-ln -v file.txt hardlink.txt
-# 'file.txt' => 'hardlink.txt'
-```
-
-
-### 软链接（符号链接） {#软链接-符号链接}
-
-
-#### 概念 {#概念}
-
-软链接（symbolic link，symlink）是一个独立的特殊文件，其内容是指向目标文件的路径字符串。软链接拥有自己的 inode，在磁盘上占据少量空间（存储路径字符串的长度）。
-
-```bash
-echo "hello" > /tmp/original.txt
-ln -s /tmp/original.txt /tmp/softlink.txt
-ls -li /tmp/original.txt /tmp/softlink.txt
-```
-
-```text
-131075 -rw-r--r-- 1 user user 6 Jan 15 10:00 /tmp/original.txt
-131076 lrwxrwxrwx 1 user user 18 Jan 15 10:00 /tmp/softlink.txt -> /tmp/original.txt
-```
-
-注意：inode 号不同， `softlink.txt` 的权限为 `lrwxrwxrwx` （ `l` 表示符号链接），链接目标路径显示在 `->` 后面。
-
-
-#### 软链接的特性 {#软链接的特性}
-
--   `独立 inode` — 软链接是独立的文件，有自己的 inode 和元数据
--   `存储路径` — 软链接的内容是一个路径字符串（可以是绝对路径或相对路径），内核在访问时动态解析
--   `可以跨文件系统` — 因为存储的是路径而非 inode 号，软链接可以跨越不同的挂载点和分区
--   `可以链接目录` — 可以对目录创建软链接，没有硬链接的限制
--   `可以链接不存在的文件` — 创建软链接时不检查目标是否存在，这会导致悬空链接（dangling symlink）
--   `权限总是 777` — 软链接自身的权限显示为 `lrwxrwxrwx` ，但实际访问权限由目标文件决定。内核在解析软链接时，使用目标文件的权限来检查访问
--   `文件类型标识` — `ls -l` 输出中第一个字符为 `l`
--   `占用少量磁盘空间` — 存储路径字符串所需的空间，通常只有几十字节
--   `目标删除即失效` — 如果目标文件被删除、移动或重命名，软链接变成悬空链接，访问会报错 `No such file or directory`
-
-
-#### 绝对路径与相对路径软链接 {#绝对路径与相对路径软链接}
-
-创建软链接时，路径的解析基于链接文件自身的位置，/而不是/ 当前工作目录。这在使用相对路径时需要特别注意：
-
-```bash
-# 绝对路径软链接 — 最安全，不受链接位置影响
-ln -s /usr/bin/python3 /usr/local/bin/python
-
-# 相对路径软链接 — 路径相对于链接文件自身的位置解析
-# 如果链接在 /usr/local/bin/ 下，相对路径从这里开始计算
-ln -s ../bin/python3 /usr/local/bin/python
-
-# 常见错误：在 /tmp 下创建指向当前目录文件的相对链接
-cd /home/user
-ln -s config.txt /tmp/link.txt
-# 错误！/tmp/link.txt 会尝试解析 /tmp/config.txt，而不是 /home/user/config.txt
-# 正确做法：使用绝对路径，或确保相对路径相对于链接所在位置正确
-```
-
-
-### 硬链接与软链接的全面对比 {#硬链接与软链接的全面对比}
-
-| 特性     | 硬链接              | 软链接             |
-|--------|------------------|-----------------|
-| inode    | 与源文件相同        | 独立的 inode       |
-| 文件数据 | 直接指向数据块      | 存储目标路径字符串 |
-| 跨文件系统 | 不能                | 可以               |
-| 链接目录 | 不能（普通用户）    | 可以               |
-| 目标删除后 | 仍可访问数据        | 变为悬空链接，访问失败 |
-| 权限显示 | 与源文件相同        | 总是 lrwxrwxrwx（777） |
-| 实际访问权限 | 自身的权限（与源文件共享 inode） | 由目标文件权限决定 |
-| 磁盘占用 | 几乎为零（仅目录项） | 路径字符串长度（通常几十字节） |
-| 链接计数 | 创建时源文件链接数 +1 | 不影响目标文件的链接计数 |
-| 创建命令 | `ln 源 链接`        | `ln -s 源 链接`    |
-| ctime 影响 | 更新源文件 inode 的 ctime | 不影响目标文件的元数据 |
-| 可链接不存在目标 | 不能                | 可以（创建悬空链接） |
-| 备份工具行为 | 通常独立备份        | 通常跟随链接备份目标文件 |
-| 文件类型标识 | 普通文件（ `-` ）   | 链接文件（ `l` ）  |
-
-
-### ln 命令完整语法与选项 {#ln-命令完整语法与选项}
-
-
-#### 基本语法 {#基本语法}
-
-```bash
-ln [选项] 源文件 链接名        # 创建硬链接
-ln [选项] 源文件 目录/         # 在目录中创建同名硬链接
-ln -s [选项] 源文件 链接名     # 创建软链接
-ln -s [选项] 源文件 目录/      # 在目录中创建同名软链接
-```
-
-
-#### 常用选项 {#常用选项}
-
-| 选项        | 说明                                                     |
-|-----------|--------------------------------------------------------|
-| `-s`        | 创建符号链接（软链接）                                   |
-| `-f`        | 强制创建，如果链接名已存在则删除后重建                   |
-| `-i`        | 交互模式，删除已有链接前询问确认                         |
-| `-n`        | 不解引用（no-dereference），将指向目录的软链接视为普通文件而非目录 |
-| `-v`        | 显示详细输出，打印每个创建的链接                         |
-| `-b`        | 对已存在的链接进行备份（加 `~` 后缀），再创建新链接      |
-| `-S 后缀`   | 指定备份后缀，替代默认的 `~` （需与 `-b` 配合使用）      |
-| `--backup`  | 同 `-b` ，可指定策略： `none` , `numbered`, `existing`, `simple` |
-| `-t 目录`   | 指定创建链接的目标目录                                   |
-| `-T`        | 将链接名始终视为普通文件（防止将链接名当作目录）         |
-| `-d` / `-F` | 允许超级用户创建目录的硬链接（极其危险，可能导致文件系统不一致） |
-| `-P`        | 创建硬链接时，如果源文件本身是软链接，硬链接指向软链接指向的最终目标（物理解引用，默认行为） |
-| `-L`        | 创建硬链接时，如果源文件本身是软链接，硬链接指向软链接本身而非其目标（逻辑行为） |
-
-
-#### 使用示例 {#使用示例}
-
-```bash
-# 创建软链接
-ln -s /usr/bin/python3 /usr/local/bin/python
-
-# 强制覆盖已存在的链接
-ln -sf /usr/bin/python3.12 /usr/local/bin/python3
-
-# 交互式覆盖
-ln -si /usr/bin/python3.12 /usr/local/bin/python3
-
-# 备份已存在的链接后再创建
-ln -sb /usr/bin/python3.12 /usr/local/bin/python3
-# 原链接被重命名为 python3~
-
-# 指定备份后缀
-ln -sb -S .bak /usr/bin/python3.12 /usr/local/bin/python3
-# 原链接被重命名为 python3.bak
-
-# 批量在目标目录中创建链接
-ln -s /usr/bin/python3 /usr/bin/pip3 /usr/local/bin/
-# 或使用 -t 选项
-ln -st /usr/local/bin/ /usr/bin/python3 /usr/bin/pip3
-
-# 防止将已存在的软链接当作目录
-# 假设 /opt/app 是指向 /opt/app-v1/ 的软链接
-# 没有 -n 时：ln -sf /opt/app-v2/config /opt/app 会将链接创建在 /opt/app-v1/ 下
-# 使用 -n：ln -sfn /opt/app-v2/config /opt/app 会替换链接本身
-ln -sfn /opt/app-v2 /opt/app
-
-# 查看创建过程
-ln -sv /etc/nginx/nginx.conf /tmp/nginx.conf
-```
-
-
-### 创建和删除链接 {#创建和删除链接}
-
-
-#### 创建软链接到目录 {#创建软链接到目录}
-
-```bash
-# 将数据目录链接到更大的分区
-ln -s /data/mysql /var/lib/mysql
-
-# 版本化应用程序目录
-ln -s /opt/node-v20.10.0 /opt/node-current
-
-# 链接配置文件
-ln -s /home/user/dotfiles/.bashrc /home/user/.bashrc
-```
-
-
-#### 删除软链接 {#删除软链接}
-
-删除软链接时必须非常小心——/绝对不能/ 在链接名后面加尾随斜杠 `/` ：
-
-```bash
-# 正确 — 删除链接本身
-rm /var/lib/mysql
-# 或
-unlink /var/lib/mysql
-
-# 错误！— 如果 /var/lib/mysql 是指向目录的软链接，
-# rm -rf /var/lib/mysql/ 会删除目标目录的内容，而不是删除链接！
-# 这可能导致数据丢失！
-```
-
-`unlink` 和 `rm` 的区别：
-
--   `unlink` 只能删除单个文件或软链接，不支持 `-r` ，更安全
--   `rm` 功能更全面，可以删除多个文件，支持 `-r` 、 `-f` 等选项
-
-对于指向目录的软链接， `rm` 和 `unlink` 都只删除链接本身，不会递归删除目标目录的内容——前提是 _没有尾随斜杠_ 。
-
-
-#### 批量创建软链接 {#批量创建软链接}
-
-```bash
-# 使用 find 批量创建链接
-find /source/dir -type f -name "*.conf" -exec ln -s {} /target/dir/ \;
-
-# 使用 for 循环
-for f in /home/user/dotfiles/.*; do
-    ln -sf "$f" "/home/user/"
-done
-
-# 使用 stow 管理符号链接（详见下文）
-```
-
-
-### 查找和检查符号链接 {#查找和检查符号链接}
-
-
-#### 查看链接指向 {#查看链接指向}
-
-```bash
-# ls -l 显示链接指向
-ls -l /usr/bin/python
-# lrwxrwxrwx 1 root root 9 Jan 10 08:00 /usr/bin/python -> python3
-
-# readlink 显示链接目标（一层）
-readlink /usr/bin/python
-# python3
-
-# readlink -f 显示绝对路径，递归解析所有软链接
-readlink -f /usr/bin/python
-# /usr/bin/python3.12
-
-# readlink -e 类似 -f，但如果最终目标不存在则返回空
-readlink -e /usr/bin/nonexistent_link
-# （无输出，因为目标不存在）
-
-# readlink -m 类似 -f，但不检查目标是否存在
-readlink -m /usr/bin/python
-# /usr/bin/python3.12
-
-# namei 递归显示路径中每一层的解析结果
-namei /usr/bin/python
-# f: /usr/bin/python
-#  d /
-#  d usr
-#  d bin
-#  l python -> python3
-#  l python3 -> python3.12
-#  - python3.12
-```
-
-
-#### 查找系统中的符号链接 {#查找系统中的符号链接}
-
-```bash
-# 查找指定目录下的所有符号链接
-find /usr/bin -type l
-
-# 查找并显示每个链接的指向
-find /usr/bin -type l -exec ls -l {} \;
-
-# 更高效的方式（使用 -printf）
-find /usr/bin -type l -printf '%p -> %l\n'
-
-# 查找指向特定目标的符号链接
-find / -type l -lname '*/python3.12*'
-
-# 查找当前目录下所有符号链接
-find . -maxdepth 3 -type l | sort
-```
-
-
-#### 检查链接是否有效 {#检查链接是否有效}
-
-```bash
-# 检查单个链接
-readlink -e /usr/bin/python && echo "有效" || echo "无效"
-
-# 查找所有悬空链接（broken/dangling symlinks）
-find /usr -type l ! -exec test -e {} \; -print
-
-# 查找悬空链接并显示其指向
-find /usr -type l ! -exec test -e {} \; -printf '%p -> %l (BROKEN)\n'
-
-# 使用 symlinks 工具（需要安装）
-sudo pacman -S symlinks
-symlinks -r /usr    # 递归检查 /usr 下的所有符号链接
-symlinks -d /usr    # 删除悬空链接（谨慎使用）
-```
-
-
-### 悬空链接 {#悬空链接}
-
-悬空链接（dangling/broken symlink）是指目标文件已经不存在（被删除、移动或重命名）的软链接。访问悬空链接会得到 `No such file or directory` 错误。
-
-
-#### 常见产生原因 {#常见产生原因}
-
--   目标文件被删除
--   目标文件被移动到其他目录
--   目标文件被重命名
--   软链接使用绝对路径，目标所在分区未挂载
--   创建时目标就不存在
-
-
-#### 查找和处理悬空链接 {#查找和处理悬空链接}
-
-```bash
-# 查找悬空链接
-find / -xtype l
-
-# 等效写法
-find / -type l ! -exec test -e {} \; -print
-
-# 查找并删除悬空链接（先确认再删除！）
-find /home/user -type l ! -exec test -e {} \; -delete
-
-# 使用 symlinks 工具
-symlinks -r /home/user   # 列出所有链接状态
-symlinks -d /home/user   # 删除悬空链接
-symlinks -c /home/user   # 将绝对路径链接转为相对路径
-```
-
-注意： `/` 下某些悬空链接可能是正常的（如 `/proc` 、 `/sys` 等虚拟文件系统，或某些包管理器预留的链接），不要盲目删除系统目录下的悬空链接。
-
-
-### 所有权与权限 {#所有权与权限}
-
-
-#### 软链接的权限 {#软链接的权限}
-
-软链接的权限显示总是 `lrwxrwxrwx` （即 777），但这只是显示值， _没有任何实际意义_ 。内核在访问软链接时，完全忽略链接自身的权限，使用目标文件的权限进行访问控制。
-
-```bash
-# 创建一个只读文件的软链接
-echo "secret" > /tmp/readonly.txt
-chmod 444 /tmp/readonly.txt
-ln -s /tmp/readonly.txt /tmp/link_to_readonly.txt
-ls -l /tmp/readonly.txt /tmp/link_to_readonly.txt
-# -r--r--r-- 1 user user 7 Jan 15 10:00 /tmp/readonly.txt
-# lrwxrwxrwx 1 user user 18 Jan 15 10:00 /tmp/link_to_readonly.txt -> /tmp/readonly.txt
-
-# 尝试通过链接写入 — 权限由目标文件决定
-echo "test" >> /tmp/link_to_readonly.txt
-# bash: /tmp/link_to_readonly.txt: Permission denied
-```
-
-
-#### 软链接的所有权 {#软链接的所有权}
-
-软链接的 uid/gid 通常属于创建者。但与权限类似，访问控制由目标文件决定。使用 `chown` 和 `chmod` 修改软链接本身：
-
-```bash
-# 默认情况下 chown/chmod 会跟随软链接修改目标文件
-chown root:root /tmp/link_to_readonly.txt  # 修改目标文件的所有权
-
-# 使用 -h 选项修改软链接本身（通常无实际意义）
-chown -h user:user /tmp/link_to_readonly.txt
-```
-
-
-#### 硬链接的权限和所有权 {#硬链接的权限和所有权}
-
-硬链接与源文件共享 inode，因此权限、所有者、时间戳完全一致。修改任何一个硬链接的权限或所有者，所有硬链接都会同步变化——因为它们本质上是同一个 inode 的不同访问入口。
-
-```bash
-echo "test" > /tmp/fileA.txt
-ln /tmp/fileA.txt /tmp/fileB.txt
-chmod 755 /tmp/fileA.txt
-ls -l /tmp/fileA.txt /tmp/fileB.txt
-# -rwxr-xr-x 2 user user 5 Jan 15 10:00 /tmp/fileA.txt
-# -rwxr-xr-x 2 user user 5 Jan 15 10:00 /tmp/fileB.txt
-# 两者权限同时改变
-```
-
-
-### 磁盘空间分析 {#磁盘空间分析}
-
-```bash
-# 查看软链接的实际大小（路径字符串长度）
-ls -l /usr/bin/python
-# lrwxrwxrwx 1 root root 9 ... /usr/bin/python -> python3
-# 大小为 9 字节，即 "python3" 这个字符串的长度
-
-stat /usr/bin/python
-# Size: 9   Blocks: 0   IO Block: 4096   symbolic link
-# 注意 Blocks: 0 — 软链接可能不占用数据块（路径较短时存储在 inode 内部）
-
-# 硬链接几乎不占额外空间
-# 创建硬链接只增加一个目录项（文件名 + inode号），不复制文件数据
-du --apparent-size /tmp/hardlink.txt
-# 显示文件大小（与源文件相同，但实际不重复占用数据块）
-
-# 对比：复制文件 vs 硬链接
-dd if=/dev/zero of=/tmp/bigfile bs=1M count=100  # 100MB
-ln /tmp/bigfile /tmp/bigfile_hardlink             # 硬链接，几乎零额外空间
-cp /tmp/bigfile /tmp/bigfile_copy                 # 复制，再占 100MB
-
-df -h /tmp  # 查看磁盘使用变化
-```
-
-在 ext4 等文件系统中，短路径的软链接（通常不超过 60 字节）可以存储在 inode 内部（inline data），不占用额外的数据块。较长的路径则需要分配独立的数据块来存储。
-
-
-### 特殊情况与进阶话题 {#特殊情况与进阶话题}
-
-
-#### 软链接指向软链接 {#软链接指向软链接}
-
-软链接可以指向另一个软链接，内核会递归解析链接链，直到找到最终目标或检测到循环。默认最多递归 40 层（由内核常量决定），超过则报错 `Too many levels of symbolic links` 。
-
-```bash
-ln -s /tmp/target.txt /tmp/link1
-ln -s /tmp/link1 /tmp/link2
-ln -s /tmp/link2 /tmp/link3
-readlink -f /tmp/link3   # /tmp/target.txt
-```
-
-
-#### 循环链接 {#循环链接}
-
-如果软链接形成环，访问会导致 `Too many levels of symbolic links` 错误：
-
-```bash
-# 创建循环链接（不要在生产环境中做！）
-ln -s /tmp/linkB /tmp/linkA
-ln -s /tmp/linkA /tmp/linkB
-cat /tmp/linkA
-# cat: /tmp/linkA: Too many levels of symbolic links
-```
-
-
-#### 硬链接指向软链接 {#硬链接指向软链接}
-
-当对软链接创建硬链接时，默认行为（ `ln -P` ）是硬链接指向软链接的最终目标（物理解引用），而不是软链接本身。使用 `ln -L` 可以让硬链接指向软链接本身：
-
-```bash
-# 默认行为：硬链接指向软链接的最终目标
-ln -s /tmp/real.txt /tmp/soft.txt
-ln /tmp/soft.txt /tmp/hard_to_soft.txt
-# hard_to_soft.txt 是 /tmp/real.txt 的硬链接，不是 soft.txt 的硬链接
-
-# 使用 -L：硬链接指向软链接本身
-ln -L /tmp/soft.txt /tmp/hard_to_link.txt
-# hard_to_link.txt 与 soft.txt 共享 inode（链接的是软链接文件本身）
-```
-
-
-#### 软链接与 mv/cp 的交互 {#软链接与-mv-cp-的交互}
-
-```bash
-# cp 默认跟随软链接，复制目标文件的内容
-cp /tmp/softlink.txt /tmp/copy.txt
-# copy.txt 包含目标文件的内容，不再是链接
-
-# cp -d 不跟随软链接，保留链接
-cp -d /tmp/softlink.txt /tmp/copy_link.txt
-# copy_link.txt 也是符号链接，指向相同目标
-
-# cp -a 等同于 cp -dR --preserve=all，完整保留链接和属性
-cp -a /tmp/softlink.txt /tmp/archive_link.txt
-
-# mv 对软链接只移动链接本身，不影响目标文件
-mv /tmp/softlink.txt /new/path/softlink.txt
-# 链接被移动，但 /tmp/original.txt 不受影响
-
-# 注意：mv 链接时，如果使用相对路径，移动后路径可能失效
-```
-
-
-### 在 EndeavourOS / Arch Linux 中的实际应用 {#在-endeavouros-arch-linux-中的实际应用}
-
-
-#### GNU Stow 管理符号链接 {#gnu-stow-管理符号链接}
-
-GNU Stow 是管理符号链接的经典工具，特别适合管理 dotfiles：
-
-```bash
-# 安装
-sudo pacman -S stow
-
-# 目录结构
-# ~/dotfiles/
-#   bash/
-#     .bashrc
-#     .bash_profile
-#   git/
-#     .gitconfig
-#   vim/
-#     .vimrc
-
-# 在 ~/ 下创建符号链接
-cd ~/dotfiles
-stow bash    # 创建 ~/.bashrc -> ~/dotfiles/bash/.bashrc
-stow git     # 创建 ~/.gitconfig -> ~/dotfiles/git/.gitconfig
-stow vim     # 创建 ~/.vimrc -> ~/dotfiles/vim/.vimrc
-
-# 删除链接
-stow -D bash   # 删除 bash 相关的符号链接
-
-# 模拟运行（不实际创建链接）
-stow -n -v bash
-
-# 采用软链接方式（默认就是软链接，但可以确认）
-stow --no-folding bash   # 创建父目录而非链接目录本身
-```
-
-
-#### XDG 目录规范与符号链接 {#xdg-目录规范与符号链接}
-
-XDG Base Directory Specification 定义了用户目录的标准位置。符号链接可以灵活地重定向这些目录：
-
-```bash
-# 将 XDG 目录重定向到数据分区
-ln -s /data/user/Downloads ~/Downloads
-ln -s /data/user/Documents ~/Documents
-ln -s /data/user/.config ~/.config
-ln -s /data/user/.local/share ~/.local/share
-
-# 或通过环境变量设置（推荐方式，避免符号链接的潜在问题）
-export XDG_CONFIG_HOME="$HOME/.config"
-export XDG_DATA_HOME="$HOME/.local/share"
-export XDG_CACHE_HOME="$HOME/.cache"
-```
-
-
-#### 库文件与 soname 链接 {#库文件与-soname-链接}
-
-在 `/usr/lib` 中，共享库使用多级符号链接管理版本。这种链接层次结构是 Linux 动态链接器的核心机制：
-
-```bash
-# 查看库文件的链接层次
-ls -l /usr/lib/libssl.so*
-# lrwxrwxrwx 1 root root  13 Jan 10 /usr/lib/libssl.so -> libssl.so.3
-# lrwxrwxrwx 1 root root  16 Jan 10 /usr/lib/libssl.so.3 -> libssl.so.3.2.1
-# -rwxr-xr-x 1 root root 2M Jan 10 /usr/lib/libssl.so.3.2.1
-
-# 链接层次说明：
-# libssl.so        → 开发链接，编译时 -lssl 使用此链接
-# libssl.so.3      → soname 链接，运行时动态链接器查找此名称
-# libssl.so.3.2.1  → 实际的库文件，包含代码和数据
-
-# 更新库时只需替换实际文件并更新 soname 链接
-# 应用程序通过 soname 链接自动使用新版本（兼容更新时）
-```
-
-
-#### Python / Java 版本管理 {#python-java-版本管理}
-
-```bash
-# Python 版本链接
-ls -l /usr/bin/python*
-# lrwxrwxrwx 1 root root  7 Jan 10 /usr/bin/python -> python3
-# lrwxrwxrwx 1 root root  9 Jan 10 /usr/bin/python3 -> python3.12
-# -rwxr-xr-x 1 root root 5M Jan 10 /usr/bin/python3.12
-
-# 切换默认 Python 版本（Arch Linux 不推荐手动修改，使用 python-xxx 包管理）
-# EndeavourOS/Arch 使用 /usr/bin/python3 作为默认
-# 如需 python 指向 python3，安装 python 包即可
-
-# Java 版本管理
-archlinux-java status   # 查看已安装的 Java 版本
-sudo archlinux-java set java-17-openjdk  # 设置默认版本
-# archlinux-java 通过管理 /usr/lib/jvm/default 和 /usr/bin 中的符号链接实现版本切换
-ls -l /usr/lib/jvm/default
-# lrwxrwxrwx 1 root root 16 ... /usr/lib/jvm/default -> java-17-openjdk
-```
-
-
-#### 软件版本切换 {#软件版本切换}
-
-```bash
-# 通过符号链接管理多版本软件
-sudo ln -sfn /opt/app-v2.0 /opt/app-current
-# 使用 -n 防止 /opt/app-current 是指向目录的软链接时，将链接创建在目标目录内
-# 使用 -f 强制覆盖已存在的链接
-
-# 切换回旧版本
-sudo ln -sfn /opt/app-v1.5 /opt/app-current
-
-# 应用程序引用 /opt/app-current 即可，无需修改配置
-```
-
-
-#### 包管理器中的符号链接 {#包管理器中的符号链接}
-
-Arch Linux 的包管理器 `pacman` 在安装和更新软件包时大量使用符号链接：
-
-```bash
-# 查看某个包安装的符号链接
-pacman -Ql openssl | grep '\.so'
-# openssl /usr/lib/libssl.so
-# openssl /usr/lib/libssl.so.3
-
-# 检查系统中的悬空链接（可能是不完整的卸载残留）
-find /usr -type l ! -exec test -e {} \; -print 2>/dev/null
-
-# pacman 在更新库时会自动更新 soname 链接
-# 如果更新后出现 "cannot open shared object file" 错误
-# 通常是因为旧 soname 链接被删除，而运行的程序还在使用旧 soname
-# 解决方法：重启相关服务或重新登录
-```
-
-
-### 常见陷阱与注意事项 {#常见陷阱与注意事项}
-
-
-#### 1. 删除指向目录的软链接时误加斜杠 {#1-dot-删除指向目录的软链接时误加斜杠}
-
-这是最容易犯的错误。 `rm -rf link/` 会删除目标目录的内容， `rm link` 只删除链接本身。
-
-```bash
-# 安全
-rm /var/lib/mysql
-
-# 危险！
-rm -rf /var/lib/mysql/
-```
-
-
-#### 2. 覆盖已存在的软链接 {#2-dot-覆盖已存在的软链接}
-
-当 `/opt/app` 已经是指向 `/opt/app-v1/` 的软链接时：
-
-```bash
-# 错误 — 在 /opt/app-v1/ 内部创建 app-v2 链接
-ln -s /opt/app-v2 /opt/app
-# 结果：/opt/app-v1/app-v2 -> /opt/app-v2（不是你想要的）
-
-# 正确 — 使用 -n 和 -f
-ln -sfn /opt/app-v2 /opt/app
-# 结果：/opt/app -> /opt/app-v2（替换了原链接）
-
-# -n 将 /opt/app 视为普通文件而非目录（不解引用）
-# -f 强制覆盖已存在的链接
-```
-
-
-#### 3. 相对路径软链接的路径解析 {#3-dot-相对路径软链接的路径解析}
-
-相对路径基于链接自身所在位置，而非创建链接时的工作目录：
-
-```bash
-# 场景：在 /home/user/configs/ 中有 app.conf
-# 想在 /home/user/.config/app/ 中创建指向它的软链接
-
-# 错误 — 路径相对于当前目录
-cd /home/user/configs
-ln -s app.conf /home/user/.config/app/app.conf
-# 链接会尝试解析 /home/user/.config/app/app.conf -> app.conf
-# 即 /home/user/.config/app/app.conf，找到了自己，不是预期结果
-
-# 正确 — 路径相对于链接所在位置
-ln -s ../../configs/app.conf /home/user/.config/app/app.conf
-# 从 /home/user/.config/app/ 往上两级到 /home/user/，再进入 configs/
-
-# 或者直接用绝对路径（最简单）
-ln -s /home/user/configs/app.conf /home/user/.config/app/app.conf
-```
-
-
-#### 4. 硬链接不能跨分区 {#4-dot-硬链接不能跨分区}
-
-```bash
-# 如果 /home 和 / 是不同的分区
-ln /var/log/syslog /home/user/syslog_backup
-# ln: failed to create hard link '/home/user/syslog_backup' =>
-#      '/var/log/syslog': Invalid cross-device link
-
-# 解决：使用软链接代替
-ln -s /var/log/syslog /home/user/syslog_backup
-```
-
-
-#### 5. 备份工具对链接的处理 {#5-dot-备份工具对链接的处理}
-
-```bash
-# rsync 默认跟随软链接，复制目标文件内容
-rsync -a /source/ /backup/          # -a 等同于 -rlptgoD，跟随链接
-
-# rsync 保留软链接
-rsync -a --links /source/ /backup/  # --links 保留软链接（-a 已包含）
-
-# rsync 将链接变为硬链接（节省空间）
-rsync -a --link-dest=/backup/previous /source/ /backup/current
-
-# tar 保留软链接
-tar czf backup.tar.gz /source/      # 默认保留软链接
-tar czf --dereference backup.tar.gz /source/  # 跟随链接，复制目标内容
-
-# cp 的行为
+# rsync
+rsync -a /source/ /backup/                        # -a 跟随链接
+rsync -a --link-dest=/backup/previous /source/ /backup/current  # 硬链接增量备份
+
+# tar
+tar czf backup.tar.gz /source/                    # 默认保留软链接
+tar czf --dereference backup.tar.gz /source/      # 跟随链接
+
+# cp
 cp -a /source/link /dest/           # 保留链接
 cp -L /source/link /dest/           # 跟随链接，复制内容
-cp -d /source/link /dest/           # 不跟随，保留链接（等同于 --no-dereference）
+cp -d /source/link /dest/           # 不跟随，保留链接
 ```
 
 
-#### 6. 硬链接与时间戳 {#6-dot-硬链接与时间戳}
+#### 硬链接与时间戳 {#硬链接与时间戳}
 
 ```bash
 # 修改硬链接的内容会更新所有硬链接的 mtime
 echo "new content" >> /tmp/hardlink.txt
-stat /tmp/original.txt
-# mtime 已更新
 
 # 创建硬链接会更新 inode 的 ctime，但不更新 mtime
 ln /tmp/original.txt /tmp/hardlink2.txt
-stat /tmp/original.txt
-# ctime 更新了，mtime 不变
 ```
 
 
 ### Windows 快捷方式 vs Linux 符号链接 {#windows-快捷方式-vs-linux-符号链接}
 
-| 特性            | Windows 快捷方式（.lnk） | Linux 符号链接            |
-|---------------|--------------------|-----------------------|
-| 实现层级        | 应用层（Shell/Explorer） | 内核/文件系统层           |
-| 透明性          | 不透明，需要应用主动解析 .lnk 文件 | 透明，内核自动解析，应用程序无感知 |
-| 命令行支持      | 命令行工具不识别 .lnk | 所有工具透明支持符号链接  |
-| 文件类型        | 二进制文件（.lnk）   | 特殊文件类型（inode 类型为 S_IFLNK） |
-| 跨分区          | 可以                 | 可以                      |
-| 链接目录        | 可以                 | 可以                      |
-| 相对路径        | 支持                 | 支持                      |
-| 图标/工作目录   | 可以嵌入图标、起始目录、运行方式等元数据 | 不支持，纯路径引用        |
-| Web 链接        | 可以指向 URL         | 不支持                    |
-| `del` / `rm` 行为 | 删除 .lnk 文件，不影响目标 | 删除链接文件，不影响目标  |
+| 特性        | Windows 快捷方式（.lnk） | Linux 符号链接            |
+|-----------|--------------------|-----------------------|
+| 实现层级    | 应用层（Shell/Explorer） | 内核/文件系统层           |
+| 透明性      | 不透明，需要应用主动解析 .lnk 文件 | 透明，内核自动解析，应用程序无感知 |
+| `open()` 行为 | 打开 `.lnk` 文件本身，不跟随 | `open()` 自动跟随到目标文件 |
+| 命令行支持  | 命令行工具不识别 .lnk | 所有工具透明支持符号链接  |
+| 文件类型    | 二进制文件（.lnk）   | 特殊文件类型（inode 类型为 S_IFLNK） |
+| 跨分区      | 可以                 | 可以                      |
+| 链接目录    | 可以                 | 可以                      |
+| 图标/工作目录 | 可以嵌入图标、起始目录等元数据 | 不支持，纯路径引用        |
+| Web 链接    | 可以指向 URL         | 不支持                    |
+| 硬链接      | NTFS 支持但极少使用  | Unix 文件系统基础设计，广泛使用 |
 
 Windows 也有真正的符号链接（ `mklink` 命令）和硬链接（ `mklink /H` ），功能上更接近 Linux 的链接机制，但需要管理员权限或开发者模式才能创建。
 
@@ -4471,25 +3800,10 @@ Windows 也有真正的符号链接（ `mklink` 命令）和硬链接（ `mklink
 #### 快速切换配置文件 {#快速切换配置文件}
 
 ```bash
-# 维护多份配置
 cp ~/.bashrc ~/.bashrc.work
 cp ~/.bashrc ~/.bashrc.home
-
-# 切换
 ln -sf ~/.bashrc.work ~/.bashrc   # 切换到工作配置
 ln -sf ~/.bashrc.home ~/.bashrc   # 切换到家庭配置
-```
-
-
-#### 修复悬空链接 {#修复悬空链接}
-
-```bash
-# 找到悬空链接并尝试修复
-for link in $(find /home/user -type l ! -exec test -e {} \; -print 2>/dev/null); do
-    target=$(readlink "$link")
-    echo "悬空链接: $link -> $target"
-    # 手动检查并修复
-done
 ```
 
 
@@ -4499,11 +3813,578 @@ done
 # 方法一：使用 ln -sfn
 ln -sfn /new/target /path/to/link
 
-# 方法二：先创建新链接再原子替换（更安全）
+# 方法二：先创建新链接再原子替换（更安全，无链接暂时失效的窗口）
 ln -s /new/target /path/to/link.new
 mv -Tf /path/to/link.new /path/to/link
-# mv -T 将目标视为普通文件，-f 强制覆盖
-# 这个操作是原子的，不会有链接暂时失效的窗口
+```
+
+
+### 电脑中只有一个 64G 的 SSD ，一个 4T 的机械硬盘挂在 /data 上 {#电脑中只有一个-64g-的-ssd-一个-4t-的机械硬盘挂在-data-上}
+
+基于这个硬件条件，系统安装在 SSD 上，但是有些软件特别大，安装在了 SSD 上后就占用了很多空间，有时会导致无法更新系统。需要使用软链接将一些目录到机械硬盘上。
+
+
+#### 基本思路 {#基本思路}
+
+软链接迁移的核心思路是：先在机械硬盘（ `/data` ）上创建对应目录，将 SSD 上已有数据移动过去，然后在原位置创建指向 `/data` 的符号链接。软件访问原路径时，通过软链接透明地读写机械硬盘上的数据，对软件本身完全无感。
+
+**注意事项** ：
+
+-   操作前确保软件未在运行，避免数据不一致
+-   对于由 pacman 管理的系统目录（如 `/usr/share/texmf` ），软链接不会影响 `pacman -Qq` 查询已安装包，但 `pacman -Qk` 校验文件完整性时会报告 symlink 与预期不符，这是正常现象
+-   建议先备份数据再操作，尤其是 docker 和虚拟机的磁盘镜像
+
+
+#### 在 /data 上创建统一目录结构 {#在-data-上创建统一目录结构}
+
+```bash
+sudo mkdir -p /data/symlinks
+```
+
+`/data/symlinks` 作为所有软链接目标的总目录，便于统一管理和备份。
+
+
+#### texlive-full {#texlive-full}
+
+`texlive-full` 安装后占用约 5-7GB，主要数据在 `/usr/share/texmf` 目录下。
+
+```bash
+sudo systemctl stop texlive-update.timer 2>/dev/null
+
+sudo mv /usr/share/texmf /data/symlinks/texmf
+sudo ln -s /data/symlinks/texmf /usr/share/texmf
+
+sudo ldconfig
+```
+
+验证：
+
+```bash
+ls -la /usr/share/texmf
+kpsewhich article.cls
+```
+
+
+#### rust {#rust}
+
+Rust 工具链通过 `rustup` 安装时，默认放在 `~/.rustup` （工具链）和 `~/.cargo` （包管理器和缓存）目录下，合计可达数 GB。
+
+```bash
+rustup self update 2>/dev/null || true
+
+mv ~/.rustup /data/symlinks/rustup
+ln -s /data/symlinks/rustup ~/.rustup
+
+mv ~/.cargo /data/symlinks/cargo
+ln -s /data/symlinks/cargo ~/.cargo
+```
+
+如果使用系统包管理器安装（ `sudo pacman -S rust` ），Rust 编译的依赖缓存仍在 `~/.cargo` ，只需迁移 `cargo` 目录。
+
+验证：
+
+```bash
+rustc --version
+cargo --version
+```
+
+
+#### octave {#octave}
+
+Octave 本体不大，但其包（packages）安装目录可能膨胀。
+
+```bash
+octave --eval "pkg list" 2>/dev/null
+
+mv ~/.octave /data/symlinks/octave
+ln -s /data/symlinks/octave ~/.octave
+```
+
+如果 Octave 包安装在系统目录 `/usr/share/octave` 下：
+
+```bash
+sudo mv /usr/share/octave /data/symlinks/octave-sys
+sudo ln -s /data/symlinks/octave-sys /usr/share/octave
+```
+
+验证：
+
+```bash
+octave --version
+```
+
+
+#### nodejs {#nodejs}
+
+Node.js 本身不大，但 `npm` 和 `yarn` 的全局缓存目录会持续增长。核心需迁移的是 `node_modules` 缓存和全局安装目录。
+
+```bash
+mv ~/.npm /data/symlinks/npm
+ln -s /data/symlinks/npm ~/.npm
+
+mv ~/.node-gyp /data/symlinks/node-gyp
+ln -s /data/symlinks/node-gyp ~/.node-gyp
+```
+
+如果使用 `pnpm` ，还需迁移其存储目录：
+
+```bash
+mv ~/.local/share/pnpm /data/symlinks/pnpm
+ln -s /data/symlinks/pnpm ~/.local/share/pnpm
+```
+
+验证：
+
+```bash
+node --version
+npm --version
+npm config get cache
+```
+
+
+#### uv {#uv}
+
+`uv` 是 Python 包管理器，缓存目录默认在 `~/.cache/uv` ，下载的包可能占用数 GB。
+
+```bash
+mv ~/.cache/uv /data/symlinks/uv-cache
+ln -s /data/symlinks/uv-cache ~/.cache/uv
+```
+
+也可以通过环境变量指定缓存位置（更推荐，避免软链接与缓存清理工具冲突）：
+
+```bash
+echo 'export UV_CACHE_DIR=/data/symlinks/uv-cache' >> ~/.bashrc
+source ~/.bashrc
+```
+
+验证：
+
+```bash
+uv --version
+uv cache dir
+```
+
+
+#### docker {#docker}
+
+Docker 的镜像和容器数据默认存储在 `/var/lib/docker` ，这是最占空间的目录之一，动辄数十 GB。
+
+```bash
+sudo systemctl stop docker
+sudo systemctl stop docker.socket
+sudo systemctl stop containerd
+
+sudo mv /var/lib/docker /data/symlinks/docker
+sudo ln -s /data/symlinks/docker /var/lib/docker
+
+sudo systemctl start containerd
+sudo systemctl start docker
+```
+
+也可以通过 Docker 的 `data-root` 配置来实现（官方推荐方式，无需软链接）：
+
+```bash
+sudo systemctl stop docker
+sudo systemctl stop docker.socket
+
+sudo mv /var/lib/docker /data/symlinks/docker
+sudo mkdir -p /etc/docker
+
+sudo tee /etc/docker/daemon.json << 'EOF'
+{
+  "data-root": "/data/symlinks/docker"
+}
+EOF
+
+sudo systemctl start docker
+```
+
+验证：
+
+```bash
+docker info | grep "Docker Root Dir"
+docker run --rm hello-world
+```
+
+
+#### virtualbox {#virtualbox}
+
+VirtualBox 的虚拟机镜像默认存放在 `~/VirtualBox VMs` ，每个虚拟机可能占用数十 GB。
+
+```bash
+VBoxManage list runningvms 2>/dev/null
+
+mv ~/VirtualBox\ VMs /data/symlinks/VirtualBox-VMs
+ln -s /data/symlinks/VirtualBox-VMs ~/VirtualBox\ VMs
+```
+
+验证：
+
+```bash
+ls -la ~/VirtualBox\ VMs
+VBoxManage list vms
+```
+
+
+#### vagrant {#vagrant}
+
+Vagrant 的 boxes（基础镜像）和机器数据存放在 `~/.vagrant.d` 。
+
+```bash
+vagrant halt 2>/dev/null
+
+mv ~/.vagrant.d /data/symlinks/vagrant.d
+ln -s /data/symlinks/vagrant.d ~/.vagrant.d
+```
+
+也可以通过环境变量指定位置：
+
+```bash
+echo 'export VAGRANT_HOME=/data/symlinks/vagrant.d' >> ~/.bashrc
+source ~/.bashrc
+```
+
+验证：
+
+```bash
+vagrant --version
+vagrant box list
+```
+
+
+#### podman {#podman}
+
+Podman 的数据存储在 `~/.local/share/containers` （rootless 模式）或 `/var/lib/containers` （root 模式）。
+
+Rootless 模式：
+
+```bash
+podman system df 2>/dev/null
+
+mv ~/.local/share/containers /data/symlinks/containers
+ln -s /data/symlinks/containers ~/.local/share/containers
+```
+
+Root 模式：
+
+```bash
+sudo systemctl stop podman
+
+sudo mv /var/lib/containers /data/symlinks/containers-sys
+sudo ln -s /data/symlinks/containers-sys /var/lib/containers
+
+sudo systemctl start podman
+```
+
+验证：
+
+```bash
+podman info | grep -i "graphroot\|store"
+podman run --rm alpine echo "OK"
+```
+
+
+#### qemu {#qemu}
+
+QEMU 的虚拟磁盘（qcow2 文件）存放在用户指定的位置，没有默认统一目录。建议在 `/data` 上创建专用目录，并软链接到用户目录：
+
+```bash
+mkdir -p /data/symlinks/qemu
+
+ln -s /data/symlinks/qemu ~/qemu
+```
+
+之后创建虚拟机时将磁盘文件放在 `~/qemu` 目录下即可。
+
+如果已有虚拟磁盘散落在各处，可以逐个迁移：
+
+```bash
+mv /path/to/existing/vm.qcow2 /data/symlinks/qemu/
+ln -s /data/symlinks/qemu/vm.qcow2 /path/to/existing/vm.qcow2
+```
+
+验证：
+
+```bash
+qemu-system-x86_64 --version
+ls -la ~/qemu
+```
+
+
+#### appimage {#appimage}
+
+AppImage 本身是自包含的可执行文件，但很多 AppImage 会在 `~/.local/share/` 或 `~/.config/` 下创建数据目录。建议统一管理 AppImage 文件本身：
+
+```bash
+mkdir -p /data/symlinks/AppImage
+
+mv ~/Applications /data/symlinks/AppImage/Applications 2>/dev/null
+ln -s /data/symlinks/AppImage/Applications ~/Applications 2>/dev/null || true
+
+mkdir -p ~/Applications 2>/dev/null || true
+```
+
+也可以使用 `AppImageLauncher` 等工具来统一管理，但需要配合其安装目录设置。
+
+验证：
+
+```bash
+ls -la ~/Applications
+```
+
+
+#### snap {#snap}
+
+Snap 的数据存储在 `/var/lib/snapd` ，包含 snap 包和快照数据。注意：Arch/EndeavourOS 上 snap 并非默认安装，需通过 AUR 安装 `snapd` 。
+
+```bash
+sudo systemctl stop snapd
+sudo systemctl stop snapd.socket
+
+sudo mv /var/lib/snapd /data/symlinks/snapd
+sudo ln -s /data/symlinks/snapd /var/lib/snapd
+
+sudo systemctl start snapd.socket
+sudo systemctl start snapd
+```
+
+验证：
+
+```bash
+snap list
+snap version
+```
+
+
+#### opencode {#opencode}
+
+`opencode` 是终端 AI 编码工具，其配置和缓存目录如下：
+
+```bash
+mv ~/.config/opencode /data/symlinks/opencode-config
+ln -s /data/symlinks/opencode-config ~/.config/opencode
+
+mv ~/.local/share/opencode /data/symlinks/opencode-data
+ln -s /data/symlinks/opencode-data ~/.local/share/opencode
+```
+
+验证：
+
+```bash
+opencode --version 2>/dev/null || which opencode
+ls -la ~/.config/opencode
+```
+
+
+#### claude {#claude}
+
+`Claude Code` CLI 工具的配置和缓存存放在如下目录：
+
+```bash
+mv ~/.claude /data/symlinks/claude
+ln -s /data/symlinks/claude ~/.claude
+```
+
+验证：
+
+```bash
+claude --version
+ls -la ~/.claude
+```
+
+
+#### ollama {#ollama}
+
+Ollama 的模型文件默认存储在 `~/.ollama` （本地模式）或 `/usr/share/ollama/.ollama` （系统安装模式）。模型文件通常很大（数 GB 到数十 GB）。
+
+本地安装模式：
+
+```bash
+ollama stop 2>/dev/null || true
+
+mv ~/.ollama /data/symlinks/ollama
+ln -s /data/symlinks/ollama ~/.ollama
+```
+
+系统安装模式（通过 `sudo pacman -S ollama` 或 AUR 安装）：
+
+```bash
+sudo systemctl stop ollama
+
+sudo mv /usr/share/ollama/.ollama /data/symlinks/ollama-sys
+sudo ln -s /data/symlinks/ollama-sys /usr/share/ollama/.ollama
+
+sudo systemctl start ollama
+```
+
+也可以通过环境变量指定模型存储位置（推荐方式，避免软链接）：
+
+```bash
+echo 'export OLLAMA_MODELS=/data/symlinks/ollama/models' >> ~/.bashrc
+source ~/.bashrc
+```
+
+验证：
+
+```bash
+ollama --version
+ollama list
+```
+
+
+#### hermes {#hermes}
+
+`hermes` 是 Meta 开源的 JavaScript 引擎，通常作为 React Native 的依赖安装。其编译缓存和构建产物可能占用较大空间。
+
+```bash
+mv ~/.hermes /data/symlinks/hermes 2>/dev/null
+ln -s /data/symlinks/hermes ~/.hermes 2>/dev/null || true
+
+mv ~/.cache/hermes /data/symlinks/hermes-cache 2>/dev/null
+ln -s /data/symlinks/hermes-cache ~/.cache/hermes 2>/dev/null || true
+```
+
+验证：
+
+```bash
+ls -la ~/.hermes 2>/dev/null
+ls -la ~/.cache/hermes 2>/dev/null
+```
+
+
+#### 批量迁移脚本 {#批量迁移脚本}
+
+以下脚本可一次性完成上述所有软件目录的迁移。执行前请确保所有相关软件已停止运行。
+
+```bash
+#!/bin/bash
+set -euo pipefail
+
+DATA_ROOT="/data/symlinks"
+mkdir -p "$DATA_ROOT"
+
+symlink_dir() {
+    local src="$1"
+    local dest="$2"
+    if [ -e "$src" ] && [ ! -L "$src" ]; then
+        echo "Moving $src -> $dest"
+        mv "$src" "$dest"
+        ln -s "$dest" "$src"
+        echo "  Symlink created: $src -> $dest"
+    elif [ -L "$src" ]; then
+        echo "  Skip $src (already a symlink)"
+    else
+        echo "  Skip $src (does not exist)"
+    fi
+}
+
+echo "=== Migrating user-level directories ==="
+
+symlink_dir "$HOME/.rustup"            "$DATA_ROOT/rustup"
+symlink_dir "$HOME/.cargo"             "$DATA_ROOT/cargo"
+symlink_dir "$HOME/.octave"            "$DATA_ROOT/octave"
+symlink_dir "$HOME/.npm"               "$DATA_ROOT/npm"
+symlink_dir "$HOME/.node-gyp"          "$DATA_ROOT/node-gyp"
+symlink_dir "$HOME/.local/share/pnpm"  "$DATA_ROOT/pnpm"
+symlink_dir "$HOME/.cache/uv"          "$DATA_ROOT/uv-cache"
+symlink_dir "$HOME/VirtualBox VMs"     "$DATA_ROOT/VirtualBox-VMs"
+symlink_dir "$HOME/.vagrant.d"         "$DATA_ROOT/vagrant.d"
+symlink_dir "$HOME/.local/share/containers" "$DATA_ROOT/containers"
+symlink_dir "$HOME/.config/opencode"   "$DATA_ROOT/opencode-config"
+symlink_dir "$HOME/.local/share/opencode" "$DATA_ROOT/opencode-data"
+symlink_dir "$HOME/.claude"            "$DATA_ROOT/claude"
+symlink_dir "$HOME/.ollama"            "$DATA_ROOT/ollama"
+symlink_dir "$HOME/.hermes"            "$DATA_ROOT/hermes"
+symlink_dir "$HOME/.cache/hermes"      "$DATA_ROOT/hermes-cache"
+
+echo ""
+echo "=== System-level directories (require sudo) ==="
+echo "Run these manually after stopping the corresponding services:"
+echo ""
+echo "  # texlive-full"
+echo "  sudo mv /usr/share/texmf $DATA_ROOT/texmf"
+echo "  sudo ln -s $DATA_ROOT/texmf /usr/share/texmf"
+echo ""
+echo "  # docker"
+echo "  sudo systemctl stop docker docker.socket containerd"
+echo "  sudo mv /var/lib/docker $DATA_ROOT/docker"
+echo "  sudo ln -s $DATA_ROOT/docker /var/lib/docker"
+echo "  sudo systemctl start containerd docker"
+echo ""
+echo "  # podman (system)"
+echo "  sudo systemctl stop podman"
+echo "  sudo mv /var/lib/containers $DATA_ROOT/containers-sys"
+echo "  sudo ln -s $DATA_ROOT/containers-sys /var/lib/containers"
+echo "  sudo systemctl start podman"
+echo ""
+echo "  # snap"
+echo "  sudo systemctl stop snapd snapd.socket"
+echo "  sudo mv /var/lib/snapd $DATA_ROOT/snapd"
+echo "  sudo ln -s $DATA_ROOT/snapd /var/lib/snapd"
+echo "  sudo systemctl start snapd.socket snapd"
+echo ""
+echo "  # ollama (system install)"
+echo "  sudo systemctl stop ollama"
+echo "  sudo mv /usr/share/ollama/.ollama $DATA_ROOT/ollama-sys"
+echo "  sudo ln -s $DATA_ROOT/ollama-sys /usr/share/ollama/.ollama"
+echo "  sudo systemctl start ollama"
+echo ""
+echo "Done! Verify with: ls -la ~/.rustup ~/.cargo ~/.docker ~/.claude"
+```
+
+将脚本保存为 `migrate-to-hdd.sh` ，赋予执行权限后运行：
+
+```bash
+chmod +x migrate-to-hdd.sh
+./migrate-to-hdd.sh
+```
+
+
+#### 还原软链接 {#还原软链接}
+
+如果需要将数据迁回 SSD（比如更换了更大的 SSD），可以逆向操作：
+
+```bash
+#!/bin/bash
+set -euo pipefail
+
+DATA_ROOT="/data/symlinks"
+
+restore_dir() {
+    local link="$1"
+    if [ -L "$link" ]; then
+        local target
+        target=$(readlink -f "$link")
+        echo "Restoring $link from $target"
+        rm "$link"
+        mv "$target" "$link"
+        echo "  Restored: $link"
+    else
+        echo "  Skip $link (not a symlink)"
+    fi
+}
+
+echo "=== Restoring user-level directories ==="
+
+restore_dir "$HOME/.rustup"
+restore_dir "$HOME/.cargo"
+restore_dir "$HOME/.octave"
+restore_dir "$HOME/.npm"
+restore_dir "$HOME/.node-gyp"
+restore_dir "$HOME/.local/share/pnpm"
+restore_dir "$HOME/.cache/uv"
+restore_dir "$HOME/VirtualBox VMs"
+restore_dir "$HOME/.vagrant.d"
+restore_dir "$HOME/.local/share/containers"
+restore_dir "$HOME/.config/opencode"
+restore_dir "$HOME/.local/share/opencode"
+restore_dir "$HOME/.claude"
+restore_dir "$HOME/.ollama"
+restore_dir "$HOME/.hermes"
+restore_dir "$HOME/.cache/hermes"
+
+echo "Done! System-level directories need manual restoration with sudo."
 ```
 
 
@@ -22313,7 +22194,7 @@ let c=a+b
 -   变量加引号防止空值报错
 
 
-#####  {#687--orgf9ada0a}
+#####  {#696--org8d37cbe}
 
 `[[ ]]` 是 Bash 增强版，支持模式匹配和逻辑运算：
 
