@@ -2,7 +2,7 @@
 title: "windows 开发环境配置"
 author: ["Donald Lo"]
 date: 2026-01-15
-lastmod: 2026-06-28T08:15:00+08:00
+lastmod: 2026-08-15T20:41:00+08:00
 tags: ["windows", "dev"]
 draft: false
 ---
@@ -20,6 +20,11 @@ draft: false
     - [查看环境变量](#查看环境变量)
     - [内置环境变量](#内置环境变量)
     - [默认环境变量(Windows 10/11)](#默认环境变量--windows-10-11)
+- [网络与代理配置](#网络与代理配置)
+    - [设置 HTTP 代理](#设置-http-代理)
+    - [Git 代理配置](#git-代理配置)
+    - [npm 代理配置](#npm-代理配置)
+    - [临时启用/禁用代理](#临时启用-禁用代理)
 - [软链接](#软链接)
     - [什么是软链接](#什么是软链接)
     - [创建软链接](#创建软链接)
@@ -77,7 +82,6 @@ draft: false
         - [结合 CMD 实现特定功能](#结合-cmd-实现特定功能)
             - [快速新建空文件](#快速新建空文件)
     - [PDF 查看工具](#pdf-查看工具)
-    - [改键工具](#改键工具)
     - [Busybox-常用的命令行工具](#busybox-常用的命令行工具)
     - [安装浏览器](#安装浏览器)
     - [Obsidian-笔记软件](#obsidian-笔记软件)
@@ -90,6 +94,10 @@ draft: false
     - [QQ](#qq)
     - [XMind-思维导图](#xmind-思维导图)
     - [vscode](#vscode)
+        - [配置 VS Code](#配置-vs-code)
+            - [命令行启动 VS Code](#命令行启动-vs-code)
+            - [推荐的扩展安装](#推荐的扩展安装)
+            - [用户设置](#用户设置)
     - [teams](#teams)
     - [截图工具](#截图工具)
     - [视频播放软件](#视频播放软件)
@@ -109,10 +117,19 @@ draft: false
     - [卸载软件](#卸载软件)
     - [删除软件的旧版本](#删除软件的旧版本)
     - [删除缓存文件](#删除缓存文件)
+- [winget](#winget)
+    - [查看已安装的应用](#查看已安装的应用)
+    - [搜索应用](#搜索应用)
+    - [安装应用](#安装应用)
+    - [更新应用](#更新应用)
+    - [卸载应用](#卸载应用)
+    - [导出和导入已安装应用列表](#导出和导入已安装应用列表)
+    - [常用参数](#常用参数)
 - [字体](#字体)
     - [查找字体](#查找字体)
     - [下载字体](#下载字体)
     - [安装字体](#安装字体)
+        - [批量安装字体（自动化方式）](#批量安装字体-自动化方式)
     - [常用的字体](#常用的字体)
         - [落霞孤鹜中文字体](#落霞孤鹜中文字体)
         - [思源中文字体](#思源中文字体)
@@ -345,6 +362,12 @@ draft: false
     - [从远程仓库克隆](#从远程仓库克隆)
     - [从远程仓库更新](#从远程仓库更新)
     - [常用 Git 命令参考](#常用-git-命令参考)
+- [SSH 配置](#ssh-配置)
+    - [生成 SSH 密钥](#生成-ssh-密钥)
+    - [启动 ssh-agent 并添加密钥](#启动-ssh-agent-并添加密钥)
+    - [将公钥添加到 GitHub](#将公钥添加到-github)
+    - [SSH 配置文件](#ssh-配置文件)
+    - [使用 SSH 克隆仓库](#使用-ssh-克隆仓库)
 - [Rsync](#rsync)
     - [Rsync 简介](#rsync-简介)
     - [通过 Scoop 安装 Rsync](#通过-scoop-安装-rsync)
@@ -371,12 +394,28 @@ draft: false
         - [备份 Rime 输入法配置](#备份-rime-输入法配置)
         - [备份文档目录](#备份文档目录)
         - [一键备份脚本](#一键备份脚本)
-    - [常用参数说明](#常用参数说明)
     - [常见问题](#常见问题)
         - [rsync: command not found](#rsync-command-not-found)
         - [权限问题](#权限问题)
         - [路径问题](#路径问题)
     - [定时自动备份](#定时自动备份)
+- [系统优化](#系统优化)
+    - [关闭 Windows Defender 实时保护（开发用）](#关闭-windows-defender-实时保护-开发用)
+    - [禁用休眠功能](#禁用休眠功能)
+    - [关闭 Windows 自动更新](#关闭-windows-自动更新)
+    - [关闭 Windows 错误报告](#关闭-windows-错误报告)
+    - [优化 SSD 性能](#优化-ssd-性能)
+    - [调整虚拟内存](#调整虚拟内存)
+    - [清理磁盘空间](#清理磁盘空间)
+- [WSL 与 Windows 互操作](#wsl-与-windows-互操作)
+    - [在 Windows 中访问 WSL 文件](#在-windows-中访问-wsl-文件)
+    - [在 WSL 中访问 Windows 文件](#在-wsl-中访问-windows-文件)
+    - [配置 wsl.conf](#配置-wsl-dot-conf)
+    - [控制 Windows PATH 是否传递到 WSL](#控制-windows-path-是否传递到-wsl)
+    - [在 WSL 中启动 Windows 程序](#在-wsl-中启动-windows-程序)
+    - [在 Windows 中执行 WSL 命令](#在-windows-中执行-wsl-命令)
+    - [共享网络配置](#共享网络配置)
+    - [备份和恢复 WSL](#备份和恢复-wsl)
 
 </div>
 <!--endtoc-->
@@ -508,6 +547,95 @@ Windows系统中有一些常见的内置环境变量，它们提供了有关操�
 -   `%windir%` ： `%SystemRoot%`
 
 
+## 网络与代理配置 {#网络与代理配置}
+
+
+### 设置 HTTP 代理 {#设置-http-代理}
+
+如果你需要通过代理访问互联网，可以在 PowerShell 中设置环境变量：
+
+```powershell
+# 设置 HTTP 和 HTTPS 代理（临时，仅当前终端有效）
+$env:HTTP_PROXY = "http://127.0.0.1:7890"
+$env:HTTPS_PROXY = "http://127.0.0.1:7890"
+
+# 设置不需要代理的地址（如本地、局域网）
+$env:NO_PROXY = "localhost,127.0.0.1,192.168.*"
+```
+
+永久设置（添加到 PowerShell 配置文件）：
+
+```powershell
+# 编辑 PowerShell 配置文件
+notepad $PROFILE
+
+# 添加以下内容
+$env:HTTP_PROXY = "http://127.0.0.1:7890"
+$env:HTTPS_PROXY = "http://127.0.0.1:7890"
+$env:NO_PROXY = "localhost,127.0.0.1,192.168.*"
+```
+
+或者通过系统环境变量设置（对所有应用生效）：
+
+```powershell
+# 设置用户级环境变量
+setx HTTP_PROXY "http://127.0.0.1:7890"
+setx HTTPS_PROXY "http://127.0.0.1:7890"
+setx NO_PROXY "localhost,127.0.0.1,192.168.*"
+```
+
+
+### Git 代理配置 {#git-代理配置}
+
+```powershell
+# 设置 Git 使用的代理（HTTP）
+git config --global http.proxy http://127.0.0.1:7890
+
+# 设置 Git 使用的代理（SSH）
+git config --global core.sshCommand "ssh -o ProxyCommand='connect -H 127.0.0.1:7890 %h %p'"
+
+# 取消代理设置
+git config --global --unset http.proxy
+git config --global --unset core.sshCommand
+```
+
+
+### npm 代理配置 {#npm-代理配置}
+
+```powershell
+npm config set proxy http://127.0.0.1:7890
+npm config set https-proxy http://127.0.0.1:7890
+
+# 取消代理
+npm config delete proxy
+npm config delete https-proxy
+```
+
+
+### 临时启用/禁用代理 {#临时启用-禁用代理}
+
+```powershell
+# 临时禁用代理（当前终端）
+$env:HTTP_PROXY = ""
+$env:HTTPS_PROXY = ""
+
+# 或者使用 PowerShell 函数
+function Disable-Proxy {
+    $env:HTTP_PROXY = ""
+    $env:HTTPS_PROXY = ""
+    Write-Host "代理已禁用"
+}
+
+function Enable-Proxy {
+    $env:HTTP_PROXY = "http://127.0.0.1:7890"
+    $env:HTTPS_PROXY = "http://127.0.0.1:7890"
+    Write-Host "代理已启用"
+}
+```
+
+将上述函数添加到 PowerShell 配置文件中，就可以使用 `Disable-Proxy` 和 `Enable-Proxy` 命令快速切换。
+
+
 ## 软链接 {#软链接}
 
 
@@ -524,11 +652,11 @@ Windows系统中有一些常见的内置环境变量，它们提供了有关操�
 
 Windows 支持三种链接类型：
 
-| 类型      | 说明         | 跨分区 | 硬链接限制 |   |
-|---------|------------|-----|-------|---|
-| 符号链接（软链接） | 指向目标文件或目录的指针 | 是  | 无     |   |
-| 硬链接    | 同一文件系统的多个入口 | 否  | 需要同一分区 |   |
-| 目录链接  | 符号链接的目录版本 | 是  | 仅限管理员 |   |
+| 类型      | 说明         | 跨分区 | 硬链接限制 |
+|---------|------------|-----|-------|
+| 符号链接（软链接） | 指向目标文件或目录的指针 | 是  | 无     |
+| 硬链接    | 同一文件系统的多个入口 | 否  | 需要同一分区 |
+| 目录链接  | 符号链接的目录版本 | 是  | 仅限管理员 |
 
 
 ### 创建软链接 {#创建软链接}
@@ -563,17 +691,17 @@ mklink /D workspace D:\Projects\workspace
 
 PowerShell 也提供了创建符号链接的方法：
 
-```bash
-:: 创建文件软链接
+```powershell
+# 创建文件软链接
 New-Item -ItemType SymbolicLink -Path "link_name" -Target "target_file"
 
-:: 创建目录软链接
+# 创建目录软链接
 New-Item -ItemType SymbolicLink -Path "link_name" -Target "target_directory"
 ```
 
 例如：
 
-```bash
+```powershell
 New-Item -ItemType SymbolicLink -Path "config.txt" -Target "D:\home\config\settings.txt"
 
 New-Item -ItemType SymbolicLink -Path "workspace" -Target "D:\Projects\workspace"
@@ -584,11 +712,11 @@ New-Item -ItemType SymbolicLink -Path "workspace" -Target "D:\Projects\workspace
 
 使用命令查看链接信息：
 
-```bash
-:: 在 cmd 中
+```powershell
+# 在 cmd 中
 dir /Al
 
-:: 在 PowerShell 中
+# 在 PowerShell 中
 Get-ChildItem | Where-Object { $_.LinkType -ne $null }
 ```
 
@@ -603,12 +731,12 @@ fsutil reparsepoint query "link_name"
 
 删除软链接和删除普通文件一样，不会影响目标文件：
 
-```bash
-:: 在 cmd 中
-del link_name    :: 删除文件软链接
-rmdir link_name  :: 删除目录软链接
+```powershell
+# 在 cmd 中
+del link_name    # 删除文件软链接
+rmdir link_name  # 删除目录软链接
 
-:: 在 PowerShell 中
+# 在 PowerShell 中
 Remove-Item -Path "link_name"
 ```
 
@@ -848,7 +976,7 @@ scoop install git aria2 coreutils fzf grep gzip make ripgrep rga wget which fd 7
 scoop config aria2-enabled true
 ```
 
-修改 C:\Users\donal\\.config\scoop\config.json 文件，原始文件如下：
+修改 Scoop 配置文件（位于 `%USERPROFILE%\.config\scoop\config.json` ），原始文件如下：
 
 ```json
 {
@@ -1210,13 +1338,6 @@ scoop install sumatrapdf
 ```
 
 
-### 改键工具 {#改键工具}
-
-```bash
-scoop install sharpkeys
-```
-
-
 ### Busybox-常用的命令行工具 {#busybox-常用的命令行工具}
 
 ```shell
@@ -1298,6 +1419,95 @@ scoop install xmind
 
 ```shell
 scoop install vscode
+```
+
+
+#### 配置 VS Code {#配置-vs-code}
+
+
+##### 命令行启动 VS Code {#命令行启动-vs-code}
+
+安装完成后，可以通过命令行启动 VS Code：
+
+```powershell
+# 打开当前目录
+code .
+
+# 打开指定文件
+code file.txt
+
+# 打开指定目录
+code D:\projects\my-project
+```
+
+
+##### 推荐的扩展安装 {#推荐的扩展安装}
+
+```powershell
+# 中文语言包
+code --install-extension MS-CEINTL.vscode-language-pack-zh-hans
+
+# Git 相关
+code --install-extension eamodio.gitlens
+
+# 代码质量
+code --install-extension ms-python.python
+code --install-extension ms-python.vscode-pylance
+code --install-extension charliermarsh.ruff
+
+# 前端开发
+code --install-extension dbaeumer.vscode-eslint
+code --install-extension esbenp.prettier-vscode
+
+# 远程开发
+code --install-extension ms-vscode-remote.remote-ssh
+code --install-extension ms-vscode.remote-explorer
+
+# 其他实用工具
+code --install-extension christian-kohler.path-intellisense
+code --install-extension formulahendry.auto-rename-tag
+code --install-extension PKief.material-icon-theme
+```
+
+
+##### 用户设置 {#用户设置}
+
+通过 `Ctrl+,` 打开设置，或编辑 `%APPDATA%\Code\User\settings.json` ：
+
+```json
+{
+    // 编辑器设置
+    "editor.fontSize": 14,
+    "editor.fontFamily": "Maple Mono NF CN, Consolas, 'Courier New', monospace",
+    "editor.tabSize": 2,
+    "editor.formatOnSave": true,
+    "editor.minimap.enabled": false,
+    "editor.wordWrap": "on",
+    "editor.bracketPairColorization.enabled": true,
+    "editor.guides.bracketPairs": true,
+
+    // 终端设置
+    "terminal.integrated.defaultProfile.windows": "PowerShell",
+    "terminal.integrated.fontSize": 13,
+
+    // 文件设置
+    "files.autoSave": "afterDelay",
+    "files.autoSaveDelay": 1000,
+    "files.encoding": "utf8",
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true,
+
+    // Git 设置
+    "git.autofetch": true,
+    "git.confirmSync": false,
+
+    // 搜索排除
+    "search.exclude": {
+        "**/node_modules": true,
+        "**/dist": true,
+        "**/.venv": true
+    }
+}
 ```
 
 
@@ -1534,6 +1744,85 @@ scoop cache rm *
 ```
 
 
+## winget {#winget}
+
+`winget` 是 Windows 包管理器，可以用来安装、更新和卸载应用程序。对于 Scoop 中没有的应用程序，可以使用 winget 来安装。
+
+
+### 查看已安装的应用 {#查看已安装的应用}
+
+```powershell
+winget list
+```
+
+
+### 搜索应用 {#搜索应用}
+
+```powershell
+winget search "应用名称"
+```
+
+例如搜索 VS Code：
+
+```powershell
+winget search Microsoft.VisualStudioCode
+```
+
+
+### 安装应用 {#安装应用}
+
+```powershell
+# 安装指定应用
+winget install Microsoft.VisualStudioCode
+
+# 安装应用并跳过安装条款确认
+winget install --id Microsoft.VisualStudioCode --accept-package-agreements --accept-source-agreements
+```
+
+
+### 更新应用 {#更新应用}
+
+```powershell
+# 更新指定应用
+winget upgrade Microsoft.VisualStudioCode
+
+# 更新所有可升级的应用
+winget upgrade --all
+```
+
+
+### 卸载应用 {#卸载应用}
+
+```powershell
+winget uninstall Microsoft.VisualStudioCode
+```
+
+
+### 导出和导入已安装应用列表 {#导出和导入已安装应用列表}
+
+导出当前系统已安装的应用列表：
+
+```powershell
+winget export -o D:\backups\installed-apps.json
+```
+
+在新系统上导入应用列表进行批量安装：
+
+```powershell
+winget import -i D:\backups\installed-apps.json
+```
+
+
+### 常用参数 {#常用参数}
+
+| 参数                          | 说明         |
+|-----------------------------|------------|
+| `--accept-package-agreements` | 接受包许可协议 |
+| `--accept-source-agreements`  | 接受源许可协议 |
+| `--silent`                    | 静默安装（无界面） |
+| `--location`                  | 指定安装目录（部分应用） |
+
+
 ## 字体 {#字体}
 
 
@@ -1599,6 +1888,55 @@ Checking hash of MapleMono-NF-CN.zip ... ok.
 选中所有的字体文件（以 ttf 结尾的文件），然后鼠标右键菜单中选择 **为所有用户安装** :
 
 {{< figure src="/images/dev-envs.org/2026-01-16_14-49-30_screenshot.png" width="90%" >}}
+
+
+#### 批量安装字体（自动化方式） {#批量安装字体-自动化方式}
+
+手动安装字体比较繁琐，可以使用 PowerShell 脚本批量安装：
+
+```powershell
+# 安装 Nerd Fonts 的 PowerShell 函数
+function Install-NerdFont {
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]$FontName
+    )
+
+    $cacheDir = "$env:SCOOP\cache"
+    $fontDir = "$env:LOCALAPPDATA\Microsoft\Windows\Fonts"
+
+    # 查找缓存中的字体文件
+    $fontFiles = Get-ChildItem -Path $cacheDir -Filter "*.ttf" -Recurse |
+        Where-Object { $_.Name -like "*$FontName*" }
+
+    if ($fontFiles.Count -eq 0) {
+        Write-Host "未找到 $FontName 的字体文件，请先执行 scoop download $FontName" -ForegroundColor Yellow
+        return
+    }
+
+    foreach ($font in $fontFiles) {
+        Write-Host "安装字体: $($font.Name)" -ForegroundColor Green
+        Copy-Item $font.FullName $fontDir -Force
+    }
+
+    Write-Host "字体安装完成，可能需要重启应用才能生效" -ForegroundColor Cyan
+}
+
+# 使用示例
+Install-NerdFont "Maple-Mono-NF-CN"
+Install-NerdFont "LXGWWenKaiMonoGB"
+Install-NerdFont "SourceCodePro-NF"
+```
+
+也可以使用 scoop 的 `hold` 功能来管理字体版本：
+
+```powershell
+# 安装字体后，使用 hold 锁定版本避免被更新
+scoop hold Maple-Mono-NF-CN
+
+# 解除锁定
+scoop unhold Maple-Mono-NF-CN
+```
 
 
 ### 常用的字体 {#常用的字体}
@@ -1889,26 +2227,44 @@ winget install --id Microsoft.PowerShell --source winget
 
 ### 设置 Windows Terminal 默认打开的是新版本的 Powershell {#设置-windows-terminal-默认打开的是新版本的-powershell}
 
-打开 Windows Termial
+打开 Windows Terminal
 
 {{< figure src="/images/dev-envs.org/2026-01-20_09-02-04_screenshot.png" width="90%" >}}
 
-通过 Ctrl+, 快捷键打开设置界面
+通过 Ctrl+, 快捷键打开设置界面：
 
 {{< figure src="/images/dev-envs.org/2026-01-20_09-02-58_screenshot.png" width="90%" >}}
+
+在设置界面中，找到 **启动** -&gt; **默认配置文件** ，选择 **PowerShell** （而不是 Windows PowerShell），这样每次打开 Windows Terminal 时就会默认使用新安装的 PowerShell 7。
+
+也可以直接编辑 Windows Terminal 的配置文件（ `settings.json` ），将 `defaultProfile` 设置为 PowerShell 的 GUID：
+
+```json
+{
+    "defaultProfile": "{574e775e-4f2a-5b96-ac1e-a2962a402336}"
+}
+```
 
 
 ### 查看 Powershell 的配置文件 {#查看-powershell-的配置文件}
 
-```bash
+```powershell
 echo $PROFILE
 ```
 
-```bash
+```powershell
 D:\Documents\PowerShell\Microsoft.PowerShell_profile.ps1
 ```
 
 需要添加的配置和一些函数都可以写在这个文件中。
+
+如果文件不存在，可以使用如下命令创建：
+
+```powershell
+if (!(Test-Path -Path $PROFILE)) {
+  New-Item -ItemType File -Path $PROFILE -Force
+}
+```
 
 
 ## MSYS2 {#msys2}
@@ -2462,7 +2818,7 @@ Mode                 LastWriteTime         Length Name
             "openpyxl>=3.1.5",
             ]
     ```
--   README. ME：空的 markdown 文件，预留让你撰写项目说明用。
+-   README.md：空的 markdown 文件，预留让你撰写项目说明用。
 
 
 ##### 添加包 {#添加包}
@@ -3543,10 +3899,75 @@ D:\Scoop\apps\msys2\current\usr\bin
 
 #### 项目文件 {#项目文件}
 
+```c
+#include <stdio.h>
+#include <stdlib.h>
+
+// 计算阶乘的函数
+unsigned long long factorial(int n) {
+    if (n <= 1) return 1;
+    return n * factorial(n - 1);
+}
+
+// 计算斐波那契数列的函数
+int fibonacci(int n) {
+    if (n <= 0) return 0;
+    if (n == 1) return 1;
+    return fibonacci(n - 1) + fibonacci(n - 2);
+}
+
+int main(int argc, char *argv[]) {
+    printf("=== C Program Demo ===\n\n");
+
+    // 演示：计算阶乘
+    printf("Factorial calculations:\n");
+    for (int i = 0; i <= 10; i++) {
+        printf("  %d! = %llu\n", i, factorial(i));
+    }
+
+    printf("\n");
+
+    // 演示：斐波那契数列
+    printf("Fibonacci sequence:\n");
+    printf("  ");
+    for (int i = 0; i < 15; i++) {
+        printf("%d ", fibonacci(i));
+    }
+    printf("\n");
+
+    printf("\n=== End of Demo ===\n");
+
+    return 0;
+}
+```
+
 transclude: <../../codes/c/gcc-hello/hello.c>  :src c
 
 
 #### Makefile {#makefile}
+
+```makefile
+# Makefile for hello.c
+
+CC = gcc
+CFLAGS = -Wall -Wextra -g -O0
+TARGET = hello
+SRC = hello.c
+
+.PHONY: all clean debug
+
+all: $(TARGET)
+
+$(TARGET): $(SRC)
+$(CC) $(CFLAGS) -o $(TARGET) $(SRC)
+
+clean:
+rm -f $(TARGET) $(TARGET).exe
+
+# 用于 GDB 调试的目标
+debug: $(TARGET)
+gdb ./$(TARGET)
+```
 
 
 #### 编译和运行 {#编译和运行}
@@ -3621,26 +4042,409 @@ cmake-hello/
 
 #### CMakeLists.txt {#cmakelists-dot-txt}
 
+```cmake
+cmake_minimum_required(VERSION 3.10)
+project(CMakeHello VERSION 1.0.0 LANGUAGES C)
+
+# 设置 C 标准
+set(CMAKE_C_STANDARD 99)
+set(CMAKE_C_STANDARD_REQUIRED ON)
+
+# 设置输出目录
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+
+# 包含头文件目录
+include_directories(${CMAKE_SOURCE_DIR}/include)
+
+# 源文件
+set(SOURCES
+  src/main.c
+  src/math_utils.c
+  src/string_utils.c
+)
+
+# 创建可执行文件
+add_executable(cmake_hello ${SOURCES})
+
+# 设置编译选项
+target_compile_options(cmake_hello PRIVATE
+  -Wall
+  -Wextra
+  -Wpedantic
+)
+
+# 生成 compile_commands.json（用于代码补全和静态分析）
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+# 安装目标
+install(TARGETS cmake_hello
+  RUNTIME DESTINATION bin
+)
+```
+
 
 #### 头文件：math_utils.h {#头文件-math-utils-dot-h}
+
+```c
+#ifndef MATH_UTILS_H
+#define MATH_UTILS_H
+
+// 数学工具函数头文件
+
+// 计算阶乘
+unsigned long long factorial(int n);
+
+// 计算幂
+double power(double base, int exp);
+
+// 计算平方根（牛顿迭代法）
+double sqrt_newton(double n);
+
+// 判断素数
+int is_prime(int n);
+
+// 计算最大公约数
+int gcd(int a, int b);
+
+// 计算最小公倍数
+int lcm(int a, int b);
+
+#endif // MATH_UTILS_H
+```
 
 
 #### 头文件：string_utils.h {#头文件-string-utils-dot-h}
 
+```c
+#ifndef STRING_UTILS_H
+#define STRING_UTILS_H
+
+#include <stddef.h>
+
+// 字符串工具函数头文件
+
+// 计算字符串长度
+size_t my_strlen(const char *str);
+
+// 复制字符串
+char *my_strcpy(char *dest, const char *src);
+
+// 连接字符串
+char *my_strcat(char *dest, const char *src);
+
+// 比较字符串
+int my_strcmp(const char *s1, const char *s2);
+
+// 反转字符串
+void my_strrev(char *str);
+
+// 判断回文字符串
+int is_palindrome(const char *str);
+
+// 将字符串转换为大写
+void to_upper(char *str);
+
+// 将字符串转换为小写
+void to_lower(char *str);
+
+#endif // STRING_UTILS_H
+```
+
 
 #### 源文件：main.c {#源文件-main-dot-c}
+
+```c
+#include <stdio.h>
+#include "math_utils.h"
+#include "string_utils.h"
+
+int main(void) {
+    printf("=== CMake Multi-File Project Demo ===\n\n");
+
+    // 演示数学工具函数
+    printf("=== Math Utils Demo ===\n");
+    printf("Factorial of 5: %llu\n", factorial(5));
+    printf("2^10: %.2f\n", power(2.0, 10));
+    printf("sqrt(2): %.6f\n", sqrt_newton(2.0));
+    printf("Is 17 prime? %s\n", is_prime(17) ? "Yes" : "No");
+    printf("GCD(48, 18): %d\n", gcd(48, 18));
+    printf("LCM(4, 6): %d\n", lcm(4, 6));
+
+    printf("\n=== String Utils Demo ===\n");
+    char str1[100] = "Hello";
+    char str2[100] = "World";
+    char str3[100] = "A man a plan a canal Panama";
+
+    printf("Original string: %s\n", str1);
+    printf("Length: %zu\n", my_strlen(str1));
+
+    my_strcat(str1, " ");
+    my_strcat(str1, str2);
+    printf("After concatenation: %s\n", str1);
+
+    to_upper(str1);
+    printf("Uppercase: %s\n", str1);
+
+    to_lower(str1);
+    printf("Lowercase: %s\n", str1);
+
+    my_strrev(str2);
+    printf("Reversed 'World': %s\n", str2);
+
+    // 移除空格后检查回文
+    printf("\n=== Palindrome Check ===\n");
+    printf("String: \"%s\"\n", str3);
+    printf("Is palindrome (ignoring spaces): %s\n",
+           is_palindrome(str3) ? "Yes" : "No");
+
+    printf("\n=== End of Demo ===\n");
+
+    return 0;
+}
+```
 
 
 #### 源文件：math_utils.c {#源文件-math-utils-dot-c}
 
+```c
+#include "math_utils.h"
+#include <math.h>
+
+unsigned long long factorial(int n) {
+    if (n < 0) return 0;
+    if (n <= 1) return 1;
+
+    unsigned long long result = 1;
+    for (int i = 2; i <= n; i++) {
+        result *= i;
+    }
+    return result;
+}
+
+double power(double base, int exp) {
+    if (exp == 0) return 1.0;
+
+    double result = 1.0;
+    int positive_exp = exp > 0 ? exp : -exp;
+
+    for (int i = 0; i < positive_exp; i++) {
+        result *= base;
+    }
+
+    return exp > 0 ? result : 1.0 / result;
+}
+
+double sqrt_newton(double n) {
+    if (n < 0) return -1.0;
+    if (n == 0) return 0.0;
+
+    double x = n;
+    double epsilon = 1e-10;
+
+    while (fabs(x * x - n) > epsilon) {
+        x = (x + n / x) / 2.0;
+    }
+
+    return x;
+}
+
+int is_prime(int n) {
+    if (n <= 1) return 0;
+    if (n <= 3) return 1;
+    if (n % 2 == 0 || n % 3 == 0) return 0;
+
+    for (int i = 5; i * i <= n; i += 6) {
+        if (n % i == 0 || n % (i + 2) == 0) return 0;
+    }
+
+    return 1;
+}
+
+int gcd(int a, int b) {
+    a = a < 0 ? -a : a;
+    b = b < 0 ? -b : b;
+
+    while (b != 0) {
+        int temp = b;
+        b = a % b;
+        a = temp;
+    }
+
+    return a;
+}
+
+int lcm(int a, int b) {
+    if (a == 0 || b == 0) return 0;
+    return (a / gcd(a, b)) * b;
+}
+```
+
 
 #### 源文件：string_utils.c {#源文件-string-utils-dot-c}
+
+```c
+#include "string_utils.h"
+#include <ctype.h>
+
+size_t my_strlen(const char *str) {
+    size_t len = 0;
+    while (str[len] != '\0') {
+        len++;
+    }
+    return len;
+}
+
+char *my_strcpy(char *dest, const char *src) {
+    char *original = dest;
+    while ((*dest++ = *src++) != '\0');
+    return original;
+}
+
+char *my_strcat(char *dest, const char *src) {
+    char *original = dest;
+
+    // 移动到 dest 的末尾
+    while (*dest != '\0') {
+        dest++;
+    }
+
+    // 复制 src
+    while ((*dest++ = *src++) != '\0');
+
+    return original;
+}
+
+int my_strcmp(const char *s1, const char *s2) {
+    while (*s1 && *s1 == *s2) {
+        s1++;
+        s2++;
+    }
+    return (unsigned char)*s1 - (unsigned char)*s2;
+}
+
+void my_strrev(char *str) {
+    if (!str || !*str) return;
+
+    int len = my_strlen(str);
+    for (int i = 0; i < len / 2; i++) {
+        char temp = str[i];
+        str[i] = str[len - 1 - i];
+        str[len - 1 - i] = temp;
+    }
+}
+
+int is_palindrome(const char *str) {
+    if (!str) return 0;
+
+    int left = 0;
+    int right = my_strlen(str) - 1;
+
+    while (left < right) {
+        // 跳过非字母数字字符
+        while (left < right && !isalnum((unsigned char)str[left])) left++;
+        while (left < right && !isalnum((unsigned char)str[right])) right--;
+
+        if (tolower((unsigned char)str[left]) != tolower((unsigned char)str[right])) {
+            return 0;
+        }
+
+        left++;
+        right--;
+    }
+
+    return 1;
+}
+
+void to_upper(char *str) {
+    while (*str) {
+        *str = toupper((unsigned char)*str);
+        str++;
+    }
+}
+
+void to_lower(char *str) {
+    while (*str) {
+        *str = tolower((unsigned char)*str);
+        str++;
+    }
+}
+```
 
 
 #### Windows 构建脚本 {#windows-构建脚本}
 
+```bat
+@echo off
+REM Windows build script for CMake project
+
+echo Building CMake Hello World Project...
+
+REM Create build directory
+if not exist build mkdir build
+cd build
+
+REM Configure with CMake
+echo Configuring with CMake...
+cmake -G "MinGW Makefiles" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
+
+if %ERRORLEVEL% NEQ 0 (
+echo CMake configuration failed!
+exit /b 1
+)
+
+REM Build the project
+echo Building project...
+cmake --build .
+
+if %ERRORLEVEL% NEQ 0 (
+echo Build failed!
+exit /b 1
+)
+
+REM Copy compile_commands.json to project root for language servers
+copy compile_commands.json ..\compile_commands.json
+
+echo.
+echo Build successful! Executable: build/bin/cmake_hello.exe
+echo compile_commands.json generated for language server support.
+
+cd ..
+```
+
 
 #### Unix/Linux 构建脚本 {#unix-linux-构建脚本}
+
+```bash
+#!/bin/bash
+# Unix/Linux/macOS build script for CMake project
+
+set -e
+
+echo "Building CMake Hello World Project..."
+
+# Create build directory
+mkdir -p build
+cd build
+
+# Configure with CMake
+echo "Configuring with CMake..."
+cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
+
+# Build the project
+echo "Building project..."
+cmake --build .
+
+# Copy compile_commands.json to project root for language servers
+cp compile_commands.json ../compile_commands.json
+
+echo ""
+echo "Build successful! Executable: build/bin/cmake_hello"
+echo "compile_commands.json generated for language server support."
+
+cd ..
+```
 
 
 #### 构建和使用 {#构建和使用}
@@ -4270,7 +5074,7 @@ $$f(x)=10x$$
 编译的命令如下：
 
 ```shell
-xelatex   -shell-escape  -8bit -interaction=nonstopmode -synctex=1 -output-directorr test.tex
+xelatex   -shell-escape  -8bit -interaction=nonstopmode -synctex=1 -output-directory test.tex
 ```
 
 其中主要跟关注的内容为，指定文档的 class：
@@ -5667,13 +6471,13 @@ Add Open with Neovide as a context menu option by running:
 reg import "D:\Scoop\apps\neovide\current\install-context.reg"
 ```
 
-根据上面的提示之行：
+根据上面的提示执行：
 
 ```shell
 reg import "D:\Scoop\apps\neovide\current\install-context.reg"
 ```
 
-从 github 上下载 AstroNvim 的配制到如下目录中（记得前面环境变量的配制）：
+从 github 上下载 AstroNvim 的配置到如下目录中（记得前面环境变量的配置）：
 
 ```shell
 PS D:\home\.config> git clone --depth 1 https://github.com/AstroNvim/template nvim
@@ -6290,6 +7094,107 @@ git merge origin/main
 | git merge               | 合并分支   |   |
 
 
+## SSH 配置 {#ssh-配置}
+
+
+### 生成 SSH 密钥 {#生成-ssh-密钥}
+
+```powershell
+ssh-keygen -t ed25519 -C "your.email@example.com"
+```
+
+按照提示操作，默认会在 `%USERPROFILE%\.ssh\` 目录下生成密钥文件：
+
+-   `id_ed25519` ：私钥（绝对不能泄露）
+-   `id_ed25519.pub` ：公钥（可以安全分享）
+
+如果需要使用 RSA 密钥（兼容旧系统）：
+
+```powershell
+ssh-keygen -t rsa -b 4096 -C "your.email@example.com"
+```
+
+
+### 启动 ssh-agent 并添加密钥 {#启动-ssh-agent-并添加密钥}
+
+```powershell
+# 启动 ssh-agent 服务
+Get-Service ssh-agent | Set-Service -StartupType Automatic
+Start-Service ssh-agent
+
+# 添加密钥到 ssh-agent
+ssh-add ~\.ssh\id_ed25519
+```
+
+
+### 将公钥添加到 GitHub {#将公钥添加到-github}
+
+复制公钥内容：
+
+```powershell
+Get-Content ~\.ssh\id_ed25519.pub | Set-Clipboard
+```
+
+然后到 GitHub -&gt; Settings -&gt; SSH and GPG keys -&gt; New SSH key，粘贴公钥。
+
+验证连接：
+
+```powershell
+ssh -T git@github.com
+```
+
+看到 `Hi username! You've successfully authenticated` 表示配置成功。
+
+
+### SSH 配置文件 {#ssh-配置文件}
+
+创建 `%USERPROFILE%\.ssh\config` 文件，用于简化 SSH 连接：
+
+```text
+# GitHub
+Host github.com
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/id_ed25519
+
+# 工作服务器
+Host work-server
+    HostName 192.168.1.100
+    User admin
+    Port 22
+    IdentityFile ~/.ssh/id_ed25519
+
+# 跳板机
+Host jump-server
+    HostName jump.example.com
+    User admin
+    Port 2222
+
+# 通过跳板机连接内网服务器
+Host internal-server
+    HostName 10.0.0.50
+    User admin
+    ProxyJump jump-server
+```
+
+配置完成后，可以直接使用 `ssh work-server` 连接，无需每次输入完整的主机名和用户名。
+
+
+### 使用 SSH 克隆仓库 {#使用-ssh-克隆仓库}
+
+配置完成后，使用 SSH URL 克隆仓库：
+
+```powershell
+git clone git@github.com:username/repository.git
+```
+
+将已有的 HTTPS 远程地址改为 SSH：
+
+```powershell
+git remote set-url origin git@github.com:username/repository.git
+```
+
+
 ## Rsync {#rsync}
 
 
@@ -6524,19 +7429,6 @@ pause
 ```
 
 
-### 常用参数说明 {#常用参数说明}
-
-| 参数         | 说明              |   |
-|------------|-----------------|---|
-| `-a`         | 归档模式，保留权限、时间戳等 |   |
-| `-v`         | 显示详细信息      |   |
-| `-z`         | 传输时压缩数据    |   |
-| `--delete`   | 删除目标目录中不存在于源目录的文件 |   |
-| `--progress` | 显示传输进度      |   |
-| `--exclude`  | 排除特定文件或目录 |   |
-| `--bwlimit`  | 限制传输带宽（单位：KB/s） |   |
-
-
 ### 常见问题 {#常见问题}
 
 
@@ -6576,3 +7468,219 @@ Windows 路径注意事项：
 3.  设置触发器（如每天晚上 10 点）
 4.  在"操作"中选择"启动程序"，指定备份脚本路径
 5.  完成创建
+
+
+## 系统优化 {#系统优化}
+
+
+### 关闭 Windows Defender 实时保护（开发用） {#关闭-windows-defender-实时保护-开发用}
+
+对于开发者来说，Windows Defender 的实时保护可能会拖慢编译和构建速度。可以暂时关闭：
+
+```powershell
+# 临时关闭（需要管理员权限的 PowerShell）
+Set-MpPreference -DisableRealtimeMonitoring $true
+
+# 重新开启
+Set-MpPreference -DisableRealtimeMonitoring $false
+```
+
+或者通过组策略永久关闭（不推荐，除非你了解风险）：
+
+```powershell
+# 以管理员身份运行
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows Defender" /v DisableAntiSpyware /t REG_DWORD /d 1 /f
+```
+
+
+### 禁用休眠功能 {#禁用休眠功能}
+
+禁用休眠可以释放 C 盘上与内存等大的空间（hiberfil.sys）：
+
+```powershell
+# 禁用休眠
+powercfg /hibernate off
+
+# 重新启用
+powercfg /hibernate on
+```
+
+
+### 关闭 Windows 自动更新 {#关闭-windows-自动更新}
+
+对于开发环境，自动更新可能会在不合适的时候打断工作。可以设置为仅通知不自动下载：
+
+```powershell
+# 设置为"通知下载和安装"
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v AUOptions /t REG_DWORD /d 2 /f
+```
+
+
+### 关闭 Windows 错误报告 {#关闭-windows-错误报告}
+
+```powershell
+# 禁用 Windows 错误报告
+reg add "HKLM\SOFTWARE\Microsoft\Windows\Windows Error Reporting" /v Disabled /t REG_DWORD /d 1 /f
+```
+
+
+### 优化 SSD 性能 {#优化-ssd-性能}
+
+确保 TRIM 已启用：
+
+```powershell
+# 检查 TRIM 状态
+fsutil behavior query DisableDeleteNotify
+
+# 启用 TRIM（DisableDeleteNotify = 0 表示启用）
+fsutil behavior set DisableDeleteNotify 0
+```
+
+
+### 调整虚拟内存 {#调整虚拟内存}
+
+如果物理内存充足，可以调整页面文件大小：
+
+```powershell
+# 查看当前虚拟内存设置
+wmic computersystem where name="%computername%" get AutomaticManagedPagefile
+
+# 禁用自动管理（需要手动设置页面文件大小）
+wmic computersystem where name="%computername%" set AutomaticManagedPagefile=False
+```
+
+
+### 清理磁盘空间 {#清理磁盘空间}
+
+```powershell
+# 清理系统临时文件
+cleanmgr /sagerun:1
+
+# 清理 Windows 更新缓存
+Dism.exe /online /Cleanup-Image /StartComponentCleanup /ResetBase
+
+# 清理回收站
+Clear-RecycleBin -Force
+```
+
+
+## WSL 与 Windows 互操作 {#wsl-与-windows-互操作}
+
+
+### 在 Windows 中访问 WSL 文件 {#在-windows-中访问-wsl-文件}
+
+WSL 的文件系统可以通过以下路径访问：
+
+```powershell
+# 访问 WSL 中的文件（以 Arch Linux 为例）
+\\wsl$\Arch\home\username
+
+# 或者在资源管理器中直接输入
+\\wsl.localhost\Arch\home\username
+```
+
+
+### 在 WSL 中访问 Windows 文件 {#在-wsl-中访问-windows-文件}
+
+```bash
+# Windows 的 C 盘挂载在 /mnt/c
+ls /mnt/c/Users/username
+
+# D 盘挂载在 /mnt/d
+ls /mnt/d/projects
+```
+
+
+### 配置 wsl.conf {#配置-wsl-dot-conf}
+
+在 WSL 中创建 `/etc/wsl.conf` 文件来控制互操作行为：
+
+```bash
+[boot]
+systemd=true
+
+[automount]
+enabled = true
+root = /mnt/
+options = "metadata,umask=22,fmask=11"
+
+[network]
+generateResolvConf = true
+
+[interop]
+enabled = true
+appendWindowsPath = true
+```
+
+
+### 控制 Windows PATH 是否传递到 WSL {#控制-windows-path-是否传递到-wsl}
+
+编辑 `/etc/wsl.conf` 中的 `[interop]` 部分：
+
+```bash
+[interop]
+# 设置为 false 可以避免 Windows PATH 中的程序干扰 WSL
+appendWindowsPath = false
+```
+
+修改后需要重启 WSL：
+
+```powershell
+wsl --shutdown
+```
+
+
+### 在 WSL 中启动 Windows 程序 {#在-wsl-中启动-windows-程序}
+
+```bash
+# 打开 Windows 资源管理器
+explorer.exe .
+
+# 打开 Windows 记事本
+notepad.exe file.txt
+
+# 打开 VS Code（如果安装了 Windows 版）
+code .
+```
+
+
+### 在 Windows 中执行 WSL 命令 {#在-windows-中执行-wsl-命令}
+
+```powershell
+# 执行 WSL 命令
+wsl ls -la /home
+
+# 指定发行版执行
+wsl -d Arch ls -la /home
+
+# 以特定用户执行
+wsl -u root pacman -Syu
+```
+
+
+### 共享网络配置 {#共享网络配置}
+
+如果需要在 Windows 中通过 localhost 访问 WSL 中运行的服务：
+
+```bash
+# 在 WSL 中查看 IP 地址
+ip addr show eth0 | grep inet
+```
+
+可以使用 `socat` 或端口转发工具将 WSL 端口映射到 Windows：
+
+```powershell
+# 使用 netsh 添加端口转发（需要管理员权限）
+netsh interface portproxy add v4tov4 listenport=8080 listenaddress=0.0.0.0 connectport=8080 connectaddress=$(wsl hostname -I | ForEach-Object { $_.Trim() })
+```
+
+
+### 备份和恢复 WSL {#备份和恢复-wsl}
+
+```powershell
+# 导出 WSL 发行版
+wsl --export Arch D:\backups\arch-backup.tar
+
+# 导入 WSL 发行版（恢复或迁移到新位置）
+wsl --import Arch D:\WSL\Arch D:\backups\arch-backup.tar
+```
