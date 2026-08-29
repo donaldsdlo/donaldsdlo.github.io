@@ -2,7 +2,7 @@
 title: "Emacs 中英文字体配置指南"
 author: ["Donald Lo"]
 date: 2026-07-14
-lastmod: 2026-07-15T13:47:00+08:00
+lastmod: 2026-08-29T11:24:00+08:00
 tags: ["Emacs", "字体", "中英文", "org-mode"]
 draft: false
 ---
@@ -272,14 +272,14 @@ Sarasa 的中英文宽度严格 2:1，在 Org Mode 表格中完美对齐。
 ```emacs-lisp
 (when (display-graphic-p)
   (set-face-attribute 'default nil
-                      :family "Sarasa Mono SC Nerd"
-                      :height 140)
+		      :family "Sarasa Mono SC Nerd"
+		      :height 140)
   (set-face-attribute 'fixed-pitch nil
-                      :family "Sarasa Mono SC Nerd"
-                      :height 1.0)
+		      :family "Sarasa Mono SC Nerd"
+		      :height 1.0)
   (set-face-attribute 'variable-pitch nil
-                      :family "Sarasa Mono SC Nerd"
-                      :height 1.0))
+		      :family "Sarasa Mono SC Nerd"
+		      :height 1.0))
 ```
 
 或者使用 Maple Mono CN：
@@ -287,8 +287,8 @@ Sarasa 的中英文宽度严格 2:1，在 Org Mode 表格中完美对齐。
 ```emacs-lisp
 (when (display-graphic-p)
   (set-face-attribute 'default nil
-                      :family "Maple Mono NF CN"
-                      :height 140))
+		      :family "Maple Mono NF CN"
+		      :height 140))
 ```
 
 
@@ -322,8 +322,8 @@ Sarasa 的中英文宽度严格 2:1，在 Org Mode 表格中完美对齐。
 ```emacs-lisp
 (setq face-font-rescale-alist
       '(("LXGW WenKai" . 1.2)
-        ("Microsoft YaHei" . 1.2)
-        ("WenQuanYi Zen Hei" . 1.2)))
+	("Microsoft YaHei" . 1.2)
+	("WenQuanYi Zen Hei" . 1.2)))
 ```
 
 `注意` ：修改 `face-font-rescale-alist` 后 `必须重启 Emacs` 才能生效（这是一个 [已知的 bug](https://debbugs.gnu.org/db/17/1785.html) ）。
@@ -377,22 +377,22 @@ Sarasa 的中英文宽度严格 2:1，在 Org Mode 表格中完美对齐。
 ```emacs-lisp
 (when (display-graphic-p)
   (set-face-attribute 'default nil
-                      :family "JetBrains Mono"
-                      :height 140
-                      :weight 'medium)
+		      :family "JetBrains Mono"
+		      :height 140
+		      :weight 'medium)
   (set-face-attribute 'fixed-pitch nil
-                      :family "JetBrains Mono"
-                      :height 1.0)
+		      :family "JetBrains Mono"
+		      :height 1.0)
   (set-face-attribute 'variable-pitch nil
-                      :family "Source Sans Pro"
-                      :height 1.0)
+		      :family "Source Sans Pro"
+		      :height 1.0)
 
   (dolist (script '(han cjk-misc bopomofo kana))
     (set-fontset-font t script (font-spec :family "LXGW WenKai Mono")))
 
   (setq face-font-rescale-alist
-        '(("LXGW WenKai" . 1.2)
-          ("LXGW WenKai Mono" . 1.2))))
+	'(("LXGW WenKai" . 1.2)
+	  ("LXGW WenKai Mono" . 1.2))))
 ```
 
 `:height` 的规则： `default` Face 必须使用绝对值（pt × 10），其他 Face 使用相对值（浮点数，1.0 表示与 default 相同）。这确保 `text-scale-adjust` （ `C-x C-+` ）能正确缩放所有字体。
@@ -466,7 +466,7 @@ CN-FONT is the Chinese font family name (string)."
     (create-fontset-from-fontset-spec
      (font-xlfd-name
       (font-spec :family en-font
-                 :registry +fontset-name)))
+		 :registry +fontset-name)))
     (set-fontset-font +fontset-name 'han (font-spec :family cn-font))
     (set-face-attribute face nil :fontset +fontset-name)))
 ```
@@ -486,9 +486,9 @@ CN-FONT is the Chinese font family name (string)."
 ```emacs-lisp
 (when (display-graphic-p)
   (set-face-attribute 'default nil
-                      :family "JetBrains Mono"
-                      :height 140
-                      :weight 'medium)
+		      :family "JetBrains Mono"
+		      :height 140
+		      :weight 'medium)
   (dolist (script '(han cjk-misc bopomofo kana))
     (set-fontset-font t script (font-spec :family "Sarasa Mono SC Nerd")))
 
@@ -505,8 +505,8 @@ CN-FONT is the Chinese font family name (string)."
   (+setup-fontset 'org-code "JetBrains Mono" "Sarasa Mono SC Nerd")
 
   (setq face-font-rescale-alist
-        '(("Sarasa Mono SC" . 1.0)
-          ("LXGW WenKai" . 1.2))))
+	'(("Sarasa Mono SC" . 1.0)
+	  ("LXGW WenKai" . 1.2))))
 ```
 
 这个配置的效果是：
@@ -616,35 +616,35 @@ CN-FONT is the Chinese font family name (string)."
     (create-fontset-from-fontset-spec
      (font-xlfd-name
       (font-spec :family en-font
-                 :registry +fontset-name)))
+		 :registry +fontset-name)))
     (set-fontset-font +fontset-name 'han (font-spec :family cn-font))
     (set-face-attribute face nil :fontset +fontset-name)))
 
 (when (display-graphic-p)
   (let ((en-font "JetBrains Mono")
-        (cn-font "Sarasa Mono SC Nerd")
-        (cn-serif-font "LXGW WenKai"))
+	(cn-font "Sarasa Mono SC Nerd")
+	(cn-serif-font "LXGW WenKai"))
     (set-face-attribute 'default nil
-                        :family en-font
-                        :height 140
-                        :weight 'medium)
+			:family en-font
+			:height 140
+			:weight 'medium)
     (set-face-attribute 'fixed-pitch nil
-                        :family en-font
-                        :height 1.0)
+			:family en-font
+			:height 1.0)
     (set-face-attribute 'variable-pitch nil
-                        :family "Source Sans Pro"
-                        :height 1.0)
+			:family "Source Sans Pro"
+			:height 1.0)
 
     (dolist (script '(han cjk-misc bopomofo kana))
       (set-fontset-font t script (font-spec :family cn-font)))
 
     (setq face-font-rescale-alist
-          `((,cn-font . 1.0)
-            (,cn-serif-font . 1.2)))
+	  `((,cn-font . 1.0)
+	    (,cn-serif-font . 1.2)))
 
     (dolist (face '(org-level-1 org-level-2 org-level-3 org-level-4
-                    org-level-5 org-level-6 org-level-7 org-level-8
-                    org-document-title))
+		    org-level-5 org-level-6 org-level-7 org-level-8
+		    org-document-title))
       (+setup-fontset face "Iosevka Term" cn-serif-font))
 
     (custom-theme-set-faces

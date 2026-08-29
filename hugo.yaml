@@ -72,7 +72,7 @@ params:
         - post
         - math
         - life
-        - windows
+        - tools
         - acm
     featuredImageField: image
     rssFullContent: true

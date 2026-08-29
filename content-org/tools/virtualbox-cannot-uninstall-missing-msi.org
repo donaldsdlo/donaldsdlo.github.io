@@ -6,7 +6,7 @@
 #+CATEGORIES: Windows VirtualBox
 #+DATE: 2026-05-08
 #+AUTHOR: Donald Lo
-#+HUGO_SECTION: windows
+#+HUGO_SECTION: tools
 #+HUGO_BASE_DIR: ../../
 #+OPTIONS: line-break:t
 #+HUGO_AUTO_SET_LASTMOD: t
@@ -30,7 +30,7 @@
 
 这个问题通常发生在：
 
-- VirtualBox之前的安装不完整或损坏
+- VirtualBox 之前的安装不完整或损坏
 - 某些安装文件被误删
 - 通过第三方工具清理后残留注册表信息
 
@@ -42,7 +42,7 @@
 
 ** 操作步骤
 
-*** 步骤1：下载对应版本的.exe安装包
+*** 步骤1：下载对应版本的.exe 安装包
 
 首先，从VirtualBox官网下载与你当前版本匹配的 =.exe= 安装包。注意版本号要完全一致，否则即使提取了MSI也可能无法正常使用。
 

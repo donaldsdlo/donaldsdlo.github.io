@@ -2,7 +2,7 @@
 title: "OpenCode cannot access Hugging Face"
 author: ["Donald Lo"]
 date: 2026-04-15
-lastmod: 2026-04-15T14:14:40+08:00
+lastmod: 2026-08-29T11:25:00+08:00
 tags: ["Opencode"]
 draft: false
 ---

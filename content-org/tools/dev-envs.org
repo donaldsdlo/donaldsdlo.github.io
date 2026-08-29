@@ -3,7 +3,7 @@
 #+CATEGORIES: windows
 #+DATE: 2026-01-15
 #+AUTHOR: Donald Lo
-#+HUGO_SECTION: windows
+#+HUGO_SECTION: tools
 #+HUGO_BASE_DIR: ../../
 #+OPTIONS: line-break:t
 #+HUGO_AUTO_SET_LASTMOD: t
@@ -1033,9 +1033,9 @@ code --install-extension PKief.material-icon-theme
 
     // 搜索排除
     "search.exclude": {
-        "**/node_modules": true,
-        "**/dist": true,
-        "**/.venv": true
+	"**/node_modules": true,
+	"**/dist": true,
+	"**/.venv": true
     }
 }
 #+end_src
@@ -1137,24 +1137,24 @@ vim $PROFILE
 #+begin_src shell
 function y {
     yt-dlp  --cookies-from-browser firefox `
-            --download-archive D:\Documents\yt-dlp\archives.txt `
-            --output "%(playlist_title)s/%(upload_date)s - P%(playlist_index)04d - %(title)s.%(ext)s" `
-            --format "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best" `
-            $args
+	    --download-archive D:\Documents\yt-dlp\archives.txt `
+	    --output "%(playlist_title)s/%(upload_date)s - P%(playlist_index)04d - %(title)s.%(ext)s" `
+	    --format "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best" `
+	    $args
 }
 function y1 {
     yt-dlp  --cookies-from-browser firefox `
-            --download-archive D:\Documents\yt-dlp\archives.txt `
-            --output "%(playlist_title)s/%(upload_date)s - P%(playlist_index)04d - %(title)s.%(ext)s" `
-            --format "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best"  `
-            -a D:\Documents\yt-dlp\urls.txt
+	    --download-archive D:\Documents\yt-dlp\archives.txt `
+	    --output "%(playlist_title)s/%(upload_date)s - P%(playlist_index)04d - %(title)s.%(ext)s" `
+	    --format "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best"  `
+	    -a D:\Documents\yt-dlp\urls.txt
 }
 function y3 {
     yt-dlp  --cookies-from-browser firefox `
-            --download-archive D:\Documents\yt-dlp\archives.txt `
-            --output "%(playlist_title)s/%(upload_date)s - P%(playlist_index)04d - %(title)s.%(ext)s" `
-            --format "bestaudio[ext=m4a]/best" `
-            $args
+	    --download-archive D:\Documents\yt-dlp\archives.txt `
+	    --output "%(playlist_title)s/%(upload_date)s - P%(playlist_index)04d - %(title)s.%(ext)s" `
+	    --format "bestaudio[ext=m4a]/best" `
+	    $args
 }
 #+end_src
 
@@ -1411,8 +1411,8 @@ Checking hash of MapleMono-NF-CN.zip ... ok.
 # 安装 Nerd Fonts 的 PowerShell 函数
 function Install-NerdFont {
     param(
-        [Parameter(Mandatory=$true)]
-        [string]$FontName
+	[Parameter(Mandatory=$true)]
+	[string]$FontName
     )
 
     $cacheDir = "$env:SCOOP\cache"
@@ -1420,16 +1420,16 @@ function Install-NerdFont {
 
     # 查找缓存中的字体文件
     $fontFiles = Get-ChildItem -Path $cacheDir -Filter "*.ttf" -Recurse |
-        Where-Object { $_.Name -like "*$FontName*" }
+	Where-Object { $_.Name -like "*$FontName*" }
 
     if ($fontFiles.Count -eq 0) {
-        Write-Host "未找到 $FontName 的字体文件，请先执行 scoop download $FontName" -ForegroundColor Yellow
-        return
+	Write-Host "未找到 $FontName 的字体文件，请先执行 scoop download $FontName" -ForegroundColor Yellow
+	return
     }
 
     foreach ($font in $fontFiles) {
-        Write-Host "安装字体: $($font.Name)" -ForegroundColor Green
-        Copy-Item $font.FullName $fontDir -Force
+	Write-Host "安装字体: $($font.Name)" -ForegroundColor Green
+	Copy-Item $font.FullName $fontDir -Force
     }
 
     Write-Host "字体安装完成，可能需要重启应用才能生效" -ForegroundColor Cyan
@@ -2288,30 +2288,30 @@ Mode                 LastWriteTime         Length Name
 
 - gitignore：uv 会帮你把项目建立成 git 储存库，并且帮你写好了 .gitignore 文件，避免 Python 执行过程产生的暂存文件等也提交到储存库内
     #+begin_src bash :exports code
-        # Python-generated files
-        __pycache__/
-        ,*.py[oc]
-        build/
-        dist/
-        wheels/
-        ,*.egg-info
+	# Python-generated files
+	__pycache__/
+	,*.py[oc]
+	build/
+	dist/
+	wheels/
+	,*.egg-info
 
-        # Virtual environments
-        .venv
+	# Virtual environments
+	.venv
     #+end_src
 - .python-version：记录这个项目使用的 Python 版本
 - main.py
 - pyproject.toml：此项目的诠释数据，其实就是前面单一程序文件形式的项目在源代码开头注释的内容
     #+begin_src toml :exports code
-        [project]
-        name = "test04"
-        version = "0.1.0"
-        description = "Add your description here"
-        readme = "README.md"
-        requires-python = ">=3.14"
-        dependencies = [
-        "openpyxl>=3.1.5",
-        ]
+	[project]
+	name = "test04"
+	version = "0.1.0"
+	description = "Add your description here"
+	readme = "README.md"
+	requires-python = ">=3.14"
+	dependencies = [
+	"openpyxl>=3.1.5",
+	]
     #+end_src
 - README.md：空的 markdown 文件，预留让你撰写项目说明用。
 
@@ -2349,33 +2349,33 @@ def read_excel_columns():
     file_path = r"D:\data\Desktop\EXPOR615.XLSX"
 
     try:
-        # 加载工作簿
-        workbook = load_workbook(filename=file_path)
+	# 加载工作簿
+	workbook = load_workbook(filename=file_path)
 
-        # 获取第一个工作表（也可以指定表名：workbook['Sheet1']）
-        worksheet = workbook.active
+	# 获取第一个工作表（也可以指定表名：workbook['Sheet1']）
+	worksheet = workbook.active
 
-        print("读取的A、B列数据（最多10行）：")
-        print("-" * 30)
+	print("读取的A、B列数据（最多10行）：")
+	print("-" * 30)
 
-        # 读取前10行的A、B列数据
-        for row in range(1, 11):  # 行号从1到10
-            cell_a = worksheet.cell(row=row, column=1).value
-            cell_b = worksheet.cell(row=row, column=2).value
+	# 读取前10行的A、B列数据
+	for row in range(1, 11):  # 行号从1到10
+	    cell_a = worksheet.cell(row=row, column=1).value
+	    cell_b = worksheet.cell(row=row, column=2).value
 
-            # 如果两列都为空，可以考虑提前退出（可选）
-            # if cell_a is None and cell_b is None:
-            #     break
+	    # 如果两列都为空，可以考虑提前退出（可选）
+	    # if cell_a is None and cell_b is None:
+	    #     break
 
-            print(f"第{row:2d}行: A={cell_a}, B={cell_b}")
+	    print(f"第{row:2d}行: A={cell_a}, B={cell_b}")
 
     except FileNotFoundError:
-        print(f"错误：文件 {file_path} 未找到！")
+	print(f"错误：文件 {file_path} 未找到！")
     except Exception as e:
-        print(f"读取文件时发生错误：{e}")
+	print(f"读取文件时发生错误：{e}")
     finally:
-        # openpyxl 会自动处理文件关闭，无需手动关闭
-        pass
+	# openpyxl 会自动处理文件关闭，无需手动关闭
+	pass
 
 if __name__ == "__main__":
     read_excel_columns()
@@ -3046,8 +3046,8 @@ npm install -g turbo             # 单体仓库构建工具
     "import/order": [
       "error",
       {
-        "groups": ["builtin", "external", "internal", "parent", "sibling", "index"],
-        "newlines-between": "always"
+	"groups": ["builtin", "external", "internal", "parent", "sibling", "index"],
+	"newlines-between": "always"
       }
     ]
   },
@@ -3846,53 +3846,53 @@ pacman -Syyu
     Since: Thu 2025-11-06 10:52:03 CST; 4min 58s ago
   systemd: 258.1-1-arch
    CGroup: /
-           ├─init.scope
-           │ ├─  1 /sbin/init
-           │ ├─  2 /init
-           │ ├─  8 plan9 --control-socket 7 --log-level 4 --server-fd 8 --pipe-fd 10 --log-truncate
-           │ ├─231 /init
-           │ ├─232 /init
-           │ ├─233 /usr/bin/bash
-           │ ├─320 systemctl status
-           │ └─321 "(pager)"
-           ├─system.slice
-           │ ├─dbus-broker.service
-           │ │ ├─214 /usr/bin/dbus-broker-launch --scope system --audit
-           │ │ └─215 dbus-broker --log 10 --controller 9 --machine-id e055bdab25604b729b245f253abd5e5f --max-bytes 536870912 --max-fds 4096 --max-matches 16384 --audit
-           │ ├─systemd-homed.service
-           │ │ └─216 /usr/lib/systemd/systemd-homed
-           │ ├─systemd-journald.service
-           │ │ └─45 /usr/lib/systemd/systemd-journald
-           │ ├─systemd-logind.service
-           │ │ └─217 /usr/lib/systemd/systemd-logind
-           │ ├─systemd-networkd.service
-           │ │ └─107 /usr/lib/systemd/systemd-networkd
-           │ ├─systemd-nsresourced.service
-           │ │ ├─76 /usr/lib/systemd/systemd-nsresourced
-           │ │ ├─80 "systemd-nsresourcework: waiting..."
-           │ │ ├─81 "systemd-nsresourcework: waiting..."
-           │ │ ├─82 "systemd-nsresourcework: waiting..."
-           │ │ ├─83 "systemd-nsresourcework: waiting..."
-           │ │ └─84 "systemd-nsresourcework: waiting..."
-           │ ├─systemd-resolved.service
-           │ │ └─96 /usr/lib/systemd/systemd-resolved
-           │ ├─systemd-udevd.service
-           │ │ └─udev
-           │ │   └─106 /usr/lib/systemd/systemd-udevd
-           │ └─systemd-userdbd.service
-           │   ├─ 77 /usr/lib/systemd/systemd-userdbd
-           │   ├─197 "systemd-userwork: waiting..."
-           │   ├─198 "systemd-userwork: waiting..."
-           │   └─199 "systemd-userwork: waiting..."
-           └─user.slice
-             └─user-0.slice
-               ├─session-c1.scope
-               │ ├─262 "login -- root"
-               │ └─280 -bash
-               └─user@0.service
-                 └─init.scope
-                   ├─267 /usr/lib/systemd/systemd --user
-                   └─269 "(sd-pam)"
+	   ├─init.scope
+	   │ ├─  1 /sbin/init
+	   │ ├─  2 /init
+	   │ ├─  8 plan9 --control-socket 7 --log-level 4 --server-fd 8 --pipe-fd 10 --log-truncate
+	   │ ├─231 /init
+	   │ ├─232 /init
+	   │ ├─233 /usr/bin/bash
+	   │ ├─320 systemctl status
+	   │ └─321 "(pager)"
+	   ├─system.slice
+	   │ ├─dbus-broker.service
+	   │ │ ├─214 /usr/bin/dbus-broker-launch --scope system --audit
+	   │ │ └─215 dbus-broker --log 10 --controller 9 --machine-id e055bdab25604b729b245f253abd5e5f --max-bytes 536870912 --max-fds 4096 --max-matches 16384 --audit
+	   │ ├─systemd-homed.service
+	   │ │ └─216 /usr/lib/systemd/systemd-homed
+	   │ ├─systemd-journald.service
+	   │ │ └─45 /usr/lib/systemd/systemd-journald
+	   │ ├─systemd-logind.service
+	   │ │ └─217 /usr/lib/systemd/systemd-logind
+	   │ ├─systemd-networkd.service
+	   │ │ └─107 /usr/lib/systemd/systemd-networkd
+	   │ ├─systemd-nsresourced.service
+	   │ │ ├─76 /usr/lib/systemd/systemd-nsresourced
+	   │ │ ├─80 "systemd-nsresourcework: waiting..."
+	   │ │ ├─81 "systemd-nsresourcework: waiting..."
+	   │ │ ├─82 "systemd-nsresourcework: waiting..."
+	   │ │ ├─83 "systemd-nsresourcework: waiting..."
+	   │ │ └─84 "systemd-nsresourcework: waiting..."
+	   │ ├─systemd-resolved.service
+	   │ │ └─96 /usr/lib/systemd/systemd-resolved
+	   │ ├─systemd-udevd.service
+	   │ │ └─udev
+	   │ │   └─106 /usr/lib/systemd/systemd-udevd
+	   │ └─systemd-userdbd.service
+	   │   ├─ 77 /usr/lib/systemd/systemd-userdbd
+	   │   ├─197 "systemd-userwork: waiting..."
+	   │   ├─198 "systemd-userwork: waiting..."
+	   │   └─199 "systemd-userwork: waiting..."
+	   └─user.slice
+	     └─user-0.slice
+	       ├─session-c1.scope
+	       │ ├─262 "login -- root"
+	       │ └─280 -bash
+	       └─user@0.service
+		 └─init.scope
+		   ├─267 /usr/lib/systemd/systemd --user
+		   └─269 "(sd-pam)"
 #+end_src
 
 ** 更新系统
@@ -4031,9 +4031,9 @@ TriggeredBy: ● docker.socket
    Main PID: 1692 (dockerd)
       Tasks: 12
      Memory: 23.8M (peak: 25.6M)
-        CPU: 277ms
+	CPU: 277ms
      CGroup: /system.slice/docker.service
-             └─1692 /usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
+	     └─1692 /usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
 
 Nov 06 15:25:23 DESKTOP-92CHCK7 dockerd[1692]: time="2025-11-06T15:25:23.040538308+08:00" level=info msg="CDI directory does not exist, skipping: failed to monitor for changes: no such file or directory" dir=/var/run/cdi
 Nov 06 15:25:23 DESKTOP-92CHCK7 dockerd[1692]: time="2025-11-06T15:25:23.051611156+08:00" level=info msg="Creating a containerd client" address=/run/containerd/containerd.sock timeout=1m0s
@@ -4067,14 +4067,14 @@ mkdir -p /etc/docker
 tee /etc/docker/daemon.json <<-'EOF'
 {
     "registry-mirrors": [
-    	"https://docker.m.daocloud.io",
-    	"https://docker.imgdb.de",
-    	"https://docker-0.unsee.tech",
-    	"https://docker.hlmirror.com",
-    	"https://docker.1ms.run",
-    	"https://func.ink",
-    	"https://lispy.org",
-    	"https://docker.xiaogenban1993.com"
+	"https://docker.m.daocloud.io",
+	"https://docker.imgdb.de",
+	"https://docker-0.unsee.tech",
+	"https://docker.hlmirror.com",
+	"https://docker.1ms.run",
+	"https://func.ink",
+	"https://lispy.org",
+	"https://docker.xiaogenban1993.com"
     ]
 }
 EOF
@@ -4983,14 +4983,14 @@ Vim 采用独特的模式编辑系统，不同模式下相同的按键会有不�
 *** 模式之间的转换
 
 #+begin_example
-                    按 i/a/o/I/A/O
-        普通模式 -------------------> 插入模式
-            ^                            |
-            |   |  |
+		    按 i/a/o/I/A/O
+	普通模式 -------------------> 插入模式
+	    ^                            |
+	    |   |  |
        按 Esc 或 Ctrl+[                  |
-            | v |
-        命令行模式 <------------------- 可视模式
-                    按 v/V/Ctrl+v
+	    | v |
+	命令行模式 <------------------- 可视模式
+		    按 v/V/Ctrl+v
 #+end_example
 
 常用模式切换命令：
@@ -5360,7 +5360,7 @@ Home: D:\Scoop\apps\gpg\current\home
 Supported algorithms:
 Pubkey: RSA, Kyber, ELG, DSA, ECDH, ECDSA, EDDSA
 Cipher: IDEA, 3DES, CAST5, BLOWFISH, AES, AES192, AES256, TWOFISH,
-        CAMELLIA128, CAMELLIA192, CAMELLIA256
+	CAMELLIA128, CAMELLIA192, CAMELLIA256
 Hash: SHA1, RIPEMD160, SHA256, SHA384, SHA512, SHA224
 Compression: Uncompressed, ZIP, ZLIB, BZIP2
 #+end_src

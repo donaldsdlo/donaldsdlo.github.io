@@ -3,7 +3,7 @@
 #+CATEGORIES: Iosevka 字体
 #+DATE: 2026-06-29
 #+AUTHOR: Donald Lo
-#+HUGO_SECTION: windows
+#+HUGO_SECTION: tools
 #+HUGO_BASE_DIR: ../../
 #+OPTIONS: line-break:t
 #+HUGO_AUTO_SET_LASTMOD: t
@@ -507,15 +507,15 @@ vim.opt.guifont = "Iosevka Term:h14"
 
 #+begin_src elisp
 (set-face-attribute 'default nil
-                    :family "Iosevka Term"
-                    :height 150
-                    :weight 'medium)
+		    :family "Iosevka Term"
+		    :height 150
+		    :weight 'medium)
 
 ;; 启用连字和字符变体
 (let ((alist '((33 . ("ss03" "cv10=6")))))
   (dolist (item alist)
     (set-char-table-range composition-function-table (car item)
-                          `([,(cdr item) 0 font-shape-gstring]))))
+			  `([,(cdr item) 0 font-shape-gstring]))))
 #+end_src
 
 更简单的方式——使用 [[https://github.com/mickeynp/ligature.el][ligature.el]] 插件：
@@ -524,9 +524,9 @@ vim.opt.guifont = "Iosevka Term:h14"
 (use-package ligature
   :config
   (ligature-set-ligatures 'prog-mode '("=>" "->" "<=" ">=" "==" "!=" "===" "!==" "=!="
-                                        "<>" "::<" "::" "++" "--" "**" "||" "&&"
-                                        "<<" ">>" "|>" "<|" ":>" "<:" "->>" "<<-"
-                                        "<!--" "<!---" "|->")))
+					"<>" "::<" "::" "++" "--" "**" "||" "&&"
+					"<<" ">>" "|>" "<|" ":>" "<:" "->>" "<<-"
+					"<!--" "<!---" "|->")))
 (global-ligature-mode t)
 #+end_src
 
@@ -539,9 +539,9 @@ vim.opt.guifont = "Iosevka Term:h14"
   "profiles": {
     "defaults": {
       "font": {
-        "face": "Iosevka Term",
-        "size": 13,
-        "weight": "semi-bold"
+	"face": "Iosevka Term",
+	"size": 13,
+	"weight": "semi-bold"
       }
     }
   }

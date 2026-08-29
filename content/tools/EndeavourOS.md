@@ -2,7 +2,7 @@
 title: "EndeavourOS"
 author: ["Donald Lo"]
 date: 2026-05-13
-lastmod: 2026-07-15T21:39:00+08:00
+lastmod: 2026-08-29T11:12:00+08:00
 tags: ["EndeavourOS", "Arch", "Linux"]
 draft: false
 ---
@@ -1263,7 +1263,7 @@ draft: false
             - [整数运算](#整数运算)
         - [条件判断](#条件判断)
             - [test / [ ]](#test)
-            - [ ](#696--org8d37cbe)
+            - [ ](#696--org47a5499)
             - [if / elif / else / fi](#if-elif-else-fi)
         - [循环](#循环)
             - [for...in](#for-dot-dot-dot-in)
@@ -1902,7 +1902,7 @@ sudo pacman -S stow
 │   └── .tmux.conf
 └── nvim/
     └── config/
-        └── init.lua
+	└── init.lua
 ```
 
 每个子目录对应一个"软件包"（package），stow 会将该目录内的文件链接到上级目录（即 `~/` ）。
@@ -1924,8 +1924,8 @@ sudo pacman -S stow
 │           └── alacritty.yml
 └── fontconfig/
     └── .config/
-        └── fontconfig/
-            └── fonts.conf
+	└── fontconfig/
+	    └── fonts.conf
 ```
 
 执行 `stow nvim` 后，stow 会在 `~/.config/nvim/` 处创建一个符号链接，指向 `~/dotfiles/nvim/.config/nvim/` ：
@@ -2074,9 +2074,9 @@ a/
   b/
     c/
       t1/
-        t1.txt
+	t1.txt
       t2/
-        t2.txt
+	t2.txt
 ```
 
 只想跟踪 `a/b/c/t2/t2.txt` ， `.gitignore` 应写为：
@@ -3092,7 +3092,7 @@ diff /tmp/env_before.txt /tmp/env_after.txt
 home/      → 在 inode 2 的目录表中查找 "home" → inode 100
 user/      → 在 inode 100 的目录表中查找 "user" → inode 200
 file.txt   → 在 inode 200 的目录表中查找 "file.txt" → inode 300
-           → 读取 inode 300 指向的数据块
+	   → 读取 inode 300 指向的数据块
 ```
 
 理解"文件名只是目录里的一个条目，inode 才是文件的本体"这一点，是理解两种链接差异的钥匙。
@@ -4268,14 +4268,14 @@ symlink_dir() {
     local src="$1"
     local dest="$2"
     if [ -e "$src" ] && [ ! -L "$src" ]; then
-        echo "Moving $src -> $dest"
-        mv "$src" "$dest"
-        ln -s "$dest" "$src"
-        echo "  Symlink created: $src -> $dest"
+	echo "Moving $src -> $dest"
+	mv "$src" "$dest"
+	ln -s "$dest" "$src"
+	echo "  Symlink created: $src -> $dest"
     elif [ -L "$src" ]; then
-        echo "  Skip $src (already a symlink)"
+	echo "  Skip $src (already a symlink)"
     else
-        echo "  Skip $src (does not exist)"
+	echo "  Skip $src (does not exist)"
     fi
 }
 
@@ -4354,14 +4354,14 @@ DATA_ROOT="/data/symlinks"
 restore_dir() {
     local link="$1"
     if [ -L "$link" ]; then
-        local target
-        target=$(readlink -f "$link")
-        echo "Restoring $link from $target"
-        rm "$link"
-        mv "$target" "$link"
-        echo "  Restored: $link"
+	local target
+	target=$(readlink -f "$link")
+	echo "Restoring $link from $target"
+	rm "$link"
+	mv "$target" "$link"
+	echo "  Restored: $link"
     else
-        echo "  Skip $link (not a symlink)"
+	echo "  Skip $link (not a symlink)"
     fi
 }
 
@@ -6043,7 +6043,7 @@ sudo mkdir -p /etc/docker
 sudo tee /etc/docker/daemon.json << 'EOF'
 {
     "registry-mirrors": [
-        "https://docker.xuanyuan.me"
+	"https://docker.xuanyuan.me"
     ]
 }
 EOF
@@ -8259,9 +8259,9 @@ Vagrant.configure("2") do |config|
       node.vm.network "private_network", ip: "192.168.56.#{80+i}", netmask: "255.255.255.0"
 
       node.vm.provider "virtualbox" do |v|
-        v.name = "k8s-node#{i}"
-        v.memory = 8192
-        v.cpus = 6
+	v.name = "k8s-node#{i}"
+	v.memory = 8192
+	v.cpus = 6
       end
     end
   end
@@ -12722,11 +12722,11 @@ VIM 支持无限撤销（不像原始 vi 只能撤销一步）。每次 `u` 撤�
 ``````````````````text
 :%s/\(\w\+\)/(\1)/g    → 给每个单词加括号：hello → (hello)
 :%s/foo/bar/gc         → 确认替换时的选项：
-                          y - 替换此匹配
-                          n - 跳过此匹配
-                          a - 替换此匹配及之后所有匹配
-                          q - 退出替换
-                          l - 替换此匹配后退出
+			  y - 替换此匹配
+			  n - 跳过此匹配
+			  a - 替换此匹配及之后所有匹配
+			  q - 退出替换
+			  l - 替换此匹配后退出
 ``````````````````
 
 
@@ -16016,8 +16016,8 @@ function Header(el)
   if el.level == 1 then
     return el:walk {
       Str = function(s)
-        s.text = s.text:upper()
-        return s
+	s.text = s.text:upper()
+	return s
       end
     }
   end
@@ -16575,23 +16575,23 @@ mkcd() {
 ``````````````````bash
 extract() {
     if [ -f "$1" ]; then
-        case "$1" in
-            *.tar.bz2) tar xjf "$1" ;;
-            *.tar.gz)  tar xzf "$1" ;;
-            *.tar.xz)  tar xJf "$1" ;;
-            *.bz2)     bunzip2 "$1" ;;
-            *.rar)     unrar x "$1" ;;
-            *.gz)      gunzip "$1" ;;
-            *.tar)     tar xf "$1" ;;
-            *.tbz2)    tar xjf "$1" ;;
-            *.tgz)     tar xzf "$1" ;;
-            *.zip)     unzip "$1" ;;
-            *.Z)       uncompress "$1" ;;
-            *.7z)      7z x "$1" ;;
-            *)         echo "无法识别: '$1'" ;;
-        esac
+	case "$1" in
+	    *.tar.bz2) tar xjf "$1" ;;
+	    *.tar.gz)  tar xzf "$1" ;;
+	    *.tar.xz)  tar xJf "$1" ;;
+	    *.bz2)     bunzip2 "$1" ;;
+	    *.rar)     unrar x "$1" ;;
+	    *.gz)      gunzip "$1" ;;
+	    *.tar)     tar xf "$1" ;;
+	    *.tbz2)    tar xjf "$1" ;;
+	    *.tgz)     tar xzf "$1" ;;
+	    *.zip)     unzip "$1" ;;
+	    *.Z)       uncompress "$1" ;;
+	    *.7z)      7z x "$1" ;;
+	    *)         echo "无法识别: '$1'" ;;
+	esac
     else
-        echo "'$1' 不是有效文件"
+	echo "'$1' 不是有效文件"
     fi
 }
 ``````````````````
@@ -22194,7 +22194,7 @@ let c=a+b
 -   变量加引号防止空值报错
 
 
-#####  {#696--org8d37cbe}
+#####  {#696--org47a5499}
 
 `[[ ]]` 是 Bash 增强版，支持模式匹配和逻辑运算：
 
@@ -22352,11 +22352,11 @@ is_even() {
 
 check_file() {
     if [[ -f "$1" ]]; then
-        echo "exists"
-        return 0
+	echo "exists"
+	return 0
     else
-        echo "not found"
-        return 1
+	echo "not found"
+	return 1
     fi
 }
 
@@ -22373,8 +22373,8 @@ echo "$result"
 counter() {
     local i=0
     while [[ $i -lt 3 ]]; do
-        echo "i = $i"
-        ((i++))
+	echo "i = $i"
+	((i++))
     done
 }
 ``````````````````
@@ -22512,9 +22512,9 @@ output=""
 
 while getopts "vo:" opt; do
     case $opt in
-        v) verbose=1 ;;
-        o) output="$OPTARG" ;;
-        *) usage ;;
+	v) verbose=1 ;;
+	o) output="$OPTARG" ;;
+	*) usage ;;
     esac
 done
 shift $((OPTIND - 1))
@@ -23107,7 +23107,7 @@ def fibonacci(n):
     """生成斐波那契数列的前 n 个数"""
     fib = [0, 1]
     for i in range(2, n):
-        fib.append(fib[i-1] + fib[i-2])
+	fib.append(fib[i-1] + fib[i-2])
     return fib
 
 print(fibonacci(10))
@@ -23129,7 +23129,7 @@ import "fmt"
 func main() {
     nums := []int{2, 3, 5, 7, 11}
     for i, n := range nums {
-        fmt.Printf("第 %d 个素数是 %d\n", i, n)
+	fmt.Printf("第 %d 个素数是 %d\n", i, n)
     }
 }
 ```
@@ -25041,23 +25041,23 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+	uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
+	uses: actions/setup-python@v5
+	with:
+	  python-version: '3.12'
 
       - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+	run: |
+	  python -m pip install --upgrade pip
+	  pip install -r requirements.txt
 
       - name: Run tests
-        run: pytest
+	run: pytest
 
       - name: Lint check
-        run: ruff check .
+	run: ruff check .
 ``````````````````
 
 这个工作流做的事情很简单：每次有人向 `main` 分支推送代码或创建 PR 时，自动在 Ubuntu 上运行测试和代码检查。
@@ -25097,29 +25097,29 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18, 20, 22]
+	node-version: [18, 20, 22]
 
     steps:
       - uses: actions/checkout@v4
 
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
+	uses: actions/setup-node@v4
+	with:
+	  node-version: ${{ matrix.node-version }}
+	  cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci
+	run: npm ci
 
       - name: Build
-        run: npm run build
+	run: npm run build
 
       - name: Test
-        run: npm test
+	run: npm test
 
       - name: Upload coverage
-        uses: codecov/codecov-action@v4
-        if: matrix.node-version == 22
+	uses: codecov/codecov-action@v4
+	if: matrix.node-version == 22
 ``````````````````
 
 `matrix` 策略是这个工作流的亮点——它会在三个 Node.js 版本上并行测试，确保代码的兼容性。
@@ -25151,23 +25151,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          submodules: recursive
-          fetch-depth: 0
+	with:
+	  submodules: recursive
+	  fetch-depth: 0
 
       - name: Setup Hugo
-        uses: peaceiris/actions-hugo@v3
-        with:
-          hugo-version: '0.139.0'
-          extended: true
+	uses: peaceiris/actions-hugo@v3
+	with:
+	  hugo-version: '0.139.0'
+	  extended: true
 
       - name: Build
-        run: hugo --minify
+	run: hugo --minify
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./public
+	uses: actions/upload-pages-artifact@v3
+	with:
+	  path: ./public
 
   deploy:
     needs: build
@@ -25177,8 +25177,8 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+	id: deployment
+	uses: actions/deploy-pages@v4
 ``````````````````
 
 这个工作流有两个作业： `build` 负责构建 Hugo 站点， `deploy` 负责部署到 GitHub Pages。 `deploy` 用 `needs: build` 依赖于 `build` 作业，确保构建成功后才部署。
@@ -25210,29 +25210,29 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Log in to Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+	uses: docker/login-action@v3
+	with:
+	  registry: ${{ env.REGISTRY }}
+	  username: ${{ github.actor }}
+	  password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Extract metadata
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: |
-            type=ref,event=branch
-            type=semver,pattern={{version}}
-            type=sha
+	id: meta
+	uses: docker/metadata-action@v5
+	with:
+	  images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+	  tags: |
+	    type=ref,event=branch
+	    type=semver,pattern={{version}}
+	    type=sha
 
       - name: Build and push Docker image
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+	uses: docker/build-push-action@v6
+	with:
+	  context: .
+	  push: true
+	  tags: ${{ steps.meta.outputs.tags }}
+	  labels: ${{ steps.meta.outputs.labels }}
 ``````````````````
 
 这个工作流在推送 `main` 分支或打 tag 时自动构建 Docker 镜像并推送到 GitHub Container Registry（ghcr.io）。
@@ -25255,23 +25255,23 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
+	uses: actions/setup-python@v5
+	with:
+	  python-version: '3.12'
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+	run: pip install -r requirements.txt
 
       - name: Run report script
-        run: python generate_report.py
+	run: python generate_report.py
 
       - name: Commit report
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add reports/
-          git diff --staged --quiet || git commit -m "update: daily report"
-          git push
+	run: |
+	  git config user.name "github-actions[bot]"
+	  git config user.email "github-actions[bot]@users.noreply.github.com"
+	  git add reports/
+	  git diff --staged --quiet || git commit -m "update: daily report"
+	  git push
 ``````````````````
 
 `schedule` 的 cron 表达式语法与 Linux 的 crontab 相同： `分 时 日 月 星期`  。注意 GitHub Actions 的 cron 精度是分钟级的，实际触发时间可能有几分钟的延迟。
@@ -25295,30 +25295,30 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+	with:
+	  fetch-depth: 0
 
       - name: Generate changelog
-        id: changelog
-        run: |
-          PREVIOUS_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
-          if [ -z "$PREVIOUS_TAG" ]; then
-            CHANGELOG=$(git log --pretty=format:"- %s (%h)" HEAD)
-          else
-            CHANGELOG=$(git log --pretty=format:"- %s (%h)" ${PREVIOUS_TAG}..HEAD)
-          fi
-          echo "changelog<<EOF" >> $GITHUB_OUTPUT
-          echo "$CHANGELOG" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+	id: changelog
+	run: |
+	  PREVIOUS_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+	  if [ -z "$PREVIOUS_TAG" ]; then
+	    CHANGELOG=$(git log --pretty=format:"- %s (%h)" HEAD)
+	  else
+	    CHANGELOG=$(git log --pretty=format:"- %s (%h)" ${PREVIOUS_TAG}..HEAD)
+	  fi
+	  echo "changelog<<EOF" >> $GITHUB_OUTPUT
+	  echo "$CHANGELOG" >> $GITHUB_OUTPUT
+	  echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Create Release
-        uses: softprops/action-gh-release@v2
-        with:
-          body: |
-            ## 变更内容
-            ${{ steps.changelog.outputs.changelog }}
-          draft: false
-          prerelease: false
+	uses: softprops/action-gh-release@v2
+	with:
+	  body: |
+	    ## 变更内容
+	    ${{ steps.changelog.outputs.changelog }}
+	  draft: false
+	  prerelease: false
 ``````````````````
 
 当你推送一个 `v*` 格式的 tag（如 `git tag v1.2.0 && git push origin v1.2.0` ）时，这个工作流会自动生成 changelog 并创建 GitHub Release。
@@ -25376,15 +25376,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Print context info
-        run: |
-          echo "Repository: ${{ github.repository }}"
-          echo "Branch: ${{ github.ref_name }}"
-          echo "Commit SHA: ${{ github.sha }}"
-          echo "Actor: ${{ github.actor }}"
-          echo "Event: ${{ github.event_name }}"
-          echo "Run ID: ${{ github.run_id }}"
-          echo "Run Number: ${{ github.run_number }}"
-          echo "Workspace: ${{ github.workspace }}"
+	run: |
+	  echo "Repository: ${{ github.repository }}"
+	  echo "Branch: ${{ github.ref_name }}"
+	  echo "Commit SHA: ${{ github.sha }}"
+	  echo "Actor: ${{ github.actor }}"
+	  echo "Event: ${{ github.event_name }}"
+	  echo "Run ID: ${{ github.run_id }}"
+	  echo "Run Number: ${{ github.run_number }}"
+	  echo "Workspace: ${{ github.workspace }}"
 ``````````````````
 
 常用上下文：
@@ -25411,25 +25411,25 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Cache pip packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/pip
-          key: pip-${{ runner.os }}-${{ hashFiles('requirements.txt') }}
-          restore-keys: |
-            pip-${{ runner.os }}-
+	uses: actions/cache@v4
+	with:
+	  path: ~/.cache/pip
+	  key: pip-${{ runner.os }}-${{ hashFiles('requirements.txt') }}
+	  restore-keys: |
+	    pip-${{ runner.os }}-
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+	run: pip install -r requirements.txt
 
       - name: Build artifact
-        run: python setup.py build
+	run: python setup.py build
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-output
-          path: dist/
-          retention-days: 5
+	uses: actions/upload-artifact@v4
+	with:
+	  name: build-output
+	  path: dist/
+	  retention-days: 5
 ``````````````````
 
 `actions/cache` 用 `key` 查找缓存——如果找到匹配的缓存，直接恢复；如果没有，运行结束后会自动保存新的缓存。 `hashFiles` 函数根据文件内容生成哈希值，只有文件内容变化时才会更新缓存。
@@ -25622,8 +25622,8 @@ fi
 if git diff --cached --name-only | grep -q "\.py$"; then
     ruff check $(git diff --cached --name-only -- '*.py')
     if [ $? -ne 0 ]; then
-        echo "错误：代码风格检查未通过"
-        exit 1
+	echo "错误：代码风格检查未通过"
+	exit 1
     fi
 fi
 
@@ -25651,7 +25651,7 @@ repos:
     rev: v0.8.0
     hooks:
       - id: ruff
-        args: [--fix]
+	args: [--fix]
       - id: ruff-format
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -25746,7 +25746,7 @@ from src.app import app
 def client():
     app.config["TESTING"] = True
     with app.test_client() as client:
-        yield client
+	yield client
 
 def test_hello(client):
     response = client.get("/")
@@ -25819,18 +25819,18 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
+	uses: actions/setup-python@v5
+	with:
+	  python-version: "3.12"
 
       - name: Install dev dependencies
-        run: pip install -r requirements-dev.txt
+	run: pip install -r requirements-dev.txt
 
       - name: Lint
-        run: ruff check .
+	run: ruff check .
 
       - name: Format check
-        run: ruff format --check .
+	run: ruff format --check .
 
   test:
     runs-on: ubuntu-latest
@@ -25839,16 +25839,16 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-          cache: pip
+	uses: actions/setup-python@v5
+	with:
+	  python-version: "3.12"
+	  cache: pip
 
       - name: Install dev dependencies
-        run: pip install -r requirements-dev.txt
+	run: pip install -r requirements-dev.txt
 
       - name: Run tests
-        run: pytest -v
+	run: pytest -v
 
   docker:
     runs-on: ubuntu-latest
@@ -25861,20 +25861,20 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Log in to GHCR
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+	uses: docker/login-action@v3
+	with:
+	  registry: ghcr.io
+	  username: ${{ github.actor }}
+	  password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          push: true
-          tags: |
-            ghcr.io/${{ github.repository }}:latest
-            ghcr.io/${{ github.repository }}:${{ github.sha }}
+	uses: docker/build-push-action@v6
+	with:
+	  context: .
+	  push: true
+	  tags: |
+	    ghcr.io/${{ github.repository }}:latest
+	    ghcr.io/${{ github.repository }}:${{ github.sha }}
 EOF
 ``````````````````
 
@@ -28447,20 +28447,20 @@ chmod +x install-mpv-scripts.sh
 ~/dotfiles/
 └── mpv/
     └── .config/
-        └── mpv/
-            ├── mpv.conf
-            ├── input.conf
-            ├── scripts/
-            │   ├── autoload.lua
-            │   ├── stats.lua
-            │   ├── thumbfast.lua
-            │   ├── playlistmanager.lua
-            │   └── ...
-            ├── script-opts/
-            │   ├── stats.conf
-            │   ├── thumbfast.conf
-            │   └── ...
-            └── fonts/
+	└── mpv/
+	    ├── mpv.conf
+	    ├── input.conf
+	    ├── scripts/
+	    │   ├── autoload.lua
+	    │   ├── stats.lua
+	    │   ├── thumbfast.lua
+	    │   ├── playlistmanager.lua
+	    │   └── ...
+	    ├── script-opts/
+	    │   ├── stats.conf
+	    │   ├── thumbfast.conf
+	    │   └── ...
+	    └── fonts/
 ``````````````````
 
 

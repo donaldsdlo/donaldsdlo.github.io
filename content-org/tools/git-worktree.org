@@ -1,0 +1,14 @@
+#+TITLE: git worktree
+#+HUGO_TAGS: git worktree
+#+CATEGORIES: git
+#+DATE: 2026-08-29
+#+AUTHOR: Donald Lo
+#+HUGO_SECTION: tools
+#+HUGO_BASE_DIR: ../../
+#+OPTIONS: line-break:t
+#+HUGO_AUTO_SET_LASTMOD: t
+#+DRAFT: false
+#+HUGO_DRAFT: false
+#+hugo_front_matter_format: yaml
+#+STARTUP: latexpreview
+#+STARTUP: inlineimages

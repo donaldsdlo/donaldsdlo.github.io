@@ -6,7 +6,7 @@
 #+CATEGORIES: windows Emacs 输入法
 #+DATE: 2026-07-11
 #+AUTHOR: Donald Lo
-#+HUGO_SECTION: windows
+#+HUGO_SECTION: tools
 #+HUGO_BASE_DIR: ../../
 #+OPTIONS: line-break:t
 #+HUGO_AUTO_SET_LASTMOD: t
@@ -93,35 +93,35 @@ rimel 包在 Emacs 内部运行 Rime 输入法，绕开系统的输入法调度�
 
     ;; Recommended config: code area + after letter + uppercase letter
     (rimel-disable-predicates
-        '(rimel-predicate-prog-in-code-p
-             ;; rimel-predicate-after-alphabet-char-p
-             rimel-predicate-current-uppercase-letter-p)
-        ;; Optional: display candidates via posframe (defaults to posframe if installed)
-        (rimel-show-candidate 'posframe))
+	'(rimel-predicate-prog-in-code-p
+	     ;; rimel-predicate-after-alphabet-char-p
+	     rimel-predicate-current-uppercase-letter-p)
+	;; Optional: display candidates via posframe (defaults to posframe if installed)
+	(rimel-show-candidate 'posframe))
     :config
     (defun rimel-activate (_name)
-        "Activate rimel input method.
+	"Activate rimel input method.
 Called by Emacs when user selects the \"rimel\" input method.
 _NAME is the input method name (unused)."
-        (unless (liberime-workable-p)
-            (liberime-load))
-        (when (and rimel-schema
-                  (liberime-workable-p)
-                  (not (string= rimel-schema liberime-current-schema)))
-            (liberime-try-select-schema rimel-schema))
-        (setq-local input-method-function #'rimel-input-method)
-        (setq-local deactivate-current-input-method-function #'rimel-deactivate))
+	(unless (liberime-workable-p)
+	    (liberime-load))
+	(when (and rimel-schema
+		  (liberime-workable-p)
+		  (not (string= rimel-schema liberime-current-schema)))
+	    (liberime-try-select-schema rimel-schema))
+	(setq-local input-method-function #'rimel-input-method)
+	(setq-local deactivate-current-input-method-function #'rimel-deactivate))
     (defun my/rimel-predicate-org-in-src-block-p ()
-        "Return non-nil when point is inside an Org source block."
-        (and (derived-mode-p 'org-mode)
-            (fboundp 'org-in-src-block-p)
-            (save-match-data (setq element (org-element-at-point)))
-            (when (org-element-type-p element 'src-block)
-                (not (or (<= (line-beginning-position)
-                                 (org-element-post-affiliated element))
-                             (>= (line-end-position)
-                             (org-with-point-at (org-element-end element)
-                                 (point)))))))))
+	"Return non-nil when point is inside an Org source block."
+	(and (derived-mode-p 'org-mode)
+	    (fboundp 'org-in-src-block-p)
+	    (save-match-data (setq element (org-element-at-point)))
+	    (when (org-element-type-p element 'src-block)
+		(not (or (<= (line-beginning-position)
+				 (org-element-post-affiliated element))
+			     (>= (line-end-position)
+			     (org-with-point-at (org-element-end element)
+				 (point)))))))))
 #+end_src
 
 动态库从 https://github.com/emacs-rime/liberime/releases 下载最新版本，例如 =liberime-v0.0.10.1-windows-ucrt-x86_64-with-deps.zip= ，将下载的压缩包中的 =bin= 目录下的文件复制到 =~/.emacs.d/bin= 。

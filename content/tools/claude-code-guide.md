@@ -2,7 +2,7 @@
 title: "Claude Code 完整使用指南"
 author: ["Donald Lo"]
 date: 2026-07-03
-lastmod: 2026-07-03T10:00:00+08:00
+lastmod: 2026-08-29T11:27:00+08:00
 tags: ["claude-code", "AI", "coding"]
 draft: false
 ---
