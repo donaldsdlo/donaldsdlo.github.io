@@ -1,0 +1,279 @@
+---
+title: "Emacs 拼写检查：jinx + Enchant + Hunspell 配置指南"
+author: ["Donald Lo"]
+date: 2026-09-02
+lastmod: 2026-09-02T17:25:00+08:00
+tags: ["Emacs", "jinx", "拼写检查", "enchant", "hunspell", "MSYS2"]
+draft: false
+---
+
+<div class="ox-hugo-toc toc">
+
+<div class="heading">&#30446;&#24405;</div>
+
+- [为什么是 jinx](#为什么是-jinx)
+- [MSYS2 安装 Enchant 与 Hunspell](#msys2-安装-enchant-与-hunspell)
+- [让 Emacs 找到 enchant-2](#让-emacs-找到-enchant-2)
+- [环境变量与目录布局](#环境变量与目录布局)
+- [enchant.ordering：决定用哪个后端、哪本词典](#enchant-dot-ordering-决定用哪个后端-哪本词典)
+- [词典：下载、存放、命名](#词典-下载-存放-命名)
+- [jinx 的 Emacs 配置](#jinx-的-emacs-配置)
+- [自定义词典](#自定义词典)
+- [日常使用](#日常使用)
+
+</div>
+<!--endtoc-->
+
+
+
+## 为什么是 jinx {#为什么是-jinx}
+
+Emacs 里的拼写检查，历史包袱不轻。最早是 `ispell` 的进程接口，后来 `flyspell` 把它做成"边输入边检查"，再往后 `aspell` 、 `hunspell` 这些后端层出不穷。方案一多，问题也来了： `flyspell` 是全缓冲区检查，打开一个大一点的 org 文件，重绘卡顿是家常便饭；原生 `ispell` 接口又老又绕，Windows 上找一个能稳定跑起来的后端都得折腾半天。
+
+`jinx` 走的是 `jit` （just-in-time）路线：只检查光标附近那一个词，而不是整个缓冲区。它比 `flyspell` 快得多，比 `wucuo` 更省心，而且它把"用哪个后端"这个决策外包给了 Enchant。
+
+Enchant 是个拼写检查的抽象层，本身不做拼写判断，只在 Hunspell、Aspell、Nuspell、Voikko 这些后端之间做路由。这意味着你只跟 Enchant 打交道，后端想换就换（比如从 Hunspell 换成 Aspell），上层配置一行不用动。
+
+我自己的配置经历过三个阶段，最终落在 jinx 上：
+
+1.  `ispell` + `hunspell` 直连 —— 能用，但接口老，Windows 上参数传参各种坑
+2.  `wucuo` —— 思路接近 jit，但 Windows 上绑 `aspell` ，词库和编码都麻烦
+3.  `jinx` + `enchant` —— 现在用的，jit + 抽象层，最省心
+
+下面按"安装 → 环境变量 → Enchant 配置 → 词典 → Emacs 配置 → 自定义词典"的顺序展开。
+
+
+## MSYS2 安装 Enchant 与 Hunspell {#msys2-安装-enchant-与-hunspell}
+
+拼写后端和 Enchant 本身都从 MSYS2 装，UCRT64 环境（ `mingw-w64-ucrt-x86_64-` 前缀）：
+
+```bash
+pacman -S mingw-w64-ucrt-x86_64-enchant
+```
+
+`enchant` 这个包会连带把 `hunspell` 、 `aspell` 、 `nuspell` 、 `libvoikko` 等后端一起装上——Enchant 是个壳，这些才是真正干活的人。装完关键文件落在：
+
+-   `/ucrt64/bin/enchant-2.exe` —— 命令行入口，jinx 最终调用的就是它
+-   `/ucrt64/bin/enchant-lsmod-2.exe` —— 列出可用的后端与词典
+-   `/ucrt64/lib/enchant-2/enchant_hunspell.dll` —— Hunspell 后端
+-   `/ucrt64/share/enchant-2/enchant.ordering` —— 系统级的默认后端排序
+
+如果你懒得手动下词典，MSYS2 也自带一套英文词典：
+
+```bash
+pacman -S mingw-w64-ucrt-x86_64-hunspell-en
+```
+
+但我没用这套。原因在讲词典的那一节说——官方 `wordlist.aspell.net` 的词典更新更及时、可选更多（普通版 / large 版），而且能精确控制放在哪里。
+
+装完先自检，确认 Enchant 能列出词典：
+
+```bash
+enchant-lsmod-2 -list-dicts
+```
+
+如果这里列不出任何词典，要么是词典没装，要么是 `DICPATH` 没指对。先让这个命令能出结果，再进 Emacs。
+
+
+## 让 Emacs 找到 enchant-2 {#让-emacs-找到-enchant-2}
+
+Emacs 不是终端，不继承你 MSYS2 窗口里的 `PATH` 。所以得在 `early-init.el` 里把 `ucrt64/bin` 塞进 `exec-path` 和 `PATH` 。我的做法是检测 `MSYS2` 环境变量，找不到再退回 Scoop 的固定路径：
+
+```emacs-lisp
+;; MSYS2 auto-detection: add its bin dirs to `exec-path' when present
+(when-let* ((msys2-root (getenv "MSYS2"))
+	    (msys2-bin (concat msys2-root "/usr/bin"))
+	    (ucrt64-bin (concat msys2-root "/ucrt64/bin"))
+	    ((file-directory-p msys2-bin)))
+  (add-to-list 'exec-path msys2-bin)
+  (add-to-list 'exec-path ucrt64-bin)
+  (setenv "PATH" (concat msys2-bin ";" ucrt64-bin ";" (getenv "PATH")))
+  (setenv "MSYSTEM" "UCRT64")
+  (setenv "TERM" "xterm-256color"))
+```
+
+MSYS2 如果用 Scoop 装，路径是 `D:/Scoop/apps/msys2/current/ucrt64` 。 `init-spell-check.el` 里也留了一段注释掉的等价逻辑——判断 `enchant_hunspell.dll` 存在与否再改 `PATH` ，思路一样，只是更保守。
+
+
+## 环境变量与目录布局 {#环境变量与目录布局}
+
+jinx 背后要喂两个环境变量给 Enchant：
+
+-   `DICPATH` —— 告诉 Hunspell 后端去哪里找 `.dic` / `.aff` 词典对
+-   `ENCHANT_CONFIG_DIR` —— 告诉 Enchant 去哪里读 `enchant.ordering`
+
+我把这两个都指向 `~/.emacs.d` 下的目录，而不是 MSYS2 安装目录，这样配置跟着 Emacs 走，换机器不用重配。目录布局如下：
+
+```text
+~/.emacs.d/
+├── resources/
+│   └── enchant/
+│       ├── enchant.ordering          ← ENCHANT_CONFIG_DIR 指向这里
+│       └── hunspell/                 ← DICPATH 指向这里
+│           ├── en_US.aff
+│           ├── en_US.dic
+│           ├── en_US-large.aff
+│           └── en_US-large.dic
+└── etc/
+    └── jinx.personal.dict            ← jinx-local-dictionary
+```
+
+在 Emacs 里设置：
+
+```emacs-lisp
+(setenv "DICPATH" (expand-file-name "enchant/hunspell" +resources-directory))
+(setenv "ENCHANT_CONFIG_DIR" (expand-file-name "enchant" +resources-directory))
+```
+
+其中 `+resources-directory` 就是 `~/.emacs.d/resources/` 。这两个 `setenv` 要放在 jinx 加载之前（ `use-package jinx` 的 `:init` 块里），因为 jinx 启动 `enchant-2` 子进程时就要用上这两个变量。
+
+
+## enchant.ordering：决定用哪个后端、哪本词典 {#enchant-dot-ordering-决定用哪个后端-哪本词典}
+
+`ENCHANT_CONFIG_DIR` 里放一个 `enchant.ordering` 文件，格式是每行一条规则：
+
+```text
+<语言标签>:<后端1>,<后端2>,...
+```
+
+-   语言标签是 BCP 47 风格，如 `en_US` 、 `en_GB` ； `*` 是通配符，兜底所有未列出的语言
+-   冒号后面是后端优先级列表，前面的优先，找不到词典再试下一个
+
+实际内容：
+
+```text
+*:hunspell,aspell
+en_US:hunspell,aspell
+```
+
+含义：默认（ `*` ）先用 Hunspell、再用 Aspell； `en_US` 也一样。想给英式英语单独指定后端、或者把 `en_US-large` 大词典也登记进来，可以这么写：
+
+```text
+en_US:hunspell
+en_US-large:hunspell
+en_GB:hunspell
+*:hunspell,aspell
+```
+
+注意：这里写的语言标签必须和 `DICPATH` 下的词典文件名对得上—— `en_US:hunspell` 意味着 Hunspell 后端会在 `DICPATH` 里找 `en_US.dic` / `en_US.aff` 。标签和文件名不一致，Enchant 就会报"找不到词典"。
+
+
+## 词典：下载、存放、命名 {#词典-下载-存放-命名}
+
+词典来自 SCOWL 项目衍生的官方英文词典集（ `wordlist.aspell.net` ）。每个语言给两个版本：
+
+-   普通版（SCOWL size 60）—— 只收一种拼写变体，干净，日常够用
+-   large 版（SCOWL size 70）—— 收录常见拼写变体，词量更大，但误报风险也更高
+
+下载地址：
+
+-   主站与说明：[English Speller Dictionaries](https://wordlist.aspell.net/dicts/)
+-   历史与当前发布：[SourceForge 发布目录](https://sourceforge.net/projects/wordlist/files/speller/)
+-   2026 年起同步到 GitHub：[GitHub Releases](https://github.com/en-wl/wordlist/releases)
+
+以当前版本（2026.02.25）为例，直接下两个 zip：
+
+```text
+hunspell-en_US-2026.02.25.zip        → en_US.aff + en_US.dic
+hunspell-en_US-large-2026.02.25.zip  → en_US-large.aff + en_US-large.dic
+```
+
+解压后把 `en_US.aff` 、 `en_US.dic` 、 `en_US-large.aff` 、 `en_US-large.dic` 放进 `DICPATH` 指向的 `resources/enchant/hunspell/` 。
+
+命名规则只有一条： `文件名（不含扩展名）-语言标签` 。所以 `en_US.dic` / `en_US.aff` 对应 `en_US` ， `en_US-large.dic` / `en_US-large.aff` 对应 `en_US-large` 。想用英式英语就下 `hunspell-en_GB-ise-*.zip` ，放成 `en_GB-ise.dic` / `en_GB-ise.aff` ，再在 `enchant.ordering` 里加一行 `en_GB-ise:hunspell` 即可。
+
+
+## jinx 的 Emacs 配置 {#jinx-的-emacs-配置}
+
+jinx 从 straight / GNU ELPA 装。核心配置如下（节选自 `init-spell-check.el` ）：
+
+```emacs-lisp
+(use-package jinx
+  :hook (emacs-startup-hook . global-jinx-mode)
+  :general ("M-$" #'jinx-correct
+	    "C-M-$" #'jinx-languages)
+  :init
+  (setenv "DICPATH" (expand-file-name "enchant/hunspell" +resources-directory))
+  (setenv "ENCHANT_CONFIG_DIR" (expand-file-name "enchant" +resources-directory))
+  :config
+  (setq ispell-program-name "enchant-2")
+  (setq ispell-dictionary "english")
+  (setq jinx-camel-modes '(prog-mode))
+  (setq jinx-languages "en_US")
+  (setq jinx-local-dictionary (expand-file-name "jinx.personal.dict" +etc-directory))
+  ;; Skip CJK codepoints.
+  (add-to-list 'jinx-exclude-regexps '(t "\\cc")))
+```
+
+逐行说：
+
+-   `global-jinx-mode` —— 全局启用 jit 检查，启动时打开
+-   `ispell-program-name "enchant-2"` —— 关键，让 jinx 走 Enchant 而不是默认的 `ispell`
+-   `jinx-languages "en_US"` —— 默认语言，可在缓冲区里用 `C-M-$` 切换
+-   `jinx-camel-modes '(prog-mode)` —— 代码里把 `camelCase` 拆开检查，而不是把整个驼峰词当一个词
+-   `jinx-local-dictionary` —— 个人词典，见下一节
+-   `jinx-exclude-regexps '(t "\\cc")` —— 跳过 CJK 码位，中文不参与拼写检查
+
+这里的 `:general` 来自 `general.el` ，如果你没装，等价写法是用 `:bind` ：
+
+```emacs-lisp
+  :bind (("M-$" . jinx-correct)
+	 ("C-M-$" . jinx-languages))
+```
+
+同文件里还保留了 `ispell` 和 `wucuo` 两段历史配置。 `ispell` 那段是给原生接口兜底； `wucuo` 那段 `:disabled` 掉了——它是我上一代的方案，Windows 上绑 `aspell` ，词库和编码都麻烦，现在留作备选参考。
+
+
+## 自定义词典 {#自定义词典}
+
+jinx 的本地词典和 aspell 的不一样：就是一个纯文本文件，一行一个词，没有 `personal_ws-1.1` 那样的头部。位置由 `jinx-local-dictionary` 指定：
+
+```emacs-lisp
+(setq jinx-local-dictionary (expand-file-name "jinx.personal.dict" +etc-directory))
+```
+
+`etc/jinx.personal.dict` 的示例（节选）：
+
+```text
+Emacs
+Dired
+org-mode
+flymake
+hugo
+Iosevka
+MSYS2
+pacman
+systemd
+```
+
+都是代码、工具、品牌、文件名里高频出现、但通用词典没收的词。加词有两种方式：
+
+-   检查时对报错词按 `@` 存入个人词典（见下一节）
+-   直接编辑这个文件，一行一个词
+
+除了全局个人词典，jinx 还提供三个作用域更小的变量，从大到小：
+
+-   `jinx-local-dictionary` —— 全局个人词典，一劳永逸
+-   `jinx-dir-local-words` —— 目录级，配合 `.dir-locals.el` 用
+-   `jinx-local-words` —— 当前缓冲区，词以空格分隔的字符串
+
+
+## 日常使用 {#日常使用}
+
+最常用的几个动作：
+
+-   `M-$` —— 纠正光标下的词（ `jinx-correct` ）
+-   `C-M-$` —— 切换检查语言（ `jinx-languages` ）
+-   `M-n` / `M-p` —— 在报错词之间跳转（ `jinx-next` / `jinx-previous` ）
+-   `M-x jinx-correct-all` —— 遍历纠正整个缓冲区
+
+`jinx-correct` 弹出的补全列表默认走 `completing-read` ，配合 `vertico` / `corfu` 就很好看。纠正时用到的键：
+
+-   `0..9` —— 快速选第 n 个候选（候选多了也会用字母作为快选键）
+-   `@` —— 保存到个人词典（永久）
+-   `*` —— 保存为文件局部（写进文件的局部变量）
+-   `/` —— 保存为目录局部（写进 `.dir-locals.el` ）
+-   `+` —— 仅本次会话接受
+-   `SPC` —— 直接输入，不纠正
+
+如果配了 `vertico-multiform` ，还可以把 jinx 候选做成 grid 布局，一次看更多词—— `init-spell-check.el` 里有对应片段。
