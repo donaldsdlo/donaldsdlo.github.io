@@ -1,0 +1,95 @@
+{{/*
+    partials/footer/components/custom.html
+    自定义增强 JS：
+      - 阅读进度条
+      - 主题切换平滑过渡
+      - 入场动效
+*/}}
+<script>
+(function() {
+  'use strict';
+
+  // ---------- 阅读进度条 ----------
+  function initReadingProgress() {
+    var bar = document.getElementById('reading-progress');
+    if (!bar) return;
+
+    var ticking = false;
+    function update() {
+      var scrollTop = window.scrollY || document.documentElement.scrollTop;
+      var docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      var pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      bar.style.width = pct + '%';
+      if (pct > 1 && pct < 99) {
+        bar.classList.add('is-active');
+      } else {
+        bar.classList.remove('is-active');
+      }
+      ticking = false;
+    }
+
+    function onScroll() {
+      if (!ticking) {
+        window.requestAnimationFrame(update);
+        ticking = true;
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    update();
+  }
+
+  // ---------- 主题切换平滑过渡 ----------
+  // 监听 colorScheme 的 data-scheme 属性变化
+  function initSchemeTransition() {
+    var target = document.documentElement;
+    if (!target) return;
+    var observer = new MutationObserver(function(mutations) {
+      mutations.forEach(function(m) {
+        if (m.attributeName === 'data-scheme') {
+          // 给 html 加一个临时 class，触发 css --scheme-transition
+          document.body.classList.add('is-switching-scheme');
+          setTimeout(function() {
+            document.body.classList.remove('is-switching-scheme');
+          }, 350);
+        }
+      });
+    });
+    observer.observe(target, { attributes: true });
+  }
+
+  // ---------- 入场动效 ----------
+  function initEntrance() {
+    var articleSelectors = '.article-list article, .article-list--compact article, .widget, .section-card, .not-found-card';
+    var elements = document.querySelectorAll(articleSelectors);
+    if (!elements.length) return;
+
+    elements.forEach(function(el, idx) {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(8px)';
+      el.style.transition = 'opacity 0.4s ease ' + Math.min(idx * 0.04, 0.4) + 's, transform 0.4s ease ' + Math.min(idx * 0.04, 0.4) + 's';
+    });
+
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() {
+        elements.forEach(function(el) {
+          el.style.opacity = '1';
+          el.style.transform = 'translateY(0)';
+        });
+      });
+    });
+  }
+
+  function ready(fn) {
+    if (document.readyState !== 'loading') fn();
+    else document.addEventListener('DOMContentLoaded', fn);
+  }
+
+  ready(function() {
+    initReadingProgress();
+    initSchemeTransition();
+    initEntrance();
+  });
+})();
+</script>

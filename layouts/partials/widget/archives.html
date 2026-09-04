@@ -12,11 +12,12 @@
         {{ $pages := where $context.Site.RegularPages "Type" "in" $context.Site.Params.mainSections }}
         {{ $filtered := where $pages "Params.hidden" "!=" true }}
         {{ $archives := $filtered.GroupByDate "2006" }}
-        
+
         <div class="widget-archive--list">
+            <ul class="archive-timeline" style="list-style:none;padding:0;margin:0;">
             {{ range $index, $item := first (add $limit 1) ($archives) }}
                 {{- $id := lower (replace $item.Key " " "-") -}}
-                <div class="archives-year">
+                <li class="archives-year">
                     <a href="{{ $archivesPage.RelPermalink }}#{{ $id }}">
                         {{ if eq $index $limit }}
                             <span class="year">{{ T "widget.archives.more" }}</span>
@@ -24,9 +25,10 @@
                             <span class="year">{{ .Key }}</span>
                             <span class="count">{{ len $item.Pages }}</span>
                         {{ end }}
-                    </a> 
-                </div>
+                    </a>
+                </li>
             {{ end }}
+            </ul>
         </div>
     </section>
 {{- else -}}

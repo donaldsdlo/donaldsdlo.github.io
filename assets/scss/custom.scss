@@ -1,4 +1,11 @@
-/* 自定义字体：移植自 manateelazycat.github.io */
+/* ============================================================
+   custom.scss — 魔数技巧 博客美化
+   主色：深青绿 #2A6B5A
+   改造点：配色、字体层级、代码块、卡片动效、阅读进度条、
+          归档时间轴、标签彩胶囊、全局过渡
+   ============================================================ */
+
+/* ---------- 1. 自定义字体 (沿用已有) ---------- */
 @font-face {
     font-family: mottoFont;
     src: url("/fonts/SCRIPTIN.ttf") format("TrueType");
@@ -17,26 +24,476 @@
     font-display: swap;
 }
 
+/* ---------- 2. CSS 变量主题层 ---------- */
 :root {
+    /* 主色：深青绿 */
+    --brand-primary: #2A6B5A;
+    --brand-primary-darker: #1F5042;
+    --brand-primary-lighter: #3E8A75;
+    --brand-soft: rgba(42, 107, 90, 0.08);
+    --brand-soft-hover: rgba(42, 107, 90, 0.16);
+
+    /* 扩展调色板（用于标签云） */
+    --brand-palette-1: #2A6B5A; /* teal */
+    --brand-palette-2: #5A4A8B; /* violet */
+    --brand-palette-3: #B5743A; /* bronze */
+    --brand-palette-4: #4A7B9C; /* slate */
+    --brand-palette-5: #8B5A6B; /* rose */
+
+    /* 字体（沿用 jinkai 主字体） */
     --sys-font-family: jinkaiFont, -apple-system, BlinkMacSystemFont, "Segoe UI", "Droid Sans", "Helvetica Neue";
     --base-font-family: jinkaiFont, var(--sys-font-family), sans-serif;
+    --heading-font-family: jinkaiFont, var(--base-font-family);
+
+    /* 覆盖 Stack 默认变量 */
+    --accent-color: var(--brand-primary);
+    --accent-color-darker: var(--brand-primary-darker);
+    --accent-color-text: #fff;
+
+    /* 链接高亮：品牌色淡背景 */
+    --link-background-color: 42, 107, 90; /* RGB 元组 */
+    --link-background-opacity: 0.12;
+    --link-background-opacity-hover: 0.22;
+
+    /* 滚动条 */
+    --scrollbar-thumb: hsl(168, 18%, 70%);
+
+    /* 卡片圆角略大一点 */
+    --card-border-radius: 12px;
+
+    /* 阅读体验优化 */
+    --article-line-height: 1.75;
+    --article-font-size: 1.65rem;
+
+    /* 阴影：层次更明显 */
+    --shadow-l1: 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 0px 2px rgba(0, 0, 0, 0.06), 0px 0px 1px rgba(0, 0, 0, 0.04);
+    --shadow-l2: 0px 10px 24px rgba(31, 80, 66, 0.08), 0px 4px 10px rgba(0, 0, 0, 0.04), 0px 0px 1px rgba(0, 0, 0, 0.04);
+    --shadow-l3: 0px 16px 32px rgba(31, 80, 66, 0.10), 0px 4px 12px rgba(0, 0, 0, 0.05), 0px 0px 1px rgba(0, 0, 0, 0.04);
+
+    /* 全局过渡：颜色、背景、边框平滑切换 */
+    --scheme-transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+
+    &[data-scheme="dark"] {
+        --body-background: #1e2724;
+
+        --accent-color: #4FA88E;            /* 暗色下用更亮的青绿 */
+        --accent-color-darker: #3E8A75;
+        --accent-color-text: #0f1815;
+
+        --body-text-color: rgba(232, 240, 238, 0.78);
+
+        /* 链接背景在暗色下更亮 */
+        --link-background-color: 79, 168, 142;
+        --link-background-opacity: 0.18;
+        --link-background-opacity-hover: 0.28;
+
+        --scrollbar-thumb: hsl(168, 18%, 30%);
+
+        --card-background: #2a3a35;
+        --card-background-selected: rgba(79, 168, 142, 0.2);
+        --card-text-color-main: rgba(255, 255, 255, 0.92);
+        --card-text-color-secondary: rgba(232, 240, 238, 0.66);
+        --card-text-color-tertiary: rgba(232, 240, 238, 0.42);
+        --card-separator-color: rgba(255, 255, 255, 0.08);
+
+        /* 暗色代码块：背景稍微亮一档，对比度更舒服 */
+        --pre-background-color: #0f1815;
+        --code-background-color: rgba(255, 255, 255, 0.08);
+
+        /* 阴影在暗色下更黑一点 */
+        --shadow-l1: 0px 4px 8px rgba(0, 0, 0, 0.4), 0px 0px 2px rgba(0, 0, 0, 0.5);
+        --shadow-l2: 0px 10px 24px rgba(0, 0, 0, 0.5), 0px 4px 10px rgba(0, 0, 0, 0.35);
+        --shadow-l3: 0px 16px 32px rgba(0, 0, 0, 0.55), 0px 4px 12px rgba(0, 0, 0, 0.4);
+    }
 }
 
-/* 站点标题使用 angelinaFont */
+/* ---------- 3. 全局过渡：颜色/背景平滑切换 ---------- */
+html, body {
+    transition: var(--scheme-transition);
+}
+
+body {
+    color: var(--body-text-color);
+}
+
+/* ---------- 4. 字体层级 ---------- */
 .site-title {
     font-family: angelinaFont, var(--base-font-family) !important;
+    letter-spacing: 0.5px;
 }
 
-/* 自定义宽度覆盖：博客整体 95% */
+.article-title,
+.section-title {
+    font-family: var(--heading-font-family);
+    font-weight: 600;
+    letter-spacing: 0.3px;
+}
 
-/* 博客容器占视口 95% */
+.article-title a,
+a.article-title {
+    transition: color 0.2s ease, background-color 0.25s ease;
+}
+
+/* ---------- 5. 链接：品牌色下划线高亮 ---------- */
+a {
+    transition: color 0.2s ease, background-color 0.25s ease;
+}
+
+a:hover {
+    color: var(--accent-color-darker);
+}
+
+/* 文中段落的链接（Stack 主题使用伪元素背景高亮）*/
+.article-content a,
+.post-content a {
+    color: var(--accent-color);
+    text-decoration: none;
+    background-image: linear-gradient(transparent calc(100% - 1px), rgba(var(--link-background-color), var(--link-background-opacity)) calc(100% - 1px));
+    transition: background-image 0.25s ease, color 0.2s ease;
+}
+
+.article-content a:hover,
+.post-content a:hover {
+    color: var(--accent-color-darker);
+    background-image: linear-gradient(transparent calc(100% - 1px), rgba(var(--link-background-color), var(--link-background-opacity-hover)) calc(100% - 1px));
+}
+
+/* ---------- 6. 文章列表卡片：悬停上浮 ---------- */
+.article-list article {
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.article-list article:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-l2);
+}
+
+.article-list--compact article {
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    border-radius: 8px;
+}
+
+.article-list--compact article:hover {
+    transform: translateX(2px);
+    box-shadow: var(--shadow-l1);
+    background-color: var(--brand-soft);
+}
+
+/* ---------- 7. 代码块：圆角 + 行号条 + 顶部留白 ---------- */
+.highlight,
+pre,
+pre code,
+.code-block {
+    border-radius: 8px !important;
+    font-family: Menlo, Monaco, "JetBrains Mono", Consolas, "Courier New", monospace;
+}
+
+.highlight {
+    position: relative;
+    margin: 1.2em 0;
+    box-shadow: var(--shadow-l1);
+    overflow: hidden;
+}
+
+.highlight pre {
+    margin: 0;
+    padding: 1em 1.1em;
+    border-radius: 0;
+}
+
+.highlight .lntable,
+.highlight .lntd {
+    border: none !important;
+}
+
+.highlight .lnt,
+.highlight .ln {
+    border-right: 1px solid rgba(127, 127, 127, 0.2) !important;
+    padding-right: 0.6em !important;
+    margin-right: 0.6em;
+    user-select: none;
+    color: rgba(127, 127, 127, 0.6) !important;
+}
+
+/* 行内 code */
+:not(pre) > code {
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-size: 0.92em;
+    font-weight: 500;
+}
+
+/* ---------- 8. 阅读进度条 ---------- */
+.reading-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    width: 0%;
+    background: linear-gradient(90deg, var(--brand-primary), var(--brand-primary-lighter));
+    box-shadow: 0 1px 4px rgba(42, 107, 90, 0.4);
+    z-index: 9999;
+    transition: width 0.1s ease-out, opacity 0.3s ease;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.reading-progress.is-active {
+    opacity: 1;
+}
+
+/* ---------- 9. 标签彩胶囊 ---------- */
+.tagCloud-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.tagCloud-tags a {
+    display: inline-block;
+    padding: 4px 11px;
+    border-radius: 999px;
+    background-color: var(--brand-soft);
+    color: var(--brand-primary-darker);
+    font-size: 0.85em;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+}
+
+[data-scheme="dark"] .tagCloud-tags a {
+    color: #b9e4d3;
+}
+
+.tagCloud-tags a:nth-child(5n + 1) {
+    background-color: rgba(42, 107, 90, 0.10);
+    color: #2A6B5A;
+}
+.tagCloud-tags a:nth-child(5n + 2) {
+    background-color: rgba(90, 74, 139, 0.10);
+    color: #5A4A8B;
+}
+.tagCloud-tags a:nth-child(5n + 3) {
+    background-color: rgba(181, 116, 58, 0.12);
+    color: #B5743A;
+}
+.tagCloud-tags a:nth-child(5n + 4) {
+    background-color: rgba(74, 123, 156, 0.10);
+    color: #4A7B9C;
+}
+.tagCloud-tags a:nth-child(5n + 5) {
+    background-color: rgba(139, 90, 107, 0.10);
+    color: #8B5A6B;
+}
+
+[data-scheme="dark"] .tagCloud-tags a:nth-child(5n + 1) { color: #6dc4a7; }
+[data-scheme="dark"] .tagCloud-tags a:nth-child(5n + 2) { color: #a896d4; }
+[data-scheme="dark"] .tagCloud-tags a:nth-child(5n + 3) { color: #e0b07e; }
+[data-scheme="dark"] .tagCloud-tags a:nth-child(5n + 4) { color: #93b8d2; }
+[data-scheme="dark"] .tagCloud-tags a:nth-child(5n + 5) { color: #d2a3b0; }
+
+.tagCloud-tags a:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-l1);
+    filter: brightness(0.96);
+}
+
+/* 紧凑列表（归档页/标签页）里的标签链接 */
+.article-tags a {
+    display: inline-block;
+    padding: 2px 9px;
+    margin-right: 4px;
+    border-radius: 4px;
+    background-color: var(--brand-soft);
+    color: var(--brand-primary-darker);
+    font-size: 0.82em;
+    transition: all 0.2s ease;
+}
+
+.article-tags a:hover {
+    background-color: var(--brand-soft-hover);
+    color: var(--accent-color-darker);
+}
+
+/* ---------- 10. 归档时间轴样式 ---------- */
+.widget-archive--list {
+    position: relative;
+    padding-left: 6px;
+}
+
+.archives-year {
+    position: relative;
+    padding: 6px 0 6px 18px;
+    border-left: 2px solid var(--card-separator-color);
+    margin-left: 4px;
+    transition: all 0.2s ease;
+}
+
+.archives-year::before {
+    content: "";
+    position: absolute;
+    left: -6px;
+    top: 14px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--brand-primary);
+    border: 2px solid var(--body-background);
+    box-shadow: 0 0 0 2px var(--brand-primary);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.archives-year:hover {
+    border-left-color: var(--brand-primary);
+    padding-left: 22px;
+}
+
+.archives-year:hover::before {
+    transform: scale(1.25);
+    box-shadow: 0 0 0 2px var(--brand-primary), 0 0 8px rgba(42, 107, 90, 0.5);
+}
+
+.archives-year a {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    text-decoration: none;
+}
+
+.archives-year .year {
+    font-weight: 600;
+    color: var(--card-text-color-main);
+}
+
+.archives-year .count {
+    font-size: 0.85em;
+    color: var(--card-text-color-tertiary);
+    background: var(--brand-soft);
+    padding: 1px 8px;
+    border-radius: 999px;
+}
+
+/* ---------- 11. 主题切换按钮的过渡 ---------- */
+#dark-mode-toggle {
+    cursor: pointer;
+    transition: color 0.25s ease;
+}
+
+#dark-mode-toggle:hover {
+    color: var(--accent-color);
+}
+
+/* ---------- 12. 页面淡入 ---------- */
+@keyframes page-fade-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+main.main {
+    animation: page-fade-in 0.4s ease-out;
+}
+
+/* ---------- 13. 404 终端风格 ---------- */
+.not-found-card {
+    text-align: center;
+    padding: 3rem 1rem;
+}
+
+.terminal-window {
+    max-width: 600px;
+    margin: 2rem auto;
+    background: #1e1e1e;
+    color: #d4d4d4;
+    border-radius: 8px;
+    box-shadow: var(--shadow-l3);
+    overflow: hidden;
+    font-family: Menlo, Monaco, "JetBrains Mono", Consolas, monospace;
+    font-size: 0.9rem;
+    text-align: left;
+    direction: ltr;
+}
+
+[data-scheme="light"] .terminal-window {
+    background: #1e1e1e;
+    color: #d4d4d4;
+}
+
+.terminal-header {
+    background: #2d2d2d;
+    padding: 8px 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid #3e3e3e;
+}
+
+.terminal-dot {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    display: inline-block;
+}
+.terminal-dot.red { background: #ff5f56; }
+.terminal-dot.yellow { background: #ffbd2e; }
+.terminal-dot.green { background: #27c93f; }
+
+.terminal-title {
+    margin-left: 8px;
+    color: #999;
+    font-size: 0.78rem;
+}
+
+.terminal-body {
+    padding: 18px 22px;
+    min-height: 180px;
+    line-height: 1.7;
+}
+
+.terminal-prompt {
+    color: #4FA88E;
+    font-weight: 600;
+}
+
+.terminal-prompt.error {
+    color: #f44747;
+}
+
+.terminal-warn {
+    color: #dcdcaa;
+}
+
+.terminal-cursor {
+    display: inline-block;
+    width: 8px;
+    height: 1em;
+    background: #d4d4d4;
+    margin-left: 2px;
+    vertical-align: text-bottom;
+    animation: cursor-blink 1s steps(2) infinite;
+}
+
+@keyframes cursor-blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+
+.terminal-body a.terminal-link {
+    color: #4FA88E;
+    text-decoration: underline;
+    background: none;
+}
+
+.terminal-body a.terminal-link:hover {
+    color: #6dc4a7;
+}
+
+/* ---------- 14. 容器宽度微调 ---------- */
 .container.compact,
 .container.extended {
     max-width: 95%;
     width: 95%;
 }
 
-/* extended 模式：按百分比动态分配三栏宽度 */
 @media (min-width: 768px) {
     .container.extended {
         --left-sidebar-max-width: 10%;
@@ -45,7 +502,6 @@
     }
 }
 
-/* 大屏保持相同比例，更宽裕 */
 @media (min-width: 1280px) {
     .container.extended {
         --left-sidebar-max-width: 10%;
@@ -53,7 +509,60 @@
     }
 }
 
-/* 三个垂直分区之间间隔 10px */
 .container.extended {
     gap: 10px;
+}
+
+/* ---------- 15. 回到顶部按钮（如果主题有）平滑 ---------- */
+.back-to-top {
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+/* ---------- 16. 移动端触摸目标增强 ---------- */
+@media (max-width: 768px) {
+    .menu-social a,
+    .menu a {
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .highlight pre {
+        padding: 0.8em 0.7em;
+        font-size: 0.88em;
+    }
+}
+
+/* ---------- 17. 滚动条美化（Webkit） ---------- */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 999px;
+    border: 2px solid var(--body-background);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--brand-primary);
+}
+
+::-webkit-scrollbar-track {
+    background: var(--body-background);
+}
+
+/* ---------- 18. section-card / not-found-card 圆角 ---------- */
+.section-card,
+.not-found-card {
+    border-radius: var(--card-border-radius);
+    box-shadow: var(--shadow-l1);
+    transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+/* ---------- 19. 选择文本颜色 ---------- */
+::selection {
+    background-color: rgba(42, 107, 90, 0.25);
+    color: var(--card-text-color-main);
 }
