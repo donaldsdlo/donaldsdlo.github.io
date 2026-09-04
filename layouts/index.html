@@ -3,9 +3,9 @@
     {{ $filtered := where $pages "Params.hidden" "!=" true }}
     {{ $pag := .Paginate ($filtered) }}
 
-    <section class="article-list">
+    <section class="article-list--compact">
         {{ range $index, $element := $pag.Pages }}
-            {{ partial "article-list/default" . }}
+            {{ partial "article-list/compact" . }}
         {{ end }}
     </section>
 

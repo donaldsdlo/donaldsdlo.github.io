@@ -4,6 +4,11 @@
       - 阅读进度条
       - 主题切换平滑过渡
       - 入场动效
+        - 主页（卡片式 .article-list）：依赖 CSS keyframes page-fade-in，
+          不再在 JS 中强行改 style，避免与卡片 hover transform 打架。
+        - 紧凑列表（.article-list--compact，如 /tools/、/tags/、/archives/）：
+          走 staggered fadeIn。
+        - section-card / widget / not-found-card：全局 CSS 已统一淡入，不再 JS 重复做。
 */}}
 <script>
 (function() {
@@ -60,15 +65,15 @@
   }
 
   // ---------- 入场动效 ----------
+  // 只对紧凑列表生效：卡片式列表（主页）由 CSS keyframes page-fade-in 处理
   function initEntrance() {
-    var articleSelectors = '.article-list article, .article-list--compact article, .widget, .section-card, .not-found-card';
-    var elements = document.querySelectorAll(articleSelectors);
+    var elements = document.querySelectorAll('.article-list--compact article');
     if (!elements.length) return;
 
     elements.forEach(function(el, idx) {
       el.style.opacity = '0';
-      el.style.transform = 'translateY(8px)';
-      el.style.transition = 'opacity 0.4s ease ' + Math.min(idx * 0.04, 0.4) + 's, transform 0.4s ease ' + Math.min(idx * 0.04, 0.4) + 's';
+      el.style.transform = 'translateY(6px)';
+      el.style.transition = 'opacity 0.35s ease ' + Math.min(idx * 0.05, 0.4) + 's, transform 0.35s ease ' + Math.min(idx * 0.05, 0.4) + 's';
     });
 
     requestAnimationFrame(function() {

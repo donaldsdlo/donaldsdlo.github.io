@@ -158,16 +158,8 @@ a:hover {
     background-image: linear-gradient(transparent calc(100% - 1px), rgba(var(--link-background-color), var(--link-background-opacity-hover)) calc(100% - 1px));
 }
 
-/* ---------- 6. 文章列表卡片：悬停上浮 ---------- */
-.article-list article {
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-
-.article-list article:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-l2);
-}
-
+/* ---------- 6. 文章列表（紧凑 / 卡片共用）：悬停微反馈 ---------- */
+/* 主页与 Tools section 都用 .article-list--compact，统一定义在这里 */
 .article-list--compact article {
     transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
     border-radius: 8px;
@@ -177,6 +169,16 @@ a:hover {
     transform: translateX(2px);
     box-shadow: var(--shadow-l1);
     background-color: var(--brand-soft);
+}
+
+/* 兼容保留旧的 .article-list 类（万一某页面还在用）*/
+.article-list article {
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.article-list article:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-l2);
 }
 
 /* ---------- 7. 代码块：圆角 + 行号条 + 顶部留白 ---------- */
@@ -383,15 +385,11 @@ pre code,
     color: var(--accent-color);
 }
 
-/* ---------- 12. 页面淡入 ---------- */
-@keyframes page-fade-in {
-    from { opacity: 0; transform: translateY(6px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-main.main {
-    animation: page-fade-in 0.4s ease-out;
-}
+/* ---------- 12. 入场动效 ----------
+   已统一由 partials/footer/components/custom.html 里的 initEntrance() 处理
+   （仅作用于 .article-list--compact article，staggered fadeIn）。
+   不再在 CSS 写 keyframes，以避免与 JS 注入的 transition 叠加产生双层动画。
+*/
 
 /* ---------- 13. 404 终端风格 ---------- */
 .not-found-card {
@@ -565,4 +563,104 @@ main.main {
 ::selection {
     background-color: rgba(42, 107, 90, 0.25);
     color: var(--card-text-color-main);
+}
+
+/* ---------- 20. 分页器美化 ---------- */
+/* 视觉层级：当前页 = 品牌色实心胶囊；其他 = 透明 + 浅背景 hover；箭头 = 圆形按钮 */
+.pagination {
+    background-color: var(--card-background);
+    border-radius: var(--card-border-radius);
+    box-shadow: var(--shadow-l1);
+    padding: 6px;
+    gap: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pagination .page-link {
+    flex: 0 0 auto;
+    min-width: 40px;
+    height: 40px;
+    padding: 0 12px;
+    border-radius: 8px;
+    color: var(--card-text-color-secondary);
+    font-weight: 500;
+    font-size: 0.95em;
+    transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.pagination .page-link:not(.pagination-link):not(.disabled) {
+    cursor: pointer;
+}
+
+.pagination .page-link:hover:not(.current):not(.pagination-link):not(.disabled) {
+    background-color: var(--brand-soft);
+    color: var(--brand-primary-darker);
+    transform: translateY(-1px);
+}
+
+[data-scheme="dark"] .pagination .page-link:hover:not(.current):not(.pagination-link):not(.disabled) {
+    color: #b9e4d3;
+}
+
+/* 当前页：品牌色实心 */
+.pagination .page-link.current {
+    background: linear-gradient(135deg, var(--brand-primary), var(--brand-primary-lighter));
+    color: var(--accent-color-text);
+    font-weight: 600;
+    box-shadow: 0 2px 6px rgba(42, 107, 90, 0.30);
+    cursor: default;
+}
+
+[data-scheme="dark"] .pagination .page-link.current {
+    box-shadow: 0 2px 8px rgba(79, 168, 142, 0.40);
+}
+
+/* 省略号：纯文字，不用品牌色 */
+.pagination .page-link.pagination-link {
+    min-width: 28px;
+    padding: 0 6px;
+    color: var(--card-text-color-tertiary);
+    cursor: default;
+}
+
+/* 箭头按钮：圆形 + 独立背景 */
+.pagination .page-link[aria-label="Previous page"],
+.pagination .page-link[aria-label="Next page"] {
+    flex: 0 0 40px;
+    min-width: 40px;
+    padding: 0;
+    background-color: transparent;
+}
+
+.pagination .page-link[aria-label="Previous page"]:hover:not(.disabled),
+.pagination .page-link[aria-label="Next page"]:hover:not(.disabled) {
+    background-color: var(--brand-soft);
+    color: var(--brand-primary-darker);
+}
+
+[data-scheme="dark"] .pagination .page-link[aria-label="Previous page"]:hover:not(.disabled),
+[data-scheme="dark"] .pagination .page-link[aria-label="Next page"]:hover:not(.disabled) {
+    color: #b9e4d3;
+}
+
+/* 禁用箭头：保留占位但视觉弱化 */
+.pagination .page-link.disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+/* 移动端分页：分页条铺满，按钮可压缩 */
+@media (max-width: 480px) {
+    .pagination {
+        padding: 4px;
+        gap: 2px;
+    }
+    .pagination .page-link {
+        min-width: 34px;
+        height: 36px;
+        padding: 0 8px;
+        font-size: 0.9em;
+    }
 }
