@@ -1,3 +1,6 @@
+:PROPERTIES:
+:ID:       e5505eb3-73b3-463c-b2ae-b44aeef7d885
+:END:
 #+TITLE: 霞光万道
 #+HUGO_TAGS: 生活
 #+CATEGORIES: 生活
