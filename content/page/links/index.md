@@ -9,6 +9,10 @@ links:
     description: TypeScript is a typed superset of JavaScript that compiles to plain JavaScript.
     website: https://www.typescriptlang.org
     image: ts-logo-128.jpg
+  - title: RSS 订阅
+    description: 通过 RSS 阅读器订阅「魔数技巧」的全部文章（全文输出）。
+    website: https://donaldsdlo.github.io/index.xml
+    image: rss.svg
 menu:
     main: 
         weight: 930
