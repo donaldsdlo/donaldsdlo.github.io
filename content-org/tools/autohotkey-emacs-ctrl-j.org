@@ -1,0 +1,169 @@
+#+TITLE: Autohotkey & Emacs Evil Ctrl-j/Ctrl-k
+#+HUGO_TAGS: Emacs autohotkey
+#+CATEGORIES: Emacs
+#+DATE: 2026-10-12
+#+AUTHOR: Donald Lo
+#+HUGO_SECTION: tools
+#+HUGO_BASE_DIR: ../../
+#+OPTIONS: line-break:t
+#+HUGO_AUTO_SET_LASTMOD: t
+#+DRAFT: false
+#+HUGO_DRAFT: false
+#+hugo_front_matter_format: yaml
+#+STARTUP: latexpreview
+#+STARTUP: inlineimages
+
+* 引言：肌肉记忆的代价
+
+我在 Emacs 里用 evil 模式，时间一长养成了一个反射：光标和选项的上下移动，
+全靠 =Ctrl-j= 和 =Ctrl-k= 。好处是手不用离开主键区，坏处是这双手不会随程序
+切换而自动重置。在浏览器地址栏翻历史、在文件选择对话框里挑文件、在终端里
+回看上一条命令时，手指照样去敲 =C-j= / =C-k= ，结果要么什么都没发生，要么
+触发了完全不相关的动作。真正麻烦的不是「忘了切换」，而是肌肉记忆根本不听
+大脑的——它只认按键。
+
+* 一个看似合理的错误解法
+
+最直接的想法，是把 =C-j= 全局映射成 =Down= 、 =C-k= 全局映射成 =Up= 。
+写起来一行就够，看起来一劳永逸。但这个「一劳永逸」恰恰在最不该出错的地方
+出错：Emacs 自己。在 Emacs 里， =C-j= 和 =C-k= 都有原生语义——普通模式下
+=C-k= 是 =kill-line= （删到行尾），插入状态下 =C-j= 往往等价于 =next-line= 。
+一旦全局重映射生效，你在 Emacs 里按 =C-k= 就变成了「上移一行」而不是
+「删到行尾」，日常工作直接被打断。全局重映射的代价，就是它把你待得最久的
+程序也一起改掉了。
+
+#+BEGIN_QUOTE
+核心判断：把肌肉记忆迁移到别的程序，前提是不能动那些本来就用这些键的程序。
+判定条件只有一条——前台窗口是不是 Emacs。
+#+END_QUOTE
+
+* 概念：让快捷键「看人下菜」
+
+所以真正的需求不是「全局改写」，而是「识别当前程序、只在该程序没有自己的
+键位约定时再改写」。AutoHotkey v2 用 =#HotIf= 把同一组热键切成不同语境。
+我们写一个判断函数 =InEmacs()= ，再用 =#HotIf InEmacs()= 和
+=#HotIf !InEmacs()= 把两套映射隔开：
+
+- *Emacs 在前台* ： =C-j= / =C-k= 一个都不碰，Emacs 收到的永远是物理按键本身；
+  额外把 =Win+Space= 绑到 =C-\= （ =toggle-input-method= ），用来切换 Emacs 中的输入法，而不切换 Windows 系统的输入法。
+- *其它程序在前台* ：才把 =C-j= 翻译成 =Down= 、 =C-k= 翻译成 =Up= 。
+
+判断函数本身踩过两个坑，写在这里是为了让你别再掉进去：
+
+1. *别用 WinGetActive()* 。在 AHK v2.0.30 下它会被当成未赋值的全局变量，
+   调用即抛异常 "This global variable has not been assigned a value."。换成
+   返回布尔、不抛错的 =WinActive("ahk_exe emacs.exe")= 。
+2. *ahk_exe 不支持通配符* 。 =emacs*.exe= 、 =*emacs*.exe= 全部匹配失败，
+   只有精确写 =emacs.exe= 才命中。版本化可执行文件或 =emacsclient.exe= 要覆盖，
+   就老老实实在在 =InEmacs()= 里追加精确名称。
+
+* 安装：用 scoop
+
+AutoHotkey v2 在 scoop 的 =extras= 桶里，名字就叫 =autohotkey= （当前为 2.0.x）。
+先加桶再装：
+
+#+begin_src bash
+scoop bucket add extras
+scoop install autohotkey
+#+end_src
+
+装完后用 =ahk --version= 或右键一个 =.ahk= 文件确认是 v2 即可（脚本顶部也用
+=#Requires AutoHotkey v2.0= 强制校验版本）。接下来把脚本存成
+=map_shortcut.ahk= ，双击就能运行。
+
+* 脚本全文
+
+下面就是完整脚本，注释里保留了上面提到的两个坑。
+
+#+begin_src ahk
+;=============================================================================
+; map_shortcut.ahk
+;
+; 把 Emacs 的 C-j / C-k 肌肉记忆带到其他程序，同时不打扰 Emacs 自身。
+;
+;   emacs.exe 前台:  C-j → C-j (原生 next-line)
+;                     C-k → C-k (原生 kill-line)
+;                     Win+Space → C-\  (point-other-window)
+;
+;   其他程序前台:      C-j → Down
+;                     C-k → Up
+;
+; Requires AutoHotkey v2.0
+;=============================================================================
+#Requires AutoHotkey v2.0
+#SingleInstance Force
+#WinActivateForce
+;----------------------------------------------------------------------------
+; 1. Emacs 窗口内: 只接管 Win+Space，C-j / C-k 保持原生。
+;    脚本不做任何全局重定义，Emacs 收到的永远是物理按键本身。
+;----------------------------------------------------------------------------
+#HotIf InEmacs()
+#Space::SendEvent("^\")
+#HotIf
+;----------------------------------------------------------------------------
+; 2. 非 Emacs 窗口: C-j 下移一行，C-k 上移一行。
+;    刻意不加 $ 前缀 —— 加了会把按键穿透给目标程序，两个效果会同时触发。
+;----------------------------------------------------------------------------
+#HotIf !InEmacs()
+^j::Down
+^k::Up
+#HotIf
+;----------------------------------------------------------------------------
+; 判断前台窗口是否属于 Emacs。
+;
+; 用 WinActive + ahk_exe 精确匹配，而不是 WinGetActive() 或通配符。
+;
+; 两个实测踩过的坑（AHK v2.0.30 + #Warn All, StdOut 验证）：
+;
+;   a) WinGetActive() 在此版本被解析成未赋值的全局变量，调用即抛异常
+;      "This global variable has not been assigned a value."。
+;      它不是可靠的函数，改用返回 0/false 而不抛异常的 WinActive()。
+;
+;   b) ahk_exe 不支持通配符。实测 "emacs*.exe" / "emacs*" / "*emacs*.exe"
+;      全部匹配失败，而精确的 "emacs.exe" 正常命中。
+;      所以这里必须写全 ".exe"，不能图省事写 "emacs*"。
+;
+; 若要一并覆盖 emacsclient / 版本化可执行文件，在此追加精确名称即可，
+; 例如: WinActive("ahk_exe emacs.exe") || WinActive("ahk_exe emacsclient.exe")
+;----------------------------------------------------------------------------
+InEmacs() {
+    return WinActive("ahk_exe emacs.exe")
+}
+#+end_src
+
+注意第 2 段刻意 *没有* 加 =$= 前缀。 =$^j= 会让 AHK 先把 =C-j= 穿透给目标程序，
+再补发一次 =Down= ，两个效果同时触发，光标会跳两行。不加 =$= 时 AHK 直接吞掉
+原键、只发 =Down= ，行为才干净。
+
+* 开机自动加载
+
+要让映射在登录后自动生效，最省事的办法是放进「启动」文件夹。按 =Win+R=
+输入下面命令打开它，把脚本或其快捷方式丢进去即可——AHK 装好后系统已把
+=.ahk= 关联给解释器，双击即运行，放快捷方式还能避免误改源文件：
+
+#+begin_src bash
+shell:startup
+#+end_src
+
+一个细节：若你的 Emacs 以管理员权限运行，脚本也得用管理员身份启动，否则
+AHK 注入不进 elevated 窗口，检测会失灵。需要的话把快捷方式的高级属性里
+「用管理员身份运行」勾上即可。
+
+* 失效边界与注意事项
+
+这套方案有两个明显边界，知道它们你才不会在出问题时瞎调：
+
+- *检测依赖前台进程的 =.exe= 名字* 。如果你用 WSL 或 Windows Terminal 跑
+  Emacs，前台 =.exe= 是 =wslhost.exe= / =WindowsTerminal.exe= 而不是
+  =emacs.exe= ， =InEmacs()= 会判定失败，映射错误地套用到 Emacs 上。解决方法是
+  把对应精确名称加进 =InEmacs()= 的 =WinActive= 列表。
+- *部分程序会抢在 AHK 之前吞键* 。典型如某些 Electron 应用，它们自己消费了
+  =C-j= / =C-k= ，AHK 根本没机会触发。这种情况只能改该程序的原生快捷键，
+  脚本帮不上忙。
+
+* 小结
+
+把一套肌肉记忆带出 Emacs，重点不在「映射」本身，而在「识别」。只有先判定
+当前程序、只在它没自己约定时才改写，迁移才不会反噬你最常用的编辑器。配合
+scoop 安装与启动文件夹自启，这套 =C-j= / =C-k= 的习惯就能在 Emacs 之外也
+顺手起效，而 Emacs 里那两个键始终是你熟悉的原生行为。
