@@ -6199,3 +6199,304 @@ wsl --export Arch D:\backups\arch-backup.tar
 # 导入 WSL 发行版（恢复或迁移到新位置）
 wsl --import Arch D:\WSL\Arch D:\backups\arch-backup.tar
 #+end_src
+
+* Ollama-本地大模型运行环境
+
+=Ollama= 是把大语言模型跑在本机的运行时：一条命令下载模型，一条命令开始对话，同时在 =http://localhost:11434= 上提供一个稳定的 =REST= 接口。模型权重全程留在本机，断网也能用，也不会把对话内容送到别人的服务器上。
+
+** 为什么用 Ollama
+
+本机跑模型有三条常见路线，差别主要在界面形态和模型来源：
+
+| 方案       | 界面             | 模型来源                       | 本地 API                 | 适合谁                             |
+|------------+------------------+--------------------------------+--------------------------+------------------------------------|
+| Ollama     | 托盘图标 + 命令行 | 官方模型库，标签已经打包好     | 是，=localhost:11434=    | 习惯命令行、想接进自己工具的开发者 |
+| LM Studio  | 完整图形界面     | 应用内搜索 Hugging Face        | 是，需要手动开本地服务器 | 不想碰终端的用户                   |
+| llama.cpp  | 命令行           | 自己找 =GGUF= 权重文件         | 需要自己编译并起服务     | 想抠推理细节的人                   |
+| 云端 API   | 无需本地安装     | 服务商提供                     | 否                       | 不介意联网、按量付费的场景         |
+
+=Ollama= 的核心价值有三点：权重不出本机、断网可用、对外暴露一个稳定的 =REST= 接口，任何能发 =HTTP= 请求的工具都能接进来。
+
+有一点要注意：=Ollama= 和 =LM Studio= 各存一份权重，同一个模型在两边各下载一次，磁盘占用是翻倍的，选定一个主力工具更划算。
+
+** 安装 Ollama
+
+*** 系统要求
+
+- =Windows 10 22H2= 或更高版本，Home 与 Pro 均可
+- 使用 =NVIDIA= 显卡时驱动不低于 =452.39= ，=AMD Radeon= 需要安装最新驱动
+- 磁盘：程序本体约 4GB，模型权重另算（体积见下面的选型表）
+
+*** 方式一：官方安装器（推荐）
+
+直接用命令行安装：
+
+#+begin_src powershell :exports code
+irm https://ollama.com/install.ps1 | iex
+#+end_src
+
+如果已经下载了安装包，可以在安装时指定目录：
+
+#+begin_src powershell :exports code
+OllamaSetup.exe /DIR="D:\Programs\Ollama"
+#+end_src
+
+安装器不需要管理员权限，默认装在当前用户目录下，装完会自动后台运行，托盘区出现羊驼图标：
+
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
+[[file:../../static/images/dev-envs.org/2026-10-25_09-00-00_ollama-tray-icon.png]]
+
+*** 方式二：scoop（只有命令行）
+
+#+begin_src powershell :exports code
+scoop install ollama
+#+end_src
+
+本文其他软件基本都用 =scoop= 安装，但 =Ollama= 建议用官方安装器，原因是 scoop 版本只提供命令行程序：没有托盘图标、不会随系统后台启动，每次用之前要自己开一个窗口执行 =ollama serve= ，否则命令会报连不上服务。而本文后面的模型目录迁移、驻留策略，都建立在"后台有一个常驻服务"这个前提上。
+
+*** 验证安装
+
+#+begin_src powershell :exports code
+ollama --version
+
+ollama list
+#+end_src
+
+=ollama list= 输出一个空列表而不是报错，就说明服务端已经正常工作。如果提示命令不存在，关掉当前终端重开一个再试。
+
+** 把模型目录迁到 D 盘
+
+=Ollama= 默认把权重放在 =C:\Users\<用户名>\.ollama\models= 。一个 8B 的量化模型大约 5GB，下三四个模型 C 盘就吃紧了，所以装完第一件事是把权重目录挪走。
+
+第一步，设置用户级环境变量 =OLLAMA_MODELS= 。命令方式：
+
+#+begin_src powershell :exports code
+[Environment]::SetEnvironmentVariable("OLLAMA_MODELS", "D:\Ollama\Models", "User")
+#+end_src
+
+图形界面方式：打开设置搜索"环境变量"，点"编辑账户环境变量"，新建变量 =OLLAMA_MODELS= ，值填 =D:\Ollama\Models= 。
+
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
+[[file:../../static/images/dev-envs.org/2026-10-25_09-05-00_ollama-models-env-var.png]]
+
+第二步，*完全退出 Ollama*。右键托盘图标选 Quit。如果之前已经下过模型，趁现在把旧目录里的 =manifests= 和 =blobs= 两个文件夹剪到新目录。
+
+第三步，从开始菜单重新启动 =Ollama= 。环境变量是服务启动时读取的，不重启就还是往 C 盘写——这是整个配置过程里最容易踩的坑。
+
+第四步，验证。拉一个 270MB 的小模型，确认文件真的落在 D 盘：
+
+#+begin_src powershell :exports code
+ollama pull gemma3:270m
+ollama list
+#+end_src
+
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
+[[file:../../static/images/dev-envs.org/2026-10-25_09-10-00_ollama-list.png]]
+
+** 模型选型：按显存分档
+
+选模型只有一个硬指标：权重加上上下文开销要塞得进显存（纯 CPU 推理时是内存）。下面按档位给出可用标签，磁盘体积是 2026-09-29 从官方 registry 实测的下载大小，实际使用再预留 20%~30% 给上下文。
+
+| 硬件档位                  | 首选标签       | 磁盘占用 | 备选标签                                            |
+|---------------------------+----------------+----------+-----------------------------------------------------|
+| 核显 / 纯 CPU，16GB 内存   | =qwen3:1.7b=   | 1.4GB    | =gemma3:1b=（0.8GB）、=qwen3:4b=（2.5GB，纯 CPU 偏慢） |
+| 6~8GB 显存                | =qwen3:8b=     | 5.2GB    | =qwen3:4b=（2.5GB）、=gemma3:4b=（3.3GB）             |
+| 12~16GB 显存              | =qwen3:14b=    | 9.3GB    | =gemma3:12b=（8.1GB）、=gpt-oss:20b=（13.8GB）        |
+| 24GB 显存以上             | =qwen3:32b=    | 20.2GB   | =gemma3:27b=（17.4GB）、=qwen3-coder:30b=（18.6GB）   |
+
+关于这张表，有四点补充：
+
+- *标签会过时，档位不会*。=gemma3= 到 =gemma4= 、=qwen3= 到 =qwen3.5= 与 =qwen3.6= ，一年内迭代了好几代。上表真正要记住的是"档位 + 体积"的判断方法，某个标签下架时换成同档位的新名字即可。
+- *量化*。默认下载的大多是 =Q4_K_M= ，但不保证，用 =ollama show qwen3:8b= 可以看到你实际下到的是哪一种。=Q8= 体积翻倍而质量提升有限，本地场景 =Q4= 就够用。
+- *嵌入模型是另一类东西*。做本地检索、=RAG= 用的不是聊天模型，而是只做向量化的嵌入模型，=nomic-embed-text= 只有 274MB，另有 =qwen3-embedding:4b= 可选。
+- *许可证要看一眼*。=ollama show= 会打印许可证；=Qwen= 系列是 =Apache 2.0= ，而 =Gemma= 与 =Llama= 用的是带使用限制的自定义许可，商用之前先读清楚。
+
+** 常用命令
+
+#+begin_src powershell :exports code
+ollama run qwen3:4b      # 首次会自动拉取，然后进入交互；输入 /bye 退出
+ollama pull qwen3:8b     # 只下载，不进入交互
+ollama list              # 本地已下载的模型
+ollama ps                # 当前驻留在内存/显存里的模型
+ollama show qwen3:8b     # 查看参数、量化、上下文窗口与提示词模板
+ollama stop qwen3:8b     # 立即卸载模型，释放显存
+ollama rm qwen3:8b       # 删除模型，释放磁盘
+ollama cp qwen3:4b my-qwen  # 复制一份，用于自定义
+#+end_src
+
+=ollama ps= 的 =Processor= 列直接告诉你模型跑在什么上面，这是判断"到底有没有用上显卡"最快的方法：
+
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
+[[file:../../static/images/dev-envs.org/2026-10-25_09-15-00_ollama-ps-processor.png]]
+
+交互模式下的斜杠命令：
+
+| 命令                          | 作用                       |
+|-------------------------------+----------------------------|
+| =/bye=                        | 退出对话                   |
+| =/set parameter num_ctx 8192= | 临时改上下文窗口           |
+| =/set parameter temperature 0.7= | 临时改采样温度           |
+| =/show=                       | 查看当前模型的信息         |
+| =/?=                          | 列出所有可用命令           |
+
+想知道模型在你机器上到底有多快，加上 =--verbose= ，看输出的 =eval rate= ：
+
+#+begin_src powershell :exports code
+ollama run qwen3:4b "用一句话解释什么是索引" --verbose
+#+end_src
+
+低于大约 15 tokens/s 就说明这个规格对你的机器偏大了，降一档体验会好很多。
+
+** 常用环境变量
+
+| 变量                      | 默认值                                | 建议                       | 作用                                                                     |
+|---------------------------+---------------------------------------+----------------------------+--------------------------------------------------------------------------|
+| =OLLAMA_HOST=             | =127.0.0.1:11434=                     | 保持默认                   | 监听地址；改成 =0.0.0.0:11434= 会暴露到局域网，需同时配置防火墙         |
+| =OLLAMA_MODELS=           | =%USERPROFILE%\.ollama\models=         | 迁到 D 盘                  | 权重目录                                                                 |
+| =OLLAMA_KEEP_ALIVE=       | =5m=                                  | 内存紧张改 =2m= ，常驻改 =-1= | 模型空闲多久后卸载                                                   |
+| =OLLAMA_CONTEXT_LENGTH=   | =4096=                                | 长文档改 =8192=            | 上下文窗口；调大后显存开销线性增加                                     |
+| =OLLAMA_NUM_PARALLEL=     | =1=                                   | 显存紧张时保持 1           | 单个模型处理的并发请求数，显存占用按"并发数 × 上下文"增长              |
+| =OLLAMA_MAX_LOADED_MODELS= | =3 × GPU 数量=（CPU 推理时为 3）      | 显存小就设 1               | 同时加载的模型数量                                                       |
+| =OLLAMA_FLASH_ATTENTION=  | 自动                                  | 一般不用管                 | 强制开启或关闭 Flash Attention                                          |
+| =OLLAMA_DEBUG=            | =0=                                   | 排错时设 =1=               | 调试日志                                                                 |
+
+改完同样要退出托盘图标再重启才生效。日志文件在 =%LOCALAPPDATA%\Ollama= 下：=server.log= 是服务端日志，=app.log= 是图形界面日志，=upgrade.log= 记录升级过程，排错时第一个看 =server.log= 。
+
+** 通过 REST API 调用
+
+=PowerShell= 下用 =Invoke-RestMethod= 最干净，注意要显式指定 =ContentType= ：
+
+#+begin_src powershell :exports code
+$body = @{
+    model  = "qwen3:4b"
+    prompt = "为什么天空是蓝色的？"
+    stream = $false
+} | ConvertTo-Json
+
+(Invoke-RestMethod -Method Post -Uri "http://localhost:11434/api/generate" `
+    -Body $body -ContentType "application/json").response
+#+end_src
+
+用 =curl= 时注意：=PowerShell= 里的 =curl= 是 =Invoke-WebRequest= 的别名，行为不一样，要写全 =curl.exe= ：
+
+#+begin_src bash :exports code
+curl.exe -s http://localhost:11434/api/chat -d '{
+  "model": "qwen3:4b",
+  "messages": [{"role": "user", "content": "为什么天空是蓝色的？"}],
+  "stream": false
+}'
+#+end_src
+
+=Python= 下直接用 =requests= 就行：
+
+#+begin_src python :exports code
+import requests
+
+resp = requests.post(
+    "http://localhost:11434/api/chat",
+    json={
+        "model": "qwen3:4b",
+        "messages": [{"role": "user", "content": "为什么天空是蓝色的？"}],
+        "stream": False,
+    },
+)
+print(resp.json()["message"]["content"])
+#+end_src
+
+两个端点要分清：=/api/generate= 是单轮，传 =prompt= 字符串；=/api/chat= 是多轮，传 =messages= 数组。两个端点的 =stream= 默认都是 =true= ，脚本里要显式关掉，否则拿到的是一串 =NDJSON= 而不是一个 =JSON= 。
+
+如果想让局域网里别的机器（比如手机、另一台电脑）也能访问，把 =OLLAMA_HOST= 设成 =0.0.0.0:11434= ，并在 Windows 防火墙里放行 11434 端口。注意这意味着本机模型对局域网内所有人开放，只在可信网络里这么做。
+
+** 接入其他工具
+
+以下都假定 =Ollama= 已经在本机 =11434= 端口正常运行。
+
+*** Emacs：gptel
+
+=gptel= 是 Emacs 里最轻量的 =LLM= 客户端，把本地 =Ollama= 注册成一个后端即可：
+
+#+begin_src emacs-lisp :exports code
+;; Register the local Ollama server as a gptel backend.
+(use-package gptel
+  :straight t
+  :config
+  (setq gptel-backend
+        (gptel-make-ollama "Ollama"
+          :host "localhost:11434"
+          :stream t
+          :models '(qwen3:8b qwen3:4b gemma3:4b)))
+  (setq gptel-model 'qwen3:8b))
+#+end_src
+
+使用时 =M-x gptel= 打开会话 buffer，写好提示后按 =C-c C-c= 发送；=C-u M-x gptel= 可以在打开时临时换后端和模型。选中一段文字后 =M-x gptel-send= 会把它作为上下文一起提交，用来改写、翻译选区很顺手。
+
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
+[[file:../../static/images/dev-envs.org/2026-10-25_09-20-00_ollama-gptel.png]]
+
+如果需要开箱即用的摘要、改写、翻译这类固定命令，可以看 =ellama= ，它依赖 =llm= 这个底层库，用同样的方式指向本地 =Ollama= ：
+
+#+begin_src emacs-lisp :exports code
+;; Point ellama at the local Ollama server.
+(use-package ellama
+  :straight t
+  :init
+  (setq ellama-provider
+        (make-llm-ollama
+         :chat-model "qwen3:8b"
+         :embedding-model "nomic-embed-text")))
+#+end_src
+
+*** Open Web UI（Docker）
+
+想要一个浏览器里的聊天界面，可以用 =Open Web UI= 。一条命令启动：
+
+#+begin_src powershell :exports code
+docker run -d -p 3000:8080 `
+  --add-host=host.docker.internal:host-gateway `
+  -e OLLAMA_BASE_URL=http://host.docker.internal:11434 `
+  -v open-webui:/app/backend/data `
+  --name open-webui ghcr.io/open-webui/open-webui:main
+#+end_src
+
+关键在 =OLLAMA_BASE_URL= 这一行：容器里的 =localhost= 指的是容器自己，要访问宿主机上的 =Ollama= 必须用 =host.docker.internal= ，这个域名靠 =--add-host= 那一行映射。之后浏览器打开 =http://localhost:3000= 即可。
+
+#+ATTR_ORG: :width 800
+#+ATTR_HTML: :width 90%
+[[file:../../static/images/dev-envs.org/2026-10-25_09-25-00_ollama-open-webui.png]]
+
+*** VS Code：Continue
+
+=Continue= 原生支持 =Ollama= ，编辑 =C:\Users\<用户名>\.continue\config.json= ，在 =models= 里加一项：
+
+#+begin_src json :exports code
+{
+  "models": [
+    {
+      "title": "Qwen3 8B (local)",
+      "provider": "ollama",
+      "model": "qwen3:8b"
+    }
+  ]
+}
+#+end_src
+
+=Cline= 的设置方式类似：provider 选 =Ollama= ，Base URL 填 =http://localhost:11434= 即可。
+
+** 排错
+
+- *输入 =ollama= 提示不是可识别的命令*：安装程序已经把路径写进用户 PATH，但当前终端窗口读的是旧的。关掉终端重开一个；还不行就注销或重启一次系统。
+- *改了 =OLLAMA_MODELS= ，模型还是下到 C 盘*：托盘图标没退出重启。环境变量在服务启动时读取，Quit 之后从开始菜单重新打开才生效。
+- *命令能执行但提示连不上服务*：多半用的是 scoop 版，没有后台服务。开一个窗口执行 =ollama serve= ，或者换回官方安装器。
+- *慢得离谱*：先看 =ollama ps= 的 =Processor= 列是不是 100% CPU。有 =NVIDIA= 显卡却没跑在 GPU 上，=nvidia-smi= 确认驱动版本是否不低于 =452.39= 。
+- *11434 端口被占用*：=netstat -ano | findstr :11434= 找到 PID，再到任务管理器里结束对应进程。
+- *进度条显示成一串方块*：=Ollama= 用 Unicode 字符做进度指示，把终端字体换成 Maple Mono NF CN 之类的 Nerd Font 就好了（见"字体"章节）。
+- *下载中断或极慢*：=ollama pull= 支持断点续传，重新执行即可，不要手动去删 =blobs= 目录。
+
+** 卸载与清理
+
+在"设置 → 已安装的应用"里卸载 =Ollama= 即可。有一点要注意：*卸载程序不会删除 =OLLAMA_MODELS= 指向的模型*，如果你迁移过目录，那几个 GB 到几十 GB 的权重需要自己手动删掉——对当初就是为了腾 C 盘而折腾的读者来说，这一步别忘了。
