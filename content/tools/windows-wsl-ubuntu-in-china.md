@@ -1,0 +1,166 @@
+---
+title: "从阿里云镜像安装最新版 Ubuntu WSL 并更换国内源"
+author: ["Donald Lo"]
+date: 2026-10-29
+lastmod: 2026-10-30T08:17:02+08:00
+tags: ["WSL", "Ubuntu"]
+draft: false
+---
+
+<div class="ox-hugo-toc toc">
+
+<div class="heading">Table of Contents</div>
+
+- [挑选镜像版本](#挑选镜像版本)
+- [下载镜像并校验](#下载镜像并校验)
+- [导入到指定目录](#导入到指定目录)
+- [创建普通用户并设为默认](#创建普通用户并设为默认)
+- [更换国内源](#更换国内源)
+
+</div>
+<!--endtoc-->
+
+在 Windows 上装 Linux，WSL 比虚拟机省事：不用分配固定内存，可以和 Windows 共享磁盘。麻烦在于两点：微软商店的下载速度不稳定，以及装好之后系统源默认指向官方服务器，apt 更新和装软件都很慢。用国内镜像站下载安装包，再换上国内源，这两个问题都能解决。
+
+这篇文章记录完整过程：从阿里云镜像挑选最新版 Ubuntu WSL 镜像，下载后导入到指定目录，最后把系统源换成国内源。
+
+
+## 挑选镜像版本 {#挑选镜像版本}
+
+打开 <https://mirrors.aliyun.com/ubuntu-cdimage/ubuntu-wsl/> ，看到的不是「Ubuntu 24.04」这样的版本号，而是三个按代号命名的目录：
+
+| 代号     | 版本               | 性质   |
+|--------|------------------|------|
+| noble    | 24.04 LTS          | 长期支持版 |
+| resolute | 26.04 LTS（26.04.1） | 长期支持版 |
+| stonking | 26.10（26.10 正式版） | 最新的过渡版 |
+
+代号和版本的对应关系来自 Ubuntu 官方的发布名：26.10 的代号是 stonking，26.04.1 LTS 的代号是 resolute。镜像站按代号归档，不按版本号，所以挑版本就是挑目录。
+
+最新版是 stonking（26.10）。想要更稳定的日常环境，选 resolute（26.04 LTS），它的镜像仍在每日更新。两者的目录结构和后续操作完全相同，把命令里的 stonking 换成 resolute 即可。
+
+进入任一目录，都是 `daily-live/current/` 一层，里面有 amd64 和 arm64 两种架构的 `.wsl` 安装包、校验文件和 manifest：
+
+```text
+stonking/
+`-- daily-live/
+    `-- current/
+        |-- stonking-wsl-amd64.wsl
+        |-- stonking-wsl-arm64.wsl
+        |-- SHA256SUMS
+        `-- stonking-wsl-amd64.manifest
+```
+
+amd64 对应常见的 x86 电脑；装了 ARM 版 Windows 的机器选 arm64。=current= 始终指向最新一次构建，每次更新后校验值也会跟着变；想固定版本，就进到具体日期目录（例如 =20261010/=）下载，链接和文件内容就不再变化。
+
+
+## 下载镜像并校验 {#下载镜像并校验}
+
+在 Windows 的 PowerShell 里下载（也可以直接用浏览器），amd64 安装包约 420 MB：
+
+```powershell
+wsl --version
+```
+
+先确认本机 WSL 已安装且版本较新。下载：
+
+```powershell
+wget https://mirrors.aliyun.com/ubuntu-cdimage/ubuntu-wsl/stonking/daily-live/20261010/stonking-wsl-amd64.wsl
+```
+
+下载完成后核对校验值。Windows 自带的 certutil 就能算 SHA256，不依赖其他工具：
+
+```powershell
+certutil -hashfile stonking-wsl-amd64.wsl SHA256
+```
+
+输出应与镜像目录里 SHA256SUMS 文件记录的值一致（该次构建为 `6c4d4affa03efa4c55ce0411242a2d28c0a8682ed3e5c30b3169ddb397777bff` ，换日期目录后以对应目录下的文件为准）。校验一致说明文件完整，可以导入。
+
+
+## 导入到指定目录 {#导入到指定目录}
+
+WSL 把发行版安装成一个 ext4.vhdx 磁盘文件，用 `wsl --import` 可以把解包目录指到任何盘符。先建好目标目录（约 2 GB 空间即可，镜像解包后会膨胀）：
+
+```powershell
+mkdir D:\WSL\Ubuntu-26.10
+```
+
+然后导入，三个参数依次是：发行版名称、安装位置、下载的镜像文件：
+
+```powershell
+wsl --set-default-version 2
+wsl --import Ubuntu-26.10 D:\WSL\Ubuntu-26.10 C:\Users\donal\Downloads\stonking-wsl-amd64.wsl
+```
+
+`wsl --import` 会把压缩包解开并转换成 vhdx，放进的目录清晰可见，之后用 `wsl -d Ubuntu-26.10` 启动。注意导入的发行版不走商店版本的开户引导，第一次进去直接是 root，且 `/etc/passwd` 里只有 root，没有普通用户。
+
+
+## 创建普通用户并设为默认 {#创建普通用户并设为默认}
+
+日常用 root 操作不合适，建一个自己的账号并加入 sudo 组：
+
+```bash
+useradd -m -s /bin/bash -G sudo donald
+passwd donald
+```
+
+镜像自带 `/etc/wsl.conf` ，目前只有 `[boot] systemd=true` 一行。把默认用户追加进去：
+
+```bash
+printf '[user]\ndefault=donald\n' >> /etc/wsl.conf
+wsl --terminate Ubuntu-26.10
+```
+
+终止后重新 `wsl -d Ubuntu-26.10` ，登录的就是普通用户，版本确认：
+
+```bash
+cat /etc/os-release
+```
+
+会看到 Ubuntu 26.10。到这里系统可用了，但 apt 仍指向 archive.ubuntu.com 和 security.ubuntu.com ，国内下载慢，接着换源。
+
+
+## 更换国内源 {#更换国内源}
+
+从 24.04 开始，Ubuntu 的源配置是 deb822 格式，放在 `/etc/apt/sources.list.d/ubuntu.sources` ，镜像里它长这样：
+
+```text
+Types: deb
+URIs: http://archive.ubuntu.com/ubuntu/
+Suites: stonking stonking-updates stonking-backports
+Components: main universe restricted multiverse
+Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
+
+Types: deb
+URIs: http://security.ubuntu.com/ubuntu/
+Suites: stonking-security
+Components: main universe restricted multiverse
+Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
+```
+
+先备份，再用 sed 把两个官方域名替换成阿里云（签名密钥同属 Ubuntu 归档密钥，不用额外导入 GPG key）：
+
+```bash
+sudo cp /etc/apt/sources.list.d/ubuntu.sources /etc/apt/sources.list.d/ubuntu.sources.bak
+sudo sed -i 's|http://archive.ubuntu.com/ubuntu/|https://mirrors.aliyun.com/ubuntu/|; s|http://security.ubuntu.com/ubuntu/|https://mirrors.aliyun.com/ubuntu/|' /etc/apt/sources.list.d/ubuntu.sources
+```
+
+替换后 `Suites` 行原样保留。阿里云已同步 26.10 的全部套件（stonking、stonking-updates、stonking-security、stonking-backports），HTTPS 也直接支持。然后刷新并升级：
+
+```bash
+sudo apt update
+sudo apt upgrade
+```
+
+`apt update` 的下载速度从官方源的几十 KB/s 变成几 MB/s。以后安装软件同样走国内源：
+
+```bash
+sudo apt install ripgrep fd-find
+```
+
+两点补充：
+
+-   阿里云的 ubuntu 帮助页对阿里云 ECS 用户另给了内网域名 mirrors.cloud.aliyuncs.com ，家用 WSL 用 mirrors.aliyun.com 即可。
+-   换版本（比如以后装 27.04）只要把 `Suites` 里的代号换成新代号，目录结构和流程不变。这一代镜像的套件代号与发行代号同名，从镜像自带的 ubuntu.sources 里直接抄即可。
+
+至此，从镜像挑选、下载、校验、指定目录安装到国内源配置的流程完整走通。日常使用中还可以用同一思路处理别的 Linux 发行版：镜像站按官方目录结构同步，导入命令与换源步骤完全相同，变的只是域名、套件名和源的格式（deb822 或旧式 sources.list）。
