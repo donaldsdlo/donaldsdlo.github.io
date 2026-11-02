@@ -1,0 +1,198 @@
+#+TITLE: 在 Windows 上使用 pi 连接 NVIDIA NIM 完整指南
+#+HUGO_TAGS: pi NVIDIA NIM AI
+#+CATEGORIES: AI工具
+#+DATE: 2026-11-02
+#+AUTHOR: Donald Lo
+#+HUGO_SECTION: tools
+#+HUGO_BASE_DIR: ../../
+#+OPTIONS: line-break:t
+#+HUGO_AUTO_SET_LASTMOD: t
+#+DRAFT: false
+#+HUGO_DRAFT: false
+#+hugo_front_matter_format: yaml
+#+STARTUP: latexpreview
+#+STARTUP: inlineimages
+
+pi 是一个运行在终端里的 AI 编程助手（coding agent），它本身不提供模型，需要连接一个模型服务才能工作。NVIDIA NIM（NVIDIA Inference Microservices）是英伟达提供的模型推理服务，通过 build.nvidia.com 托管了一批开源模型，提供 OpenAI 兼容的 API，申请 key 后即可调用，其中一部分可以免费使用。
+
+写这篇文章的起因，是原来的方案不好用。此前我用 cli-proxy-api.exe + cc switch + claude code 这条链来调用 NIM：cli-proxy-api 把 NIM 的 OpenAI 兼容接口转换成 Claude Code 能用的形态，cc switch 负责在多套 Claude Code 配置之间切换。链条上的每一层都可能成为故障点，实际使用中有两个突出的问题：会话经常中途断掉，请求次数一多又会撞上 NIM 的速率限制，只能反复重试。pi 原生内置 NVIDIA provider，代理和配置切换这两层都不需要了，连接、选模型都在一个工具里完成，所以换了过来。
+
+在 Windows 上把 pi 接到 NIM，要做的事情分三步：申请 NVIDIA API key、把 key 配置成环境变量、告诉 pi 用哪个模型。pi 已经内置了 NVIDIA NIM 的支持，正常情况下不需要写任何配置文件。这篇文章按顺序记录完整过程，并覆盖本地部署 NIM、模型选择、常见故障的排查。
+
+* 准备工作
+
+需要三样东西：一台能访问 build.nvidia.com 的 Windows 电脑、一个 NVIDIA 开发者账号、装好的 pi。
+
+pi 通过 npm 全局安装，要求 Node.js 22.19 或更高版本。在 PowerShell 或 Git Bash 中执行：
+
+#+begin_src bash
+node --version
+npm install -g --ignore-scripts @earendil-works/pi-coding-agent
+#+end_src
+
+装完验证：
+
+#+begin_src bash
+pi --version
+#+end_src
+
+输出 =pi 1.4.0= 之类的版本号即安装成功。pi 的 =bash= 工具在 Windows 上默认调用 Git for Windows 自带的 Git Bash，本机没装的话先到 https://git-scm.com/download/win 安装，否则 pi 运行 shell 命令时会提示找不到 bash。
+
+* 申请 NVIDIA API Key
+
+打开 https://build.nvidia.com/ ，用邮箱注册并验证 NVIDIA 账号（已有账号的直接登录）。登录后进入 https://build.nvidia.com/settings/api-keys ，点击 =Generate API Key= 生成一个密钥，密钥只完整显示一次，形如 =nvapi-= 开头的一长串字符，保存到密码管理器里。
+
+在同一个页面还可以看到 API key 的使用额度说明。NIM 的托管端点有速率限制，免费额度用完后请求会返回 429，适合日常试用和中小强度的开发，不适合当生产环境的高并发后端。这一点决定了它更适合作为 pi 的「日常模型」而不是唯一依赖。
+
+* 配置 NVIDIA_API_KEY 环境变量
+
+pi 的 NVIDIA NIM 支持通过读取环境变量 =NVIDIA_API_KEY= 来获取密钥。Windows 上设置环境变量有两种场景，效果不同，先用临时方式验证，再持久化。
+
+*当前会话临时生效* ，在 PowerShell 里执行，只对当前窗口有效：
+
+#+begin_src powershell
+$env:NVIDIA_API_KEY = "nvapi-你的密钥"
+#+end_src
+
+*永久生效* ，用 =setx= 写入用户级环境变量（新开的窗口都能读到，当前已开窗口不生效）：
+
+#+begin_src powershell
+setx NVIDIA_API_KEY "nvapi-你的密钥"
+#+end_src
+
+也可以用 .NET 的方法写入，效果等价：
+
+#+begin_src powershell
+[Environment]::SetEnvironmentVariable("NVIDIA_API_KEY", "nvapi-你的密钥", "User")
+#+end_src
+
+三种方式对比如下：
+
+| 方式                 | 生效范围       | 适用场景                           |
+|----------------------+----------------+------------------------------------|
+| =$env:= 赋值         | 当前会话       | 先验证 key 能不能用，避免写错后污染全局 |
+| =setx=               | 之后所有新窗口 | 日常固定使用，一次配置             |
+| =[Environment]::Set...= | 之后所有新窗口 | 不想记 setx 的转义规则时           |
+
+注意 =setx= 会把值原样写入注册表，密钥包含特殊字符时用双引号包住即可。写入后*关掉并重开* PowerShell，新的 =pi= 进程才能读到。
+
+验证环境变量已就位：
+
+#+begin_src powershell
+echo $env:NVIDIA_API_KEY
+#+end_src
+
+能打印出完整密钥说明配置成功。注意这种方法会把密钥明文显示在终端上，留意场合。
+
+* 用 curl 验证 key 和网络
+
+在把 pi 接上之前，先用 curl 直接打一次 NIM 接口，确认 key 有效且网络可达。NIM 的 OpenAI 兼容端点是 =https://integrate.api.nvidia.com/v1= ，列出模型的接口是 =GET /v1/models= ：
+
+#+begin_src powershell
+curl.exe -s -H "Authorization: Bearer $env:NVIDIA_API_KEY" https://integrate.api.nvidia.com/v1/models
+#+end_src
+
+这里写 =curl.exe= 而不是 =curl= ：Windows 自带的 curl 在 PowerShell 5.1 里默认是 =Invoke-WebRequest= 的别名，写全 =.exe= 才会调真正的 curl。把密钥放在请求头 =Authorization: Bearer= 后面，就是 NIM 的鉴权方式，与 OpenAI 的用法一致。
+
+返回一段 JSON，里面有几百个模型的 =id= ，说明 key 有效、网络连通。若返回 401 或 403，检查密钥是否复制完整、是否有多余空格。
+
+* 让 pi 识别 NIM
+
+pi 已内置 NVIDIA NIM provider，只要 =NVIDIA_API_KEY= 存在，pi 启动时就能看到 nvidia 的模型，无需写配置。先列出 pi 当前能用的全部模型，确认 nvidia 已在其中：
+
+#+begin_src bash
+pi --list-models
+#+end_src
+
+输出里 =nvidia= 开头的行就是 NIM 提供的模型，例如 =deepseek-ai/deepseek-v4.1-flash= 、 =moonshotai/kimi-k2.6= 、 =z-ai/glm-5.3= 。如果列表里完全没有 nvidia，说明环境变量没读到：关掉当前终端重开，或重新执行 =setx= 那一步，再启动 pi。
+
+也可以只精确验证凭据状态：
+
+#+begin_src bash
+pi auth check --provider nvidia
+#+end_src
+
+输出 =ready= 表示 pi 能解析到 NIM 的密钥； =not_ready= 表示环境变量缺失； =invalid= 表示密钥格式或服务端拒绝，需要重新检查 key。
+
+除了内置 provider，pi 还支持通过 =~/.pi/agent/models.json= 注册 OpenAI 兼容端点。这在两种情况下要用：一是调用*本地部署*的 NIM 容器，二是某个模型不在 pi 内置清单里、想手工指定上下文长度等参数。以本机自建 NIM（默认监听 8000 端口）为例，在 =~/.pi/agent/models.json= 中写入：
+
+#+begin_src json
+{
+  "providers": {
+    "nim-local": {
+      "baseUrl": "http://localhost:8000/v1",
+      "api": "openai-completions",
+      "apiKey": "local",
+      "models": [
+        { "id": "meta/llama-3.1-8b-instruct" }
+      ]
+    }
+  }
+}
+#+end_src
+
+各字段的含义： =baseUrl= 是服务地址，本地 NIM 不需要鉴权， =apiKey= 填任意占位值； =api= 声明用 OpenAI Chat Completions 协议与它通信； =models= 里列出该端点实际暴露的模型， =id= 必须和 NIM 返回的模型名一致。保存后在 pi 里输入 =/model= 会重新加载该文件， =nim-local= 开头的模型随即出现在列表里。
+
+* 选择模型与启动
+
+选用 NIM 模型有三种方式，按使用频率从高到低：
+
+*一次指定* ，在启动 pi 时用 =--model= 参数，格式是 =provider/模型id= ：
+
+#+begin_src bash
+pi --model nvidia/deepseek-ai/deepseek-v4.1-flash
+#+end_src
+
+由于模型 id 里本身含有斜杠（ =deepseek-ai/deepseek-v4.1-flash= ），完整写法是 =nvidia/deepseek-ai/deepseek-v4.1-flash= ，第一段是 pi 侧的 provider 名，其余部分是模型名。
+
+*会话内切换* ，启动 pi 后输入斜杠命令 =/model= ，在列表里选择。适合临时试不同模型。
+
+*固定默认* ，编辑 =~/.pi/agent/settings.json= ，把默认模型写死，以后每次启动 pi 都直接用 NIM：
+
+#+begin_src json
+{
+  "defaultProvider": "nvidia",
+  "defaultModel": "deepseek-ai/deepseek-v4.1-flash"
+}
+#+end_src
+
+下面几个模型覆盖了常见场景，上下文和输出长度来自 pi 的模型清单，可按任务挑选：
+
+| 模型 | 上下文 | 最大输出 | 推理 | 适合场景 |
+|-----------------------------+--------+----------+------+---------------------------|
+| =deepseek-ai/deepseek-v4.1-flash= | 1M | 384K | 是 | 通用主力，长上下文与大输出 |
+| =moonshotai/kimi-k2.6= | 256K | 256K | 是 | 长文档分析 |
+| =z-ai/glm-5.3-flash= | 1M | 131K | 是 | 轻量快速任务 |
+| =nvidia/llama-3.1-nemotron-70b-instruct= | 128K | 8.2K | 否 | 不开启推理链的稳定问答 |
+
+「推理」一列指该模型支持思考链（reasoning），会先输出一段内部推理再给答案，复杂任务更准但更慢更费 token。pi 还可以用 =--thinking= 控制推理深度，例如 =pi --model nvidia/deepseek-ai/deepseek-v4.1-flash:high= 中的 =:high= 后缀，或运行中调整。
+
+* 验证 pi 与 NIM 的连通
+
+启动 pi 后随便问一句，例如「用三句话介绍你自己」，能正常流式返回即连通。更严谨的验证是在 pi 内部执行 shell 命令，打印 pi 当前实际使用的模型：
+
+#+begin_src text
+!printf '%s/%s\n' "$PI_PROVIDER" "$PI_MODEL"
+#+end_src
+
+输出 =nvidia/deepseek-ai/deepseek-v4.1-flash= 说明这次会话确实走的是 NIM，而不是本机装的其他 provider。pi 还会用 =PI_PROVIDER= 和 =PI_MODEL= 这两个变量记录当前选择，排查「模型没切过去」的问题时先看它们。
+
+* 常见问题
+
+以下问题按出现频率排列，都发生在环境变量、key 和模型名三个环节。
+
+*429 请求被限流* 。NIM 托管端点对免费额度有速率限制，表现为请求失败并提示稍后重试。等限流窗口过去再试，或换速率更宽的模型；持续超限说明用量超出免费额度，需要升级或改成本地部署。
+
+*401/403 鉴权失败* 。密钥错误、过期或复制时带上了空格。重新执行 =echo $env:NVIDIA_API_KEY= 核对当前值，确认是否完整、有无多余空格；仍不行就回 build.nvidia.com 的 API key 页面核对或重新生成。
+
+*环境变量不生效* 。这是 Windows 上最常见的一类问题： =setx= 只影响之后新开的终端，已经开着的 PowerShell、VS Code 集成终端、pi 进程都读不到新值。全部关掉重开即可。
+
+*模型列表中看不到 nvidia* 。pi 启动时环境里没有 =NVIDIA_API_KEY= ，内置 provider 直接不注册。执行 =setx= 后重开终端，再用 =pi --list-models= 确认。若 =pi auth check --provider nvidia= 报 =not_ready= ，也是同一原因。
+
+*curl 返回 404* 。地址多写了或少写了 =/v1= 。正确的端点是 =https://integrate.api.nvidia.com/v1= ， =/v1/chat/completions= 才是对话接口。
+
+*连接超时* 。build.nvidia.com 在国内访问不稳定时，先确认能打开该网站；仅 curl 超时而网站正常，检查是否处于需要代理的网络环境，pi 本身支持通过标准代理环境变量走系统代理。
+
+* 小结
+
+把 pi 接到 NIM，正规路径只有三步：在 build.nvidia.com 生成 key、用 =setx= 写入用户环境变量 =NVIDIA_API_KEY= 、用 =--model nvidia/模型名= 或 =/model= 选择模型。因为 pi 内置了 NVIDIA provider，全程不需要写任何配置文件；只有在调用本地部署的 NIM、或需要手工指定模型参数时，才动用 =~/.pi/agent/models.json= 。连接成功后换模型只是改 =--model= 的参数，NIM 侧的模型清单、上下文长度、是否支持推理都已在 pi 的元数据里，切换成本几乎为零。日常使用中真正要留意的只有两件事：免费额度的 429 限流，以及改完环境变量后记得重开终端。
