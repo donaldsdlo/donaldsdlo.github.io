@@ -2,10 +2,27 @@
 title: "在 Windows 上使用 pi 连接 NVIDIA NIM 完整指南"
 author: ["Donald Lo"]
 date: 2026-11-02
-lastmod: 2026-11-02T16:03:52+08:00
+lastmod: 2026-11-03T19:38:36+08:00
 tags: ["pi", "NVIDIA", "NIM", "AI"]
 draft: false
 ---
+
+<div class="ox-hugo-toc toc">
+
+<div class="heading">Table of Contents</div>
+
+- [准备工作](#准备工作)
+- [申请 NVIDIA API Key](#申请-nvidia-api-key)
+- [配置 NVIDIA_API_KEY 环境变量](#配置-nvidia-api-key-环境变量)
+- [用 curl 验证 key 和网络](#用-curl-验证-key-和网络)
+- [让 pi 识别 NIM](#让-pi-识别-nim)
+- [选择模型与启动](#选择模型与启动)
+- [验证 pi 与 NIM 的连通](#验证-pi-与-nim-的连通)
+- [常见问题](#常见问题)
+- [小结](#小结)
+
+</div>
+<!--endtoc-->
 
 pi 是一个运行在终端里的 AI 编程助手（coding agent），它本身不提供模型，需要连接一个模型服务才能工作。NVIDIA NIM（NVIDIA Inference Microservices）是英伟达提供的模型推理服务，通过 build.nvidia.com 托管了一批开源模型，提供 OpenAI 兼容的 API，申请 key 后即可调用，其中一部分可以免费使用。
 
@@ -71,7 +88,7 @@ setx NVIDIA_API_KEY "nvapi-你的密钥"
 | `setx`                  | 之后所有新窗口 | 日常固定使用，一次配置 |
 | `[Environment]::Set...` | 之后所有新窗口 | 不想记 setx 的转义规则时 |
 
-注意 `setx` 会把值原样写入注册表，密钥包含特殊字符时用双引号包住即可。写入后\*关掉并重开\* PowerShell，新的 `pi` 进程才能读到。
+注意 `setx` 会把值原样写入注册表，密钥包含特殊字符时用双引号包住即可。写入后**关掉并重开** PowerShell，新的 `pi` 进程才能读到。
 
 验证环境变量已就位：
 
@@ -113,7 +130,7 @@ pi auth check --provider nvidia
 
 输出 `ready` 表示 pi 能解析到 NIM 的密钥； `not_ready` 表示环境变量缺失； `invalid` 表示密钥格式或服务端拒绝，需要重新检查 key。
 
-除了内置 provider，pi 还支持通过 `~/.pi/agent/models.json` 注册 OpenAI 兼容端点。这在两种情况下要用：一是调用\*本地部署\*的 NIM 容器，二是某个模型不在 pi 内置清单里、想手工指定上下文长度等参数。以本机自建 NIM（默认监听 8000 端口）为例，在 `~/.pi/agent/models.json` 中写入：
+除了内置 provider，pi 还支持通过 `~/.pi/agent/models.json` 注册 OpenAI 兼容端点。这在两种情况下要用：一是调用**本地部署**的 NIM 容器，二是某个模型不在 pi 内置清单里、想手工指定上下文长度等参数。以本机自建 NIM（默认监听 8000 端口）为例，在 `~/.pi/agent/models.json` 中写入：
 
 ```json
 {

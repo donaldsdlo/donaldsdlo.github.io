@@ -1,0 +1,249 @@
+#+TITLE: pi-worktrees：把 Pi 的 worktree 集中到 E:\tmp\pi-tmp
+#+HUGO_TAGS: pi worktree git 效率工具
+#+CATEGORIES: tools
+#+DATE: 2026-11-03
+#+AUTHOR: Donald Lo
+#+HUGO_SECTION: tools
+#+HUGO_BASE_DIR: ../../
+#+OPTIONS: line-break:t
+#+HUGO_AUTO_SET_LASTMOD: t
+#+DRAFT: false
+#+HUGO_DRAFT: false
+#+hugo_front_matter_format: yaml
+#+STARTUP: latexpreview
+#+STARTUP: inlineimages
+
+* 引言
+
+#+BEGIN_QUOTE
+本文相关代码保存在 [[https://github.com/0xkuze/pi-worktrees][0xkuze/pi-worktrees]]。
+#+END_QUOTE
+
+用 Pi 并行跑几个任务之后，我发现自己陷入了一个熟悉的窘境：worktree 越开越多，
+位置越来越随机。有的躺在主项目旁边，有的在 =.pi= 目录里，还有几个早就不用的
+「孤儿」散落在不同盘符下。/wt 或 =git worktree list= 一拉一大串，哪个是死的、
+哪个还有活没干完，只能一个目录一个目录地翻。
+
+真正让人累的不是删除本身，而是*每个 worktree 的「位置」没有约定*：找它靠记忆，
+清理靠勇气，误删一次就得重来。所以需要的不是更多命令，而是一个固定的存放根目录
+加一套统一的创建、切换、删除流程。
+
+=pi-worktrees= 这个扩展做的正是这件事：它在 Pi 里加了 =/wt= 命令，并把所有由它
+创建的 worktree 放进一个可指定的「托管目录」。本文记录我把它指到 =E:\tmp\pi-tmp=
+之后的完整设置与日常用法。
+
+* pi-worktrees 是什么
+
+=pi-worktrees= 是 Pi 的第三方扩展，把 Git worktree 的常用操作收进一条 =/wt= 命令：
+创建并立刻切换、返回原项目、删除，全程不退出 Pi 会话，也不需要手写
+=git worktree= 的一长串参数。
+
+它解决的链条是这样的：
+
+#+begin_src text
+worktree 散落各处  ->  位置不可预期（找）
+                 ->  删除不彻底（清）
+                 ->  未提交改动被一起删掉（丢）
+
+PI_WORKTREE_HOME 固定根目录  ->  /wt 统一入口  ->  删除有确认和未提交改动警告
+#+end_src
+
+和裸用 =git worktree= 相比，它多出来的价值集中在三点：
+
+- *位置可预期*：所有托管 worktree 都在一个根目录下，路径不用记。
+- *生命周期完整*：创建、切换、返回、删除在同一个界面里完成，删除前有确认，
+  目录里有未提交改动时会给出警告。
+- *改动可搬运*：创建或返回时加 =--move= ，可以把当前未提交的改动
+  stash 到目的地，不会因为切换目录丢掉手上的活。
+
+* 安装
+
+在 Pi 会话中直接安装：
+
+#+begin_src bash
+pi install npm:pi-worktrees
+#+end_src
+
+安装后重启 Pi；如果会话支持热重载，用 =/reload= 也行。之后 =/wt= 命令即可用。
+
+想先试一试再决定常驻，可以用一次性加载的方式，它不会写进设置：
+
+#+begin_src bash
+pi -e npm:pi-worktrees
+#+end_src
+
+* 集中管理：把 worktree 指到 E:\tmp\pi-tmp
+
+扩展默认把托管 worktree 放在：
+
+#+begin_src text
+~/.local/share/pi-worktrees
+#+end_src
+
+在 Windows 上这个路径既隐藏又跨盘难找，清扫时要先猜它在哪。设置环境变量
+=PI_WORKTREE_HOME= 就可以把根目录换掉。
+
+** 为什么选 E:\tmp\pi-tmp
+
+这个位置不是我随手挑的，它同时满足四个条件：
+
+1. *与项目目录分离*：worktree 是「用完即弃的副本」，不该混在
+   =D:\Documents\donaldsdlo.github.io= 这种要长期保留的目录旁边。
+2. *单独磁盘*：临时产物放 E 盘，系统盘 C 保持干净，也不占文档盘的空间。
+3. *可随时清空*：~/tmp 目录的语义就是「可再生」。只要改动都提交进了主仓库，
+   整个 =E:\tmp\pi-tmp= 删掉重建，不损失任何东西。
+4. *集中清点*：所有在用的 worktree 躺在一个目录里，打开资源管理器就能看全，
+   不用回忆「上次那个分支让我开在哪了」。
+
+这里有一条必须自己守住的前提：*/tmp 里只放再生的东西*。未提交的改动要么先
+commit，要么在创建/返回时用 =--move= 搬走，否则一次「清理 tmp」就会把它
+一起删掉。托管目录的删除确认和未提交改动警告，就是为这个前提加的护栏。
+
+** 设置环境变量
+
+按你常用的 shell 三选一：
+
+*** PowerShell（当前会话）
+
+#+begin_src powershell
+$env:PI_WORKTREE_HOME = "E:\tmp\pi-tmp"
+#+end_src
+
+*** PowerShell / cmd（永久生效）
+
+#+begin_src cmd
+setx PI_WORKTREE_HOME "E:\tmp\pi-tmp"
+#+end_src
+
+=setx= 写入用户级环境变量，写完后要重开终端才生效。
+
+*** Git Bash
+
+#+begin_src bash
+export PI_WORKTREE_HOME="/e/tmp/pi-tmp"
+#+end_src
+
+注意这里是 Git Bash 的路径写法（盘符小写、反斜杠改斜杠）。要永久生效，把这一行
+追加到 =~/.bashrc= 。
+
+写完随便挑一个终端确认一下：
+
+#+begin_src bash
+echo $PI_WORKTREE_HOME
+#+end_src
+
+之后用 =/wt create= 开的 worktree，都会落在 =E:\tmp\pi-tmp\<name>= 。
+名字会被自动规范化成 kebab-case；省略名字时扩展会自行生成一个。
+
+* 日常用法
+
+** 打开总览
+
+#+begin_src text
+/wt
+#+end_src
+
+弹出交互式浮层，列出当前所有可切换的 worktree。操作键：
+
+| 按键           | 作用                    |
+|----------------+-------------------------|
+| =↑= / =↓= 或 =j= / =k= | 在列表中移动            |
+| =/=              | 搜索 worktree           |
+| =Enter=          | 切换到选中的 worktree   |
+| =⌘N= 或 =n=        | 新建 worktree           |
+| =d=              | 删除选中的托管 worktree |
+| =Esc= 或 =q=       | 关闭浮层                |
+
+从托管 worktree 里打开浮层时，原项目会带一个 =[project]= 标记，方便一键回去。
+
+** 创建并切换
+
+#+begin_src text
+/wt create feature-name
+#+end_src
+
+在托管目录创建 worktree，检出分支 =wt/feature-name= ，并让 Pi 立即切进去。
+
+手上还有未提交的改动、想把它带到新 worktree 里继续：
+
+#+begin_src text
+/wt create feature-name --move
+#+end_src
+
+它的动作分解是：先在当前目录 =git stash push -u= （连未跟踪文件一起收），
+创建 worktree，再在新目录 =git stash pop= 。不用 =--move= 时，原样留在原处。
+
+** 返回原项目
+
+#+begin_src text
+/wt return
+#+end_src
+
+从托管 worktree 跳回原始项目；想把 worktree 里的改动带回去，用
+=/wt return --move= ，过程同上，方向相反。
+
+** 删除
+
+#+begin_src bash
+/wt delete E:\tmp\pi-tmp\feature-name
+#+end_src
+
+删除托管 worktree。删除前会要求确认；如果该目录存在未提交改动，会先给出警告。
+别名 =new= / =back= / =remove= ( =rm= ) 分别对应 =create= / =return= / =delete= ，
+按记忆习惯挑一个用就行。
+
+* 完整工作流示例
+
+假设主仓库在 =D:\Documents\donaldsdlo.github.io= ，一个功能分支和一次线上热修
+并行，全程用 =/wt= 完成：
+
+#+begin_src text
+1. 主项目里发现要开发新功能
+   /wt create feature-search          -> 进入 E:\tmp\pi-tmp\feature-search
+   写代码、提交、推送，主目录原封不动
+
+2. 主项目里临时来了个紧急修复
+   /wt create hotfix-typo             -> 进入 E:\tmp\pi-tmp\hotfix-typo
+   修完、提交、推送
+
+3. 功能做完，回到主项目收尾
+   /wt return
+   在主仓库合并 wt/feature-search
+
+4. 清扫
+   /wt delete E:\tmp\pi-tmp\hotfix-typo
+   /wt delete E:\tmp\pi-tmp\feature-search
+#+end_src
+
+任何时候想核对托管目录和仓库记录是否一致，用 Git 自己的命令对一眼：
+
+#+begin_src bash
+git worktree list      # 在主仓库中执行，输出所有已登记的 worktree
+#+end_src
+
+=pi-worktrees= 是 Git =worktree= 之上的一层管理，不是另一套实现，所以两边的
+列表永远对得上；对不上的（比如手动删过目录），用 =git worktree prune= 清掉
+残留元数据即可。
+
+* 边界与注意
+
+- *暂存 ≠ 弃置*：=/tmp= 目录可清空的前提是「改动已进仓库」。把 =E:\tmp\pi-tmp=
+   当可再生空间用，未提交的活必须 commit 或 =--move= 。
+- *删除只删工作目录*：=/wt delete= 移除托管 worktree，它关联的分支仍在仓库里。
+   需要清理分支时，在主仓库另行 =git branch -d wt/xxx= 。
+- *--move 依赖 stash*：它跨 worktree 用 Git stash 搬运改动，只适用于同一个
+   仓库内的 worktree；有冲突时按 stash 解冲突的正常流程处理。
+- *配置是一次性的，目录不是*：换机器、换盘符，只需改 =PI_WORKTREE_HOME= 一处；
+   旧的托管目录确认无未提交改动后整个删掉，不会留下看不见的残留。
+- *第三方扩展*：安装前建议过一遍源码。它能执行代码并影响会话行为，
+   权限上值得按普通第三方包对待。
+
+* 小结
+
+worktree 散落各处，根源不在命令太少，而在位置没有约定。把 =PI_WORKTREE_HOME=
+指到 =E:\tmp\pi-tmp= 之后，创建、切换、返回、删除都有了一条确定路径：
+根目录固定，入口统一（=/wt=），删除有护栏（确认 + 未提交改动警告），
+搬运有通道（=--move= ）。剩下的纪律只有一条——tmp 里只放再生的东西。
+
+按这个约定用了一阵子之后，「清理 worktree」从一件需要下决心的事，
+变成了打开一个目录、逐条 =/wt delete= 的体力活。工具省下的正是这份犹豫。
